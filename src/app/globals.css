@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-primary: #0c5c2b;
+  --color-highlight: #FBB21B;
+  --color-bg-cream: #fffdf5;
+  --color-text-dark: #1a1f1c;
+  --color-text-light: #ffffff;
+
+  --font-heading: var(--font-montserrat), 'Montserrat', sans-serif;
+  --font-body: var(--font-montserrat), 'Montserrat', sans-serif;
+  --font-sans: var(--font-montserrat), 'Montserrat', sans-serif;
+}
+
+:root {
+  --background: #fffdf5;
+  --foreground: #1a1f1c;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-montserrat), 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 8s infinite alternate;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Hide scrollbar, keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth page background - white for the new Navbar layout */
+body {
+  background-color: #f8f9fa;
+}
