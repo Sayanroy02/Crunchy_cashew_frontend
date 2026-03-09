@@ -1,6 +1,20 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+
+/**
+ * ANIMATION SEQUENCE
+ * ─────────────────────────────────────────────────────────────────
+ * 1. Banner background sweeps in (left → right clip-path)
+ * 2. Delivery image enters from the LEFT edge and ROLLS across
+ *    the banner to its final position on the FAR RIGHT.
+ *    As it moves, it "uncovers" the content behind it:
+ *      - Brand logo + text fade in from left
+ *      - Platform logos pop in one by one (staggered)
+ * 3. Delivery image settles on the right — no looping animation
+ * ─────────────────────────────────────────────────────────────────
+ */
+
 const platforms = [
     {
         name: 'Amazon',
@@ -236,7 +250,7 @@ export default function Affiliates() {
                                             src="/images/cc-Logo-01-1.png"
                                             alt="Crunchy Cashews"
                                             style={{
-                                                width: 58, height: 58, objectFit: 'contain', flexShrink: 0,
+                                                width: 80, height: 80, objectFit: 'contain', flexShrink: 0,
                                                 animation: 'affLogoPulse 3s ease-in-out infinite',
                                             }}
                                         />
@@ -253,15 +267,15 @@ export default function Affiliates() {
                                         <div>
                                             <p style={{
                                                 margin: 0, lineHeight: 1.25,
-                                                fontSize: 13, fontWeight: 400,
-                                                color: '#6b3010', fontFamily: '"Georgia", serif',
+                                                fontSize: 18, fontWeight: 400,
+                                                color: '#6b3010',
                                             }}>
                                                 We are also
                                             </p>
                                             <p style={{
                                                 margin: 0, lineHeight: 1.1,
-                                                fontSize: 18, fontWeight: 900,
-                                                color: '#2d1200', fontFamily: '"Georgia", serif',
+                                                fontSize: 28, fontWeight: 900,
+                                                color: '#2d1200',
                                             }}>
                                                 Available on
                                             </p>
@@ -270,50 +284,8 @@ export default function Affiliates() {
                                 }
                             </div>
 
-                            {/* ── MIDDLE: trust badges / tagline ── */}
-                            <div style={{
-                                flex: 1,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                gap: 10,
-                                opacity: phase >= 3 ? 1 : 0,
-                                animation: phase >= 3 ? 'affFadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.15s forwards' : 'none',
-                            }}>
-                                {phase < 3 ? (
-                                    <>
-                                        <Skel w={110} h={36} r={20} delay={0.1} />
-                                        <Skel w={110} h={36} r={20} delay={0.18} />
-                                        <Skel w={110} h={36} r={20} delay={0.26} />
-                                    </>
-                                ) : (
-                                    <>
-                                        {[
-                                            { icon: '⚡', label: 'Quick Delivery', sub: 'In 10 mins' },
-                                            { icon: '✅', label: 'Trusted Brand', sub: '100% Authentic' },
-                                            { icon: '🎁', label: 'Great Deals', sub: 'Offers everyday' },
-                                        ].map((badge) => (
-                                            <div key={badge.label} style={{
-                                                display: 'flex', alignItems: 'center', gap: 7,
-                                                background: 'rgba(255,255,255,0.55)',
-                                                backdropFilter: 'blur(4px)',
-                                                borderRadius: 20,
-                                                padding: '5px 13px',
-                                                border: '1px solid rgba(255,255,255,0.75)',
-                                                boxShadow: '0 1px 6px rgba(180,80,20,0.08)',
-                                            }}>
-                                                <span style={{ fontSize: 16 }}>{badge.icon}</span>
-                                                <div>
-                                                    <p style={{ margin: 0, fontSize: 11, fontWeight: 700, color: '#3a1800', lineHeight: 1.2 }}>
-                                                        {badge.label}
-                                                    </p>
-                                                    <p style={{ margin: 0, fontSize: 9.5, color: '#7a4020', lineHeight: 1.2 }}>
-                                                        {badge.sub}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </>
-                                )}
-                            </div>
+                            {/* ── Spacer ── */}
+                            <div style={{ flex: 1 }} />
 
                             {/* ── Platform logos — RIGHT ── */}
                             <div style={{
@@ -408,10 +380,10 @@ export default function Affiliates() {
                                     )
                                     : (
                                         <>
-                                            <p style={{ margin: 0, fontSize: 16, fontWeight: 400, color: '#6b3010', fontFamily: '"Georgia", serif' }}>
+                                            <p style={{ margin: 0, fontSize: 18, fontWeight: 400, color: '#6b3010', }}>
                                                 We are also
                                             </p>
-                                            <p style={{ margin: 0, fontSize: 24, fontWeight: 900, color: '#2d1200', fontFamily: '"Georgia", serif', letterSpacing: '0.03em' }}>
+                                            <p style={{ margin: 0, fontSize: 28, fontWeight: 900, color: '#2d1200', letterSpacing: '0.03em' }}>
                                                 AVAILABLE ON
                                             </p>
                                         </>
