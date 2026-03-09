@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 
-// Skeleton card
 function SkeletonCard() {
     return (
         <div className="bg-white rounded-2xl overflow-hidden animate-pulse">
@@ -30,7 +29,8 @@ export default function BestSellers() {
     }, []);
 
     return (
-        <section className="py-16 md:py-24 bg-[#fffdf5]">
+        // ✅ py-16 md:py-24 → pt-8 pb-16 md:pt-10 md:pb-20: cuts top padding roughly in half
+        <section className="pt-8 pb-16 md:pt-10 md:pb-20 bg-[#fffdf5]">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 <div className="text-center mb-12">
                     <span className="text-[#0c5c2b] font-bold tracking-[4px] uppercase text-xs mb-2 block">Handpicked For You</span>
@@ -42,7 +42,6 @@ export default function BestSellers() {
                     </p>
                 </div>
 
-                {/* Grid — skeleton or real cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     {loading
                         ? [0, 1, 2, 3].map(i => <SkeletonCard key={i} />)

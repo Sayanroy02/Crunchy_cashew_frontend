@@ -40,6 +40,7 @@ export default function AdminUsers() {
                                 <th className="p-4 font-semibold">User</th>
                                 <th className="p-4 font-semibold">Email</th>
                                 <th className="p-4 font-semibold">Phone</th>
+                                <th className="p-4 font-semibold">Total Orders</th>
                                 <th className="p-4 font-semibold">Role</th>
                             </tr>
                         </thead>
@@ -49,6 +50,7 @@ export default function AdminUsers() {
                                     <td className="p-4 font-bold">{u.username}</td>
                                     <td className="p-4">{u.email}</td>
                                     <td className="p-4">{u.phone || 'N/A'}</td>
+                                    <td className="p-4 font-semibold text-[#0c5c2b]">{u.orders ? u.orders.length : 0}</td>
                                     <td className="p-4">
                                         <span className={`px-2 py-1 text-xs font-bold rounded-full ${u.role === 'admin' ? 'bg-[#f6d70f]/20 text-[#be9e00]' : 'bg-gray-100 text-gray-600'}`}>
                                             {u.role}

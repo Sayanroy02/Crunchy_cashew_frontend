@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 interface Banner {
     _id: string;
@@ -44,6 +43,10 @@ export default function HeroCarousel() {
     const [banners, setBanners] = useState<Banner[]>([]);
     const [current, setCurrent] = useState(0);
     const [animating, setAnimating] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
+
+    // Touch-hold: pause only after finger held ≥ 300 ms
+    const touchHoldTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         fetch('http://localhost:8000/api/cms/banners')
@@ -62,23 +65,45 @@ export default function HeroCarousel() {
     const next = useCallback(() => navigate(1), [navigate]);
     const prev = useCallback(() => navigate(-1), [navigate]);
 
+    // Auto-play — respects isPaused
     useEffect(() => {
-        if (banners.length <= 1) return;
+        if (banners.length <= 1 || isPaused) return;
         const t = setInterval(next, 5000);
         return () => clearInterval(t);
-    }, [banners.length, next]);
+    }, [banners.length, next, isPaused]);
 
-    if (banners.length === 0) return <div className="w-full h-[420px] bg-gray-50 animate-pulse rounded-2xl" />;
+    // ── Pause handlers ───────────────────────────────────────────────────────
+    // Desktop: hover
+    const handleMouseEnter = () => setIsPaused(true);
+    const handleMouseLeave = () => setIsPaused(false);
+
+    // Mobile: touch-hold (≥ 300 ms triggers pause; quick tap is unaffected)
+    const handleTouchStart = () => {
+        touchHoldTimer.current = setTimeout(() => setIsPaused(true), 300);
+    };
+    const handleTouchEnd = () => {
+        if (touchHoldTimer.current) clearTimeout(touchHoldTimer.current);
+        setIsPaused(false);
+    };
+    // ────────────────────────────────────────────────────────────────────────
+
+    if (banners.length === 0) return <div className="w-full h-[320px] bg-gray-50 animate-pulse rounded-2xl" />;
 
     const prevIdx = (current - 1 + banners.length) % banners.length;
     const nextIdx = (current + 1) % banners.length;
 
     return (
-        <section className="w-full bg-[#fffdf5] pt-4 pb-8 overflow-hidden">
+        <section className="w-full bg-[#fffdf5] pt-4 pb-2 overflow-hidden">
             <div className="max-w-screen-xl mx-auto px-4 md:px-8">
                 <div
                     className="relative flex items-center gap-3 md:gap-5"
-                    style={{ height: 'clamp(220px, 42vw, 480px)' }}
+                    style={{ height: 'clamp(180px, 32vw, 360px)' }}
+                    // Pause events applied to the whole row so side-previews also trigger it
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                    onTouchCancel={handleTouchEnd}
                 >
                     {/* LEFT — Previous preview */}
                     <button
@@ -87,7 +112,6 @@ export default function HeroCarousel() {
                         style={{ width: '14%', height: '70%' }}
                         aria-label="Previous"
                     >
-                        {/* Blurred preview */}
                         <div className="absolute inset-0 scale-125 origin-center pointer-events-none">
                             <SlideContent banner={banners[prevIdx]} idx={prevIdx} />
                         </div>
@@ -98,8 +122,9 @@ export default function HeroCarousel() {
                         </div>
                     </button>
 
-                    {/* CENTER — Main banner with smooth transition */}
-                    <div className="flex-1 h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl"
+                    {/* CENTER — Main banner */}
+                    <div
+                        className="flex-1 h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl"
                         style={{ outline: '2px solid rgba(251,178,27,0.3)', outlineOffset: '2px' }}
                     >
                         {banners.map((banner, i) => (
@@ -120,9 +145,25 @@ export default function HeroCarousel() {
                             </div>
                         ))}
 
+                        {/* Paused badge */}
+                        <div
+                            className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full pointer-events-none"
+                            style={{
+                                opacity: isPaused ? 1 : 0,
+                                transform: isPaused ? 'translateY(0)' : 'translateY(-6px)',
+                                transition: 'opacity 0.2s ease, transform 0.2s ease',
+                            }}
+                        >
+                            <span className="flex gap-[3px] items-center">
+                                <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
+                                <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
+                            </span>
+                            Paused
+                        </div>
+
                         {/* Dots */}
                         {banners.length > 1 && (
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                                 {banners.map((_, i) => (
                                     <button
                                         key={i}
@@ -158,7 +199,7 @@ export default function HeroCarousel() {
                 </div>
 
                 {/* Slide indicator row */}
-                <div className="flex items-center justify-center gap-2 mt-3">
+                <div className="flex items-center justify-center gap-2 mt-1.5">
                     {banners.map((b, i) => (
                         <span
                             key={b._id}

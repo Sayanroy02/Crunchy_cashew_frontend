@@ -9,6 +9,7 @@ import { clearCart } from '@/lib/store/features/cartSlice';
 export default function CheckoutPage() {
     const { items, totalAmount } = useSelector((state: RootState) => state.cart);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const { token: reduxToken } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     const router = useRouter();
 
@@ -16,6 +17,7 @@ export default function CheckoutPage() {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
+        email: '',
         address: '',
         city: '',
         state: '',
@@ -37,17 +39,39 @@ export default function CheckoutPage() {
 
         const fetchProfile = async () => {
             try {
-                const token = localStorage.getItem('token');
+                const token = reduxToken || localStorage.getItem('token');
+                if (!token) return;
                 const res = await fetch('http://localhost:8000/api/auth/me', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
                     const data = await res.json();
+
+                    // Simple address parser if they used the auto-locator or freeform
+                    let parsedCity = '';
+                    let parsedState = '';
+                    let parsedPincode = '';
+                    let cleanAddress = data.address || '';
+
+                    if (data.address && data.address.includes(',')) {
+                        const parts = data.address.split(',').map((p: string) => p.trim());
+                        if (parts.length >= 3) {
+                            // basic heuristic for nominatim addresses
+                            parsedPincode = parts[parts.length - 2].replace(/[^0-9]/g, '');
+                            parsedState = parts[parts.length - 3];
+                            parsedCity = parts[parts.length - 4] || '';
+                        }
+                    }
+
                     setFormData(prev => ({
                         ...prev,
                         name: data.full_name || data.username || '',
                         phone: data.phone || '',
-                        address: data.address || ''
+                        email: data.email || '',
+                        address: cleanAddress,
+                        city: parsedCity,
+                        state: parsedState,
+                        pincode: parsedPincode
                     }));
                 }
             } catch (e) {
@@ -61,9 +85,42 @@ export default function CheckoutPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleGetLocation = () => {
+        if (!navigator.geolocation) return alert('Geolocation not supported');
+        navigator.geolocation.getCurrentPosition(
+            async pos => {
+                try {
+                    const { latitude, longitude } = pos.coords;
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+                    const data = await res.json();
+                    if (data?.display_name) setFormData(prev => ({ ...prev, address: data.display_name }));
+                } catch { alert('Could not fetch address.'); }
+            },
+            () => { alert('Unable to retrieve location'); }
+        );
+    };
+
     const handlePlaceOrder = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
+        try {
+            const pinRes = await fetch('http://localhost:8000/api/pincodes/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pincode: formData.pincode })
+            });
+            if (pinRes.ok) {
+                const pinData = await pinRes.json();
+                if (!pinData.available) {
+                    alert('Not delivering in your location.');
+                    setLoading(false);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.error("Pincode check error", e);
+        }
 
         const fullAddress = `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`;
 
@@ -85,18 +142,25 @@ export default function CheckoutPage() {
         };
 
         try {
+            const token = reduxToken || localStorage.getItem('token');
             const res = await fetch('http://localhost:8000/api/orders/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                },
                 body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                const data = await res.json();
+                await res.json();
                 dispatch(clearCart());
-                router.push(`/profile?tab=orders&success=true&order_id=${data.order_id}`);
+                alert("Order placed successfully!");
+                router.push('/profile?tab=orders');
             } else {
-                alert("Failed to place order. Please try again.");
+                const errData = await res.json().catch(() => ({}));
+                console.error("Order placed error:", errData);
+                alert(`Failed to place order: ${errData.detail || 'Server Error'}`);
             }
         } catch (err) {
             console.error("Checkout error", err);
@@ -124,31 +188,40 @@ export default function CheckoutPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                                    <input required type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="John Doe" />
+                                    <input required type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="John Doe" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
-                                    <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="+91 9876543210" />
+                                    <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="+91 9876543210" />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                                    <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800 bg-gray-50" readOnly />
                                 </div>
                             </div>
 
                             <div className="mb-6">
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Street Address</label>
-                                <textarea required name="address" value={formData.address} onChange={handleInputChange} rows={3} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="123 Cashew Lane, Apt 4B"></textarea>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-sm font-bold text-gray-700">Street Address</label>
+                                    <button type="button" onClick={handleGetLocation} className="text-[10px] bg-[#0c5c2b]/10 text-[#0c5c2b] font-bold px-3 py-1.5 rounded-full hover:bg-[#0c5c2b]/20 transition-colors uppercase tracking-widest">
+                                        <i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate
+                                    </button>
+                                </div>
+                                <textarea required name="address" value={formData.address} onChange={handleInputChange} rows={3} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="123 Cashew Lane, Apt 4B"></textarea>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
-                                    <input required type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="Siliguri" />
+                                    <input required type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="Siliguri" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">State</label>
-                                    <input required type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="West Bengal" />
+                                    <input required type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="West Bengal" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">PIN Code</label>
-                                    <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b]" placeholder="734001" />
+                                    <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange} className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800" placeholder="734001" />
                                 </div>
                             </div>
 

@@ -19,7 +19,7 @@ export default function BlogsPreview() {
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {
-                    setBlogs(data.slice(0, 3)); // Show top 3 recent blogs
+                    setBlogs(data.slice(0, 3));
                 }
             })
             .catch(err => console.error("Failed to fetch blogs", err));
@@ -42,8 +42,13 @@ export default function BlogsPreview() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogs.map(blog => (
-                        <Link href={`/blogs/${blog._id}`} key={blog._id} className="bg-bg-cream rounded-3xl overflow-hidden group hover:-translate-y-2 transition-transform duration-300 shadow-md hover:shadow-xl flex flex-col">
+                    {blogs.map((blog, index) => (
+                        <Link
+                            href={`/blogs/${blog._id}`}
+                            key={blog._id}
+                            className={`bg-bg-cream rounded-3xl overflow-hidden group hover:-translate-y-2 transition-transform duration-300 shadow-md hover:shadow-xl flex flex-col ${index !== 0 ? "hidden md:flex" : ""
+                                }`}
+                        >
                             <div className="w-full h-60 relative overflow-hidden bg-gray-200">
                                 {blog.image_url ? (
                                     <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -59,7 +64,7 @@ export default function BlogsPreview() {
                             <div className="p-8 flex flex-col flex-grow bg-white border-t-4 border-primary">
                                 <h3 className="text-xl font-bold font-heading text-text-dark mb-4 line-clamp-2 group-hover:text-primary transition-colors">{blog.title}</h3>
                                 <p className="text-gray-600 line-clamp-3 mb-6 flex-grow">
-                                    {blog.content.replace(/<[^>]*>?/gm, '')} {/* Strip HTML for quick preview */}
+                                    {blog.content.replace(/<[^>]*>?/gm, '')}
                                 </p>
                                 <span className="text-primary font-bold flex items-center gap-2 uppercase tracking-wide text-sm mt-auto group-hover:gap-3 transition-all">
                                     Read More <i className="fa-solid fa-arrow-right-long"></i>

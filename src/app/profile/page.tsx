@@ -16,7 +16,6 @@ interface UserProfile {
     role: string;
 }
 
-// ─── Star Rating Component ───────────────────────────────────────
 function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
     const [hover, setHover] = useState(0);
     return (
@@ -37,7 +36,6 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
     );
 }
 
-// ─── Status step/pill ────────────────────────────────────────────
 const STATUS_STEPS = ['Pending', 'Accepted', 'Dispatched', 'Shipped', 'Delivered'];
 const STATUS_COLORS: Record<string, string> = {
     Pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
@@ -48,20 +46,38 @@ const STATUS_COLORS: Record<string, string> = {
     Cancelled: 'bg-red-50 text-red-700 border-red-200',
 };
 
-type TabKey = 'details' | 'orders' | 'wishlist' | 'queries' | 'reviews';
+type TabKey = 'home' | 'details' | 'orders' | 'wishlist' | 'queries' | 'reviews';
 
-const TABS: { key: TabKey; label: string; icon: string }[] = [
-    { key: 'details', label: 'Account', icon: 'fa-user' },
-    { key: 'orders', label: 'Orders', icon: 'fa-box' },
-    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart' },
-    { key: 'reviews', label: 'Reviews', icon: 'fa-star' },
-    { key: 'queries', label: 'Queries', icon: 'fa-clipboard-question' },
+const SIDEBAR_TABS: { key: TabKey; label: string; icon: string }[] = [
+    { key: 'details', label: 'My Accounts', icon: 'fa-user' },
+    { key: 'orders', label: 'My Orders', icon: 'fa-box' },
+    { key: 'wishlist', label: 'My Wishlist', icon: 'fa-heart' },
+    { key: 'reviews', label: 'My Rating & Reviews', icon: 'fa-star' },
+    { key: 'queries', label: 'Queries & Contact', icon: 'fa-clipboard-question' },
+];
+
+const MOBILE_GRID = [
+    { key: 'Pending', label: 'Pending Payment', icon: 'fa-wallet', color: 'text-blue-500' },
+    { key: 'Delivered', label: 'Delivered', icon: 'fa-truck-fast', color: 'text-yellow-500' },
+    { key: 'Processing', label: 'Processing', icon: 'fa-arrows-rotate', color: 'text-orange-500' },
+    { key: 'Cancelled', label: 'Cancelled', icon: 'fa-ban', color: 'text-green-500' },
+    { key: 'Wishlist', label: 'Wishlist', icon: 'fa-heart', color: 'text-red-500' },
+    { key: 'Customer Care', label: 'Customer Care', icon: 'fa-headset', color: 'text-purple-500' },
 ];
 
 export default function ProfilePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center"><div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>}>
+            <ProfileContent />
+        </Suspense>
+    );
+}
+
+function ProfileContent() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState<TabKey>('details');
+    const [activeTab, setActiveTab] = useState<TabKey>('home');
+    const [mobileOrderFilter, setMobileOrderFilter] = useState<string>('All');
 
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState({ phone: '', address: '' });
@@ -82,7 +98,6 @@ export default function ProfilePage() {
     const [orders, setOrders] = useState<any[]>([]);
     const [tabLoading, setTabLoading] = useState(false);
 
-    // Reviews state
     const [reviewForm, setReviewForm] = useState({ name: '', city: '', state: '', description: '', rating: 5 });
     const [reviewStatus, setReviewStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -106,7 +121,7 @@ export default function ProfilePage() {
     useEffect(() => {
         if (activeTab === 'wishlist') fetchWishlist();
         else if (activeTab === 'queries') fetchQueries();
-        else if (activeTab === 'orders') fetchOrders();
+        else if (activeTab === 'orders' || activeTab === 'home') fetchOrders();
     }, [activeTab]);
 
     const fetchWishlist = async () => {
@@ -217,20 +232,28 @@ export default function ProfilePage() {
     };
 
     if (loading) return (
-        <div className="min-h-screen bg-[#f8f9fa] py-8 px-4">
-            <div className="max-w-3xl mx-auto space-y-4">
-                <div className="h-32 bg-gray-200 rounded-2xl animate-pulse" />
-                <div className="h-12 bg-gray-100 rounded-full w-full animate-pulse" />
-                <div className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
-            </div>
+        <div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center">
+            <div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
     const initials = profile?.username.charAt(0).toUpperCase() || '?';
+    const currentDesktopTab = activeTab === 'home' ? 'details' : activeTab;
+
+    // Filter logic for Mobile Order views
+    let displayedOrders = orders;
+    if (activeTab === 'orders' && mobileOrderFilter !== 'All') {
+        displayedOrders = orders.filter((o: any) => {
+            if (mobileOrderFilter === 'Pending') return o.status === 'Pending' || o.status === 'Order placed';
+            if (mobileOrderFilter === 'Processing') return o.status === 'Accepted' || o.status === 'Dispatched' || o.status === 'Shipped';
+            if (mobileOrderFilter === 'Delivered') return o.status === 'Delivered';
+            if (mobileOrderFilter === 'Cancelled') return o.status === 'Cancelled';
+            return true;
+        });
+    }
 
     return (
-        <div className="min-h-screen bg-[#f8f9fa]">
-
+        <div className="min-h-screen bg-[#f8f9fa] font-sans">
             {/* ── Order Success Modal ── */}
             {showSuccessModal && successOrderId && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -239,7 +262,6 @@ export default function ProfilePage() {
                             <i className="fa-solid fa-circle-check text-4xl text-green-500" />
                         </div>
                         <h2 className="text-2xl font-black text-gray-900 mb-2">Order Placed! 🎉</h2>
-                        <p className="text-gray-500 text-sm mb-1">Your order has been confirmed.</p>
                         <code className="block text-xs bg-gray-100 text-[#0c5c2b] font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
                             #{successOrderId.slice(-10).toUpperCase()}
                         </code>
@@ -257,360 +279,458 @@ export default function ProfilePage() {
                 </div>
             )}
 
-            {/* ── Profile Header Card ── */}
-            <div className="bg-[#0c5c2b] text-white rounded-2xl p-5 md:p-7 flex items-center gap-4 relative overflow-hidden shadow-lg">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, #fff 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
-                {/* Avatar */}
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-3xl md:text-4xl font-black z-10 shrink-0 border-2 border-white/30">
-                    {initials}
-                </div>
-                <div className="z-10 flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <h1 className="text-xl md:text-2xl font-black truncate">{profile?.username}</h1>
-                        {profile?.role === 'admin' && (
-                            <span className="bg-[#FBB21B] text-black text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Admin</span>
-                        )}
-                    </div>
-                    <p className="text-green-200 text-sm mt-0.5 truncate">{profile?.email}</p>
-                    {profile?.phone && <p className="text-green-100 text-xs mt-0.5"><i className="fa-solid fa-phone mr-1.5" />{profile.phone}</p>}
-                </div>
-                <button
-                    onClick={() => { dispatch(logout()); router.push('/'); }}
-                    className="z-10 shrink-0 flex items-center gap-1.5 bg-white/15 hover:bg-white/25 text-white text-sm font-semibold px-3 py-2 rounded-xl transition-all border border-white/20"
-                >
-                    <i className="fa-solid fa-arrow-right-from-bracket" />
-                    <span className="hidden sm:inline">Logout</span>
-                </button>
-            </div>
+            {/* ── DESKTOP VIEW ── */}
+            <div className="hidden md:flex max-w-[1200px] mx-auto pt-10 pb-20 px-6 gap-8 items-start">
 
-            {/* ── Tab Bar ── */}
-            <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide bg-white rounded-2xl p-1.5 shadow-sm">
-                {TABS.map(tab => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-semibold text-sm whitespace-nowrap transition-all flex-shrink-0 ${activeTab === tab.key
-                            ? 'bg-[#0c5c2b] text-white shadow-md'
-                            : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
-                            }`}
-                    >
-                        <i className={`fa-solid ${tab.icon} text-xs`} />
-                        {tab.label}
-                    </button>
-                ))}
-            </div>
+                {/* Desktop Sidebar */}
+                <div className="w-72 shrink-0 flex flex-col gap-6">
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-            {/* ── Tab Content ── */}
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-
-                {/* ── ACCOUNT DETAILS ── */}
-                {activeTab === 'details' && (
-                    <div className="p-5 md:p-7">
-                        <div className="flex justify-between items-center mb-5">
-                            <h2 className="text-lg font-bold text-gray-800">Personal Information</h2>
-                            {!isEditing && (
-                                <button onClick={() => setIsEditing(true)} className="text-sm text-[#0c5c2b] font-bold flex items-center gap-1.5 hover:underline">
-                                    <i className="fa-solid fa-pen" /> Edit
-                                </button>
-                            )}
+                        {/* Profile Info Card */}
+                        <div className="p-6 border-b border-gray-100 flex items-center gap-4">
+                            <div className="w-16 h-16 bg-[#0c5c2b]/10 rounded-full flex items-center justify-center text-2xl font-black text-[#0c5c2b] relative">
+                                {initials}
+                                <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow border border-gray-100 cursor-pointer">
+                                    <i className="fa-solid fa-camera text-[10px] text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div className="overflow-hidden">
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hello</p>
+                                <h2 className="text-base font-black text-gray-800 line-clamp-1">{profile?.username}</h2>
+                            </div>
                         </div>
 
-                        {!isEditing ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {[
-                                    { label: 'Username', value: profile?.username, icon: 'fa-user' },
-                                    { label: 'Email', value: profile?.email, icon: 'fa-envelope' },
-                                    { label: 'Phone', value: profile?.phone || 'Not provided', icon: 'fa-phone' },
-                                    { label: 'Address', value: profile?.address || 'Not provided', icon: 'fa-location-dot' },
-                                ].map(item => (
-                                    <div key={item.label} className="bg-gray-50 rounded-xl p-4">
-                                        <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                                            <i className={`fa-solid ${item.icon}`} /> {item.label}
-                                        </p>
-                                        <p className="text-gray-800 font-medium text-sm break-words">{item.value}</p>
+                        {/* Sidebar Navigation */}
+                        <div className="flex flex-col p-3 gap-1">
+                            {SIDEBAR_TABS.map(tab => (
+                                <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOrderFilter('All'); }}
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-[#0c5c2b] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
+                                    <i className={`fa-solid ${tab.icon} w-5 text-center ${currentDesktopTab === tab.key ? 'text-white' : 'text-gray-400'}`}></i>
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button onClick={() => { dispatch(logout()); router.push('/'); }} className="bg-white rounded-2xl px-4 py-3.5 border border-gray-100 shadow-sm flex items-center gap-3 font-bold text-sm text-gray-500 hover:bg-gray-50 transition-colors">
+                        <i className="fa-solid fa-right-from-bracket w-5 text-center text-gray-400"></i> Logout
+                    </button>
+                </div>
+
+                {/* Desktop Content Panel */}
+                <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 min-h-[600px]">
+                    {currentDesktopTab === 'details' && (
+                        <div className="animate-in fade-in duration-300">
+                            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
+                                <h2 className="text-xl font-black text-gray-800">Personal Information</h2>
+                                {!isEditing && (
+                                    <button onClick={() => setIsEditing(true)} className="text-sm text-[#0c5c2b] font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
+                                        <i className="fa-solid fa-pen-to-square" /> Change Information
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="flex gap-10">
+                                {/* Profile Picture Area */}
+                                <div className="w-32 h-32 bg-[#FBB21B] rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg relative border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
+                                    {initials}
+                                    <div className="absolute right-0 bottom-2 bg-white p-2 rounded-full shadow border border-gray-100 cursor-pointer">
+                                        <i className="fa-solid fa-camera text-gray-500 text-xs"></i>
                                     </div>
+                                </div>
+
+                                {/* Info Form/Display Area */}
+                                <div className="flex-1">
+                                    {!isEditing ? (
+                                        <div className="grid grid-cols-2 gap-y-8 gap-x-8">
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-800 mb-2">Name</p>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600">{profile?.username}</div>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-800 mb-2">Role</p>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 capitalize">{profile?.role}</div>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-800 mb-2">Phone Number</p>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 flex items-center gap-2">
+                                                    <span className="text-gray-400">🇮🇳 +91</span> {profile?.phone || 'Missing'}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-bold text-gray-800 mb-2">Email</p>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 truncate">{profile?.email}</div>
+                                            </div>
+                                            <div className="col-span-2">
+                                                <p className="text-xs font-bold text-gray-800 mb-2">Address</p>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 min-h-[80px]">{profile?.address || 'Not provided. Update to receive orders.'}</div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleUpdateProfile} className="space-y-6">
+                                            <div className="grid grid-cols-2 gap-y-6 gap-x-6">
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
+                                                    <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm transition-colors font-semibold" placeholder="10-digit mobile number" />
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <label className="text-xs font-bold text-gray-800">Complete Address</label>
+                                                        <button type="button" onClick={handleGetLocation} className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest"><i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate</button>
+                                                    </div>
+                                                    <textarea rows={4} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm transition-colors resize-none font-semibold" placeholder="Enter flat/house no, street, area, city, pincode" />
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <button type="submit" className="px-8 py-3 rounded-xl font-bold text-white bg-[#0c5c2b] shadow-lg shadow-[#0c5c2b]/20 hover:-translate-y-0.5 transition-transform text-sm">Save Complete Info</button>
+                                                <button type="button" onClick={() => setIsEditing(false)} className="px-8 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm">Cancel</button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {currentDesktopTab === 'orders' && (
+                        <div className="animate-in slide-in-from-right-4 duration-300">
+                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Orders</h2>
+                            <OrderListRenderer orders={orders} tabLoading={tabLoading} cancelOrder={cancelOrder} />
+                        </div>
+                    )}
+                    {currentDesktopTab === 'wishlist' && (
+                        <div className="animate-in slide-in-from-right-4 duration-300">
+                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Wishlist</h2>
+                            <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} />
+                        </div>
+                    )}
+                    {currentDesktopTab === 'queries' && (
+                        <div className="animate-in slide-in-from-right-4 duration-300">
+                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Queries & Factory Visits</h2>
+                            <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} />
+                        </div>
+                    )}
+                    {currentDesktopTab === 'reviews' && (
+                        <div className="animate-in slide-in-from-right-4 duration-300 max-w-2xl">
+                            <h2 className="text-xl font-black text-gray-800 mb-2">My Reviews</h2>
+                            <p className="text-sm text-gray-400 mb-6 border-b border-gray-100 pb-4">Share your experience with Crunchy Cashews on our homepage.</p>
+                            <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} />
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* ── MOBILE VIEW ── */}
+            <div className="md:hidden">
+                {activeTab === 'home' ? (
+                    <div className="animate-in fade-in duration-300 bg-[#f8f9fa] min-h-screen">
+                        {/* Wavy Header Segment */}
+                        <div className="relative bg-[#bd1547] text-white pt-8 pb-[140px] shadow-sm">
+                            {/* The color in Image 3 header looks like a vibrant pinkish red, but we strictly use #0c5c2b or the requested color scheme. Let's use a nice gradient green. */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#0c5c2b] to-green-600"></div>
+                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+
+                            <div className="relative z-10 flex justify-between items-center px-6">
+                                <button onClick={() => router.push('/')} className="w-10 h-10 flex items-center justify-center text-lg active:scale-95 transition-transform"><i className="fa-solid fa-chevron-left" /></button>
+                                <span className="text-base font-bold tracking-widest uppercase">Profile</span>
+                                <div className="w-10"></div>
+                            </div>
+
+                            {/* Wavy bottom SVG */}
+                            <svg className="absolute bottom-0 left-0 w-full translate-y-[1px] text-[#f8f9fa]" viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '70px' }}>
+                                <path fill="currentColor" fillOpacity="1" d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,106.7C672,96,768,128,864,154.7C960,181,1056,203,1152,181.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                            </svg>
+                        </div>
+
+                        {/* Avatar */}
+                        <div className="flex flex-col items-center -mt-[90px] relative z-20 px-6">
+                            <div className="w-[100px] h-[100px] bg-[#FBB21B] rounded-full flex items-center justify-center text-4xl font-black text-white border-4 border-[#f8f9fa] shadow-xl shadow-gray-200">
+                                {initials}
+                                <div className="absolute bottom-0 right-1 bg-white p-1.5 rounded-full shadow border border-gray-100 flex items-center justify-center text-[#0c5c2b]">
+                                    <i className="fa-solid fa-camera text-[10px]" />
+                                </div>
+                            </div>
+                            <h2 className="text-2xl font-black text-gray-800 mt-3">{profile?.username}</h2>
+                            <p className="text-xs font-semibold text-gray-400 capitalize">{profile?.role}</p>
+                        </div>
+
+                        {/* Mobile Grid Section */}
+                        <div className="px-6 mt-8 mb-6">
+                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_#FBB21B] inline-block -ml-1 pr-2">My Orders</h3>
+                            <div className="grid grid-cols-3 gap-y-8 gap-x-4">
+                                {MOBILE_GRID.map(item => (
+                                    <button key={item.key} onClick={() => {
+                                        if (item.key === 'Wishlist') setActiveTab('wishlist');
+                                        else if (item.key === 'Customer Care') setActiveTab('queries');
+                                        else {
+                                            setActiveTab('orders');
+                                            let filterStatus = item.key;
+                                            if (item.key === 'Processing') filterStatus = 'Processing';
+                                            setMobileOrderFilter(filterStatus);
+                                        }
+                                    }} className="flex flex-col items-center gap-2 group">
+                                        <div className="w-14 h-14 bg-white rounded-[20px] flex items-center justify-center shadow-[0_8px_16px_-4px_rgba(0,0,0,0.05)] border border-gray-100 group-active:scale-95 transition-transform" style={{ color: item.color || '#000' }}>
+                                            <i className={`fa-solid ${item.icon} text-2xl group-active:scale-110 transition-transform`} />
+                                        </div>
+                                        <span className="text-[10px] font-bold text-gray-600 text-center leading-tight whitespace-pre-wrap">{item.label}</span>
+                                    </button>
                                 ))}
                             </div>
-                        ) : (
-                            <form onSubmit={handleUpdateProfile} className="space-y-4">
-                                <div>
-                                    <label className="text-sm font-bold text-gray-700 block mb-1.5">Phone Number</label>
-                                    <input
-                                        type="text" value={editForm.phone}
-                                        onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
-                                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none text-sm transition-colors"
-                                        placeholder="+91 00000 00000"
-                                    />
-                                </div>
-                                <div>
-                                    <div className="flex justify-between items-center mb-1.5">
-                                        <label className="text-sm font-bold text-gray-700">Delivery Address</label>
-                                        <button type="button" onClick={handleGetLocation} disabled={locating}
-                                            className="text-xs bg-[#FBB21B] text-black font-bold px-3 py-1 rounded-full hover:bg-yellow-400 transition-colors disabled:opacity-50">
-                                            {locating ? 'Locating...' : '📍 Use Location'}
-                                        </button>
-                                    </div>
-                                    <textarea
-                                        rows={3} value={editForm.address}
-                                        onChange={e => setEditForm({ ...editForm, address: e.target.value })}
-                                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none resize-none text-sm transition-colors"
-                                        placeholder="Enter your full delivery address"
-                                    />
-                                </div>
-                                <div className="flex gap-3 pt-1">
-                                    <button type="button" onClick={() => setIsEditing(false)}
-                                        className="flex-1 py-2.5 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm transition-colors">Cancel</button>
-                                    <button type="submit"
-                                        className="flex-1 py-2.5 rounded-xl font-bold text-black bg-[#FBB21B] hover:bg-yellow-400 text-sm transition-colors shadow-sm">Save Changes</button>
-                                </div>
-                            </form>
-                        )}
-                    </div>
-                )}
+                        </div>
 
-                {/* ── ORDERS ── */}
-                {activeTab === 'orders' && (
-                    <div className="p-5 md:p-7">
-                        <h2 className="text-lg font-bold text-gray-800 mb-5">My Orders</h2>
-                        {tabLoading ? (
-                            <div className="space-y-3">
-                                {[1, 2].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}
-                            </div>
-                        ) : orders.length === 0 ? (
-                            <div className="text-center py-14">
-                                <i className="fa-solid fa-box-open text-5xl text-gray-200 mb-4 block" />
-                                <h3 className="text-lg font-bold text-gray-700 mb-1">No Orders Yet</h3>
-                                <p className="text-gray-400 text-sm mb-5">Place your first order from the shop!</p>
-                                <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full hover:bg-green-800 transition inline-block text-sm">
-                                    Shop Now
-                                </Link>
-                            </div>
-                        ) : (
-                            <div className="space-y-3">
-                                {orders.map((order: any) => {
-                                    const sc = STATUS_COLORS[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
-                                    const currentIdx = STATUS_STEPS.indexOf(order.status ?? 'Pending');
-                                    const isCancelled = order.status === 'Cancelled';
-                                    return (
-                                        <div key={order._id} className="border border-gray-100 rounded-2xl overflow-hidden">
-                                            {/* Order header */}
-                                            <div className="flex items-center justify-between px-5 py-3.5 bg-gray-50 border-b border-gray-100">
-                                                <div>
-                                                    <p className="text-[11px] text-gray-400 font-medium">Order ID</p>
-                                                    <p className="font-bold font-mono text-sm text-gray-800">{order._id.slice(-8).toUpperCase()}</p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="text-[11px] text-gray-400">{order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}</p>
-                                                    <p className="font-black text-base text-[#0c5c2b]">₹{order.total_amount?.toLocaleString('en-IN')}</p>
-                                                </div>
-                                            </div>
-                                            <div className="px-5 py-4 space-y-3">
-                                                {/* Status + payment */}
-                                                <div className="flex flex-wrap items-center gap-2">
-                                                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${sc}`}>{order.status || 'Processing'}</span>
-                                                    <span className="text-xs text-gray-400">{order.payment_mode} · {order.payment_status}</span>
-                                                    <Link href={`/track?order=${order._id}`}
-                                                        className="ml-auto text-xs font-bold text-[#0c5c2b] border border-[#0c5c2b] px-3 py-1 rounded-full hover:bg-[#0c5c2b] hover:text-white transition-colors">
-                                                        <i className="fa-solid fa-truck-fast mr-1" /> Track
-                                                    </Link>
-                                                </div>
-                                                {/* Progress stepper */}
-                                                {!isCancelled && (
-                                                    <div className="flex items-center gap-0 overflow-x-auto">
-                                                        {STATUS_STEPS.map((s, idx) => {
-                                                            const done = idx <= currentIdx;
-                                                            const isLast = idx === STATUS_STEPS.length - 1;
-                                                            return (
-                                                                <React.Fragment key={s}>
-                                                                    <div className="flex flex-col items-center shrink-0">
-                                                                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${done ? 'bg-[#0c5c2b] text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                                                            {done ? <i className="fa-solid fa-check" /> : idx + 1}
-                                                                        </div>
-                                                                        <p className={`text-[9px] mt-0.5 font-medium text-center leading-none ${done ? 'text-[#0c5c2b]' : 'text-gray-300'}`}>{s}</p>
-                                                                    </div>
-                                                                    {!isLast && <div className={`flex-1 h-0.5 mx-0.5 mb-3 ${idx < currentIdx ? 'bg-[#0c5c2b]' : 'bg-gray-100'}`} />}
-                                                                </React.Fragment>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                )}
-                                                {/* Items breakdown */}
-                                                {order.items?.length > 0 && (
-                                                    <div className="bg-gray-50 rounded-xl p-3 space-y-2">
-                                                        {order.items.map((it: any, idx: number) => (
-                                                            <div key={idx} className="flex items-center justify-between text-xs">
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="w-5 h-5 bg-[#0c5c2b]/10 text-[#0c5c2b] rounded font-bold flex items-center justify-center text-[10px]">{idx + 1}</span>
-                                                                    <span className="font-semibold text-gray-700">{it.name || it.product_name || 'Item'}</span>
-                                                                </div>
-                                                                <div className="flex items-center gap-3 text-gray-500">
-                                                                    <span>×{it.quantity}</span>
-                                                                    <span className="font-semibold text-gray-800">₹{(it.price * it.quantity).toLocaleString('en-IN')}</span>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                                {/* Cancel button (only for Pending/Accepted) */}
-                                                {!isCancelled && (order.status === 'Pending' || order.status === 'Accepted' || order.status === 'Order placed') && (
-                                                    <button
-                                                        onClick={() => cancelOrder(order._id)}
-                                                        className="text-xs font-bold text-red-500 border border-red-200 px-3 py-1.5 rounded-full hover:bg-red-50 transition-colors"
-                                                    >
-                                                        <i className="fa-solid fa-xmark mr-1" /> Cancel Order
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-                    </div>
-                )}
+                        {/* List Actions */}
+                        <div className="px-6 space-y-3 pb-10">
+                            <button onClick={() => setActiveTab('details')} className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
+                                <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"><i className="fa-solid fa-user text-gray-400" /></div>
+                                    Edit Profile
+                                </span>
+                                <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+                            </button>
+                            <button onClick={() => setActiveTab('details')} className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
+                                <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"><i className="fa-solid fa-location-dot text-gray-400" /></div>
+                                    Shipping Address
+                                </span>
+                                <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+                            </button>
 
-                {/* ── WISHLIST ── */}
-                {activeTab === 'wishlist' && (
-                    <div className="p-5 md:p-7">
-                        <h2 className="text-lg font-bold text-gray-800 mb-5">My Wishlist</h2>
-                        {tabLoading ? (
-                            <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>
-                        ) : wishlistProducts.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                {wishlistProducts.map(p => <ProductCard key={p.id || p._id} product={p} />)}
-                            </div>
-                        ) : (
-                            <div className="text-center py-12">
-                                <i className="fa-solid fa-heart-crack text-5xl text-gray-200 mb-5 block" />
-                                <h3 className="text-lg font-bold text-gray-700 mb-1">Wishlist is Empty</h3>
-                                <p className="text-gray-400 text-sm mb-5">Save your favorite cashews for later!</p>
-                                <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full hover:bg-green-800 transition text-sm inline-block">Discover Products</Link>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* ── REVIEWS ── */}
-                {activeTab === 'reviews' && (
-                    <div className="p-5 md:p-7">
-                        <h2 className="text-lg font-bold text-gray-800 mb-2">Write a Review</h2>
-                        <p className="text-sm text-gray-400 mb-5">Share your experience with Crunchy Cashews — your review will appear on the homepage after approval.</p>
-
-                        {reviewStatus === 'success' ? (
-                            <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
-                                <i className="fa-solid fa-circle-check text-4xl text-green-500 mb-3 block" />
-                                <p className="font-bold text-green-800 text-lg">Review Submitted!</p>
-                                <p className="text-green-600 text-sm mt-1">It will be visible on the homepage once approved.</p>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleReviewSubmit} className="space-y-4">
-                                {/* Star Rating */}
-                                <div>
-                                    <label className="text-sm font-bold text-gray-700 block mb-2">Your Rating</label>
-                                    <StarPicker value={reviewForm.rating} onChange={v => setReviewForm(r => ({ ...r, rating: v }))} />
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                    <div>
-                                        <label className="text-sm font-bold text-gray-700 block mb-1.5">Name</label>
-                                        <input required type="text" value={reviewForm.name}
-                                            onChange={e => setReviewForm(r => ({ ...r, name: e.target.value }))}
-                                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none text-sm" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-bold text-gray-700 block mb-1.5">City</label>
-                                        <input required type="text" value={reviewForm.city}
-                                            onChange={e => setReviewForm(r => ({ ...r, city: e.target.value }))}
-                                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none text-sm" />
-                                    </div>
-                                    <div>
-                                        <label className="text-sm font-bold text-gray-700 block mb-1.5">State</label>
-                                        <input required type="text" value={reviewForm.state}
-                                            onChange={e => setReviewForm(r => ({ ...r, state: e.target.value }))}
-                                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none text-sm" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="text-sm font-bold text-gray-700 block mb-1.5">Your Review</label>
-                                    <textarea required rows={4} value={reviewForm.description}
-                                        onChange={e => setReviewForm(r => ({ ...r, description: e.target.value }))}
-                                        placeholder="Tell us about your experience with our cashews..."
-                                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-2.5 px-4 focus:border-[#0c5c2b] outline-none resize-none text-sm transition-colors" />
-                                </div>
-                                {reviewStatus === 'error' && (
-                                    <p className="text-red-500 text-sm"><i className="fa-solid fa-circle-exclamation mr-1" /> Something went wrong. Please try again.</p>
-                                )}
-                                <button type="submit" disabled={reviewStatus === 'loading'}
-                                    className="w-full bg-[#0c5c2b] text-white py-3 rounded-xl font-bold hover:bg-green-800 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60">
-                                    {reviewStatus === 'loading' ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</> : <><i className="fa-solid fa-paper-plane" /> Submit Review</>}
+                            <div className="pt-6 pb-6 flex justify-center mt-4">
+                                <button onClick={() => { dispatch(logout()); router.push('/'); }} className="flex items-center gap-2 text-gray-400 font-bold text-sm bg-white border border-gray-200 px-6 py-2.5 rounded-full active:bg-gray-50 transition-colors">
+                                    <i className="fa-solid fa-right-from-bracket"></i> Logout
                                 </button>
-                            </form>
-                        )}
+                            </div>
+                        </div>
                     </div>
-                )}
-
-                {/* ── QUERIES ── */}
-                {activeTab === 'queries' && (
-                    <div className="p-5 md:p-7">
-                        <h2 className="text-lg font-bold text-gray-800 mb-5">My Queries & Requests</h2>
-                        {tabLoading ? (
-                            <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>
-                        ) : enquiries.length === 0 && visits.length === 0 ? (
-                            <div className="text-center py-12">
-                                <i className="fa-solid fa-file-circle-question text-5xl text-gray-200 mb-5 block" />
-                                <h3 className="text-lg font-bold text-gray-700 mb-1">No Active Queries</h3>
-                                <p className="text-gray-400 text-sm mb-5">You have no pending queries or visit requests.</p>
-                                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                    <Link href="/contact" className="bg-gray-800 text-white font-bold px-6 py-2.5 rounded-full hover:bg-gray-700 transition text-sm">Contact Us</Link>
-                                    <Link href="/bulk" className="bg-[#FBB21B] text-black font-bold px-6 py-2.5 rounded-full hover:bg-yellow-400 transition text-sm">Wholesale Inquiry</Link>
-                                </div>
+                ) : (
+                    <div className="animate-in slide-in-from-right-8 duration-300 bg-white min-h-screen">
+                        {/* Detail View Header */}
+                        <div className="flex items-center justify-between bg-white px-5 py-4 sticky top-0 z-30 shadow-sm border-b border-gray-100">
+                            <div className="flex items-center gap-4">
+                                <button onClick={() => setActiveTab('home')} className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
+                                    <i className="fa-solid fa-chevron-left text-sm"></i>
+                                </button>
+                                <h2 className="text-xl font-black text-gray-800 tracking-tight">
+                                    {activeTab === 'orders' ? 'My Orders' : SIDEBAR_TABS.find(t => t.key === activeTab)?.label || 'Profile Info'}
+                                </h2>
                             </div>
-                        ) : (
-                            <div className="space-y-6">
-                                {enquiries.length > 0 && (
-                                    <div>
-                                        <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center gap-2"><i className="fa-solid fa-envelope text-[#0c5c2b]" /> Enquiries</h3>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            {enquiries.map((enq, i) => (
-                                                <div key={i} className="border border-gray-100 rounded-xl p-4 bg-gray-50">
-                                                    <div className="flex justify-between items-start mb-3">
-                                                        <div className="text-xs text-gray-400">{new Date(enq.created_at).toLocaleDateString()}</div>
-                                                        <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${enq.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{enq.status || 'Pending'}</span>
-                                                    </div>
-                                                    <h4 className="font-bold text-sm mb-1 line-clamp-1">{enq.subject}</h4>
-                                                    <p className="text-xs text-gray-500 line-clamp-2 italic">"{enq.message}"</p>
-                                                    {enq.admin_notes && (
-                                                        <div className="mt-3 p-3 bg-white border-l-2 border-[#0c5c2b] rounded-r-lg">
-                                                            <span className="font-bold text-[10px] text-gray-500 uppercase block mb-0.5">Admin Reply:</span>
-                                                            <p className="text-xs text-gray-700">{enq.admin_notes}</p>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                                {visits.length > 0 && (
-                                    <div>
-                                        <h3 className="text-sm font-bold text-gray-600 mb-3 flex items-center gap-2"><i className="fa-solid fa-industry text-[#0c5c2b]" /> Factory Visits</h3>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                            {visits.map((vis, i) => (
-                                                <div key={i} className="border border-gray-100 rounded-xl p-4 bg-gray-50">
-                                                    <div className="flex justify-between mb-3">
-                                                        <p className="text-xs font-bold text-[#0c5c2b]">Date: {vis.preferred_date}</p>
-                                                        <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${vis.status === 'Approved' ? 'bg-green-100 text-green-700' : vis.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{vis.status || 'Pending'}</span>
-                                                    </div>
-                                                    <p className="text-xs text-gray-600"><strong>Attendees:</strong> {vis.number_of_people}</p>
-                                                    <p className="text-xs text-gray-500 mt-1 italic">"{vis.purpose_of_visit}"</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                            <button className="text-gray-400"><i className="fa-solid fa-magnifying-glass font-bold" /></button>
+                        </div>
+
+                        {/* Mobile Order Tab Filters */}
+                        {activeTab === 'orders' && (
+                            <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky top-[65px] z-20 -mx-1">
+                                {['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'].map(f => (
+                                    <button key={f} onClick={() => setMobileOrderFilter(f)} className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                        {f}
+                                    </button>
+                                ))}
                             </div>
                         )}
+
+                        {/* Content Area */}
+                        <div className="p-5 bg-white min-h-[calc(100vh-65px)] pb-10">
+                            {activeTab === 'details' && (
+                                <div className="space-y-6">
+                                    {!isEditing ? (
+                                        <div className="space-y-6 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                            <div className="flex justify-between items-center pb-4 border-b border-gray-50">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl font-black text-gray-500">{initials}</div>
+                                                    <div>
+                                                        <h3 className="font-black text-sm text-gray-800">{profile?.username}</h3>
+                                                        <p className="text-[10px] text-gray-400 font-bold mt-0.5">{profile?.email}</p>
+                                                    </div>
+                                                </div>
+                                                <button onClick={() => setIsEditing(true)} className="text-[#0c5c2b] bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i className="fa-solid fa-pen text-xs" /></button>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Phone</p>
+                                                <p className="text-sm font-semibold text-gray-800">{profile?.phone || 'Not provided'}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Address</p>
+                                                <p className="text-sm font-semibold text-gray-800">{profile?.address || 'Not provided'}</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleUpdateProfile} className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                            <div>
+                                                <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Phone</label>
+                                                <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-[#0c5c2b]" />
+                                            </div>
+                                            <div>
+                                                <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Address</label>
+                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-[#0c5c2b] resize-none" />
+                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold text-[#0c5c2b] uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5"><i className="fa-solid fa-location-crosshairs"></i> Auto Locate</button>
+                                            </div>
+                                            <div className="flex gap-3 pt-2">
+                                                <button type="submit" className="flex-1 bg-[#0c5c2b] text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-[#0c5c2b]/20">Save</button>
+                                                <button type="button" onClick={() => setIsEditing(false)} className="px-6 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl">Cancel</button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
+                            )}
+                            {activeTab === 'orders' && <OrderListRenderer orders={displayedOrders} tabLoading={tabLoading} cancelOrder={cancelOrder} isMobile />}
+                            {activeTab === 'wishlist' && <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} isMobile />}
+                            {activeTab === 'queries' && <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} isMobile />}
+                            {activeTab === 'reviews' && <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} isMobile />}
+                        </div>
                     </div>
                 )}
             </div>
         </div>
     );
 }
+
+// ----------------- RENDER SUBCOMPONENTS -----------------
+
+function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
+    if (tabLoading) return <div className="space-y-4">{[1, 2].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}</div>;
+    if (orders.length === 0) return (
+        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <i className="fa-solid fa-box-open text-4xl text-gray-200 mb-4 block" />
+            <h3 className="text-lg font-black text-gray-800 mb-1">No Orders Yet</h3>
+            <p className="text-gray-400 text-sm mb-6">You haven't placed any orders.</p>
+            <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-[#0c5c2b]/20 hover:scale-105 transition-transform">Explore Store</Link>
+        </div>
+    );
+
+    return (
+        <div className={`space-y-4 ${isMobile ? '' : 'grid grid-cols-1 gap-4'}`}>
+            {orders.map((order: any) => {
+                const sc = STATUS_COLORS[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
+                return (
+                    <div key={order._id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm shadow-gray-100/50 hover:shadow-md transition-shadow">
+                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 flex-wrap gap-2">
+                            <div className="flex items-center gap-2 font-black text-gray-800 text-sm">
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order No:</span> {order._id.slice(-8).toUpperCase()}
+                            </div>
+                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">{order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}</span>
+                        </div>
+                        <div className="px-5 py-4 space-y-3">
+                            <div className="flex items-center justify-between text-xs">
+                                <span className="text-gray-500 font-semibold">Tracking number: <span className="font-bold text-gray-800 ml-1">UW{order._id.slice(0, 10).toUpperCase()}</span></span>
+                            </div>
+                            <div className="flex items-center justify-between text-xs font-semibold">
+                                <span className="text-gray-500">Quantity: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
+                                <span className="text-gray-500">Total Amount: <span className="font-bold text-[-#0c5c2b] ml-1">₹{order.total_amount?.toLocaleString('en-IN')}</span></span>
+                            </div>
+                            <div className="flex items-center justify-between pt-3">
+                                <Link href={`/track?order=${order._id}`} className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
+                                    Details
+                                </Link>
+                                <span className={`text-xs font-bold ${order.status === 'Delivered' ? 'text-green-500' : 'text-[#0c5c2b]'}`}>{order.status}</span>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
+    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>;
+    if (wishlistProducts.length === 0) return (
+        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <i className="fa-solid fa-heart-crack text-4xl text-gray-200 mb-5 block" />
+            <h3 className="text-lg font-black text-gray-800 mb-1">Wishlist is Empty</h3>
+            <p className="text-gray-400 text-sm mb-6">Save your favorite items here.</p>
+            <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-[#0c5c2b]/20">Start Exploring</Link>
+        </div>
+    );
+    return (
+        <div className={`grid grid-cols-2 gap-4 ${isMobile ? '' : 'md:grid-cols-3 xl:grid-cols-4'}`}>
+            {wishlistProducts.map((p: any) => <ProductCard key={p.id || p._id} product={p} />)}
+        </div>
+    );
+}
+
+function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
+    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>;
+    if (enquiries.length === 0 && visits.length === 0) return (
+        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
+            <i className="fa-solid fa-file-circle-question text-4xl text-gray-200 mb-5 block" />
+            <h3 className="text-lg font-black text-gray-800 mb-1">No Active Queries</h3>
+            <p className="text-gray-400 text-sm mb-6">You have no pending tickets or visit requests.</p>
+            <div className="flex justify-center gap-3">
+                <Link href="/contact" className="bg-gray-800 text-white font-bold px-6 py-2.5 rounded-full text-sm">Contact Us</Link>
+            </div>
+        </div>
+    );
+    return (
+        <div className="space-y-6">
+            {enquiries.length > 0 && (
+                <div>
+                    <h3 className="text-[10px] font-bold tracking-widest text-[#0c5c2b] uppercase mb-3 px-2 border-l-2 border-[#0c5c2b]">Enquiries</h3>
+                    <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                        {enquiries.map((enq: any, i: any) => (
+                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+                                <div>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">{enq.subject}</h4>
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{enq.status || 'Pending'}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
+                                </div>
+                                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{new Date(enq.created_at).toLocaleDateString()}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            {visits.length > 0 && (
+                <div>
+                    <h3 className="text-[10px] font-bold tracking-widest text-[#0c5c2b] uppercase mb-3 px-2 border-l-2 border-[#0c5c2b]">Visits</h3>
+                    <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                        {visits.map((vis: any, i: any) => (
+                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow">
+                                <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
+                                    <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">{vis.preferred_date}</p>
+                                    <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' ? 'bg-green-100 text-green-700' : vis.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{vis.status || 'Pending'}</span>
+                                </div>
+                                <p className="text-xs text-gray-600 mb-1 font-semibold"><span className="text-gray-400">Attendees:</span> {vis.number_of_people}</p>
+                                <p className="text-xs text-gray-500 italic">"{vis.purpose_of_visit}"</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleReviewSubmit, isMobile }: any) {
+    if (reviewStatus === 'success') return (
+        <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center animate-in zoom-in duration-300">
+            <i className="fa-solid fa-circle-check text-4xl text-green-500 mb-3 block" />
+            <p className="font-black text-green-800 text-lg">Thank You!</p>
+            <p className="text-green-600 text-sm mt-1">Your review helps us improve.</p>
+        </div>
+    );
+    return (
+        <form onSubmit={handleReviewSubmit} className={`space-y-5 ${isMobile ? 'bg-white rounded-2xl p-5 shadow-sm border border-gray-100' : ''}`}>
+            <div>
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Rating</label>
+                <StarPicker value={reviewForm.rating} onChange={(v: any) => setReviewForm((r: any) => ({ ...r, rating: v }))} />
+            </div>
+            <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label><input required type="text" value={reviewForm.name} onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
+                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label><input required type="text" value={reviewForm.city} onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
+                <div className={isMobile ? '' : 'col-span-2'}><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label><input required type="text" value={reviewForm.state} onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
+            </div>
+            <div>
+                <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Your Review</label>
+                <textarea required rows={4} value={reviewForm.description} onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none resize-none text-sm font-semibold" placeholder="Share your experience..." />
+            </div>
+            {reviewStatus === 'error' && <p className="text-red-500 text-xs font-bold"><i className="fa-solid fa-circle-exclamation mr-1" /> Error submitting review.</p>}
+            <button type="submit" disabled={reviewStatus === 'loading'} className="w-full bg-[#0c5c2b] text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-[#0c5c2b]/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
+                {reviewStatus === 'loading' ? <i className="fa-solid fa-spinner animate-spin" /> : <i className="fa-solid fa-paper-plane" />}
+                {reviewStatus === 'loading' ? 'Submitting...' : 'Submit Review'}
+            </button>
+        </form>
+    );
+}
+
