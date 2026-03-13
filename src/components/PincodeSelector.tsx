@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 export default function PincodeSelector() {
     const [saved, setSaved] = useState('');
@@ -17,7 +18,7 @@ export default function PincodeSelector() {
         if (input.length !== 6 || !/^\d+$/.test(input)) return;
         setStatus('checking');
         try {
-            const res = await fetch('http://localhost:8000/api/pincodes/check', {
+            const res = await fetch(API.PINCODES_CHECK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pincode: input })

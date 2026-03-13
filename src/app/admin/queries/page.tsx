@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -33,8 +34,8 @@ export default function AdminQueries() {
         const headers = { 'Authorization': `Bearer ${token}` };
         try {
             const [eRes, vRes] = await Promise.all([
-                fetch('http://localhost:8000/api/contact/enquiries', { headers }),
-                fetch('http://localhost:8000/api/contact/visits', { headers })
+                fetch(API.CONTACT_ENQUIRY, { headers }),
+                fetch(API.CONTACT_VISIT, { headers })
             ]);
             if (eRes.ok) setEnquiries(await eRes.json());
             if (vRes.ok) setVisits(await vRes.json());
@@ -54,7 +55,7 @@ export default function AdminQueries() {
         setSaving(true);
         const token = getToken();
         try {
-            const res = await fetch(`http://localhost:8000/api/contact/${modal.type}/${modal.item._id}/status`, {
+            const res = await fetch(API.CONTACT_STATUS(modal.type, modal.item._id), {
                 method: 'PATCH',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: statusChoice, admin_notes: adminNotes })

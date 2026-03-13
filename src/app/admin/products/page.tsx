@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -20,7 +21,7 @@ export default function AdminProducts() {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/products');
+            const res = await fetch(API.PRODUCTS);
             if (res.ok) setProducts(await res.json());
         } catch (e) { console.error(e); } finally { setLoading(false); }
     };
@@ -56,7 +57,7 @@ export default function AdminProducts() {
         if (!confirm('Delete this product? This cannot be undone.')) return;
         const token = getToken();
         try {
-            const res = await fetch(`http://localhost:8000/api/products/${id}`, {
+            const res = await fetch(API.PRODUCT_DETAIL(id), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -74,8 +75,8 @@ export default function AdminProducts() {
         if (file) fd.append('file', file);
 
         const url = editingId
-            ? `http://localhost:8000/api/products/${editingId}`
-            : 'http://localhost:8000/api/products/';
+            ? API.PRODUCT_DETAIL(editingId)
+            : API.PRODUCTS;
         const method = editingId ? 'PUT' : 'POST';
 
         try {

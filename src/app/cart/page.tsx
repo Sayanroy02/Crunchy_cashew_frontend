@@ -6,12 +6,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { removeFromCart, updateQuantity, clearCart, addToCart } from '@/lib/store/features/cartSlice';
 import ProductCard, { Product } from '@/components/products/ProductCard';
+import { API } from '@/constants/api';
 
 function RecommendedProducts() {
     const [products, setProducts] = React.useState<Product[]>([]);
 
     React.useEffect(() => {
-        fetch('http://localhost:8000/api/products/')
+        fetch(API.PRODUCTS)
             .then(res => res.json())
             .then(data => {
                 // Shuffle and pick 3 random products

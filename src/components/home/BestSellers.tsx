@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import ProductCard, { Product } from '@/components/products/ProductCard';
+import { API } from '@/constants/api';
 
 function SkeletonCard() {
     return (
@@ -22,7 +23,7 @@ export default function BestSellers() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/products/')
+        fetch(API.PRODUCTS)
             .then(res => res.json())
             .then(data => { setProducts(data.slice(0, 4)); setLoading(false); })
             .catch(() => setLoading(false));

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { API } from '@/constants/api';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -23,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             return;
         }
 
-        fetch('http://localhost:8000/api/auth/me', {
+        fetch(API.AUTH_ME, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
             .then(res => {

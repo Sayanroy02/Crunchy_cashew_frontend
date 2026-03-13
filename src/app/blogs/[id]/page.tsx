@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { API } from '@/constants/api';
 
 interface Blog {
     _id: string;
@@ -23,7 +24,7 @@ export default function BlogDetailPage() {
     useEffect(() => {
         if (!id) return;
 
-        fetch(`http://localhost:8000/api/cms/blogs/${id}`)
+        fetch(API.BLOG_DETAIL(id))
             .then(res => {
                 if (!res.ok) throw new Error('Blog not found');
                 return res.json();

@@ -7,6 +7,8 @@ import { logout } from '@/lib/store/features/authSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard, { Product } from '@/components/products/ProductCard';
+import { API } from '@/constants/api';
+import { ORDER_STATUS_CLASSES, PAYMENT_STATUS_CLASSES, CANCELLABLE_STATUSES, COLORS } from '@/constants/styles';
 
 interface UserProfile {
     username: string;
@@ -105,7 +107,7 @@ function ProfileContent() {
         if (!isAuthenticated) { router.push('/login'); return; }
         const fetchProfile = async () => {
             try {
-                const res = await fetch('http://localhost:8000/api/auth/me', {
+                const res = await fetch(API.AUTH_ME, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (!res.ok) throw new Error('Failed');
@@ -131,7 +133,7 @@ function ProfileContent() {
             if (saved) {
                 const list: string[] = JSON.parse(saved);
                 if (list.length > 0) {
-                    const res = await fetch('http://localhost:8000/api/products/');
+                    const res = await fetch(API.PRODUCTS);
                     if (res.ok) {
                         const all = await res.json();
                         setWishlistProducts(all.filter((p: any) => list.includes(p.id || p._id)));
@@ -144,7 +146,7 @@ function ProfileContent() {
     const fetchOrders = async () => {
         try {
             setTabLoading(true);
-            const res = await fetch('http://localhost:8000/api/orders/my-orders', {
+            const res = await fetch(API.MY_ORDERS, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) setOrders(await res.json());
@@ -154,7 +156,7 @@ function ProfileContent() {
     const cancelOrder = async (orderId: string) => {
         if (!confirm('Cancel this order?')) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/orders/cancel/${orderId}`, {
+            const res = await fetch(API.ORDER_CANCEL(orderId), {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -172,8 +174,8 @@ function ProfileContent() {
             setTabLoading(true);
             const headers = { 'Authorization': `Bearer ${token}` };
             const [enqRes, visRes] = await Promise.all([
-                fetch('http://localhost:8000/api/contact/my-enquiries', { headers }),
-                fetch('http://localhost:8000/api/contact/my-visits', { headers })
+                fetch(API.MY_ENQUIRIES, { headers }),
+                fetch(API.MY_VISITS, { headers })
             ]);
             if (enqRes.ok) setEnquiries(await enqRes.json());
             if (visRes.ok) setVisits(await visRes.json());
@@ -183,14 +185,14 @@ function ProfileContent() {
     const handleUpdateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8000/api/auth/profile', {
+            const res = await fetch(API.AUTH_PROFILE, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify(editForm)
             });
             if (res.ok) {
                 setIsEditing(false);
-                const meRes = await fetch('http://localhost:8000/api/auth/me', {
+                const meRes = await fetch(API.AUTH_ME, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setProfile(await meRes.json());
@@ -219,7 +221,7 @@ function ProfileContent() {
         e.preventDefault();
         setReviewStatus('loading');
         try {
-            const res = await fetch('http://localhost:8000/api/cms/testimonials', {
+            const res = await fetch(API.TESTIMONIALS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(reviewForm)
@@ -600,28 +602,67 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
     return (
         <div className={`space-y-4 ${isMobile ? '' : 'grid grid-cols-1 gap-4'}`}>
             {orders.map((order: any) => {
-                const sc = STATUS_COLORS[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
+                const statusClass = ORDER_STATUS_CLASSES[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
+                // Payment status: use payment_status field, fall back to mode
+                const paymentStatus = order.payment_status || (order.payment_mode === 'COD' ? 'COD' : 'Pending');
+                const paymentStatusClass = PAYMENT_STATUS_CLASSES[paymentStatus] || PAYMENT_STATUS_CLASSES.Pending;
+                const canCancel = CANCELLABLE_STATUSES.includes(order.status);
                 return (
                     <div key={order._id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm shadow-gray-100/50 hover:shadow-md transition-shadow">
+                        {/* Header row */}
                         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 flex-wrap gap-2">
                             <div className="flex items-center gap-2 font-black text-gray-800 text-sm">
-                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order No:</span> {order._id.slice(-8).toUpperCase()}
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order No:</span>
+                                {order._id.slice(-8).toUpperCase()}
                             </div>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">{order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}</span>
+                            <div className="flex items-center gap-2">
+                                {/* Payment status badge */}
+                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${paymentStatusClass}`}>
+                                    {paymentStatus}
+                                </span>
+                                {/* Order status badge */}
+                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusClass}`}>
+                                    {order.status || 'Pending'}
+                                </span>
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
+                                    {order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}
+                                </span>
+                            </div>
                         </div>
+
+                        {/* Body */}
                         <div className="px-5 py-4 space-y-3">
                             <div className="flex items-center justify-between text-xs">
-                                <span className="text-gray-500 font-semibold">Tracking number: <span className="font-bold text-gray-800 ml-1">UW{order._id.slice(0, 10).toUpperCase()}</span></span>
+                                <span className="text-gray-500 font-semibold">
+                                    Ref: <span className="font-bold text-gray-800 ml-1">UW{order._id.slice(0, 10).toUpperCase()}</span>
+                                </span>
+                                <span className="text-gray-500 font-semibold">
+                                    {order.payment_mode || 'COD'}
+                                </span>
                             </div>
                             <div className="flex items-center justify-between text-xs font-semibold">
-                                <span className="text-gray-500">Quantity: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
-                                <span className="text-gray-500">Total Amount: <span className="font-bold text-[-#0c5c2b] ml-1">₹{order.total_amount?.toLocaleString('en-IN')}</span></span>
+                                <span className="text-gray-500">Items: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
+                                <span className="font-black text-sm" style={{ color: COLORS.primary }}>₹{order.total_amount?.toLocaleString('en-IN')}</span>
                             </div>
-                            <div className="flex items-center justify-between pt-3">
-                                <Link href={`/track?order=${order._id}`} className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
-                                    Details
+
+                            {/* Actions row */}
+                            <div className="flex items-center justify-between pt-3 gap-2">
+                                {/* Link to proper order detail page */}
+                                <Link
+                                    href={`/profile/orders/${order._id}`}
+                                    className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors"
+                                >
+                                    View Details
                                 </Link>
-                                <span className={`text-xs font-bold ${order.status === 'Delivered' ? 'text-green-500' : 'text-[#0c5c2b]'}`}>{order.status}</span>
+                                {/* Cancel button — only for cancellable statuses */}
+                                {canCancel && (
+                                    <button
+                                        onClick={() => cancelOrder(order._id)}
+                                        className="text-xs font-bold text-red-500 border-2 border-red-100 px-5 py-2 rounded-full hover:bg-red-50 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>

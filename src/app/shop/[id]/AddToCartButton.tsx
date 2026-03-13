@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/lib/store/features/cartSlice';
+import { API } from '@/constants/api';
 
 export default function AddToCartButton({ product }: { product: any }) {
     const [quantity, setQuantity] = useState(1);

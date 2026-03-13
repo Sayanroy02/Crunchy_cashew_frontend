@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/store/store';
+import { API } from '@/constants/api';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -24,26 +23,25 @@ ChartJS.register(
 );
 
 export default function AdminDashboard() {
-    const { token } = useSelector((state: RootState) => state.auth);
     const [stats, setStats] = useState({ total_orders: 0, pending_orders: 0, todays_collection: 0 });
     const [traffic, setTraffic] = useState({ unique_visitors: 0, popular_pages: [] as any[] });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!token) return;
-
         const fetchData = async () => {
+            const token = typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
+            if (!token) return;
             try {
                 const headers = { 'Authorization': `Bearer ${token}` };
 
                 // Dashboard Stats
-                const statsRes = await fetch('http://localhost:8000/api/admin/dashboard', { headers });
+                const statsRes = await fetch(API.ADMIN_DASHBOARD, { headers });
                 if (statsRes.ok) {
                     setStats(await statsRes.json());
                 }
 
                 // Traffic Stats
-                const trafficRes = await fetch('http://localhost:8000/api/traffic/stats', { headers });
+                const trafficRes = await fetch(API.TRAFFIC_STATS, { headers });
                 if (trafficRes.ok) {
                     setTraffic(await trafficRes.json());
                 }
@@ -54,9 +52,8 @@ export default function AdminDashboard() {
                 setLoading(false);
             }
         };
-
         fetchData();
-    }, [token]);
+    }, []);
 
     const chartData = {
         labels: traffic.popular_pages.map(p => p.path),

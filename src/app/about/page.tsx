@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { API } from '@/constants/api';
 
 export default function AboutPage() {
     const [activeTab, setActiveTab] = useState<'founder' | 'journey' | 'story'>('story');
@@ -12,7 +12,7 @@ export default function AboutPage() {
         e.preventDefault();
         setSubmitStatus('loading');
         try {
-            const res = await fetch('http://localhost:8000/api/contact/visit', {
+            const res = await fetch(API.CONTACT_VISIT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(visitForm)

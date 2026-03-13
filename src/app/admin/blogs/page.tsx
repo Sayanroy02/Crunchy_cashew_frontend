@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 }
 
-const EMPTY_FORM = { title: '', author: '', slug: '', content: '', tags: '' };
+const CATEGORIES = ['Health Articles', 'Recipes Blog', 'Sustainability'] as const;
+type Category = typeof CATEGORIES[number];
+const EMPTY_FORM = { title: '', author: '', slug: '', content: '', tags: '', category: 'Health Articles' as Category };
 
 export default function AdminBlogs() {
     const [blogs, setBlogs] = useState<any[]>([]);
@@ -32,10 +35,15 @@ export default function AdminBlogs() {
 
     const fetchBlogs = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/cms/admin/blogs', {
+            const res = await fetch(API.ADMIN_BLOGS, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
-            if (res.ok) setBlogs(await res.json());
+            if (res.ok) {
+                setBlogs(await res.json());
+            } else {
+                const err = await res.json().catch(() => ({}));
+                console.error('Admin blogs fetch failed:', res.status, err.detail);
+            }
         } catch (e) { console.error(e); } finally { setLoading(false); }
     };
 
@@ -56,7 +64,8 @@ export default function AdminBlogs() {
             author: blog.author || '',
             slug: blog.slug || '',
             content: blog.content || '',
-            tags: (blog.tags || []).join(', ')
+            tags: (blog.tags || []).join(', '),
+            category: blog.category || 'Health Articles'
         });
         setFile(null);
         setError('');
@@ -73,7 +82,7 @@ export default function AdminBlogs() {
 
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this blog post?')) return;
-        const res = await fetch(`http://localhost:8000/api/cms/admin/blogs/${id}`, {
+        const res = await fetch(API.ADMIN_BLOG(id), {
             method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` }
         });
         if (res.ok) fetchBlogs();
@@ -89,12 +98,13 @@ export default function AdminBlogs() {
         fd.append('slug', form.slug);
         fd.append('content', form.content);
         fd.append('tags', form.tags);
+        fd.append('category', form.category);
         if (file) fd.append('file', file);
 
         const isEdit = !!editingBlog;
         const url = isEdit
-            ? `http://localhost:8000/api/cms/admin/blogs/${editingBlog._id}`
-            : 'http://localhost:8000/api/cms/admin/blogs';
+            ? API.ADMIN_BLOG(editingBlog._id)
+            : API.ADMIN_BLOGS;
         const method = isEdit ? 'PUT' : 'POST';
 
         try {
@@ -159,6 +169,13 @@ export default function AdminBlogs() {
                                     {b.created_at && <span><i className="fa-regular fa-calendar mr-1" />{new Date(b.created_at).toLocaleDateString()}</span>}
                                 </div>
                                 <div className="flex flex-wrap gap-1 mb-4">
+                                    {b.category && (
+                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                                            b.category === 'Health Articles' ? 'bg-green-100 text-green-700' :
+                                            b.category === 'Recipes Blog' ? 'bg-amber-100 text-amber-700' :
+                                            'bg-blue-100 text-blue-700'
+                                        }`}>{b.category}</span>
+                                    )}
                                     {(b.tags || []).slice(0, 3).map((tag: string, i: number) => (
                                         <span key={i} className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-md">#{tag}</span>
                                     ))}
@@ -212,10 +229,21 @@ export default function AdminBlogs() {
                                     </div>
                                 </div>
                                 <div className="space-y-1">
+                                    <label className="text-sm font-medium text-gray-700">Category <span className="text-red-500">*</span></label>
+                                    <select
+                                        value={form.category}
+                                        onChange={e => setForm(f => ({ ...f, category: e.target.value as Category }))}
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0B5143]/30 focus:border-[#0B5143] bg-white"
+                                        required
+                                    >
+                                        {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-1">
                                     <label className="text-sm font-medium text-gray-700">Author</label>
                                     <input type="text" required value={form.author}
                                         onChange={e => setForm(f => ({ ...f, author: e.target.value }))}
-                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0c5c2b]/30"
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0B5143]/30"
                                         placeholder="Crunchy Cashews Editorial" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">

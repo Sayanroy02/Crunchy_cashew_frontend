@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -24,7 +25,7 @@ export default function AdminChangePassword() {
         setStatus('loading');
         setErrorMsg('');
         try {
-            const res = await fetch('http://localhost:8000/api/admin/change-password', {
+            const res = await fetch(API.ADMIN_CHANGE_PW, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ current_password: form.current_password, new_password: form.new_password })
@@ -95,8 +96,8 @@ export default function AdminChangePassword() {
                         <div className="flex gap-1 mt-1">
                             {[1, 2, 3, 4].map(i => (
                                 <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${form.new_password.length >= i * 3
-                                        ? i <= 2 ? 'bg-red-400' : i === 3 ? 'bg-yellow-400' : 'bg-green-500'
-                                        : 'bg-gray-200'
+                                    ? i <= 2 ? 'bg-red-400' : i === 3 ? 'bg-yellow-400' : 'bg-green-500'
+                                    : 'bg-gray-200'
                                     }`} />
                             ))}
                         </div>
@@ -111,8 +112,8 @@ export default function AdminChangePassword() {
                         value={form.confirm_password}
                         onChange={e => setForm(f => ({ ...f, confirm_password: e.target.value }))}
                         className={`w-full bg-gray-50 border-2 rounded-xl py-3 px-4 focus:outline-none text-sm transition-colors ${form.confirm_password && form.confirm_password !== form.new_password
-                                ? 'border-red-300 focus:border-red-400'
-                                : 'border-gray-200 focus:border-[#0c5c2b]'
+                            ? 'border-red-300 focus:border-red-400'
+                            : 'border-gray-200 focus:border-[#0c5c2b]'
                             }`}
                         placeholder="Re-enter new password"
                     />

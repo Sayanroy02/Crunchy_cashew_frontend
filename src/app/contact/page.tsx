@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import Lottie from 'lottie-react';
+import { API } from '@/constants/api';
 
 export default function ContactPage() {
     const [formData, setFormData] = useState({
@@ -47,7 +48,7 @@ export default function ContactPage() {
 
         try {
             // In the original app, contact goes to /api/contact or similar
-            const res = await fetch('http://localhost:8000/api/contact', {
+            const res = await fetch(API.CONTACT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -72,7 +73,7 @@ export default function ContactPage() {
         setStatus('loading');
 
         try {
-            const res = await fetch('http://localhost:8000/api/contact/visit', {
+            const res = await fetch(API.CONTACT_VISIT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(visitForm)

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -23,7 +24,7 @@ export default function AdminTestimonials() {
 
     const fetchTestimonials = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/cms/admin/testimonials', {
+            const res = await fetch(API.ADMIN_TESTIMONIALS, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setTestimonials(await res.json());
@@ -33,7 +34,7 @@ export default function AdminTestimonials() {
     useEffect(() => { fetchTestimonials(); }, []);
 
     const handleApprove = async (id: string) => {
-        const res = await fetch(`http://localhost:8000/api/cms/admin/testimonials/${id}/approve`, {
+        const res = await fetch(API.ADMIN_TESTIMONIAL_APPROVE(id), {
             method: 'PATCH',
             headers: { 'Authorization': `Bearer ${getToken()}` }
         });
@@ -42,7 +43,7 @@ export default function AdminTestimonials() {
 
     const handleDelete = async (id: string) => {
         if (!confirm('Delete this review?')) return;
-        const res = await fetch(`http://localhost:8000/api/cms/admin/testimonials/${id}`, {
+        const res = await fetch(API.ADMIN_TESTIMONIAL_DELETE(id), {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${getToken()}` }
         });

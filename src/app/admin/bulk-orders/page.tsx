@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -15,7 +16,7 @@ export default function AdminBulkOrders() {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:8000/api/admin/bulk-orders', {
+            const res = await fetch(API.ADMIN_BULK_ORDERS, {
                 headers: { 'Authorization': `Bearer ${getToken()}` }
             });
             if (res.ok) setOrders(await res.json());
@@ -25,7 +26,7 @@ export default function AdminBulkOrders() {
     useEffect(() => { fetchOrders(); }, []);
 
     const updateStatus = async (id: string, status: string, admin_notes: string = '') => {
-        const res = await fetch(`http://localhost:8000/api/admin/bulk-orders/${id}/status`, {
+        const res = await fetch(API.ADMIN_BULK_STATUS(id), {
             method: 'PATCH',
             headers: { 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({ status, admin_notes })

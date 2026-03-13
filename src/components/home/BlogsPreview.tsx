@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { API } from '@/constants/api';
 
 interface Blog {
     _id: string;
@@ -15,7 +16,7 @@ export default function BlogsPreview() {
     const [blogs, setBlogs] = useState<Blog[]>([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/cms/blogs')
+        fetch(API.BLOGS)
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {

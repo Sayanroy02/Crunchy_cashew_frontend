@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -13,7 +14,7 @@ export default function AdminUsers() {
     const fetchUsers = async () => {
         try {
             const token = getToken();
-            const res = await fetch('http://localhost:8000/api/admin/users', {
+            const res = await fetch(API.ADMIN_USERS, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) setUsers(await res.json());

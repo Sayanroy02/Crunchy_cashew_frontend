@@ -6,6 +6,7 @@ import { login } from '@/lib/store/features/authSlice';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
+import { API } from '@/constants/api';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ export default function RegisterPage() {
     });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -36,8 +39,7 @@ export default function RegisterPage() {
         }
 
         try {
-            // 1. Hit Registration API
-            const regRes = await fetch('http://localhost:8000/api/auth/register', {
+            const regRes = await fetch(API.AUTH_REGISTER, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -52,26 +54,16 @@ export default function RegisterPage() {
                 throw new Error(errData.detail || 'Registration failed');
             }
 
-            // 2. Auto-Login Flow (as done in previous logic)
             const fd = new FormData();
-            fd.append('username', formData.email); // FastAPI OAuth2 uses 'username' field for email
+            fd.append('username', formData.email);
             fd.append('password', formData.password);
 
-            const loginRes = await fetch('http://localhost:8000/api/auth/login', {
-                method: 'POST',
-                body: fd
-            });
-
+            const loginRes = await fetch(API.AUTH_LOGIN, { method: 'POST', body: fd });
             if (!loginRes.ok) throw new Error('Auto-login failed after registration');
 
             const data = await loginRes.json();
-
-            // Dispatch globally to Redux and LocalStorage
             dispatch(login(data.access_token));
-
-            // Redirect to Shop directly
             router.push('/shop');
-
         } catch (err: any) {
             setError(err.message || 'Failed to register account');
             setIsLoading(false);
@@ -82,7 +74,7 @@ export default function RegisterPage() {
         setIsLoading(true);
         setError('');
         try {
-            const res = await fetch('http://localhost:8000/api/auth/google', {
+            const res = await fetch(API.AUTH_GOOGLE, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })
@@ -99,76 +91,223 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-[90vh] flex items-center justify-center bg-bg-cream px-6 py-12">
-            <div className="w-full max-w-lg bg-white rounded-[40px] shadow-2xl overflow-hidden">
-                <div className="bg-primary text-center py-10 px-8">
-                    <h1 className="text-3xl font-heading font-black text-white">Join Crunchy Cashews</h1>
-                    <p className="text-green-100 mt-2">Create an account for faster checkouts and order tracking.</p>
+        <div
+            className="w-full bg-[#ede7d9] flex items-center justify-center p-4 sm:p-5 lg:p-8"
+            style={{ minHeight: 'calc(100vh - 112px)' }}
+        >
+            {/* Floating card */}
+            <div className="w-full max-w-[860px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+
+                {/* ════════════════════════════════
+                    BRAND PANEL
+                ════════════════════════════════ */}
+                <div className="relative flex flex-col items-center justify-center overflow-hidden bg-[#0f1410]
+                    w-full py-8 px-5
+                    lg:w-[42%] lg:py-12 lg:px-8 lg:min-h-[600px]">
+
+                    {/* Green radial glow */}
+                    <div className="absolute inset-0 pointer-events-none"
+                        style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 72%, rgba(12,92,43,0.38) 0%, transparent 68%)' }} />
+                    {/* Warm bottom edge */}
+                    <div className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
+                        style={{ background: 'linear-gradient(to top, rgba(200,169,110,0.1), transparent)' }} />
+
+                    {/* Real logo */}
+                    <div className="absolute top-4 left-4 lg:top-5 lg:left-5 z-10">
+                        <img
+                            src="/images/cc-Logo-01-1.png"
+                            alt="Crunchy Cashews"
+                            className="h-9 lg:h-10 w-auto object-contain"
+                        />
+                    </div>
+
+                    {/* Illustration + copy */}
+                    <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0">
+                        <img
+                            src="/images/iLLUSTARTION-1.png"
+                            alt="Crunchy Cashews illustration"
+                            className="object-contain w-[130px] sm:w-[170px] lg:w-[250px] xl:w-[270px]"
+                            style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.6))' }}
+                        />
+
+                        <div className="mt-4 lg:mt-6 text-center px-2">
+                            <h2 className="text-white font-bold leading-snug tracking-tight text-lg sm:text-xl lg:text-[1.45rem]">
+                                Join Crunchy Cashews,<br />
+                                <span className="text-[#c8a96e]">Taste the Difference</span>
+                            </h2>
+                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[210px] mx-auto leading-relaxed">
+                                Create an account for faster checkouts and order tracking.
+                            </p>
+                        </div>
+
+                        {/* Pill dots */}
+                        <div className="flex gap-1.5 mt-4 lg:mt-6">
+                            <span className="w-5 h-1.5 rounded-full bg-[#c8a96e]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="p-8 md:p-12">
-                    {error && (
-                        <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-4 mb-6 text-sm font-medium flex items-center gap-3">
-                            <i className="fa-solid fa-circle-exclamation w-8 flex-shrink-0"></i> {error}
-                        </div>
-                    )}
+                {/* ════════════════════════════════
+                    FORM PANEL
+                ════════════════════════════════ */}
+                <div className="flex-1 flex items-center justify-center bg-white
+                    px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12">
 
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-bold text-gray-700 ml-2" htmlFor="username">Full Name</label>
-                            <div className="relative">
-                                <i className="fa-solid fa-user absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="text" id="username" name="username" required value={formData.username} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-full py-4 pl-12 pr-6 focus:border-primary focus:ring-2 outline-none" placeholder="John Doe" />
+                    <div className="w-full max-w-[340px]">
+
+                        {/* Heading */}
+                        <div className="mb-5">
+                            <h1 className="text-[1.6rem] font-bold text-gray-900 tracking-tight">Create account</h1>
+                            <p className="text-gray-400 mt-1 text-sm leading-relaxed">
+                                Sign up to start shopping with us
+                            </p>
+                        </div>
+
+                        {/* Error */}
+                        {error && (
+                            <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 mb-4 text-sm font-medium flex items-center gap-2">
+                                <i className="fa-solid fa-circle-exclamation flex-shrink-0 text-xs" />
+                                {error}
                             </div>
-                        </div>
+                        )}
 
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-bold text-gray-700 ml-2" htmlFor="email">Email Address</label>
-                            <div className="relative">
-                                <i className="fa-solid fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                <input type="email" id="email" name="email" required value={formData.email} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-full py-4 pl-12 pr-6 focus:border-primary focus:ring-2 outline-none" placeholder="name@example.com" />
-                            </div>
-                        </div>
+                        <form onSubmit={handleSubmit} className="space-y-3.5">
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-bold text-gray-700 ml-2" htmlFor="password">Password</label>
+                            {/* Full Name */}
+                            <div className="space-y-1.5">
+                                <label htmlFor="username"
+                                    className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                    Full Name
+                                </label>
                                 <div className="relative">
-                                    <i className="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                    <input type="password" id="password" name="password" required value={formData.password} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-full py-4 pl-12 pr-6 focus:border-primary focus:ring-2 outline-none" placeholder="••••••••" />
+                                    <i className="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+                                    <input
+                                        type="text" id="username" name="username" required
+                                        value={formData.username} onChange={handleChange}
+                                        placeholder="John Doe"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400
+                                            focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                    />
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-bold text-gray-700 ml-2" htmlFor="confirm_password">Confirm</label>
+                            {/* Email */}
+                            <div className="space-y-1.5">
+                                <label htmlFor="email"
+                                    className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                    Email Address
+                                </label>
                                 <div className="relative">
-                                    <i className="fa-solid fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                                    <input type="password" id="confirm_password" name="confirm_password" required value={formData.confirm_password} onChange={handleChange} className="w-full bg-gray-50 border border-gray-200 rounded-full py-4 pl-12 pr-6 focus:border-primary focus:ring-2 outline-none" placeholder="••••••••" />
+                                    <i className="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+                                    <input
+                                        type="email" id="email" name="email" required
+                                        value={formData.email} onChange={handleChange}
+                                        placeholder="name@example.com"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400
+                                            focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                    />
                                 </div>
                             </div>
+
+                            {/* Password row — side by side on sm+ */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+
+                                {/* Password */}
+                                <div className="space-y-1.5">
+                                    <label htmlFor="password"
+                                        className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                        Password
+                                    </label>
+                                    <div className="relative">
+                                        <i className="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+                                        <input
+                                            type={showPassword ? 'text' : 'password'} id="password" name="password" required
+                                            value={formData.password} onChange={handleChange}
+                                            placeholder="••••••••"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-9 text-sm text-gray-800 placeholder-gray-400
+                                                focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                        />
+                                        <button type="button" tabIndex={-1}
+                                            onClick={() => setShowPassword(v => !v)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                            <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'} text-xs`} />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Confirm Password */}
+                                <div className="space-y-1.5">
+                                    <label htmlFor="confirm_password"
+                                        className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                        Confirm
+                                    </label>
+                                    <div className="relative">
+                                        <i className="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
+                                        <input
+                                            type={showConfirm ? 'text' : 'password'} id="confirm_password" name="confirm_password" required
+                                            value={formData.confirm_password} onChange={handleChange}
+                                            placeholder="••••••••"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-9 text-sm text-gray-800 placeholder-gray-400
+                                                focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                        />
+                                        <button type="button" tabIndex={-1}
+                                            onClick={() => setShowConfirm(v => !v)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                            <i className={`fa-solid ${showConfirm ? 'fa-eye-slash' : 'fa-eye'} text-xs`} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Submit */}
+                            <button type="submit" disabled={isLoading}
+                                className="w-full bg-[#0C5C2B] hover:bg-[#0a4f25] active:scale-[0.98]
+                                    text-white font-bold text-sm py-3.5 rounded-xl
+                                    shadow-md hover:shadow-lg hover:-translate-y-0.5
+                                    transition-all disabled:opacity-60 disabled:hover:translate-y-0
+                                    tracking-wide mt-1">
+                                {isLoading
+                                    ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                                    : <span className="flex items-center justify-center gap-2">
+                                        Create Account <i className="fa-solid fa-arrow-right text-xs opacity-70" />
+                                    </span>
+                                }
+                            </button>
+                        </form>
+
+                        {/* Divider */}
+                        <div className="flex items-center gap-2.5 my-4">
+                            <div className="flex-1 h-px bg-gray-200" />
+                            <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">or</span>
+                            <div className="flex-1 h-px bg-gray-200" />
                         </div>
 
-                        <button type="submit" disabled={isLoading} className="mt-8 w-full bg-primary text-white font-bold text-lg py-4 rounded-full shadow-lg hover:-translate-y-1 hover:shadow-green-900/40 hover:bg-green-800 transition-all disabled:opacity-70 disabled:hover:translate-y-0">
-                            {isLoading ? <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div> : "Create Account"}
-                        </button>
-                    </form>
-
-                    <p className="text-center mt-8 text-gray-500 text-sm flex flex-col gap-4">
-                        <div className="w-full flex items-center justify-center">
-                            <span className="bg-white px-2 text-gray-400 text-xs mt-2 mb-2 w-full max-w-[200px] border-b border-gray-200 leading-[0.1em] text-center"><span className="bg-white px-2">OR</span></span>
-                        </div>
-                        <div className="flex justify-center w-full">
+                        {/* Google */}
+                        <div className="flex justify-center">
                             <GoogleLogin
                                 onSuccess={handleGoogleSuccess}
                                 onError={() => setError('Google Authentication Failed')}
                                 useOneTap
-                                theme="filled_black"
-                                shape="pill"
+                                theme="outline"
+                                shape="rectangular"
+                                width="320"
                             />
                         </div>
-                        <span className="mt-4">Already have an account? <Link href="/login" className="text-primary font-bold hover:underline">Sign in here</Link></span>
-                    </p>
+
+                        {/* Login link */}
+                        <p className="text-center mt-5 text-sm text-gray-500">
+                            Already have an account?{' '}
+                            <Link href="/login"
+                                className="text-[#0C5C2B] font-bold hover:underline underline-offset-2">
+                                Sign in here
+                            </Link>
+                        </p>
+
+                    </div>
                 </div>
+
             </div>
         </div>
     );

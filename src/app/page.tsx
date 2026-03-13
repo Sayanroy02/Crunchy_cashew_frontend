@@ -1,3 +1,4 @@
+import Image from "next/image";
 import HeroCarousel from "@/components/home/HeroCarousel";
 import WhyUsCRO from "@/components/home/WhyUsCRO";
 import BestSellers from "@/components/home/BestSellers";
@@ -11,6 +12,7 @@ export default function Home() {
       <HeroCarousel />
       <BestSellers />
       <WhyUsCRO />
+      {/* <AboutPage/> */}
       <BlogsPreview />
       <Testimonials />
       <Affiliates />
@@ -22,9 +24,11 @@ export default function Home() {
 
             {/* Floating image on top of card */}
             <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-              <img
+              <Image
                 src="/images/Artboard-1-1000-copy-p-2000.png"
                 alt="Artboard Accent"
+                width={500}
+                height={500}
                 className="w-500 h-auto object-contain drop-shadow-xl"
               />
             </div>
@@ -79,9 +83,11 @@ export default function Home() {
 
               {/* Right: Mockup Image */}
               <div className="relative z-10 flex-shrink-0 flex items-end justify-center md:justify-end w-full md:w-auto">
-                <img
+                <Image
                   src="/images/Mockups-1.png"
                   alt="Product Mockup"
+                  width={384}
+                  height={384}
                   className="w-64 md:w-80 lg:w-96 object-contain drop-shadow-2xl"
                   style={{ marginBottom: "-40px" }}
                 />

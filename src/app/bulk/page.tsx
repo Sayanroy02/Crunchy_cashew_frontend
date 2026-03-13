@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import Link from 'next/link';
+import { API } from '@/constants/api';
 
 export default function BulkOrderPage() {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -28,7 +29,7 @@ export default function BulkOrderPage() {
 
         try {
             // Re-using the general enquiry endpoint but we would typically have a specific /bulk one
-            const res = await fetch('http://localhost:8000/api/contact/enquiry', {
+            const res = await fetch(API.CONTACT_ENQUIRY, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-
+import { API } from '@/constants/api';
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 }
@@ -27,7 +27,7 @@ export default function AdminBanners() {
     const fetchBanners = async () => {
         try {
             const token = getToken();
-            const res = await fetch('http://localhost:8000/api/cms/admin/banners', {
+            const res = await fetch(API.ADMIN_BANNERS, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) setBanners(await res.json());
@@ -40,7 +40,7 @@ export default function AdminBanners() {
         if (!confirm('Are you sure you want to delete this banner?')) return;
         try {
             const token = getToken();
-            const res = await fetch(`http://localhost:8000/api/cms/admin/banners/${id}`, {
+            const res = await fetch(API.ADMIN_BANNER_DELETE(id), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -60,7 +60,7 @@ export default function AdminBanners() {
 
         try {
             const token = getToken();
-            const res = await fetch('http://localhost:8000/api/cms/admin/banners', {
+            const res = await fetch(API.ADMIN_BANNERS, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: fd

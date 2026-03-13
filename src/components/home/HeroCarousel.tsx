@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { API } from '@/constants/api';
 
 interface Banner {
     _id: string;
@@ -32,7 +33,9 @@ function SlideContent({ banner, idx }: { banner: Banner; idx: number }) {
     }
     return (
         <div className={`w-full h-full bg-gradient-to-br ${g} flex flex-col justify-center items-center text-center p-8`}>
-            <span className={`inline-block ${tc} bg-white/10 border border-white/20 text-xs font-bold px-4 py-1.5 rounded-full mb-3 tracking-widest`}>{BADGES[idx % BADGES.length]}</span>
+            <span className={`inline-block ${tc} bg-white/10 border border-white/20 text-xs font-bold px-4 py-1.5 rounded-full mb-3 tracking-widest`}>
+                {BADGES[idx % BADGES.length]}
+            </span>
             <h2 className={`text-3xl md:text-5xl font-black ${tc} leading-tight mb-2`}>{banner.title}</h2>
             <p className={`text-sm md:text-lg font-semibold ${tc} opacity-70`}>{SUBS[idx % SUBS.length]}</p>
         </div>
@@ -45,11 +48,11 @@ export default function HeroCarousel() {
     const [animating, setAnimating] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
 
-    // Touch-hold: pause only after finger held ≥ 300 ms
     const touchHoldTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const touchStartX = useRef<number>(0);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/cms/banners')
+        fetch(API.BANNERS)
             .then(r => r.json())
             .then(data => setBanners(data?.length > 0 ? data : DEFAULTS))
             .catch(() => setBanners(DEFAULTS));
@@ -59,157 +62,171 @@ export default function HeroCarousel() {
         if (animating || banners.length <= 1) return;
         setAnimating(true);
         setCurrent(c => (c + dir + banners.length) % banners.length);
-        setTimeout(() => setAnimating(false), 600);
+        setTimeout(() => setAnimating(false), 500);
     }, [animating, banners.length]);
 
     const next = useCallback(() => navigate(1), [navigate]);
     const prev = useCallback(() => navigate(-1), [navigate]);
 
-    // Auto-play — respects isPaused
+    // Auto-play
     useEffect(() => {
         if (banners.length <= 1 || isPaused) return;
         const t = setInterval(next, 5000);
         return () => clearInterval(t);
     }, [banners.length, next, isPaused]);
 
-    // ── Pause handlers ───────────────────────────────────────────────────────
-    // Desktop: hover
-    const handleMouseEnter = () => setIsPaused(true);
-    const handleMouseLeave = () => setIsPaused(false);
-
-    // Mobile: touch-hold (≥ 300 ms triggers pause; quick tap is unaffected)
-    const handleTouchStart = () => {
+    // Swipe support
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
         touchHoldTimer.current = setTimeout(() => setIsPaused(true), 300);
     };
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: React.TouchEvent) => {
         if (touchHoldTimer.current) clearTimeout(touchHoldTimer.current);
         setIsPaused(false);
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
     };
-    // ────────────────────────────────────────────────────────────────────────
 
-    if (banners.length === 0) return <div className="w-full h-[320px] bg-gray-50 animate-pulse rounded-2xl" />;
-
-    const prevIdx = (current - 1 + banners.length) % banners.length;
-    const nextIdx = (current + 1) % banners.length;
+    if (banners.length === 0) {
+        return <div className="w-full mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-10 py-4">
+            <div className="w-full h-[200px] sm:h-[280px] lg:h-[360px] bg-gray-100 animate-pulse rounded-2xl" />
+        </div>;
+    }
 
     return (
-        <section className="w-full bg-[#fffdf5] pt-4 pb-2 overflow-hidden">
-            <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+        <section className="w-full bg-[#fffdf5] py-4 sm:py-5">
+            {/* Constrained + padded wrapper — this gives the left/right margin */}
+            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10">
+
+                {/* Single banner container */}
                 <div
-                    className="relative flex items-center gap-3 md:gap-5"
-                    style={{ height: 'clamp(180px, 32vw, 360px)' }}
-                    // Pause events applied to the whole row so side-previews also trigger it
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
+                    className="relative w-full overflow-hidden rounded-2xl md:rounded-3xl shadow-lg"
+                    style={{
+                        height: 'clamp(160px, 28vw, 380px)',
+                        outline: '2px solid rgba(251,178,27,0.25)',
+                        outlineOffset: '2px',
+                    }}
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
-                    onTouchCancel={handleTouchEnd}
+                    onTouchCancel={() => { setIsPaused(false); if (touchHoldTimer.current) clearTimeout(touchHoldTimer.current); }}
                 >
-                    {/* LEFT — Previous preview */}
-                    <button
-                        onClick={prev}
-                        className="hidden sm:block flex-shrink-0 relative overflow-hidden rounded-xl md:rounded-2xl cursor-pointer group"
-                        style={{ width: '14%', height: '70%' }}
-                        aria-label="Previous"
-                    >
-                        <div className="absolute inset-0 scale-125 origin-center pointer-events-none">
-                            <SlideContent banner={banners[prevIdx]} idx={prevIdx} />
-                        </div>
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/15 transition-colors duration-300 flex items-center justify-center backdrop-blur-[1px]">
-                            <div className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <i className="fa-solid fa-chevron-left text-[#0c5c2b] text-sm" />
-                            </div>
-                        </div>
-                    </button>
-
-                    {/* CENTER — Main banner */}
-                    <div
-                        className="flex-1 h-full relative rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl"
-                        style={{ outline: '2px solid rgba(251,178,27,0.3)', outlineOffset: '2px' }}
-                    >
-                        {banners.map((banner, i) => (
-                            <div
-                                key={banner._id}
-                                className="absolute inset-0"
-                                style={{
-                                    opacity: i === current ? 1 : 0,
-                                    transform: `scale(${i === current ? 1 : 1.03})`,
-                                    transition: 'opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    zIndex: i === current ? 2 : 1,
-                                    pointerEvents: i === current ? 'auto' : 'none',
-                                }}
-                            >
-                                <a href={banner.link || '/shop'} className="block w-full h-full">
-                                    <SlideContent banner={banner} idx={i} />
-                                </a>
-                            </div>
-                        ))}
-
-                        {/* Paused badge */}
+                    {/* Slides */}
+                    {banners.map((banner, i) => (
                         <div
-                            className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full pointer-events-none"
+                            key={banner._id}
+                            className="absolute inset-0"
                             style={{
-                                opacity: isPaused ? 1 : 0,
-                                transform: isPaused ? 'translateY(0)' : 'translateY(-6px)',
-                                transition: 'opacity 0.2s ease, transform 0.2s ease',
+                                opacity: i === current ? 1 : 0,
+                                transform: `scale(${i === current ? 1 : 1.03})`,
+                                transition: 'opacity 0.5s cubic-bezier(0.4,0,0.2,1), transform 0.5s cubic-bezier(0.4,0,0.2,1)',
+                                zIndex: i === current ? 2 : 1,
+                                pointerEvents: i === current ? 'auto' : 'none',
                             }}
                         >
-                            <span className="flex gap-[3px] items-center">
-                                <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
-                                <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
-                            </span>
-                            Paused
+                            <a href={banner.link || '/shop'} className="block w-full h-full">
+                                <SlideContent banner={banner} idx={i} />
+                            </a>
                         </div>
+                    ))}
 
-                        {/* Dots */}
-                        {banners.length > 1 && (
-                            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                                {banners.map((_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={(e) => { e.preventDefault(); if (!animating) { setAnimating(true); setCurrent(i); setTimeout(() => setAnimating(false), 600); } }}
-                                        className="h-1.5 rounded-full transition-all duration-500 ease-out"
-                                        style={{
-                                            width: i === current ? '2rem' : '0.5rem',
-                                            background: i === current ? '#FBB21B' : 'rgba(255,255,255,0.6)',
-                                        }}
-                                        aria-label={`Slide ${i + 1}`}
-                                    />
-                                ))}
-                            </div>
-                        )}
+                    {/* LEFT arrow */}
+                    {banners.length > 1 && (
+                        <button
+                            onClick={prev}
+                            aria-label="Previous"
+                            className="absolute left-3 top-1/2 -translate-y-1/2 z-10
+                                w-9 h-9 sm:w-10 sm:h-10
+                                bg-white/90 hover:bg-white
+                                rounded-full shadow-md hover:shadow-lg
+                                flex items-center justify-center
+                                transition-all duration-200 hover:scale-110 active:scale-95"
+                        >
+                            <i className="fa-solid fa-chevron-left text-[#0c5c2b] text-sm" />
+                        </button>
+                    )}
+
+                    {/* RIGHT arrow */}
+                    {banners.length > 1 && (
+                        <button
+                            onClick={next}
+                            aria-label="Next"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 z-10
+                                w-9 h-9 sm:w-10 sm:h-10
+                                bg-white/90 hover:bg-white
+                                rounded-full shadow-md hover:shadow-lg
+                                flex items-center justify-center
+                                transition-all duration-200 hover:scale-110 active:scale-95"
+                        >
+                            <i className="fa-solid fa-chevron-right text-[#0c5c2b] text-sm" />
+                        </button>
+                    )}
+
+                    {/* Paused badge */}
+                    <div
+                        className="absolute top-3 right-3 z-20 flex items-center gap-1.5
+                            bg-black/50 backdrop-blur-sm text-white text-xs font-semibold
+                            px-3 py-1.5 rounded-full pointer-events-none"
+                        style={{
+                            opacity: isPaused ? 1 : 0,
+                            transform: isPaused ? 'translateY(0)' : 'translateY(-6px)',
+                            transition: 'opacity 0.2s ease, transform 0.2s ease',
+                        }}
+                    >
+                        <span className="flex gap-[3px] items-center">
+                            <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
+                            <span className="inline-block w-[3px] h-3 bg-white rounded-sm" />
+                        </span>
+                        Paused
                     </div>
 
-                    {/* RIGHT — Next preview */}
-                    <button
-                        onClick={next}
-                        className="hidden sm:block flex-shrink-0 relative overflow-hidden rounded-xl md:rounded-2xl cursor-pointer group"
-                        style={{ width: '14%', height: '70%' }}
-                        aria-label="Next"
-                    >
-                        <div className="absolute inset-0 scale-125 origin-center pointer-events-none">
-                            <SlideContent banner={banners[nextIdx]} idx={nextIdx} />
+                    {/* Dot indicators — inside the banner, bottom centre */}
+                    {banners.length > 1 && (
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5 items-center">
+                            {banners.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        if (!animating) {
+                                            setAnimating(true);
+                                            setCurrent(i);
+                                            setTimeout(() => setAnimating(false), 500);
+                                        }
+                                    }}
+                                    aria-label={`Slide ${i + 1}`}
+                                    className="h-1.5 rounded-full transition-all duration-400 ease-out"
+                                    style={{
+                                        width: i === current ? '2rem' : '0.5rem',
+                                        background: i === current ? '#FBB21B' : 'rgba(255,255,255,0.65)',
+                                    }}
+                                />
+                            ))}
                         </div>
-                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/15 transition-colors duration-300 flex items-center justify-center backdrop-blur-[1px]">
-                            <div className="w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <i className="fa-solid fa-chevron-right text-[#0c5c2b] text-sm" />
-                            </div>
-                        </div>
-                    </button>
+                    )}
                 </div>
 
-                {/* Slide indicator row */}
-                <div className="flex items-center justify-center gap-2 mt-1.5">
-                    {banners.map((b, i) => (
-                        <span
-                            key={b._id}
-                            className="text-xs font-semibold transition-all duration-300"
-                            style={{ color: i === current ? '#0c5c2b' : '#94a3b8', transform: i === current ? 'scale(1.1)' : 'scale(1)' }}
-                        >
-                            {i === current ? `● ${b.title}` : '○'}
-                        </span>
-                    ))}
-                </div>
+                {/* Slide title row below banner */}
+                {banners.length > 1 && (
+                    <div className="flex items-center justify-center gap-3 mt-2">
+                        {banners.map((b, i) => (
+                            <span
+                                key={b._id}
+                                className="text-xs font-semibold transition-all duration-300 cursor-pointer"
+                                style={{
+                                    color: i === current ? '#0c5c2b' : '#94a3b8',
+                                    transform: i === current ? 'scale(1.1)' : 'scale(1)',
+                                }}
+                                onClick={() => {
+                                    if (!animating) { setAnimating(true); setCurrent(i); setTimeout(() => setAnimating(false), 500); }
+                                }}
+                            >
+                                {i === current ? `● ${b.title}` : '○'}
+                            </span>
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );

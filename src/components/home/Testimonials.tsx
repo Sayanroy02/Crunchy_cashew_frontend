@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { API } from '@/constants/api';
 
 interface Testimonial {
     _id: string;
@@ -47,7 +48,7 @@ export default function Testimonials() {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/cms/testimonials')
+        fetch(API.TESTIMONIALS)
             .then(res => res.json())
             .then(data => { if (Array.isArray(data) && data.length > 0) setTestimonials(data); })
             .catch(err => console.error('Failed to fetch testimonials', err));
@@ -57,7 +58,7 @@ export default function Testimonials() {
         e.preventDefault();
         setSubmitStatus('loading');
         try {
-            const res = await fetch('http://localhost:8000/api/cms/testimonials', {
+            const res = await fetch(API.TESTIMONIALS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -78,7 +79,7 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-16 md:py-24 bg-[#0c5c2b] overflow-hidden">
+        <section className="py-10 md:py-18 bg-[#0c5c2b] overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">

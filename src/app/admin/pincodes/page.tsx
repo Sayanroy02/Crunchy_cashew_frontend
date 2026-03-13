@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -15,7 +16,7 @@ export default function AdminPincodes() {
 
     const fetchPincodes = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/pincodes/');
+            const res = await fetch(API.PINCODES);
             if (res.ok) setPincodes(await res.json());
         } catch (e) { console.error(e); } finally { setLoading(false); }
     };
@@ -31,7 +32,7 @@ export default function AdminPincodes() {
         setAdding(true);
         const token = getToken();
         try {
-            const res = await fetch('http://localhost:8000/api/pincodes/admin/add', {
+            const res = await fetch(API.PINCODES_ADD, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pincode: input.trim() })
@@ -44,7 +45,7 @@ export default function AdminPincodes() {
     const handleRemove = async (p: string) => {
         const token = getToken();
         try {
-            await fetch(`http://localhost:8000/api/pincodes/admin/remove/${p}`, {
+            await fetch(API.PINCODES_REMOVE(p), {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

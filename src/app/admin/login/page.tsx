@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { API } from '@/constants/api';
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -22,7 +23,7 @@ export default function AdminLoginPage() {
             formData.append('username', username);
             formData.append('password', password);
 
-            const res = await fetch('http://localhost:8000/api/auth/login', {
+            const res = await fetch(API.AUTH_LOGIN, {
                 method: 'POST',
                 body: formData,
             });
@@ -36,7 +37,7 @@ export default function AdminLoginPage() {
             const token = data.access_token;
 
             // Verify this user is actually an admin
-            const meRes = await fetch('http://localhost:8000/api/auth/me', {
+            const meRes = await fetch(API.AUTH_ME, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const me = await meRes.json();

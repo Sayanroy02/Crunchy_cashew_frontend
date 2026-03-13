@@ -2,13 +2,14 @@ import React from 'react';
 import AddToCartButton from '@/app/shop/[id]/AddToCartButton';
 import Link from 'next/link';
 import PincodeWidget from '@/components/PincodeWidget';
+import { API } from '@/constants/api';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
 
     const [res, productsRes] = await Promise.all([
-        fetch(`http://localhost:8000/api/products/${id}`, { next: { revalidate: 60 } }),
-        fetch(`http://localhost:8000/api/products`, { next: { revalidate: 60 } }),
+        fetch(API.PRODUCT_DETAIL(id), { next: { revalidate: 60 } }),
+        fetch(API.PRODUCTS, { next: { revalidate: 60 } }),
     ]);
 
     if (!res.ok) {
