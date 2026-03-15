@@ -5,6 +5,7 @@ import BestSellers from "@/components/home/BestSellers";
 import Testimonials from "@/components/home/Testimonials";
 import BlogsPreview from "@/components/home/BlogsPreview";
 import Affiliates from "@/components/home/Affiliates";
+import ComparisonSection from "@/components/home/OffersGrid";
 
 export default function Home() {
   return (
@@ -12,7 +13,7 @@ export default function Home() {
       <HeroCarousel />
       <BestSellers />
       <WhyUsCRO />
-      {/* <AboutPage/> */}
+      <ComparisonSection />
 
       <Testimonials />
       <Affiliates />
@@ -85,7 +86,7 @@ export default function Home() {
               {/* Right: Mockup Image */}
               <div className="relative z-10 flex-shrink-0 flex items-end justify-center md:justify-end w-full md:w-auto">
                 <Image
-                  src="/images/Right-Hero-Section.png"
+                  src="/images/crunchy-cashews-product.png"
                   alt="Product Mockup"
                   width={384}
                   height={384}

@@ -1,202 +1,560 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 
+// ─── Data ────────────────────────────────────────────────────────────────────
 
-const offers = [
-    {
-        id: 1,
-        badge: '🔥 Limited Time',
-        discount: '10% OFF',
-        title: 'First Order Special',
-        subtitle: 'Use code: CRUNCHY10',
-        description: 'Minimum order ₹499',
-        color: 'from-yellow to-yellow',
-        textColor: 'text-primary',
-        href: '/shop',
-        size: 'large',
-        icon: '🥜',
-    },
-    {
-        id: 2,
-        badge: '⚡ Flash Sale',
-        discount: '5% OFF',
-        title: 'Orders Above ₹1,599',
-        subtitle: 'Auto-applied at checkout',
-        description: 'No coupon needed',
-        color: 'from-primary to-primary',
-        textColor: 'text-white',
-        href: '/shop',
-        size: 'medium',
-        icon: '💰',
-    },
-    {
-        id: 3,
-        badge: '🚛 Free Shipping',
-        discount: 'FREE',
-        title: 'Delivery on ₹999+',
-        subtitle: 'Pan India delivery',
-        description: '5–7 business days',
-        color: 'from-[#1a1a2e] to-[#16213e]',
-        textColor: 'text-white',
-        href: '/shop',
-        size: 'medium',
-        icon: '📦',
-    },
-    {
-        id: 4,
-        badge: '🎁 Exclusive',
-        discount: '15% OFF',
-        title: 'Gift Packs & Hampers',
-        subtitle: 'Premium packaging included',
-        description: 'Perfect for festive season',
-        color: 'from-[#9c27b0] to-[#673ab7]',
-        textColor: 'text-white',
-        href: '/shop?category=gift',
-        size: 'small',
-        icon: '🎀',
-    },
-    {
-        id: 5,
-        badge: '📦 Wholesale',
-        discount: 'BULK',
-        title: 'Factory-Direct Pricing',
-        subtitle: 'Min 10 kg order',
-        description: 'Best rates guaranteed',
-        color: 'from-[#e65100] to-[#f57c00]',
-        textColor: 'text-white',
-        href: '/bulk',
-        size: 'small',
-        icon: '🏭',
-    },
+const points = [
+  {
+    icon: '🏭',
+    label: 'Sourcing',
+    ours: 'Direct from our own factory — zero middlemen',
+    theirs: 'Passes through multiple middlemen',
+  },
+  {
+    icon: '💰',
+    label: 'Pricing',
+    ours: 'Below market rate, always competitive',
+    theirs: 'Inflated by supply chain markups',
+  },
+  {
+    icon: '🧪',
+    label: 'Production',
+    ours: 'Hygienic, food-grade certified facility',
+    theirs: 'Unverified third-party standards',
+  },
+  {
+    icon: '🏆',
+    label: 'Kernel Quality',
+    ours: 'Premium grade, uniformly white kernels',
+    theirs: 'Inconsistent grades, mixed batches',
+  },
+  {
+    icon: '📦',
+    label: 'Packaging',
+    ours: 'Sealed freshness-lock packs, tamper-proof',
+    theirs: 'Standard packaging, no freshness guarantee',
+  },
+  {
+    icon: '🌿',
+    label: 'Freshness',
+    ours: 'Dispatched within days of roasting',
+    theirs: 'Sits in warehouses for weeks',
+  },
 ];
 
-function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
-    const [count, setCount] = useState(0);
-    const ref = useRef<HTMLSpanElement>(null);
+// ─── Hook ─────────────────────────────────────────────────────────────────────
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(([entry]) => {
-            if (entry.isIntersecting) {
-                let start = 0;
-                const step = target / 60;
-                const timer = setInterval(() => {
-                    start += step;
-                    if (start >= target) { setCount(target); clearInterval(timer); }
-                    else setCount(Math.floor(start));
-                }, 16);
-                observer.disconnect();
-            }
-        });
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
-    }, [target]);
-
-    return <span ref={ref}>{count}{suffix}</span>;
+function useInView(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, inView };
 }
 
-export default function OffersGrid() {
-    return (
-        <section className="max-w-screen-xl mx-auto px-4 md:px-8 py-10 md:py-14">
-            {/* Section Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h2 className="text-2xl md:text-3xl font-heading font-black text-gray-900">
-                        🏷️ Today's <span className="text-primary">Best Deals</span>
-                    </h2>
-                    <p className="text-gray-500 text-sm mt-1">Freshly sourced. Directly roasted. Only the best for you.</p>
-                </div>
-                <Link href="/shop" className="hidden md:flex items-center gap-2 text-primary font-bold text-sm hover:underline">
-                    Shop All <i className="fa-solid fa-arrow-right"></i>
-                </Link>
-            </div>
+// ─── Main Export ──────────────────────────────────────────────────────────────
 
-            {/* Bento Grid — fixed to remove empty space */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-                {/* Large Card - 2x2 */}
-                <Link href="/shop"
-                    className="col-span-2 md:col-span-2 row-span-2 bg-gradient-to-br from-yellow to-yellow rounded-2xl p-6 md:p-8 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[220px] md:min-h-[280px]"
+export default function ComparisonSection() {
+  const { ref: headRef, inView: headIn } = useInView(0.2);
+
+  return (
+    <section
+      className="py-12 md:py-20 px-4"
+      style={{ background: '#E1EDEB' }}
+    >
+      <div className="max-w-4xl mx-auto">
+
+        {/* ── Page Heading ── */}
+        <div
+          ref={headRef}
+          className="text-center mb-10 md:mb-14"
+          style={{
+            opacity: headIn ? 1 : 0,
+            transform: headIn ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 0.65s ease, transform 0.65s ease',
+          }}
+        >
+          <span
+            className="inline-block text-xs font-black tracking-[5px] uppercase mb-3"
+            style={{ color: '#0A5246', opacity: 0.6 }}
+          >
+            The Difference
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-black leading-tight tracking-tight"
+            style={{ color: '#0a1f1c' }}
+          >
+            Why We{' '}
+            <span
+              style={{
+                color: '#0A5246',
+                borderBottom: '4px solid #f6d70f',
+                paddingBottom: 2,
+              }}
+            >
+              Stand Out
+            </span>
+          </h2>
+          <p className="mt-3 text-sm md:text-base max-w-md mx-auto" style={{ color: '#3d6560' }}>
+            From farm to your hands — every step is ours to control.
+          </p>
+        </div>
+
+        {/* ── DESKTOP: Side-by-side table (md and above) ── */}
+        <DesktopTable />
+
+        {/* ── MOBILE: Accordion cards (below md) ── */}
+        <MobileAccordion />
+
+      </div>
+
+      <style>{`
+        @keyframes slideLeft {
+          from { opacity: 0; transform: translateX(-20px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideRight {
+          from { opacity: 0; transform: translateX(20px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+          0%   { transform: scale(0.4); opacity: 0; }
+          70%  { transform: scale(1.2); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .anim-left  { animation: slideLeft  0.55s cubic-bezier(.22,1,.36,1) both; }
+        .anim-right { animation: slideRight 0.55s cubic-bezier(.22,1,.36,1) both; }
+        .anim-up    { animation: fadeUp     0.5s  cubic-bezier(.22,1,.36,1) both; }
+        .anim-pop   { animation: popIn      0.4s  cubic-bezier(.34,1.56,.64,1) both; }
+
+        .acc-body {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.35s cubic-bezier(.22,1,.36,1);
+        }
+        .acc-body.open {
+          grid-template-rows: 1fr;
+        }
+        .acc-inner { overflow: hidden; }
+
+        .acc-trigger-icon {
+          transition: transform 0.3s cubic-bezier(.22,1,.36,1), color 0.3s;
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ─── Desktop Table ─────────────────────────────────────────────────────────────
+
+function DesktopTable() {
+  const { ref, inView } = useInView(0.08);
+
+  return (
+    <div
+      ref={ref}
+      className="hidden md:block rounded-3xl overflow-hidden"
+      style={{
+        boxShadow: '0 8px 48px rgba(10,82,70,0.13)',
+        opacity: inView ? 1 : 0,
+        transition: 'opacity 0.4s ease',
+      }}
+    >
+      {/* ── Column Headers with Product Images ── */}
+      <div className="grid grid-cols-2">
+
+        {/* Our Brand */}
+        <div
+          className="flex flex-col items-center pb-6 pt-8 px-8"
+          style={{ background: '#ffffff' }}
+        >
+          <div className="relative w-40 h-40 mb-4">
+            <Image
+              src="/images/crunchy-cashews-product.png"
+              alt="Crunchy Cashews"
+              fill
+              className="object-contain drop-shadow-lg"
+            />
+          </div>
+          <p className="text-xl font-black tracking-tight" style={{ color: '#0A5246' }}>
+            Crunchy Cashews
+          </p>
+          <span
+            className="mt-2 text-[9px] font-bold tracking-[3px] uppercase px-3 py-1 rounded-full"
+            style={{ background: '#E1EDEB', color: '#0A5246' }}
+          >
+            Factory Direct
+          </span>
+        </div>
+
+        {/* Other Brands */}
+        <div
+          className="flex flex-col items-center pb-6 pt-8 px-8"
+          style={{ background: '#f5f0e6', borderLeft: '1.5px solid #ddd7cc' }}
+        >
+          <div className="relative w-40 h-40 mb-4">
+            <Image
+              src="/images/other-brands.png"
+              alt="Other Brands"
+              fill
+              className="object-contain"
+              style={{ filter: 'grayscale(25%) opacity(0.72)' }}
+            />
+          </div>
+          <p className="text-xl font-black tracking-tight" style={{ color: '#4a4540' }}>
+            Other Brands
+          </p>
+          <span
+            className="mt-2 text-[9px] font-bold tracking-[3px] uppercase px-3 py-1 rounded-full"
+            style={{ background: '#e8e2d8', color: '#6a6560' }}
+          >
+            Via Middlemen
+          </span>
+        </div>
+      </div>
+
+      {/* Gradient divider */}
+      <div style={{ height: '2px', background: 'linear-gradient(90deg, #0A5246 50%, #ddd7cc 50%)' }} />
+
+      {/* Rows */}
+      {points.map((p, i) => (
+        <DesktopRow
+          key={p.label}
+          point={p}
+          index={i}
+          inView={inView}
+          isLast={i === points.length - 1}
+        />
+      ))}
+    </div>
+  );
+}
+
+function DesktopRow({
+  point,
+  index,
+  inView,
+  isLast,
+}: {
+  point: typeof points[0];
+  index: number;
+  inView: boolean;
+  isLast: boolean;
+}) {
+  const delay = `${index * 70 + 100}ms`;
+
+  return (
+    <div
+      className="grid grid-cols-2"
+      style={{ borderBottom: isLast ? 'none' : '1.5px solid #ede8df' }}
+    >
+      {/* Our side */}
+      <div
+        className={inView ? 'anim-left' : ''}
+        style={{
+          animationDelay: delay,
+          opacity: inView ? undefined : 0,
+          padding: '18px 24px',
+          background: '#ffffff',
+        }}
+      >
+        <div className="flex items-start gap-3">
+          <span
+            className={inView ? 'anim-pop' : ''}
+            style={{
+              animationDelay: `${index * 70 + 220}ms`,
+              flexShrink: 0,
+              marginTop: 2,
+              width: 22,
+              height: 22,
+              borderRadius: '50%',
+              background: '#0A5246',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 11,
+              fontWeight: 900,
+              color: '#f6d70f',
+            }}
+          >
+            ✓
+          </span>
+          <div>
+            <p
+              className="text-[9px] font-black tracking-[2.5px] uppercase mb-1"
+              style={{ color: '#0A5246', opacity: 0.55 }}
+            >
+              {point.icon} {point.label}
+            </p>
+            <p className="text-sm font-semibold leading-snug" style={{ color: '#1a1f1c' }}>
+              {point.ours}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Their side */}
+      <div
+        className={inView ? 'anim-right' : ''}
+        style={{
+          animationDelay: delay,
+          opacity: inView ? undefined : 0,
+          padding: '18px 24px',
+          background: '#f9f5ed',
+          borderLeft: '1.5px solid #ddd7cc',
+        }}
+      >
+        <div className="flex items-start gap-3">
+          <span
+            style={{
+              flexShrink: 0,
+              marginTop: 2,
+              width: 22,
+              height: 22,
+              borderRadius: '50%',
+              background: '#e5e0d6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 11,
+              fontWeight: 900,
+              color: '#cc2222',
+            }}
+          >
+            ✕
+          </span>
+          <div>
+            <p
+              className="text-[9px] font-black tracking-[2.5px] uppercase mb-1"
+              style={{ color: '#7a7068' }}
+            >
+              {point.label}
+            </p>
+            <p className="text-sm leading-snug" style={{ color: '#3a3530' }}>
+              {point.theirs}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Mobile Accordion ──────────────────────────────────────────────────────────
+
+function MobileAccordion() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { ref, inView } = useInView(0.05);
+
+  return (
+    <div ref={ref} className="md:hidden flex flex-col gap-3">
+
+      {/* Product image cards */}
+      <div
+        className={`grid grid-cols-2 gap-3 mb-2 ${inView ? 'anim-up' : ''}`}
+        style={{ opacity: inView ? undefined : 0 }}
+      >
+        {/* Our product */}
+        <div
+          className="rounded-2xl flex flex-col items-center py-5 px-3"
+          style={{
+            background: '#ffffff',
+            boxShadow: '0 2px 16px rgba(10,82,70,0.10)',
+            border: '1.5px solid #c8e0da',
+          }}
+        >
+          <div className="relative w-24 h-24 mb-3">
+            <Image
+              src="/images/crunchy-cashews-product.png"
+              alt="Crunchy Cashews"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <p className="text-xs font-black text-center" style={{ color: '#0A5246' }}>
+            Crunchy Cashews
+          </p>
+          <span
+            className="mt-1.5 text-[7px] font-bold tracking-[2px] uppercase px-2.5 py-1 rounded-full"
+            style={{ background: '#E1EDEB', color: '#0A5246' }}
+          >
+            Factory Direct
+          </span>
+        </div>
+
+        {/* Other brands */}
+        <div
+          className="rounded-2xl flex flex-col items-center py-5 px-3"
+          style={{
+            background: '#f5f0e6',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
+            border: '1.5px solid #ddd7cc',
+          }}
+        >
+          <div className="relative w-24 h-24 mb-3">
+            <Image
+              src="/images/other-brands.png"
+              alt="Other Brands"
+              fill
+              className="object-contain"
+              style={{ filter: 'grayscale(25%) opacity(0.7)' }}
+            />
+          </div>
+          <p className="text-xs font-black text-center" style={{ color: '#4a4540' }}>
+            Other Brands
+          </p>
+          <span
+            className="mt-1.5 text-[7px] font-bold tracking-[2px] uppercase px-2.5 py-1 rounded-full"
+            style={{ background: '#e2ddd4', color: '#6a6560' }}
+          >
+            Via Middlemen
+          </span>
+        </div>
+      </div>
+
+      {/* Accordion rows */}
+      {points.map((p, i) => {
+        const isOpen = openIndex === i;
+        return (
+          <div
+            key={p.label}
+            className={`rounded-2xl overflow-hidden ${inView ? 'anim-up' : ''}`}
+            style={{
+              animationDelay: `${i * 55 + 80}ms`,
+              opacity: inView ? undefined : 0,
+              boxShadow: isOpen
+                ? '0 4px 22px rgba(10,82,70,0.15)'
+                : '0 1px 6px rgba(0,0,0,0.05)',
+              border: isOpen ? '1.5px solid #0A5246' : '1.5px solid #d4cfc4',
+              background: '#ffffff',
+              transition: 'box-shadow 0.3s, border-color 0.3s',
+            }}
+          >
+            {/* Trigger */}
+            <button
+              onClick={() => setOpenIndex(isOpen ? null : i)}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left"
+              style={{
+                background: isOpen ? '#0A5246' : '#ffffff',
+                transition: 'background 0.3s',
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-base leading-none">{p.icon}</span>
+                <span
+                  className="text-sm font-black"
+                  style={{ color: isOpen ? '#ffffff' : '#1a1f1c' }}
                 >
-                    <div className="absolute -right-8 -bottom-8 text-[100px] md:text-[150px] opacity-10 select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">🥜</div>
-                    <div>
-                        <span className="inline-block text-primary bg-black/10 text-xs font-bold px-3 py-1 rounded-full mb-3">🔥 Limited Time</span>
-                        <div className="text-5xl md:text-6xl font-black text-primary leading-none mb-1">10% OFF</div>
-                        <div className="text-lg md:text-xl font-bold text-primary opacity-90">First Order Special</div>
-                        <div className="text-sm text-primary opacity-70 mt-1">Use code: CRUNCHY10</div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs text-primary opacity-60">Min order ₹499</span>
-                        <span className="text-primary group-hover:translate-x-1 transition-transform text-lg">→</span>
-                    </div>
-                </Link>
+                  {p.label}
+                </span>
+              </div>
+              <span
+                className="acc-trigger-icon text-xl font-black leading-none select-none"
+                style={{
+                  color: isOpen ? '#f6d70f' : '#0A5246',
+                  transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+                  display: 'inline-block',
+                }}
+              >
+                +
+              </span>
+            </button>
 
-                {/* Right column — stacked vertically */}
-                <div className="col-span-2 md:col-span-1 grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-4">
-                    {/* Green Card */}
-                    <Link href="/shop" className="bg-gradient-to-br from-primary to-primary rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[130px]">
-                        <div className="absolute -right-3 -bottom-3 text-[60px] opacity-10 select-none pointer-events-none">💰</div>
-                        <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">⚡ Flash Sale</span>
-                        <div>
-                            <div className="text-3xl font-black text-white leading-none">5% OFF</div>
-                            <div className="text-xs font-bold text-white opacity-80">Orders above ₹1,599</div>
-                        </div>
-                    </Link>
-                    {/* Dark Card */}
-                    <Link href="/shop" className="bg-gradient-to-br from-[#1a1a2e] to-[#16213e] rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[130px]">
-                        <div className="absolute -right-3 -bottom-3 text-[60px] opacity-10 select-none pointer-events-none">📦</div>
-                        <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">🚛 Free Shipping</span>
-                        <div>
-                            <div className="text-3xl font-black text-white leading-none">FREE</div>
-                            <div className="text-xs font-bold text-white opacity-80">On orders above ₹999</div>
-                        </div>
-                    </Link>
+            {/* Body */}
+            <div className={`acc-body ${isOpen ? 'open' : ''}`}>
+              <div className="acc-inner">
+
+                {/* Our row */}
+                <div
+                  className="flex items-start gap-3 px-4 py-3.5"
+                  style={{ borderTop: '1px solid #eee9e0', borderBottom: '1px dashed #ede8df' }}
+                >
+                  <span
+                    style={{
+                      flexShrink: 0,
+                      marginTop: 2,
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      background: '#0A5246',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 10,
+                      fontWeight: 900,
+                      color: '#f6d70f',
+                    }}
+                  >
+                    ✓
+                  </span>
+                  <div>
+                    <p
+                      className="text-[8px] font-black tracking-[2px] uppercase mb-0.5"
+                      style={{ color: '#0A5246', opacity: 0.6 }}
+                    >
+                      Crunchy Cashews
+                    </p>
+                    <p className="text-sm font-semibold leading-snug" style={{ color: '#1a1f1c' }}>
+                      {p.ours}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Bottom row — 3 equal cards */}
-                <Link href="/shop?category=gift" className="col-span-1 bg-gradient-to-br from-[#9c27b0] to-[#673ab7] rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 min-h-[120px]">
-                    <div className="absolute -right-2 -bottom-2 text-[50px] opacity-10 select-none pointer-events-none">🎁</div>
-                    <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">🎁 Exclusive</span>
-                    <div>
-                        <div className="text-2xl font-black text-white">15% OFF</div>
-                        <div className="text-xs font-bold text-white opacity-80">Gift Packs & Hampers</div>
-                    </div>
-                </Link>
-                <Link href="/bulk" className="col-span-1 bg-gradient-to-br from-[#e65100] to-[#f57c00] rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 min-h-[120px]">
-                    <div className="absolute -right-2 -bottom-2 text-[50px] opacity-10 select-none pointer-events-none">🏭</div>
-                    <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">📦 Wholesale</span>
-                    <div>
-                        <div className="text-2xl font-black text-white">BULK</div>
-                        <div className="text-xs font-bold text-white opacity-80">Factory-direct pricing</div>
-                    </div>
-                </Link>
-                <Link href="/shop?category=roasted" className="col-span-2 md:col-span-1 bg-gradient-to-br from-primary to-primary rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 min-h-[120px]">
-                    <div className="absolute -right-2 -bottom-2 text-[50px] opacity-10 select-none pointer-events-none">✨</div>
-                    <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">🌟 Bestseller</span>
-                    <div>
-                        <div className="text-2xl font-black text-white">NEW</div>
-                        <div className="text-xs font-bold text-white opacity-80">Spiced Roasted Range</div>
-                    </div>
-                </Link>
-            </div>
+                {/* Their row */}
+                <div
+                  className="flex items-start gap-3 px-4 py-3.5"
+                  style={{ background: '#f9f5ed' }}
+                >
+                  <span
+                    style={{
+                      flexShrink: 0,
+                      marginTop: 2,
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      background: '#e5e0d6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 10,
+                      fontWeight: 900,
+                      color: '#cc2222',
+                    }}
+                  >
+                    ✕
+                  </span>
+                  <div>
+                    <p
+                      className="text-[8px] font-black tracking-[2px] uppercase mb-0.5"
+                      style={{ color: '#7a7068' }}
+                    >
+                      Other Brands
+                    </p>
+                    <p className="text-sm leading-snug" style={{ color: '#3a3530' }}>
+                      {p.theirs}
+                    </p>
+                  </div>
+                </div>
 
-
-            {/* Stats Ticker */}
-            <div className="mt-6 bg-primary rounded-2xl px-6 py-4 flex flex-wrap items-center justify-around gap-4 text-white">
-                {[
-                    { label: 'Happy Customers', value: 15000, suffix: '+' },
-                    { label: 'Orders Delivered', value: 50000, suffix: '+' },
-                    { label: 'Cities Covered', value: 200, suffix: '+' },
-                    { label: 'Years of Trust', value: 12, suffix: '+' },
-                ].map((stat) => (
-                    <div key={stat.label} className="text-center">
-                        <div className="text-2xl md:text-3xl font-black text-yellow">
-                            <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                        </div>
-                        <div className="text-xs md:text-sm opacity-80 mt-0.5">{stat.label}</div>
-                    </div>
-                ))}
+              </div>
             </div>
-        </section>
-    );
+          </div>
+        );
+      })}
+    </div>
+  );
 }
