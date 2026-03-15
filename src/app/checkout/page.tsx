@@ -178,7 +178,7 @@ export default function CheckoutPage() {
     return (
         <div className="bg-[#f4f6f9] min-h-screen py-16 px-4 md:px-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl md:text-4xl font-heading font-black text-[#0c5c2b] mb-10 pb-4 border-b-2 border-[#0c5c2b]/10">
+                <h1 className="text-3xl md:text-4xl font-heading font-black text-primary mb-10 pb-4 border-b-2 border-primary/10">
                     Checkout
                 </h1>
 
@@ -187,26 +187,26 @@ export default function CheckoutPage() {
                     <div className="lg:w-2/3">
                         <form id="checkoutForm" onSubmit={handleFormSubmit} className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8">
                             <h2 className="text-xl font-bold font-heading mb-6 flex items-center gap-2">
-                                <i className="fa-solid fa-map-location-dot text-[#6bbc45]"></i> Shipping Details
+                                <i className="fa-solid fa-map-location-dot text-primary-light"></i> Shipping Details
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                                     <input required type="text" name="name" value={formData.name} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                         placeholder="John Doe" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                                     <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                         placeholder="+91 9876543210" />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
                                     <input required type="email" name="email" value={formData.email} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800 bg-gray-50"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800 bg-gray-50"
                                         readOnly />
                                 </div>
                             </div>
@@ -215,13 +215,13 @@ export default function CheckoutPage() {
                                 <div className="flex justify-between items-center mb-2">
                                     <label className="block text-sm font-bold text-gray-700">Street Address</label>
                                     <button type="button" onClick={handleGetLocation}
-                                        className="text-[10px] bg-[#0c5c2b]/10 text-[#0c5c2b] font-bold px-3 py-1.5 rounded-full hover:bg-[#0c5c2b]/20 transition-colors uppercase tracking-widest">
+                                        className="text-[10px] bg-primary/10 text-primary font-bold px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors uppercase tracking-widest">
                                         <i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate
                                     </button>
                                 </div>
                                 <textarea required name="address" value={formData.address} onChange={handleInputChange}
                                     rows={3}
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                     placeholder="123 Cashew Lane, Apt 4B"></textarea>
                             </div>
 
@@ -229,41 +229,41 @@ export default function CheckoutPage() {
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
                                     <input required type="text" name="city" value={formData.city} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                         placeholder="Siliguri" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">State</label>
                                     <input required type="text" name="state" value={formData.state} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                         placeholder="West Bengal" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">PIN Code</label>
                                     <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-[#0c5c2b] focus:ring-1 focus:ring-[#0c5c2b] font-semibold text-gray-800"
+                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
                                         placeholder="734001" maxLength={6} />
                                 </div>
                             </div>
 
                             {/* Payment Method */}
                             <h2 className="text-xl font-bold font-heading mb-6 flex items-center gap-2 border-t border-gray-100 pt-8">
-                                <i className="fa-solid fa-credit-card text-[#6bbc45]"></i> Payment Method
+                                <i className="fa-solid fa-credit-card text-primary-light"></i> Payment Method
                             </h2>
                             <div className="flex flex-col gap-4">
-                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'border-[#0c5c2b] bg-[#0c5c2b]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
                                     <input type="radio" name="paymentMethod" value="COD"
                                         checked={formData.paymentMethod === 'COD'} onChange={handleInputChange}
-                                        className="w-5 h-5 text-[#0c5c2b] focus:ring-[#0c5c2b]" />
+                                        className="w-5 h-5 text-primary focus:ring-primary" />
                                     <div>
                                         <div className="font-bold text-gray-800">Cash on Delivery (COD)</div>
                                         <div className="text-sm text-gray-500">Pay when your order arrives.</div>
                                     </div>
                                 </label>
-                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'Razorpay' ? 'border-[#0c5c2b] bg-[#0c5c2b]/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'Razorpay' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
                                     <input type="radio" name="paymentMethod" value="Razorpay"
                                         checked={formData.paymentMethod === 'Razorpay'} onChange={handleInputChange}
-                                        className="w-5 h-5 text-[#0c5c2b] focus:ring-[#0c5c2b]" />
+                                        className="w-5 h-5 text-primary focus:ring-primary" />
                                     <div className="flex-1">
                                         <div className="font-bold text-gray-800">Pay Online (Razorpay)</div>
                                         <div className="text-sm text-gray-500">Credit Card, Debit Card, UPI, NetBanking</div>
@@ -279,8 +279,8 @@ export default function CheckoutPage() {
 
                     {/* Right Side: Order Summary + Checkout Button */}
                     <div className="lg:w-1/3">
-                        <div className="bg-[#0c5c2b] text-white rounded-3xl p-8 shadow-xl sticky top-28">
-                            <h2 className="text-xl font-heading font-bold mb-6 text-[#f6d70f] border-b border-white/20 pb-4">
+                        <div className="bg-primary text-white rounded-3xl p-8 shadow-xl sticky top-28">
+                            <h2 className="text-xl font-heading font-bold mb-6 text-yellow border-b border-white/20 pb-4">
                                 Order Summary
                             </h2>
 
@@ -310,10 +310,10 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-white/80">Shipping</span>
-                                    <span className="font-semibold text-[#6bbc45]">Free</span>
+                                    <span className="font-semibold text-primary-light">Free</span>
                                 </div>
                                 <div className="flex justify-between items-center text-xl mt-4 pt-4 border-t border-white/20">
-                                    <span className="font-bold text-[#f6d70f]">Total</span>
+                                    <span className="font-bold text-yellow">Total</span>
                                     <span className="font-bold text-white">₹{totalAmount.toFixed(2)}</span>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
                                         // Trigger HTML5 form validation by submitting the form
                                         (document.getElementById('form-submit-trigger') as HTMLButtonElement)?.click();
                                     }}
-                                    className="w-full bg-[#f6d70f] text-[#0c5c2b] font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70"
+                                    className="w-full bg-yellow text-primary font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70"
                                 >
                                     {checkingPin ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-lock" />}
                                     {checkingPin ? 'Checking location...' : 'Place Order'}

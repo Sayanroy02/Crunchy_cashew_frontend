@@ -73,7 +73,7 @@ export default function OrderDetailPage() {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) return (
     <div className="min-h-screen bg-[#f4f6f9] flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
@@ -81,7 +81,7 @@ export default function OrderDetailPage() {
     <div className="min-h-screen bg-[#f4f6f9] flex flex-col items-center justify-center gap-4 px-4">
       <i className="fa-solid fa-circle-exclamation text-5xl text-gray-300" />
       <p className="text-gray-500 font-semibold">{error || 'Order not found.'}</p>
-      <Link href="/profile?tab=orders" className="text-[#0c5c2b] font-bold text-sm hover:underline">
+      <Link href="/profile?tab=orders" className="text-primary font-bold text-sm hover:underline">
         ← Back to My Orders
       </Link>
     </div>
@@ -222,7 +222,7 @@ export default function OrderDetailPage() {
           <div className="flex gap-3 pb-8">
             <Link
               href="/profile?tab=orders"
-              className="flex-1 text-center border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:border-[#0c5c2b] transition-colors text-sm"
+              className="flex-1 text-center border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:border-primary transition-colors text-sm"
             >
               ← My Orders
             </Link>

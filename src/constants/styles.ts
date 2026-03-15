@@ -1,5 +1,5 @@
 export const COLORS = {
-  primary: '#0B5143',        // Deep green — main brand color
+  primary: '#99EA78',        // Deep green — main brand color
   primaryLight: '#6bbc45',   // Light green — accents, icons
   yellow: '#f6d70f',         // Yellow — CTA backgrounds
   amber: '#FBB21B',          // Amber — star ratings, avatar backgrounds

@@ -17,8 +17,8 @@ const DEFAULTS: Banner[] = [
 ];
 
 const GRADIENTS = [
-    'from-[#FBB21B] via-[#f0a500] to-[#e09000]',
-    'from-[#0c5c2b] to-[#1a8c44]',
+    'from-amber via-yellow to-yellow',
+    'from-primary to-primary',
     'from-[#1a1a2e] to-[#2d3561]',
 ];
 const TEXT_COLORS = ['text-[#2c1a0e]', 'text-white', 'text-white'];
@@ -94,7 +94,7 @@ export default function HeroCarousel() {
     }
 
     return (
-        <section className="w-full bg-[#fffdf5] py-4 sm:py-5">
+        <section className="w-full bg-bg py-4 sm:py-5">
             {/* Constrained + padded wrapper — this gives the left/right margin */}
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10">
 
@@ -143,7 +143,7 @@ export default function HeroCarousel() {
                                 flex items-center justify-center
                                 transition-all duration-200 hover:scale-110 active:scale-95"
                         >
-                            <i className="fa-solid fa-chevron-left text-[#0c5c2b] text-sm" />
+                            <i className="fa-solid fa-chevron-left text-primary text-sm" />
                         </button>
                     )}
 
@@ -159,7 +159,7 @@ export default function HeroCarousel() {
                                 flex items-center justify-center
                                 transition-all duration-200 hover:scale-110 active:scale-95"
                         >
-                            <i className="fa-solid fa-chevron-right text-[#0c5c2b] text-sm" />
+                            <i className="fa-solid fa-chevron-right text-primary text-sm" />
                         </button>
                     )}
 
@@ -199,7 +199,7 @@ export default function HeroCarousel() {
                                     className="h-1.5 rounded-full transition-all duration-400 ease-out"
                                     style={{
                                         width: i === current ? '2rem' : '0.5rem',
-                                        background: i === current ? '#FBB21B' : 'rgba(255,255,255,0.65)',
+                                        background: i === current ? 'var(--theme-amber)' : 'rgba(255,255,255,0.65)',
                                     }}
                                 />
                             ))}
@@ -215,7 +215,7 @@ export default function HeroCarousel() {
                                 key={b._id}
                                 className="text-xs font-semibold transition-all duration-300 cursor-pointer"
                                 style={{
-                                    color: i === current ? '#0c5c2b' : '#94a3b8',
+                                    color: i === current ? 'var(--theme-primary)' : '#94a3b8',
                                     transform: i === current ? 'scale(1.1)' : 'scale(1)',
                                 }}
                                 onClick={() => {

@@ -85,7 +85,7 @@ export default function AdminDashboard() {
 
     return (
         <div className="flex flex-col gap-8">
-            <h1 className="text-3xl font-heading font-black text-[#0c5c2b]">System Analytics</h1>
+            <h1 className="text-3xl font-heading font-black text-primary">System Analytics</h1>
 
             {/* Top Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -101,13 +101,13 @@ export default function AdminDashboard() {
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center">
                     <p className="text-gray-500 font-medium text-sm">Today's Revenue</p>
-                    <h2 className="text-4xl font-bold text-[#0c5c2b] mt-2">₹{stats.todays_collection}</h2>
+                    <h2 className="text-4xl font-bold text-primary mt-2">₹{stats.todays_collection}</h2>
                 </div>
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-[#f6d70f]/20 rounded-bl-full"></div>
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-yellow/20 rounded-bl-full"></div>
                     <p className="text-gray-500 font-medium text-sm relative z-10">Live Unique Visitors</p>
-                    <h2 className="text-4xl font-bold text-[#0c5c2b] mt-2 relative z-10">{traffic.unique_visitors}</h2>
+                    <h2 className="text-4xl font-bold text-primary mt-2 relative z-10">{traffic.unique_visitors}</h2>
                 </div>
             </div>
 

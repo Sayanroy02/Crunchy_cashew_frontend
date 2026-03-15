@@ -110,7 +110,7 @@ export default function AdminProducts() {
                 required={required}
                 value={(formData as any)[key]}
                 onChange={e => setFormData({ ...formData, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
-                className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b] transition-colors"
+                className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
             />
         </div>
     );
@@ -121,7 +121,7 @@ export default function AdminProducts() {
                 <h1 className="text-2xl font-bold text-gray-800">
                     Manage Catalog <span className="text-sm font-normal text-gray-400 ml-2">({products.length} products)</span>
                 </h1>
-                <button onClick={openAdd} className="bg-[#0c5c2b] text-white px-4 py-2.5 rounded-xl hover:bg-green-800 transition font-bold shadow-sm flex items-center gap-2">
+                <button onClick={openAdd} className="bg-primary text-white px-4 py-2.5 rounded-xl hover:bg-green-800 transition font-bold shadow-sm flex items-center gap-2">
                     <i className="fa-solid fa-plus"></i> Add Product
                 </button>
             </div>
@@ -161,7 +161,7 @@ export default function AdminProducts() {
                                             </div>
                                         </td>
                                         <td className="p-4 font-semibold">₹{p.price}</td>
-                                        <td className="p-4 text-[#FBB21B] font-bold">{p.discount ? `${p.discount}%` : '—'}</td>
+                                        <td className="p-4 text-amber font-bold">{p.discount ? `${p.discount}%` : '—'}</td>
                                         <td className="p-4">{p.stock} units</td>
                                         <td className="p-4 text-center">
                                             <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${p.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
@@ -170,7 +170,7 @@ export default function AdminProducts() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <button onClick={() => openEdit(p)} className="flex items-center gap-1.5 bg-[#FBB21B]/10 hover:bg-[#FBB21B]/20 text-[#2c1a0e] px-3 py-1.5 rounded-lg text-xs font-bold transition">
+                                                <button onClick={() => openEdit(p)} className="flex items-center gap-1.5 bg-amber/10 hover:bg-amber/20 text-[#2c1a0e] px-3 py-1.5 rounded-lg text-xs font-bold transition">
                                                     <i className="fa-solid fa-pen-to-square"></i> Edit
                                                 </button>
                                                 <button onClick={() => handleDelete(p._id || p.id)} className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition">
@@ -209,7 +209,7 @@ export default function AdminProducts() {
                                 <div className="space-y-1 md:col-span-2">
                                     <label className="text-sm font-semibold text-gray-700">Description</label>
                                     <textarea required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b] min-h-[90px] transition-colors resize-none" />
+                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary min-h-[90px] transition-colors resize-none" />
                                 </div>
                                 {field('Price (₹)', 'price', 'number')}
                                 {field('Stock Quantity', 'stock', 'number')}
@@ -217,7 +217,7 @@ export default function AdminProducts() {
                                 <div className="space-y-1">
                                     <label className="text-sm font-semibold text-gray-700">Availability</label>
                                     <select value={formData.is_available ? 'true' : 'false'} onChange={e => setFormData({ ...formData, is_available: e.target.value === 'true' })}
-                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b]">
+                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary">
                                         <option value="true">Active (visible in shop)</option>
                                         <option value="false">Inactive (hidden)</option>
                                     </select>
@@ -243,17 +243,17 @@ export default function AdminProducts() {
                                     <div className="space-y-1 md:col-span-2">
                                         <label className="text-sm font-semibold text-gray-700">Image URL (Cloudinary) — or upload below</label>
                                         <input type="url" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                                            placeholder="https://res.cloudinary.com/..." className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b]" />
+                                            placeholder="https://res.cloudinary.com/..." className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary" />
                                     </div>
                                 )}
                                 <div className="space-y-1 md:col-span-2">
                                     <label className="text-sm font-semibold text-gray-700">Upload Image File (optional)</label>
                                     <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
-                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-[#0c5c2b] hover:file:bg-green-100 cursor-pointer border-2 border-gray-200 rounded-xl p-2" />
+                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border-2 border-gray-200 rounded-xl p-2" />
                                 </div>
                                 <div className="md:col-span-2 pt-2">
                                     <button type="submit" disabled={isSubmitting}
-                                        className="w-full bg-[#0c5c2b] text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                                        className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
                                         {isSubmitting ? <><i className="fa-solid fa-spinner animate-spin"></i> Saving...</> : <>{editingId ? '💾 Save Changes' : '+ Add Product'}</>}
                                     </button>
                                 </div>

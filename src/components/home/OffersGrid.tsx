@@ -12,8 +12,8 @@ const offers = [
         title: 'First Order Special',
         subtitle: 'Use code: CRUNCHY10',
         description: 'Minimum order ₹499',
-        color: 'from-[#f6d70f] to-[#f0a500]',
-        textColor: 'text-[#0c5c2b]',
+        color: 'from-yellow to-yellow',
+        textColor: 'text-primary',
         href: '/shop',
         size: 'large',
         icon: '🥜',
@@ -25,7 +25,7 @@ const offers = [
         title: 'Orders Above ₹1,599',
         subtitle: 'Auto-applied at checkout',
         description: 'No coupon needed',
-        color: 'from-[#0c5c2b] to-[#1a8c44]',
+        color: 'from-primary to-primary',
         textColor: 'text-white',
         href: '/shop',
         size: 'medium',
@@ -103,11 +103,11 @@ export default function OffersGrid() {
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-2xl md:text-3xl font-heading font-black text-gray-900">
-                        🏷️ Today's <span className="text-[#0c5c2b]">Best Deals</span>
+                        🏷️ Today's <span className="text-primary">Best Deals</span>
                     </h2>
                     <p className="text-gray-500 text-sm mt-1">Freshly sourced. Directly roasted. Only the best for you.</p>
                 </div>
-                <Link href="/shop" className="hidden md:flex items-center gap-2 text-[#0c5c2b] font-bold text-sm hover:underline">
+                <Link href="/shop" className="hidden md:flex items-center gap-2 text-primary font-bold text-sm hover:underline">
                     Shop All <i className="fa-solid fa-arrow-right"></i>
                 </Link>
             </div>
@@ -116,25 +116,25 @@ export default function OffersGrid() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                 {/* Large Card - 2x2 */}
                 <Link href="/shop"
-                    className="col-span-2 md:col-span-2 row-span-2 bg-gradient-to-br from-[#f6d70f] to-[#f0a500] rounded-2xl p-6 md:p-8 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[220px] md:min-h-[280px]"
+                    className="col-span-2 md:col-span-2 row-span-2 bg-gradient-to-br from-yellow to-yellow rounded-2xl p-6 md:p-8 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[220px] md:min-h-[280px]"
                 >
                     <div className="absolute -right-8 -bottom-8 text-[100px] md:text-[150px] opacity-10 select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">🥜</div>
                     <div>
-                        <span className="inline-block text-[#0c5c2b] bg-black/10 text-xs font-bold px-3 py-1 rounded-full mb-3">🔥 Limited Time</span>
-                        <div className="text-5xl md:text-6xl font-black text-[#0c5c2b] leading-none mb-1">10% OFF</div>
-                        <div className="text-lg md:text-xl font-bold text-[#0c5c2b] opacity-90">First Order Special</div>
-                        <div className="text-sm text-[#0c5c2b] opacity-70 mt-1">Use code: CRUNCHY10</div>
+                        <span className="inline-block text-primary bg-black/10 text-xs font-bold px-3 py-1 rounded-full mb-3">🔥 Limited Time</span>
+                        <div className="text-5xl md:text-6xl font-black text-primary leading-none mb-1">10% OFF</div>
+                        <div className="text-lg md:text-xl font-bold text-primary opacity-90">First Order Special</div>
+                        <div className="text-sm text-primary opacity-70 mt-1">Use code: CRUNCHY10</div>
                     </div>
                     <div className="flex items-center justify-between">
-                        <span className="text-xs text-[#0c5c2b] opacity-60">Min order ₹499</span>
-                        <span className="text-[#0c5c2b] group-hover:translate-x-1 transition-transform text-lg">→</span>
+                        <span className="text-xs text-primary opacity-60">Min order ₹499</span>
+                        <span className="text-primary group-hover:translate-x-1 transition-transform text-lg">→</span>
                     </div>
                 </Link>
 
                 {/* Right column — stacked vertically */}
                 <div className="col-span-2 md:col-span-1 grid grid-cols-2 md:grid-cols-1 gap-3 md:gap-4">
                     {/* Green Card */}
-                    <Link href="/shop" className="bg-gradient-to-br from-[#0c5c2b] to-[#1a8c44] rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[130px]">
+                    <Link href="/shop" className="bg-gradient-to-br from-primary to-primary rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[130px]">
                         <div className="absolute -right-3 -bottom-3 text-[60px] opacity-10 select-none pointer-events-none">💰</div>
                         <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">⚡ Flash Sale</span>
                         <div>
@@ -170,7 +170,7 @@ export default function OffersGrid() {
                         <div className="text-xs font-bold text-white opacity-80">Factory-direct pricing</div>
                     </div>
                 </Link>
-                <Link href="/shop?category=roasted" className="col-span-2 md:col-span-1 bg-gradient-to-br from-[#004d40] to-[#00796b] rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 min-h-[120px]">
+                <Link href="/shop?category=roasted" className="col-span-2 md:col-span-1 bg-gradient-to-br from-primary to-primary rounded-2xl p-4 md:p-5 flex flex-col justify-between group overflow-hidden relative shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 min-h-[120px]">
                     <div className="absolute -right-2 -bottom-2 text-[50px] opacity-10 select-none pointer-events-none">✨</div>
                     <span className="inline-block text-white bg-white/10 text-[10px] font-bold px-2 py-0.5 rounded-full w-fit">🌟 Bestseller</span>
                     <div>
@@ -182,7 +182,7 @@ export default function OffersGrid() {
 
 
             {/* Stats Ticker */}
-            <div className="mt-6 bg-[#0c5c2b] rounded-2xl px-6 py-4 flex flex-wrap items-center justify-around gap-4 text-white">
+            <div className="mt-6 bg-primary rounded-2xl px-6 py-4 flex flex-wrap items-center justify-around gap-4 text-white">
                 {[
                     { label: 'Happy Customers', value: 15000, suffix: '+' },
                     { label: 'Orders Delivered', value: 50000, suffix: '+' },
@@ -190,7 +190,7 @@ export default function OffersGrid() {
                     { label: 'Years of Trust', value: 12, suffix: '+' },
                 ].map((stat) => (
                     <div key={stat.label} className="text-center">
-                        <div className="text-2xl md:text-3xl font-black text-[#f6d70f]">
+                        <div className="text-2xl md:text-3xl font-black text-yellow">
                             <AnimatedCounter target={stat.value} suffix={stat.suffix} />
                         </div>
                         <div className="text-xs md:text-sm opacity-80 mt-0.5">{stat.label}</div>

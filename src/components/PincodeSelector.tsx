@@ -49,9 +49,9 @@ export default function PincodeSelector() {
             {/* Trigger chip */}
             <button
                 onClick={() => { setOpen(v => !v); setInput(saved); setStatus('idle'); }}
-                className="flex items-center gap-1.5 text-xs font-medium text-gray-700 hover:text-[#0c5c2b] transition-colors group"
+                className="flex items-center gap-1.5 text-xs font-medium text-gray-700 hover:text-primary transition-colors group"
             >
-                <i className="fa-solid fa-location-dot text-[#0c5c2b] text-sm"></i>
+                <i className="fa-solid fa-location-dot text-primary text-sm"></i>
                 <div className="text-left leading-tight">
                     <div className="text-[10px] text-gray-400 group-hover:text-gray-500">Deliver to</div>
                     <div className="font-bold text-gray-800">{saved || 'Pincode'} <i className="fa-solid fa-chevron-down text-[9px]"></i></div>
@@ -80,13 +80,13 @@ export default function PincodeSelector() {
                                 onChange={e => { setInput(e.target.value.replace(/\D/g, '')); setStatus('idle'); }}
                                 onKeyDown={e => e.key === 'Enter' && check()}
                                 placeholder="e.g. 734001"
-                                className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-[#0c5c2b] transition-colors font-mono tracking-widest"
+                                className="flex-1 border-2 border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary transition-colors font-mono tracking-widest"
                                 autoFocus
                             />
                             <button
                                 onClick={check}
                                 disabled={input.length !== 6 || status === 'checking'}
-                                className="bg-[#0c5c2b] text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-green-800 transition disabled:opacity-50"
+                                className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-green-800 transition disabled:opacity-50"
                             >
                                 {status === 'checking' ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Check'}
                             </button>
@@ -112,7 +112,7 @@ export default function PincodeSelector() {
                         )}
 
                         {status === 'available' && (
-                            <button onClick={() => setOpen(false)} className="mt-2 w-full bg-[#FBB21B] text-[#2c1a0e] font-bold text-sm py-2 rounded-xl hover:bg-yellow-400 transition">
+                            <button onClick={() => setOpen(false)} className="mt-2 w-full bg-amber text-[#2c1a0e] font-bold text-sm py-2 rounded-xl hover:bg-yellow transition">
                                 Save & Close
                             </button>
                         )}

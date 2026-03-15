@@ -188,7 +188,7 @@ export default function RegisterPage() {
                                         value={formData.username} onChange={handleChange}
                                         placeholder="John Doe"
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400
-                                            focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                            focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
                                         value={formData.email} onChange={handleChange}
                                         placeholder="name@example.com"
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-4 text-sm text-gray-800 placeholder-gray-400
-                                            focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                            focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition-all"
                                     />
                                 </div>
                             </div>
@@ -227,7 +227,7 @@ export default function RegisterPage() {
                                             value={formData.password} onChange={handleChange}
                                             placeholder="••••••••"
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-9 text-sm text-gray-800 placeholder-gray-400
-                                                focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                                focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition-all"
                                         />
                                         <button type="button" tabIndex={-1}
                                             onClick={() => setShowPassword(v => !v)}
@@ -250,7 +250,7 @@ export default function RegisterPage() {
                                             value={formData.confirm_password} onChange={handleChange}
                                             placeholder="••••••••"
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3.5 pl-10 pr-9 text-sm text-gray-800 placeholder-gray-400
-                                                focus:bg-white focus:border-[#0C5C2B] focus:ring-2 focus:ring-[#0C5C2B]/15 outline-none transition-all"
+                                                focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/15 outline-none transition-all"
                                         />
                                         <button type="button" tabIndex={-1}
                                             onClick={() => setShowConfirm(v => !v)}
@@ -263,7 +263,7 @@ export default function RegisterPage() {
 
                             {/* Submit */}
                             <button type="submit" disabled={isLoading}
-                                className="w-full bg-[#0C5C2B] hover:bg-[#0a4f25] active:scale-[0.98]
+                                className="w-full bg-primary hover:bg-[#0a4f25] active:scale-[0.98]
                                     text-white font-bold text-sm py-3.5 rounded-xl
                                     shadow-md hover:shadow-lg hover:-translate-y-0.5
                                     transition-all disabled:opacity-60 disabled:hover:translate-y-0
@@ -300,7 +300,7 @@ export default function RegisterPage() {
                         <p className="text-center mt-5 text-sm text-gray-500">
                             Already have an account?{' '}
                             <Link href="/login"
-                                className="text-[#0C5C2B] font-bold hover:underline underline-offset-2">
+                                className="text-primary font-bold hover:underline underline-offset-2">
                                 Sign in here
                             </Link>
                         </p>

@@ -87,8 +87,8 @@ export default function AdminQueries() {
                                         <StatusBadge status={q.status} />
                                     </div>
                                     <div className="text-xs text-gray-500 flex flex-wrap gap-3 mb-2">
-                                        <span><i className="fa-solid fa-envelope mr-1 text-[#FBB21B]"></i>{q.email}</span>
-                                        <span><i className="fa-solid fa-phone mr-1 text-[#FBB21B]"></i>{q.phone}</span>
+                                        <span><i className="fa-solid fa-envelope mr-1 text-amber"></i>{q.email}</span>
+                                        <span><i className="fa-solid fa-phone mr-1 text-amber"></i>{q.phone}</span>
                                         {q.created_at && <span><i className="fa-regular fa-calendar mr-1"></i>{new Date(q.created_at).toLocaleDateString()}</span>}
                                     </div>
                                     <p className="text-sm text-gray-600 line-clamp-3">{q.message}</p>
@@ -132,9 +132,9 @@ export default function AdminQueries() {
                                         <StatusBadge status={v.status} />
                                     </div>
                                     <div className="text-xs text-gray-500 flex flex-wrap gap-3 mb-2">
-                                        <span><i className="fa-solid fa-envelope mr-1 text-[#FBB21B]"></i>{v.email}</span>
-                                        <span><i className="fa-solid fa-phone mr-1 text-[#FBB21B]"></i>{v.phone}</span>
-                                        <span className="text-[#0c5c2b] font-semibold"><i className="fa-regular fa-calendar mr-1"></i>Requested: {v.desired_date ? new Date(v.desired_date).toLocaleDateString() : 'N/A'}</span>
+                                        <span><i className="fa-solid fa-envelope mr-1 text-amber"></i>{v.email}</span>
+                                        <span><i className="fa-solid fa-phone mr-1 text-amber"></i>{v.phone}</span>
+                                        <span className="text-primary font-semibold"><i className="fa-regular fa-calendar mr-1"></i>Requested: {v.desired_date ? new Date(v.desired_date).toLocaleDateString() : 'N/A'}</span>
                                     </div>
                                     <p className="text-sm text-gray-600 line-clamp-2">{v.purpose}</p>
                                     {v.admin_notes && (
@@ -177,7 +177,7 @@ export default function AdminQueries() {
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Status</label>
                                 <select value={statusChoice} onChange={e => setStatusChoice(e.target.value)}
-                                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#FBB21B]">
+                                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-amber">
                                     <option>Pending</option>
                                     <option>Accepted</option>
                                     <option>Rejected</option>
@@ -188,10 +188,10 @@ export default function AdminQueries() {
                                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Admin Reply / Notes</label>
                                 <textarea value={adminNotes} onChange={e => setAdminNotes(e.target.value)} rows={3}
                                     placeholder="Optional message to the user..."
-                                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#FBB21B] resize-none" />
+                                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-amber resize-none" />
                             </div>
                             <button onClick={handleSave} disabled={saving}
-                                className="w-full bg-[#0c5c2b] text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                                className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
                                 {saving ? <><i className="fa-solid fa-spinner animate-spin"></i> Saving...</> : 'Save & Notify'}
                             </button>
                         </div>

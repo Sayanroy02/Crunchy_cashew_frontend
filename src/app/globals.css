@@ -1,12 +1,22 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-primary: #0c5c2b;
+@theme {
+  /* ── Brand Colors ── */
+  --color-primary: #0A5246;
+  --color-primary-light: #0B5143;
+  --color-yellow: #f6d70f;
+  --color-amber: #FBB21B;
+  --color-bg: #E1EDEB;
+  --color-bg-mobile: #f8f9fa;
+  --color-danger: #ef4444;
+
+  /* ── Semantic Colors ── */
   --color-highlight: #FBB21B;
-  --color-bg-cream: #fffdf5;
+  --color-bg-cream: #E1EDEB;
   --color-text-dark: #1a1f1c;
   --color-text-light: #ffffff;
 
+  /* ── Typography ── */
   --font-heading: var(--font-montserrat), 'Montserrat', sans-serif;
   --font-body: var(--font-montserrat), 'Montserrat', sans-serif;
   --font-sans: var(--font-montserrat), 'Montserrat', sans-serif;
@@ -17,15 +27,16 @@
   --foreground: #1a1f1c;
 }
 
+/* ── Base ── */
 body {
-  background-color: var(--background);
+  background-color: #f8f9fa;
   color: var(--foreground);
   font-family: var(--font-montserrat), 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-
+/* ── Animations ── */
 @keyframes blob {
   0% {
     transform: translate(0px, 0px) scale(1);
@@ -56,7 +67,7 @@ body {
   animation-delay: 4s;
 }
 
-/* Hide scrollbar, keep scroll functionality */
+/* ── Scrollbar ── */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -64,9 +75,4 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* Smooth page background - white for the new Navbar layout */
-body {
-  background-color: #f8f9fa;
 }

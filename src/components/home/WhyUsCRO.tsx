@@ -51,8 +51,8 @@ export default function ComparisonSection() {
 
     return (
         <section
-            className="relative py-2 md:py-2"
-            style={{ background: '#FFFDF5' }}
+            className="relative py-5 md:py-5"
+            style={{ background: 'var(--theme-bg)' }}
         >
             <div className="max-w-5xl mx-auto px-4 md:px-8">
 
@@ -68,7 +68,7 @@ export default function ComparisonSection() {
                 >
                     <span
                         className="inline-block font-bold tracking-[4px] uppercase text-xs mb-2"
-                        style={{ color: '#0A4F25' }}
+                        style={{ color: 'var(--color-primary)' }}
                     >
                         Side by Side
                     </span>
@@ -77,7 +77,7 @@ export default function ComparisonSection() {
                         style={{ color: '#1a1a1a' }}
                     >
                         Why{' '}
-                        <span style={{ color: '#FDC700' }}>
+                        <span style={{ color: 'var(--theme-yellow)' }}>
                             Crunchy Cashews
                         </span>{' '}
                         wins
@@ -134,7 +134,7 @@ function SplitCard() {
                 {/* Our header — green with logo */}
                 <div
                     className="px-5 md:px-7 py-4 flex items-center gap-3"
-                    style={{ background: '#0A4F25' }}
+                    style={{ background: 'var(--color-primary)' }}
                 >
                     <div className="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden bg-white flex items-center justify-center p-1">
                         <Image
@@ -219,7 +219,7 @@ function CompareRow({
                 style={{
                     animationDelay: d,
                     opacity: inView ? undefined : 0,
-                    background: 'rgba(10,79,37,0.04)',
+                    background: 'rgba(var(--color-primary-rgb, 10,79,37),0.04)',
                     borderLeft: '3px solid #0A4F25',
                     padding: '16px 16px 16px 18px',
                 }}
@@ -234,13 +234,13 @@ function CompareRow({
                             width: 19,
                             height: 19,
                             borderRadius: '50%',
-                            background: '#0A4F25',
+                            background: 'var(--color-primary)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: 10,
                             fontWeight: 900,
-                            color: '#FDC700',
+                            color: 'var(--theme-yellow)',
                         }}
                     >
                         ✓
@@ -248,7 +248,7 @@ function CompareRow({
                     <div>
                         <p
                             className="text-[9px] font-black tracking-[2px] uppercase mb-1"
-                            style={{ color: '#0A4F25', opacity: 0.75 }}
+                            style={{ color: 'var(--color-primary)', opacity: 0.75 }}
                         >
                             {point.icon} {point.label}
                         </p>

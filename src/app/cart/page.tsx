@@ -140,13 +140,13 @@ export default function CartPage() {
                             </div>
 
                             {isAuthenticated ? (
-                                <Link href="/checkout" className="w-full bg-highlight text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 hover:shadow-yellow-400/20 transition-all hover:-translate-y-1">
+                                <Link href="/checkout" className="w-full bg-highlight text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow hover:shadow-yellow-400/20 transition-all hover:-translate-y-1">
                                     <i className="fa-solid fa-lock"></i> Proceed to Checkout
                                 </Link>
                             ) : (
                                 <div className="flex flex-col gap-3">
                                     <p className="text-sm text-center text-gray-400 mb-2">You must sign in to secure your checkout.</p>
-                                    <Link href="/login" className="w-full bg-highlight text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 transition-all">
+                                    <Link href="/login" className="w-full bg-highlight text-black font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow transition-all">
                                         Sign In to Checkout
                                     </Link>
                                     <Link href="/register" className="w-full bg-transparent border border-gray-600 text-white font-bold py-3 rounded-xl flex items-center justify-center hover:border-gray-400 transition-all">

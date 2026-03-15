@@ -55,7 +55,7 @@ export default function AdminBulkOrders() {
                     <h1 className="text-2xl font-bold text-gray-800">Bulk / Wholesale Orders</h1>
                     <p className="text-sm text-gray-400 mt-0.5">{orders.length} total inquiries</p>
                 </div>
-                <button onClick={fetchOrders} className="text-sm text-[#0c5c2b] font-semibold flex items-center gap-1.5 hover:underline">
+                <button onClick={fetchOrders} className="text-sm text-primary font-semibold flex items-center gap-1.5 hover:underline">
                     <i className="fa-solid fa-rotate-right" /> Refresh
                 </button>
             </div>
@@ -64,7 +64,7 @@ export default function AdminBulkOrders() {
             <div className="flex flex-wrap gap-2">
                 {['all', 'Pending', 'In Review', 'Quoted', 'Confirmed', 'Rejected'].map(f => (
                     <button key={f} onClick={() => setFilter(f)}
-                        className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize border transition-all ${filter === f ? 'bg-[#0c5c2b] text-white border-[#0c5c2b]' : 'bg-white text-gray-500 border-gray-200 hover:border-[#0c5c2b]'}`}>
+                        className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize border transition-all ${filter === f ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:border-primary'}`}>
                         {f === 'all' ? `All (${orders.length})` : `${f} (${counts[f] ?? 0})`}
                     </button>
                 ))}
@@ -126,12 +126,12 @@ export default function AdminBulkOrders() {
                                         value={activeNote!.notes}
                                         onChange={e => setActiveNote({ ...activeNote!, notes: e.target.value })}
                                         placeholder="Add admin note (optional)..."
-                                        className="w-full text-xs border rounded-lg px-3 py-2 resize-none h-16 focus:outline-none focus:ring-2 focus:ring-[#0c5c2b]/30"
+                                        className="w-full text-xs border rounded-lg px-3 py-2 resize-none h-16 focus:outline-none focus:ring-2 focus:ring-primary/30"
                                     />
                                     <div className="flex gap-2">
                                         {['In Review', 'Quoted', 'Confirmed', 'Rejected'].map(s => (
                                             <button key={s} onClick={() => updateStatus(o._id, s, activeNote!.notes)}
-                                                className="flex-1 text-[10px] font-bold py-1.5 rounded-lg border border-gray-200 hover:border-[#0c5c2b] hover:text-[#0c5c2b] transition-colors">
+                                                className="flex-1 text-[10px] font-bold py-1.5 rounded-lg border border-gray-200 hover:border-primary hover:text-primary transition-colors">
                                                 {s}
                                             </button>
                                         ))}
@@ -140,7 +140,7 @@ export default function AdminBulkOrders() {
                                 </div>
                             ) : (
                                 <button onClick={() => setActiveNote({ id: o._id, notes: o.admin_notes || '' })}
-                                    className="w-full text-xs font-bold text-[#0c5c2b] border border-[#0c5c2b] py-2 rounded-xl hover:bg-[#0c5c2b] hover:text-white transition-colors">
+                                    className="w-full text-xs font-bold text-primary border border-primary py-2 rounded-xl hover:bg-primary hover:text-white transition-colors">
                                     <i className="fa-solid fa-pen mr-1" /> Update Status
                                 </button>
                             )}

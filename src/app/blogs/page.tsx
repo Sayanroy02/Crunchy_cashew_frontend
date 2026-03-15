@@ -81,17 +81,17 @@ export default function BlogsDirectory() {
     }, [blogs, activeCategory, searchTerm, sortOrder]);
 
     return (
-        <div className="bg-[#E1EDEB] min-h-screen pb-24">
+        <div className="bg-bg min-h-screen pb-24">
             {/* Hero Header */}
             <section className="bg-black text-white pt-28 pb-20 px-6 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,#0B5143,transparent)]" />
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,var(--theme-primary),transparent)]" />
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-pen-nib" /> Our Journal
                     </span>
                     <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight">
                         Insights, Recipes &<br />
-                        <span className="text-[#f6d70f]">Sustainability</span>
+                        <span className="text-yellow">Sustainability</span>
                     </h1>
                     <p className="text-gray-300 max-w-2xl mx-auto text-lg mb-10">
                         Expert health guides, cashew recipes, and our commitment to sustainable farming — all in one place.
@@ -136,14 +136,14 @@ export default function BlogsDirectory() {
                                     onClick={() => setActiveCategory(cat)}
                                     className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold whitespace-nowrap border-b-2 transition-all ${
                                         isActive
-                                            ? 'border-[#0B5143] text-[#0B5143]'
+                                            ? 'border-primary text-primary'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
                                 >
                                     <i className={CATEGORY_ICONS[cat]} />
                                     {cat}
                                     <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                                        isActive ? 'bg-[#0B5143] text-white' : 'bg-gray-100 text-gray-500'
+                                        isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'
                                     }`}>
                                         {count}
                                     </span>
@@ -179,12 +179,12 @@ export default function BlogsDirectory() {
                         </p>
                         <div className="flex gap-3 justify-center">
                             {searchTerm && (
-                                <button onClick={() => setSearchTerm('')} className="px-5 py-2.5 rounded-full bg-[#0B5143] text-white text-sm font-bold">
+                                <button onClick={() => setSearchTerm('')} className="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold">
                                     Clear Search
                                 </button>
                             )}
                             {activeCategory !== 'All' && (
-                                <button onClick={() => setActiveCategory('All')} className="px-5 py-2.5 rounded-full border-2 border-[#0B5143] text-[#0B5143] text-sm font-bold">
+                                <button onClick={() => setActiveCategory('All')} className="px-5 py-2.5 rounded-full border-2 border-primary text-primary text-sm font-bold">
                                     View All
                                 </button>
                             )}
@@ -228,17 +228,17 @@ export default function BlogsDirectory() {
                                 <div className="p-7 flex flex-col flex-grow">
                                     {blog.author && (
                                         <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                                            <i className="fa-solid fa-user-pen text-[#0B5143]" />
+                                            <i className="fa-solid fa-user-pen text-primary" />
                                             {blog.author}
                                         </p>
                                     )}
-                                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-[#0B5143] transition-colors">
+                                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                                         {blog.title}
                                     </h3>
                                     <p className="text-gray-500 line-clamp-3 mb-5 flex-grow leading-relaxed text-sm">
                                         {(blog.content || '').replace(/<[^>]*>?/gm, '')}
                                     </p>
-                                    <span className="text-[#0B5143] font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all">
+                                    <span className="text-primary font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all">
                                         Read Article <i className="fa-solid fa-arrow-right-long" />
                                     </span>
                                 </div>

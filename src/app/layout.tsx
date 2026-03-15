@@ -5,6 +5,7 @@ import StoreProvider from "@/components/StoreProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingBackground from "@/components/layout/FloatingBackground";
+import { COLORS } from "@/constants/styles";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -45,7 +46,18 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
       </head>
-      <body className={`${montserrat.variable} font-sans antialiased`}>
+      <body 
+        className={`${montserrat.variable} font-sans antialiased`}
+        style={{
+          '--theme-primary': COLORS.primary,
+          '--theme-primary-light': COLORS.primaryLight,
+          '--theme-yellow': COLORS.yellow,
+          '--theme-amber': COLORS.amber,
+          '--theme-bg': COLORS.bg,
+          '--theme-bg-mobile': COLORS.bgMobile,
+          '--theme-danger': COLORS.danger,
+        } as React.CSSProperties}
+      >
         <StoreProvider>
           <FloatingBackground />
           <Navbar />

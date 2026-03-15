@@ -31,7 +31,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
                     onMouseLeave={() => setHover(0)}
                     className="text-2xl transition-transform hover:scale-110"
                 >
-                    <i className={`${(hover || value) >= star ? 'fa-solid fa-star text-[#FBB21B]' : 'fa-regular fa-star text-gray-300'}`} />
+                    <i className={`${(hover || value) >= star ? 'fa-solid fa-star text-amber' : 'fa-regular fa-star text-gray-300'}`} />
                 </button>
             ))}
         </div>
@@ -69,7 +69,7 @@ const MOBILE_GRID = [
 
 export default function ProfilePage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center"><div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>}>
+        <Suspense fallback={<div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center"><div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
             <ProfileContent />
         </Suspense>
     );
@@ -235,7 +235,7 @@ function ProfileContent() {
 
     if (loading) return (
         <div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center">
-            <div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" />
+            <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
@@ -264,12 +264,12 @@ function ProfileContent() {
                             <i className="fa-solid fa-circle-check text-4xl text-green-500" />
                         </div>
                         <h2 className="text-2xl font-black text-gray-900 mb-2">Order Placed! 🎉</h2>
-                        <code className="block text-xs bg-gray-100 text-[#0c5c2b] font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
+                        <code className="block text-xs bg-gray-100 text-primary font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
                             #{successOrderId.slice(-10).toUpperCase()}
                         </code>
                         <div className="flex flex-col gap-3">
                             <Link href={`/track?order=${successOrderId}`}
-                                className="block bg-[#0c5c2b] text-white font-bold py-3 rounded-xl hover:bg-green-800 transition flex items-center justify-center gap-2">
+                                className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-green-800 transition flex items-center justify-center gap-2">
                                 <i className="fa-solid fa-truck-fast" /> Track Your Order
                             </Link>
                             <button onClick={() => setShowSuccessModal(false)}
@@ -290,7 +290,7 @@ function ProfileContent() {
 
                         {/* Profile Info Card */}
                         <div className="p-6 border-b border-gray-100 flex items-center gap-4">
-                            <div className="w-16 h-16 bg-[#0c5c2b]/10 rounded-full flex items-center justify-center text-2xl font-black text-[#0c5c2b] relative">
+                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-black text-primary relative">
                                 {initials}
                                 <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow border border-gray-100 cursor-pointer">
                                     <i className="fa-solid fa-camera text-[10px] text-gray-400"></i>
@@ -306,7 +306,7 @@ function ProfileContent() {
                         <div className="flex flex-col p-3 gap-1">
                             {SIDEBAR_TABS.map(tab => (
                                 <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOrderFilter('All'); }}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-[#0c5c2b] text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-primary text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
                                     <i className={`fa-solid ${tab.icon} w-5 text-center ${currentDesktopTab === tab.key ? 'text-white' : 'text-gray-400'}`}></i>
                                     {tab.label}
                                 </button>
@@ -326,7 +326,7 @@ function ProfileContent() {
                             <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                                 <h2 className="text-xl font-black text-gray-800">Personal Information</h2>
                                 {!isEditing && (
-                                    <button onClick={() => setIsEditing(true)} className="text-sm text-[#0c5c2b] font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
+                                    <button onClick={() => setIsEditing(true)} className="text-sm text-primary font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
                                         <i className="fa-solid fa-pen-to-square" /> Change Information
                                     </button>
                                 )}
@@ -334,7 +334,7 @@ function ProfileContent() {
 
                             <div className="flex gap-10">
                                 {/* Profile Picture Area */}
-                                <div className="w-32 h-32 bg-[#FBB21B] rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg relative border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
+                                <div className="w-32 h-32 bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg relative border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
                                     {initials}
                                     <div className="absolute right-0 bottom-2 bg-white p-2 rounded-full shadow border border-gray-100 cursor-pointer">
                                         <i className="fa-solid fa-camera text-gray-500 text-xs"></i>
@@ -373,18 +373,18 @@ function ProfileContent() {
                                             <div className="grid grid-cols-2 gap-y-6 gap-x-6">
                                                 <div>
                                                     <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
-                                                    <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm transition-colors font-semibold" placeholder="10-digit mobile number" />
+                                                    <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors font-semibold" placeholder="10-digit mobile number" />
                                                 </div>
                                                 <div className="col-span-2">
                                                     <div className="flex justify-between items-center mb-2">
                                                         <label className="text-xs font-bold text-gray-800">Complete Address</label>
                                                         <button type="button" onClick={handleGetLocation} className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest"><i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate</button>
                                                     </div>
-                                                    <textarea rows={4} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm transition-colors resize-none font-semibold" placeholder="Enter flat/house no, street, area, city, pincode" />
+                                                    <textarea rows={4} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors resize-none font-semibold" placeholder="Enter flat/house no, street, area, city, pincode" />
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
-                                                <button type="submit" className="px-8 py-3 rounded-xl font-bold text-white bg-[#0c5c2b] shadow-lg shadow-[#0c5c2b]/20 hover:-translate-y-0.5 transition-transform text-sm">Save Complete Info</button>
+                                                <button type="submit" className="px-8 py-3 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-transform text-sm">Save Complete Info</button>
                                                 <button type="button" onClick={() => setIsEditing(false)} className="px-8 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm">Cancel</button>
                                             </div>
                                         </form>
@@ -429,7 +429,7 @@ function ProfileContent() {
                         {/* Wavy Header Segment */}
                         <div className="relative bg-[#bd1547] text-white pt-8 pb-[140px] shadow-sm">
                             {/* The color in Image 3 header looks like a vibrant pinkish red, but we strictly use #0c5c2b or the requested color scheme. Let's use a nice gradient green. */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#0c5c2b] to-green-600"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary to-green-600"></div>
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
 
                             <div className="relative z-10 flex justify-between items-center px-6">
@@ -446,9 +446,9 @@ function ProfileContent() {
 
                         {/* Avatar */}
                         <div className="flex flex-col items-center -mt-[90px] relative z-20 px-6">
-                            <div className="w-[100px] h-[100px] bg-[#FBB21B] rounded-full flex items-center justify-center text-4xl font-black text-white border-4 border-[#f8f9fa] shadow-xl shadow-gray-200">
+                            <div className="w-[100px] h-[100px] bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white border-4 border-[#f8f9fa] shadow-xl shadow-gray-200">
                                 {initials}
-                                <div className="absolute bottom-0 right-1 bg-white p-1.5 rounded-full shadow border border-gray-100 flex items-center justify-center text-[#0c5c2b]">
+                                <div className="absolute bottom-0 right-1 bg-white p-1.5 rounded-full shadow border border-gray-100 flex items-center justify-center text-primary">
                                     <i className="fa-solid fa-camera text-[10px]" />
                                 </div>
                             </div>
@@ -458,7 +458,7 @@ function ProfileContent() {
 
                         {/* Mobile Grid Section */}
                         <div className="px-6 mt-8 mb-6">
-                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_#FBB21B] inline-block -ml-1 pr-2">My Orders</h3>
+                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_var(--theme-amber)] inline-block -ml-1 pr-2">My Orders</h3>
                             <div className="grid grid-cols-3 gap-y-8 gap-x-4">
                                 {MOBILE_GRID.map(item => (
                                     <button key={item.key} onClick={() => {
@@ -544,7 +544,7 @@ function ProfileContent() {
                                                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">{profile?.email}</p>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => setIsEditing(true)} className="text-[#0c5c2b] bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i className="fa-solid fa-pen text-xs" /></button>
+                                                <button onClick={() => setIsEditing(true)} className="text-primary bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i className="fa-solid fa-pen text-xs" /></button>
                                             </div>
                                             <div>
                                                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Phone</p>
@@ -559,15 +559,15 @@ function ProfileContent() {
                                         <form onSubmit={handleUpdateProfile} className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Phone</label>
-                                                <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-[#0c5c2b]" />
+                                                <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary" />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Address</label>
-                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-[#0c5c2b] resize-none" />
-                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold text-[#0c5c2b] uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5"><i className="fa-solid fa-location-crosshairs"></i> Auto Locate</button>
+                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary resize-none" />
+                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5"><i className="fa-solid fa-location-crosshairs"></i> Auto Locate</button>
                                             </div>
                                             <div className="flex gap-3 pt-2">
-                                                <button type="submit" className="flex-1 bg-[#0c5c2b] text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-[#0c5c2b]/20">Save</button>
+                                                <button type="submit" className="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20">Save</button>
                                                 <button type="button" onClick={() => setIsEditing(false)} className="px-6 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl">Cancel</button>
                                             </div>
                                         </form>
@@ -595,7 +595,7 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
             <i className="fa-solid fa-box-open text-4xl text-gray-200 mb-4 block" />
             <h3 className="text-lg font-black text-gray-800 mb-1">No Orders Yet</h3>
             <p className="text-gray-400 text-sm mb-6">You haven't placed any orders.</p>
-            <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-[#0c5c2b]/20 hover:scale-105 transition-transform">Explore Store</Link>
+            <Link href="/shop" className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20 hover:scale-105 transition-transform">Explore Store</Link>
         </div>
     );
 
@@ -673,13 +673,13 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
 }
 
 function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
-    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>;
+    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
     if (wishlistProducts.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <i className="fa-solid fa-heart-crack text-4xl text-gray-200 mb-5 block" />
             <h3 className="text-lg font-black text-gray-800 mb-1">Wishlist is Empty</h3>
             <p className="text-gray-400 text-sm mb-6">Save your favorite items here.</p>
-            <Link href="/shop" className="bg-[#0c5c2b] text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-[#0c5c2b]/20">Start Exploring</Link>
+            <Link href="/shop" className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20">Start Exploring</Link>
         </div>
     );
     return (
@@ -690,7 +690,7 @@ function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
 }
 
 function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
-    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin" /></div>;
+    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
     if (enquiries.length === 0 && visits.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <i className="fa-solid fa-file-circle-question text-4xl text-gray-200 mb-5 block" />
@@ -705,7 +705,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
         <div className="space-y-6">
             {enquiries.length > 0 && (
                 <div>
-                    <h3 className="text-[10px] font-bold tracking-widest text-[#0c5c2b] uppercase mb-3 px-2 border-l-2 border-[#0c5c2b]">Enquiries</h3>
+                    <h3 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3 px-2 border-l-2 border-primary">Enquiries</h3>
                     <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {enquiries.map((enq: any, i: any) => (
                             <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
@@ -724,7 +724,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
             )}
             {visits.length > 0 && (
                 <div>
-                    <h3 className="text-[10px] font-bold tracking-widest text-[#0c5c2b] uppercase mb-3 px-2 border-l-2 border-[#0c5c2b]">Visits</h3>
+                    <h3 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3 px-2 border-l-2 border-primary">Visits</h3>
                     <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {visits.map((vis: any, i: any) => (
                             <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -758,16 +758,16 @@ function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleRev
                 <StarPicker value={reviewForm.rating} onChange={(v: any) => setReviewForm((r: any) => ({ ...r, rating: v }))} />
             </div>
             <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label><input required type="text" value={reviewForm.name} onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
-                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label><input required type="text" value={reviewForm.city} onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
-                <div className={isMobile ? '' : 'col-span-2'}><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label><input required type="text" value={reviewForm.state} onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none text-sm font-bold" /></div>
+                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label><input required type="text" value={reviewForm.name} onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
+                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label><input required type="text" value={reviewForm.city} onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
+                <div className={isMobile ? '' : 'col-span-2'}><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label><input required type="text" value={reviewForm.state} onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
             </div>
             <div>
                 <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Your Review</label>
-                <textarea required rows={4} value={reviewForm.description} onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-[#0c5c2b] outline-none resize-none text-sm font-semibold" placeholder="Share your experience..." />
+                <textarea required rows={4} value={reviewForm.description} onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none resize-none text-sm font-semibold" placeholder="Share your experience..." />
             </div>
             {reviewStatus === 'error' && <p className="text-red-500 text-xs font-bold"><i className="fa-solid fa-circle-exclamation mr-1" /> Error submitting review.</p>}
-            <button type="submit" disabled={reviewStatus === 'loading'} className="w-full bg-[#0c5c2b] text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-[#0c5c2b]/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
+            <button type="submit" disabled={reviewStatus === 'loading'} className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
                 {reviewStatus === 'loading' ? <i className="fa-solid fa-spinner animate-spin" /> : <i className="fa-solid fa-paper-plane" />}
                 {reviewStatus === 'loading' ? 'Submitting...' : 'Submit Review'}
             </button>

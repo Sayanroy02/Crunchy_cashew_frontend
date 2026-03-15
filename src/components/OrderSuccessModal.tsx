@@ -20,12 +20,12 @@ function OrderSuccessContent() {
                 </div>
                 <h2 className="text-2xl font-black text-gray-900 mb-2">Order Placed!</h2>
                 <p className="text-gray-500 text-sm mb-1">Your order has been confirmed.</p>
-                <code className="block text-xs bg-gray-100 text-[#0c5c2b] font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
+                <code className="block text-xs bg-gray-100 text-primary font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
                     #{orderId.slice(-10).toUpperCase()}
                 </code>
                 <div className="flex flex-col gap-3">
                     <Link href={`/track?order=${orderId}`}
-                        className="block bg-[#0c5c2b] text-white font-bold py-3 rounded-xl hover:bg-green-800 transition flex items-center justify-center gap-2">
+                        className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-green-800 transition flex items-center justify-center gap-2">
                         <i className="fa-solid fa-truck-fast" /> Track Your Order
                     </Link>
                     <Link href="/shop"

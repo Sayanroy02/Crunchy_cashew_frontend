@@ -38,9 +38,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             {/* Breadcrumb */}
             <div className="bg-white border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center gap-2 text-sm text-gray-500">
-                    <Link href="/" className="hover:text-[#0c5c2b]">Home</Link>
+                    <Link href="/" className="hover:text-primary">Home</Link>
                     <span>/</span>
-                    <Link href="/shop" className="hover:text-[#0c5c2b]">Shop</Link>
+                    <Link href="/shop" className="hover:text-primary">Shop</Link>
                     <span>/</span>
                     <span className="text-gray-800 font-medium truncate max-w-[200px]">{product.name}</span>
                 </div>
@@ -69,7 +69,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     <div className="lg:w-[55%] p-8 md:p-12 flex flex-col justify-between">
                         <div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="text-xs font-bold tracking-widest text-[#0c5c2b] uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                                <span className="text-xs font-bold tracking-widest text-primary uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
                                     {product.category}
                                 </span>
                                 {product.stock > 0 ? (
@@ -90,7 +90,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                 {discountedPrice && (
                                     <>
                                         <span className="text-lg text-gray-400 line-through">₹{product.price.toFixed(2)}</span>
-                                        <span className="bg-[#f6d70f] text-gray-900 text-xs font-black px-2 py-1 rounded">{product.discount}% OFF</span>
+                                        <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{product.discount}% OFF</span>
                                     </>
                                 )}
                             </div>
@@ -125,9 +125,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                         {/* Trust Badges */}
                         <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1"><i className="fa-solid fa-shield-halved text-[#0c5c2b]"></i> Secure Checkout</span>
-                            <span className="flex items-center gap-1"><i className="fa-solid fa-rotate-left text-[#0c5c2b]"></i> Easy Returns</span>
-                            <span className="flex items-center gap-1"><i className="fa-brands fa-whatsapp text-[#0c5c2b]"></i> WhatsApp Support</span>
+                            <span className="flex items-center gap-1"><i className="fa-solid fa-shield-halved text-primary"></i> Secure Checkout</span>
+                            <span className="flex items-center gap-1"><i className="fa-solid fa-rotate-left text-primary"></i> Easy Returns</span>
+                            <span className="flex items-center gap-1"><i className="fa-brands fa-whatsapp text-primary"></i> WhatsApp Support</span>
                         </div>
                     </div>
                 </div>
@@ -139,7 +139,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                             <h2 className="text-2xl md:text-3xl font-heading font-black text-gray-900">
                                 You May Also Love 🥜
                             </h2>
-                            <Link href="/shop" className="text-[#0c5c2b] font-bold text-sm hover:underline flex items-center gap-1">
+                            <Link href="/shop" className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
                                 View All <i className="fa-solid fa-arrow-right"></i>
                             </Link>
                         </div>
@@ -154,7 +154,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                     >
                                         <div className="relative bg-gray-50 h-40 flex items-center justify-center overflow-hidden">
                                             {p.discount > 0 && (
-                                                <span className="absolute top-2 left-2 bg-[#f6d70f] text-gray-900 text-[10px] font-black px-2 py-0.5 rounded z-10">
+                                                <span className="absolute top-2 left-2 bg-yellow text-gray-900 text-[10px] font-black px-2 py-0.5 rounded z-10">
                                                     {p.discount}% OFF
                                                 </span>
                                             )}

@@ -5,7 +5,7 @@ export const metadata = { title: 'Privacy Policy | Crunchy Cashews', description
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <div className="mb-8">
-        <h2 className="text-xl font-bold text-[#0c5c2b] mb-3 font-heading">{title}</h2>
+        <h2 className="text-xl font-bold text-primary mb-3 font-heading">{title}</h2>
         <div className="text-gray-600 leading-relaxed space-y-2">{children}</div>
     </div>
 );
@@ -13,8 +13,8 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 export default function PrivacyPage() {
     return (
         <div className="min-h-screen bg-[#fffdf5]">
-            <div className="bg-[#0c5c2b] py-14 px-6 text-center">
-                <p className="text-[#FBB21B] text-xs font-bold uppercase tracking-widest mb-2">Legal</p>
+            <div className="bg-primary py-14 px-6 text-center">
+                <p className="text-amber text-xs font-bold uppercase tracking-widest mb-2">Legal</p>
                 <h1 className="text-4xl md:text-5xl font-heading font-black text-white">Privacy Policy</h1>
                 <p className="text-white/60 mt-2 text-sm">Last updated: March 2025</p>
             </div>
@@ -71,11 +71,11 @@ export default function PrivacyPage() {
                 </Section>
 
                 <Section title="8. Contact">
-                    <p>For privacy-related concerns, contact us at <a href="mailto:privacy@crunchycashews.com" className="text-[#0c5c2b] font-semibold hover:underline">privacy@crunchycashews.com</a></p>
+                    <p>For privacy-related concerns, contact us at <a href="mailto:privacy@crunchycashews.com" className="text-primary font-semibold hover:underline">privacy@crunchycashews.com</a></p>
                 </Section>
 
                 <div className="mt-10 pt-6 border-t border-gray-200 flex gap-4 text-sm">
-                    <Link href="/terms" className="text-[#0c5c2b] hover:underline font-medium">→ Terms & Conditions</Link>
+                    <Link href="/terms" className="text-primary hover:underline font-medium">→ Terms & Conditions</Link>
                     <Link href="/" className="text-gray-400 hover:underline">← Back to Home</Link>
                 </div>
             </div>

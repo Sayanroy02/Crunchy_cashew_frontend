@@ -74,12 +74,12 @@ export default function AdminPincodes() {
                         onChange={e => setInput(e.target.value.replace(/\D/g, ''))}
                         onKeyDown={e => e.key === 'Enter' && handleAdd()}
                         placeholder="6-digit pincode e.g. 734001"
-                        className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#0c5c2b] font-mono tracking-widest"
+                        className="flex-1 border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-primary font-mono tracking-widest"
                     />
                     <button
                         onClick={handleAdd}
                         disabled={adding || input.length !== 6}
-                        className="bg-[#0c5c2b] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-green-800 transition disabled:opacity-50 flex items-center gap-2"
+                        className="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-green-800 transition disabled:opacity-50 flex items-center gap-2"
                     >
                         {adding ? <i className="fa-solid fa-spinner animate-spin"></i> : <i className="fa-solid fa-plus"></i>}
                         Add
@@ -103,7 +103,7 @@ export default function AdminPincodes() {
                     <div className="flex flex-wrap gap-2">
                         {pincodes.map(p => (
                             <div key={p} className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-full px-3 py-1.5">
-                                <i className="fa-solid fa-location-dot text-[#0c5c2b] text-xs"></i>
+                                <i className="fa-solid fa-location-dot text-primary text-xs"></i>
                                 <span className="font-mono font-bold text-gray-800 text-sm">{p}</span>
                                 <button
                                     onClick={() => handleRemove(p)}

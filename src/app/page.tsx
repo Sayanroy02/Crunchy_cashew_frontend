@@ -13,9 +13,10 @@ export default function Home() {
       <BestSellers />
       <WhyUsCRO />
       {/* <AboutPage/> */}
-      <BlogsPreview />
+
       <Testimonials />
       <Affiliates />
+
 
       {/* Contact Banner */}
       <section className="py-20 bg-[#FFFDF5]">
@@ -34,7 +35,7 @@ export default function Home() {
             </div>
 
             {/* Main Card */}
-            <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl bg-[#0C5C2B]">
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl bg-primary">
 
               {/* Dot grid pattern overlay */}
               <div
@@ -75,7 +76,7 @@ export default function Home() {
                   style={{ boxShadow: "0 4px 24px #FDC70055" }}
                 >
                   Contact Us
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 group-hover:translate-x-1 bg-[#0C5C2B]">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full transition-all duration-300 group-hover:translate-x-1 bg-primary">
                     <i className="fa-solid fa-paper-plane text-white text-xs" />
                   </span>
                 </a>
@@ -84,7 +85,7 @@ export default function Home() {
               {/* Right: Mockup Image */}
               <div className="relative z-10 flex-shrink-0 flex items-end justify-center md:justify-end w-full md:w-auto">
                 <Image
-                  src="/images/Mockups-1.png"
+                  src="/images/Right-Hero-Section.png"
                   alt="Product Mockup"
                   width={384}
                   height={384}
@@ -96,6 +97,7 @@ export default function Home() {
             </div>
           </div>
         </div>
+        <BlogsPreview />
       </section>
     </>
   );

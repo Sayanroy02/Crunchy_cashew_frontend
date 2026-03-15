@@ -8,7 +8,7 @@ export default function NotFound() {
         <div className="min-h-[80vh] flex flex-col items-center justify-center bg-[#fffdf5] px-6 py-16 text-center">
             {/* Big 404 */}
             <div className="relative mb-8">
-                <span className="text-[160px] md:text-[220px] font-black text-[#FBB21B]/20 leading-none select-none">404</span>
+                <span className="text-[160px] md:text-[220px] font-black text-amber/20 leading-none select-none">404</span>
                 <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-8xl">🥜</span>
                 </div>
@@ -23,11 +23,11 @@ export default function NotFound() {
 
             <div className="flex flex-wrap gap-3 justify-center">
                 <Link href="/"
-                    className="bg-[#0c5c2b] text-white font-bold px-8 py-3.5 rounded-full hover:bg-green-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    className="bg-primary text-white font-bold px-8 py-3.5 rounded-full hover:bg-green-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                     <i className="fa-solid fa-house mr-2"></i>Back to Home
                 </Link>
                 <Link href="/shop"
-                    className="bg-[#FBB21B] text-[#2c1a0e] font-bold px-8 py-3.5 rounded-full hover:bg-yellow-400 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    className="bg-amber text-[#2c1a0e] font-bold px-8 py-3.5 rounded-full hover:bg-yellow transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                     <i className="fa-solid fa-store mr-2"></i>Shop Cashews
                 </Link>
             </div>

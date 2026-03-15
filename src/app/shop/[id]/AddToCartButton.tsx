@@ -48,7 +48,7 @@ export default function AddToCartButton({ product }: { product: any }) {
 
             <button
                 onClick={handleAdd}
-                className="w-full sm:w-2/3 bg-highlight text-text-dark font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-yellow-400 hover:shadow-yellow-400/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3"
+                className="w-full sm:w-2/3 bg-highlight text-text-dark font-bold text-lg py-4 rounded-xl shadow-lg hover:bg-yellow hover:shadow-yellow-400/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3"
             >
                 <i className="fa-solid fa-bag-shopping"></i> Add to Cart
             </button>

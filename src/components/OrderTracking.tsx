@@ -94,7 +94,7 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
               {/* Left: dot + line */}
               <div className="flex flex-col items-center w-6">
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${isCurrent ? 'ring-2 ring-offset-1 ring-[#6bbc45]' : ''}`}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${isCurrent ? 'ring-2 ring-offset-1 ring-primary-light' : ''}`}
                   style={{
                     backgroundColor: done ? COLORS.primary : '#f3f4f6',
                     color: done ? '#fff' : '#9ca3af',

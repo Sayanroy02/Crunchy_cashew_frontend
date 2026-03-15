@@ -183,7 +183,7 @@ export default function CheckoutButton({
       type="button"
       onClick={handleCheckout}
       disabled={disabled || loading}
-      className="w-full bg-[#f6d70f] text-[#0c5c2b] font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow-400 hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
+      className="w-full bg-yellow text-primary font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
     >
       {loading ? (
         <>

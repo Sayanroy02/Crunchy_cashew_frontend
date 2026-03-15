@@ -18,7 +18,7 @@ function StarRating({ rating = 5 }: { rating?: number }) {
             {[1, 2, 3, 4, 5].map(star => (
                 <i
                     key={star}
-                    className={`text-sm ${star <= rating ? 'fa-solid fa-star text-[#FBB21B]' : 'fa-regular fa-star text-gray-300'}`}
+                    className={`text-sm ${star <= rating ? 'fa-solid fa-star text-amber' : 'fa-regular fa-star text-gray-300'}`}
                 />
             ))}
         </div>
@@ -33,7 +33,7 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
                 <button key={star} type="button" onClick={() => onChange(star)}
                     onMouseEnter={() => setHover(star)} onMouseLeave={() => setHover(0)}
                     className="text-2xl transition-transform hover:scale-110">
-                    <i className={`${(hover || value) >= star ? 'fa-solid fa-star text-[#FBB21B]' : 'fa-regular fa-star text-gray-300'}`} />
+                    <i className={`${(hover || value) >= star ? 'fa-solid fa-star text-amber' : 'fa-regular fa-star text-gray-300'}`} />
                 </button>
             ))}
         </div>
@@ -79,13 +79,13 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-10 md:py-18 bg-[#0c5c2b] overflow-hidden">
+        <section className="py-5 md:py-10 bg-primary overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
-                        <span className="text-[#FBB21B] font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
-                        <h2 className="text-3xl md:text-4xl font-black text-white">Voices of Our Community</h2>
+                        <span className="text-amber font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
+                        <h2 className="text-3xl md:text-4xl font-black text-white">Testimonials</h2>
                     </div>
                     <div className="flex items-center gap-3">
                         {/* Scroll arrows */}
@@ -99,7 +99,7 @@ export default function Testimonials() {
                         </button>
                         <button
                             onClick={() => setFormOpen(!formOpen)}
-                            className="border-2 border-[#FBB21B] text-[#FBB21B] hover:bg-[#FBB21B] hover:text-black px-5 py-2  rounded-full text-sm font-bold transition-all"
+                            className="border-2 border-amber text-amber hover:bg-amber hover:text-black px-5 py-2  rounded-full text-sm font-bold transition-all"
                         >
                             {formOpen ? 'Close' : '✍ Share Your Experience'}
                         </button>
@@ -119,7 +119,7 @@ export default function Testimonials() {
                                 className="flex-shrink-0 w-72 md:w-80 bg-white/10 backdrop-blur rounded-2xl p-6 snap-start border border-white/10 hover:bg-white/15 transition-all"
                             >
                                 <div className="flex items-start justify-between mb-4">
-                                    <div className="w-10 h-10 rounded-xl bg-[#FBB21B] flex items-center justify-center text-black font-black text-lg">
+                                    <div className="w-10 h-10 rounded-xl bg-amber flex items-center justify-center text-black font-black text-lg">
                                         {t.name.charAt(0).toUpperCase()}
                                     </div>
                                     <i className="fa-solid fa-quote-right text-2xl text-white/20" />
@@ -145,7 +145,7 @@ export default function Testimonials() {
                 {/* Submit Form */}
                 {formOpen && (
                     <div className="mt-10 bg-white rounded-3xl p-6 md:p-10 max-w-2xl mx-auto shadow-2xl animate-fade-in-up">
-                        <h3 className="text-xl font-bold text-[#0c5c2b] mb-5">Share Your Experience</h3>
+                        <h3 className="text-xl font-bold text-primary mb-5">Share Your Experience</h3>
 
                         {submitStatus === 'success' ? (
                             <div className="text-center py-8">
@@ -165,7 +165,7 @@ export default function Testimonials() {
                                             <label className="text-sm font-bold text-gray-700 block mb-1.5 capitalize">{field}</label>
                                             <input required type="text" value={formData[field]}
                                                 onChange={e => setFormData(f => ({ ...f, [field]: e.target.value }))}
-                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#0c5c2b]" />
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary" />
                                         </div>
                                     ))}
                                 </div>
@@ -174,11 +174,11 @@ export default function Testimonials() {
                                     <textarea required rows={4} value={formData.description}
                                         onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
                                         placeholder="Tell us about your experience..."
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#0c5c2b] resize-none" />
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary resize-none" />
                                 </div>
                                 {submitStatus === 'error' && <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>}
                                 <button type="submit" disabled={submitStatus === 'loading'}
-                                    className="w-full bg-[#0c5c2b] text-white font-bold py-3 rounded-xl hover:bg-green-800 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60">
+                                    className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-green-800 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60">
                                     {submitStatus === 'loading' ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</> : <><i className="fa-solid fa-paper-plane" /> Submit Review</>}
                                 </button>
                             </form>

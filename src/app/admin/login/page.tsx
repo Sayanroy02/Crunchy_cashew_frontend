@@ -60,10 +60,10 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#0c5c2b] via-[#0a4f25] to-[#1a1a2e] flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-primary via-[#0a4f25] to-[#1a1a2e] flex items-center justify-center p-4">
             {/* Background decoration */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-[#f6d70f]/5 rounded-full blur-3xl"></div>
+                <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-yellow/5 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] bg-white/5 rounded-full blur-3xl"></div>
             </div>
 
@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
                                     onChange={e => setUsername(e.target.value)}
                                     required
                                     autoFocus
-                                    className="w-full pl-9 pr-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b] transition-colors"
+                                    className="w-full pl-9 pr-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
                                     placeholder="Admin username"
                                 />
                             </div>
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
                                     required
-                                    className="w-full pl-9 pr-10 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b] transition-colors"
+                                    className="w-full pl-9 pr-10 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
                                     placeholder="Admin password"
                                 />
                                 <button
@@ -126,7 +126,7 @@ export default function AdminLoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#0c5c2b] text-white font-bold py-3 rounded-xl hover:bg-green-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
+                            className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-green-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2 mt-2"
                         >
                             {loading ? (
                                 <><i className="fa-solid fa-spinner animate-spin"></i> Signing in...</>
@@ -137,7 +137,7 @@ export default function AdminLoginPage() {
                     </form>
 
                     <p className="text-center text-xs text-gray-400 mt-6">
-                        <a href="/" className="hover:text-[#0c5c2b] transition-colors">← Back to Store</a>
+                        <a href="/" className="hover:text-primary transition-colors">← Back to Store</a>
                     </p>
                 </div>
 

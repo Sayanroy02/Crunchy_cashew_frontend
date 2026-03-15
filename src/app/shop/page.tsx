@@ -53,10 +53,10 @@ export default function ShopPage() {
     const clearAll = () => { setSearchTerm(''); setSortKey('default'); setPriceRange(0); };
 
     return (
-        <div className="bg-[#E1EDEB] min-h-screen pb-24">
+        <div className="bg-bg min-h-screen pb-24">
             {/* Header */}
             <section className="bg-black text-white pt-28 pb-20 px-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,#0B5143,transparent)] opacity-30 pointer-events-none" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--theme-primary),transparent)] opacity-30 pointer-events-none" />
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <span className="inline-flex items-center gap-2 bg-white/10 border border-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-store" /> Premium Cashews
@@ -88,10 +88,10 @@ export default function ShopPage() {
                         {/* Mobile Filter Trigger */}
                         <button
                             onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden flex items-center gap-2 bg-[#f6d70f] text-black font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-yellow-400 transition-colors"
+                            className="lg:hidden flex items-center gap-2 bg-yellow text-black font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-yellow transition-colors"
                         >
                             <i className="fa-solid fa-sliders" /> Filters
-                            {hasFilters && <span className="w-2 h-2 rounded-full bg-[#0B5143]" />}
+                            {hasFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
                         </button>
                     </div>
                 </div>
@@ -131,7 +131,7 @@ export default function ShopPage() {
                                     />
                                 </div>
                                 <div className="p-5 border-t border-gray-100">
-                                    <button onClick={() => setSidebarOpen(false)} className="w-full bg-[#0B5143] text-white font-bold py-3 rounded-xl">
+                                    <button onClick={() => setSidebarOpen(false)} className="w-full bg-primary text-white font-bold py-3 rounded-xl">
                                         Show {filtered.length} Results
                                     </button>
                                 </div>
@@ -152,19 +152,19 @@ export default function ShopPage() {
                                 {hasFilters && (
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {searchTerm && (
-                                            <span className="inline-flex items-center gap-1.5 bg-[#0B5143]/10 text-[#0B5143] text-xs font-bold px-3 py-1 rounded-full">
+                                            <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
                                                 "{searchTerm}"
                                                 <button onClick={() => setSearchTerm('')}><i className="fa-solid fa-xmark" /></button>
                                             </span>
                                         )}
                                         {sortKey !== 'default' && (
-                                            <span className="inline-flex items-center gap-1.5 bg-[#0B5143]/10 text-[#0B5143] text-xs font-bold px-3 py-1 rounded-full">
+                                            <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
                                                 {sortKey === 'price_asc' ? 'Price: Low→High' : sortKey === 'price_desc' ? 'Price: High→Low' : 'Biggest Discount'}
                                                 <button onClick={() => setSortKey('default')}><i className="fa-solid fa-xmark" /></button>
                                             </span>
                                         )}
                                         {priceRange !== 0 && (
-                                            <span className="inline-flex items-center gap-1.5 bg-[#0B5143]/10 text-[#0B5143] text-xs font-bold px-3 py-1 rounded-full">
+                                            <span className="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full">
                                                 {PRICE_RANGES[priceRange].label}
                                                 <button onClick={() => setPriceRange(0)}><i className="fa-solid fa-xmark" /></button>
                                             </span>
@@ -176,7 +176,7 @@ export default function ShopPage() {
                             <select
                                 value={sortKey}
                                 onChange={e => setSortKey(e.target.value as SortKey)}
-                                className="hidden sm:block text-sm border-2 border-gray-200 rounded-xl px-3 py-2 bg-white font-semibold text-gray-700 focus:outline-none focus:border-[#0B5143] transition-colors"
+                                className="hidden sm:block text-sm border-2 border-gray-200 rounded-xl px-3 py-2 bg-white font-semibold text-gray-700 focus:outline-none focus:border-primary transition-colors"
                             >
                                 <option value="default">Sort: Default</option>
                                 <option value="price_asc">Price: Low → High</option>
@@ -210,7 +210,7 @@ export default function ShopPage() {
                                 </p>
                                 <button
                                     onClick={clearAll}
-                                    className="px-6 py-3 bg-[#0B5143] text-white font-bold rounded-xl hover:bg-green-800 transition-colors"
+                                    className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-green-800 transition-colors"
                                 >
                                     Clear All Filters
                                 </button>
@@ -256,7 +256,7 @@ function SidebarContent({
             {/* Sort */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
                 <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-arrow-up-wide-short text-[#0B5143]" /> Sort By
+                    <i className="fa-solid fa-arrow-up-wide-short text-primary" /> Sort By
                 </h3>
                 <div className="flex flex-col gap-2">
                     {([
@@ -270,7 +270,7 @@ function SidebarContent({
                             onClick={() => setSortKey(opt.value)}
                             className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                                 sortKey === opt.value
-                                    ? 'bg-[#0B5143] text-white shadow-sm'
+                                    ? 'bg-primary text-white shadow-sm'
                                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                             }`}
                         >
@@ -284,7 +284,7 @@ function SidebarContent({
             {/* Price Range */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
                 <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-indian-rupee-sign text-[#0B5143]" /> Price Range
+                    <i className="fa-solid fa-indian-rupee-sign text-primary" /> Price Range
                 </h3>
                 <div className="flex flex-col gap-2">
                     {PRICE_RANGES.map((range, idx) => (
@@ -293,7 +293,7 @@ function SidebarContent({
                             onClick={() => setPriceRange(idx)}
                             className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                                 priceRange === idx
-                                    ? 'bg-[#0B5143] text-white shadow-sm'
+                                    ? 'bg-primary text-white shadow-sm'
                                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                             }`}
                         >
@@ -305,11 +305,11 @@ function SidebarContent({
             </div>
 
             {/* Result count badge */}
-            <div className="bg-[#0B5143]/5 rounded-2xl px-5 py-4 flex items-center gap-3 border border-[#0B5143]/10">
-                <i className="fa-solid fa-box text-[#0B5143] text-lg" />
+            <div className="bg-primary/5 rounded-2xl px-5 py-4 flex items-center gap-3 border border-primary/10">
+                <i className="fa-solid fa-box text-primary text-lg" />
                 <div>
                     <p className="text-xs text-gray-500 font-medium">Showing</p>
-                    <p className="text-lg font-black text-[#0B5143]">{resultCount} products</p>
+                    <p className="text-lg font-black text-primary">{resultCount} products</p>
                 </div>
             </div>
         </div>

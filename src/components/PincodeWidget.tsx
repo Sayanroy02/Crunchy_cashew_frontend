@@ -68,7 +68,7 @@ export default function PincodeWidget() {
         const isSaved = PINCODES_AVAILABLE.includes(savedPincode);
         return (
             <div className={`flex items-center gap-2 text-sm rounded-xl border px-4 py-2.5 ${isSaved ? 'border-green-200 bg-green-50' : 'border-red-100 bg-red-50'}`}>
-                <i className={`fa-solid ${isSaved ? 'fa-location-dot text-[#0c5c2b]' : 'fa-circle-xmark text-red-500'}`}></i>
+                <i className={`fa-solid ${isSaved ? 'fa-location-dot text-primary' : 'fa-circle-xmark text-red-500'}`}></i>
                 <span className="font-medium text-gray-700">
                     Delivering to <span className="font-black">{savedPincode}</span>
                     {isSaved ? ' ✅' : ' ❌'}
@@ -88,14 +88,14 @@ export default function PincodeWidget() {
                         value={pincode}
                         onChange={handleChange}
                         placeholder="Enter 6-digit pincode"
-                        className="w-full pl-8 pr-3 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-[#0c5c2b] transition-colors"
+                        className="w-full pl-8 pr-3 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
                         maxLength={6}
                     />
                 </div>
                 <button
                     type="submit"
                     disabled={loading || pincode.length < 6}
-                    className="bg-[#0c5c2b] text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 disabled:opacity-50 transition-colors whitespace-nowrap"
+                    className="bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 disabled:opacity-50 transition-colors whitespace-nowrap"
                 >
                     {loading ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Check'}
                 </button>

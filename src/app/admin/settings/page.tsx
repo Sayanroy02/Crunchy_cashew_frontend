@@ -65,7 +65,7 @@ export default function AdminChangePassword() {
                             required
                             value={form.current_password}
                             onChange={e => setForm(f => ({ ...f, current_password: e.target.value }))}
-                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 pr-10 focus:border-[#0c5c2b] outline-none text-sm transition-colors"
+                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 pr-10 focus:border-primary outline-none text-sm transition-colors"
                             placeholder="Enter current password"
                         />
                         <button type="button" onClick={() => setShowCurrent(!showCurrent)}
@@ -83,7 +83,7 @@ export default function AdminChangePassword() {
                             required
                             value={form.new_password}
                             onChange={e => setForm(f => ({ ...f, new_password: e.target.value }))}
-                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 pr-10 focus:border-[#0c5c2b] outline-none text-sm transition-colors"
+                            className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 pr-10 focus:border-primary outline-none text-sm transition-colors"
                             placeholder="At least 6 characters"
                         />
                         <button type="button" onClick={() => setShowNew(!showNew)}
@@ -113,7 +113,7 @@ export default function AdminChangePassword() {
                         onChange={e => setForm(f => ({ ...f, confirm_password: e.target.value }))}
                         className={`w-full bg-gray-50 border-2 rounded-xl py-3 px-4 focus:outline-none text-sm transition-colors ${form.confirm_password && form.confirm_password !== form.new_password
                             ? 'border-red-300 focus:border-red-400'
-                            : 'border-gray-200 focus:border-[#0c5c2b]'
+                            : 'border-gray-200 focus:border-primary'
                             }`}
                         placeholder="Re-enter new password"
                     />
@@ -131,7 +131,7 @@ export default function AdminChangePassword() {
                 <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="w-full bg-[#0c5c2b] text-white font-bold py-3.5 rounded-xl hover:bg-green-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-2">
+                    className="w-full bg-primary text-white font-bold py-3.5 rounded-xl hover:bg-green-800 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 mt-2">
                     {status === 'loading'
                         ? <><i className="fa-solid fa-spinner animate-spin" /> Changing...</>
                         : <><i className="fa-solid fa-lock" /> Change Password</>

@@ -133,7 +133,7 @@ export default function AdminBlogs() {
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Manage Journal</h1>
-                <button onClick={openAdd} className="bg-[#0c5c2b] text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm flex items-center gap-2">
+                <button onClick={openAdd} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm flex items-center gap-2">
                     <i className="fa-solid fa-pen-nib" /> Write Article
                 </button>
             </div>
@@ -181,7 +181,7 @@ export default function AdminBlogs() {
                                     ))}
                                 </div>
                                 <div className="mt-auto flex justify-between items-center pt-4 border-t border-gray-100">
-                                    <span className="text-sm font-bold text-[#0c5c2b]"><i className="fa-regular fa-eye mr-1" />{b.views || 0} views</span>
+                                    <span className="text-sm font-bold text-primary"><i className="fa-regular fa-eye mr-1" />{b.views || 0} views</span>
                                     <div className="flex gap-2">
                                         <button onClick={() => openEdit(b)} className="text-blue-500 hover:bg-blue-50 px-3 py-1.5 rounded transition font-medium text-sm">
                                             <i className="fa-solid fa-pen mr-1" />Edit
@@ -216,7 +216,7 @@ export default function AdminBlogs() {
                                     <label className="text-sm font-medium text-gray-700">Article Title</label>
                                     <input type="text" required value={form.title}
                                         onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0c5c2b]/30 focus:border-[#0c5c2b] text-xl font-medium text-gray-800"
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30 focus:border-primary text-xl font-medium text-gray-800"
                                         placeholder="The Health Benefits of Premium Cashews..." />
                                 </div>
                                 <div className="space-y-1">
@@ -233,7 +233,7 @@ export default function AdminBlogs() {
                                     <select
                                         value={form.category}
                                         onChange={e => setForm(f => ({ ...f, category: e.target.value as Category }))}
-                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0B5143]/30 focus:border-[#0B5143] bg-white"
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30 focus:border-primary bg-white"
                                         required
                                     >
                                         {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -243,14 +243,14 @@ export default function AdminBlogs() {
                                     <label className="text-sm font-medium text-gray-700">Author</label>
                                     <input type="text" required value={form.author}
                                         onChange={e => setForm(f => ({ ...f, author: e.target.value }))}
-                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0B5143]/30"
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30"
                                         placeholder="Crunchy Cashews Editorial" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
                                     <label className="text-sm font-medium text-gray-700">Tags (comma separated)</label>
                                     <input type="text" value={form.tags}
                                         onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
-                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-[#0c5c2b]/30"
+                                        className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30"
                                         placeholder="Health, Nutrition, Recipes" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
@@ -264,18 +264,18 @@ export default function AdminBlogs() {
                                         </div>
                                     )}
                                     <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
-                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-[#0c5c2b] hover:file:bg-green-100 cursor-pointer border rounded-lg p-2" />
+                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border rounded-lg p-2" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
                                     <label className="text-sm font-medium text-gray-700">Content (Markdown / HTML supported)</label>
                                     <textarea required value={form.content}
                                         onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                                        className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-[#0c5c2b]/30 min-h-[280px] font-mono text-sm"
+                                        className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-primary/30 min-h-[280px] font-mono text-sm"
                                         placeholder="Write your amazing content here..." />
                                 </div>
                                 <div className="md:col-span-2 pt-2">
                                     <button type="submit" disabled={isSubmitting}
-                                        className="w-full bg-[#0c5c2b] text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
+                                        className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">
                                         {isSubmitting
                                             ? <><i className="fa-solid fa-spinner animate-spin" /> {editingBlog ? 'Saving...' : 'Publishing...'}</>
                                             : <><i className="fa-solid fa-paper-plane" /> {editingBlog ? 'Save Changes' : 'Publish Article'}</>

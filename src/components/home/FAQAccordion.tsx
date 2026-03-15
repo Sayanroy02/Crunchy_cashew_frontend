@@ -34,7 +34,7 @@ export default function FAQAccordion() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section className="relative bg-[#FBB21B] py-16 md:py-24 overflow-hidden">
+        <section className="relative bg-amber py-16 md:py-24 overflow-hidden">
             {/* Decorative plants */}
             <div className="absolute bottom-0 left-4 opacity-20 pointer-events-none text-[#2c1a0e] text-8xl select-none">🌿</div>
             <div className="absolute bottom-0 right-4 opacity-20 pointer-events-none text-[#2c1a0e] text-8xl select-none">🌿</div>
@@ -59,12 +59,12 @@ export default function FAQAccordion() {
                                     onClick={() => setOpenIndex(isOpen ? null : index)}
                                 >
                                     <span className="pr-4 font-heading">{faq.question}</span>
-                                    <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[#FBB21B] text-[#2c1a0e] rotate-180' : 'bg-gray-100 text-gray-500'}`}>
+                                    <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-amber text-[#2c1a0e] rotate-180' : 'bg-gray-100 text-gray-500'}`}>
                                         <i className="fa-solid fa-chevron-down text-xs"></i>
                                     </span>
                                 </button>
                                 <div className={`overflow-hidden transition-all duration-400 ease-in-out ${isOpen ? 'max-h-48' : 'max-h-0'}`}>
-                                    <div className="bg-[#fff8e7] px-5 py-4 text-sm text-[#2c1a0e]/80 leading-relaxed border-t-2 border-[#FBB21B]/30">
+                                    <div className="bg-[#fff8e7] px-5 py-4 text-sm text-[#2c1a0e]/80 leading-relaxed border-t-2 border-amber/30">
                                         {faq.answer}
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@ export default function FAQAccordion() {
                         <h3 className="text-white font-black text-xl md:text-2xl font-heading uppercase">100% Satisfaction Guarantee</h3>
                         <p className="text-white/60 text-sm mt-1 mb-4">If you're not happy with your purchase, contact us within 30 days and we'll assist you fully — no questions asked.</p>
                         <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                            <Link href="/shop" className="bg-[#FBB21B] text-[#2c1a0e] font-black px-5 py-2.5 rounded-full text-sm hover:bg-yellow-400 transition uppercase tracking-wider">
+                            <Link href="/shop" className="bg-amber text-[#2c1a0e] font-black px-5 py-2.5 rounded-full text-sm hover:bg-yellow transition uppercase tracking-wider">
                                 Order Now
                             </Link>
                             <a href="tel:+919876543210" className="flex items-center gap-2 text-white border border-white/20 px-5 py-2.5 rounded-full text-sm hover:bg-white/10 transition">

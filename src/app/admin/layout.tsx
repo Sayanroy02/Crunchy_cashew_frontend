@@ -53,8 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (status === 'checking') {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4">
-                <div className="w-10 h-10 border-4 border-[#0c5c2b] border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-[#0c5c2b] font-semibold text-lg">Verifying Admin Access...</p>
+                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-primary font-semibold text-lg">Verifying Admin Access...</p>
             </div>
         );
     }
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             const active = pathname === item.path || (item.path !== '/admin' && pathname.startsWith(item.path));
                             return (
                                 <Link key={item.path} href={item.path} onClick={() => setIsMenuOpen(false)}>
-                                    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${active ? 'bg-[#0c5c2b] text-white shadow-md' : 'text-gray-600 hover:bg-green-50 hover:text-[#0c5c2b]'}`}>
+                                    <div className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-sm font-medium ${active ? 'bg-primary text-white shadow-md' : 'text-gray-600 hover:bg-green-50 hover:text-primary'}`}>
                                         <i className={`${item.icon} w-5 text-center`}></i>
                                         {item.name}
                                     </div>

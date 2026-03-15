@@ -91,7 +91,7 @@ export default function AdminBanners() {
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Manage Banners (Max 6 Slots)</h1>
                 {banners.length < 6 && (
-                    <button onClick={() => setIsModalOpen(true)} className="bg-[#0c5c2b] text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm">
+                    <button onClick={() => setIsModalOpen(true)} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm">
                         + Add Banner
                     </button>
                 )}
@@ -115,7 +115,7 @@ export default function AdminBanners() {
                         );
                     } else {
                         return (
-                            <div key={`empty-${index}`} onClick={() => setIsModalOpen(true)} className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl h-[310px] flex flex-col items-center justify-center text-gray-400 hover:text-[#0c5c2b] hover:border-[#0c5c2b] hover:bg-green-50/30 transition cursor-pointer group">
+                            <div key={`empty-${index}`} onClick={() => setIsModalOpen(true)} className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-xl h-[310px] flex flex-col items-center justify-center text-gray-400 hover:text-primary hover:border-primary hover:bg-green-50/30 transition cursor-pointer group">
                                 <i className="fa-solid fa-cloud-arrow-up text-4xl mb-3 group-hover:-translate-y-1 transition-transform"></i>
                                 <span className="font-medium text-lg">Upload to Slot {index + 1}</span>
                             </div>
@@ -143,9 +143,9 @@ export default function AdminBanners() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Image Bundle</label>
-                                <input type="file" required accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-[#0c5c2b] hover:file:bg-green-100 cursor-pointer" />
+                                <input type="file" required accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer" />
                             </div>
-                            <button type="submit" disabled={isSubmitting} className="w-full mt-4 bg-[#0c5c2b] text-white py-3 rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition block text-center disabled:opacity-50">
+                            <button type="submit" disabled={isSubmitting} className="w-full mt-4 bg-primary text-white py-3 rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition block text-center disabled:opacity-50">
                                 {isSubmitting ? 'Uploading...' : 'Publish Banner'}
                             </button>
                         </form>
