@@ -4,7 +4,7 @@
  * Import { API } from '@/constants/api' — never hardcode localhost:8000 in components.
  */
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://crunchy-node-backend.onrender.com/';
 
 export const API = {
   // ── Auth ─────────────────────────────────────────────────────────────────
