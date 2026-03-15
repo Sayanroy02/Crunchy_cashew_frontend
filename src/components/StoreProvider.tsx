@@ -13,7 +13,7 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
         store.dispatch(hydrateCart());
     }, []);
 
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '1234567890-mockclientid.apps.googleusercontent.com';
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
     return (
         <GoogleOAuthProvider clientId={clientId}>

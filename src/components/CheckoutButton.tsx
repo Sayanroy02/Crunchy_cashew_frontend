@@ -102,7 +102,11 @@ export default function CheckoutButton({
       if (!scriptLoaded) throw new Error('Razorpay SDK failed to load. Check your network connection.');
 
       // Razorpay key must be the PUBLIC key_id (not secret)
-      const rzpKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_SQB8zlhbHR0Rci';
+      const rzpKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      
+      if (!rzpKeyId) {
+          throw new Error('Razorpay publicly accessible key not found in environment variables.');
+      }
 
       const options = {
         key: rzpKeyId,
