@@ -12,11 +12,12 @@ export default function Home() {
     <>
       <HeroCarousel />
       <BestSellers />
-      <WhyUsCRO />
+      <Affiliates />
+      {/* <WhyUsCRO /> */}
       <ComparisonSection />
 
       <Testimonials />
-      <Affiliates />
+
 
 
       {/* Contact Banner */}
