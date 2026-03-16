@@ -14,11 +14,11 @@ export default function FloatingBackground() {
 
     // Create a deterministic array of elements to map over
     const activeAssets = [
-        { id: '1', size: 80, delay: 0, src: '/images/cashews/1.jpg', left: '5%', top: '10%' },
-        { id: '2', size: 150, delay: 2, src: '/images/cashews/2.jpg', left: '85%', top: '30%' },
-        { id: '3', size: 100, delay: 5, src: '/images/cashews/3.webp', left: '20%', top: '60%' },
-        { id: '4', size: 60, delay: 1.5, src: '/images/cashews/1.jpg', left: '75%', top: '75%' },
-        { id: '5', size: 200, delay: 4, src: '/images/cashews/2.jpg', left: '10%', top: '90%' },
+        { id: '1', size: 80, delay: 0, src: '/images/Cashew-parachute-03.png', left: '5%', top: '10%' },
+        { id: '2', size: 150, delay: 2, src: '/images/Artboard-1-1000-copy.png', left: '85%', top: '30%' },
+        { id: '3', size: 100, delay: 5, src: '/images/Cashew-parachute-03.png', left: '20%', top: '60%' },
+        { id: '4', size: 60, delay: 1.5, src: '/images/Artboard-1-1000-copy.png', left: '75%', top: '75%' },
+        { id: '5', size: 200, delay: 4, src: '/images/Cashew-parachute-03.png', left: '10%', top: '90%' },
     ];
 
     return (
