@@ -52,7 +52,7 @@ export default function AboutFactory() {
                             </div>
 
                             {/* Floating Badge (Logo) */}
-                            <div className="absolute top-[10%] right-0 translate-x-[50%] w-20 h-20 md:w-24 md:h-24 z-10 hover:scale-105 transition-transform duration-300">
+                            <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 md:top-[10%] md:left-auto md:right-0 md:translate-x-[50%] w-20 h-20 md:w-24 md:h-24 z-10 hover:scale-105 transition-transform duration-300">
                                 <div className="relative w-full h-full">
                                     <Image
                                         src="/images/cc-Logo-01-1.png"

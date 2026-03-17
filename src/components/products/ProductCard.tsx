@@ -114,23 +114,38 @@ export default function ProductCard({ product }: ProductCardProps) {
                     {product.name}
                 </h3>
 
-                <div className="mt-auto pt-3 flex items-center justify-between">
+                <div className="mt-auto pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
                     <div className="flex items-baseline gap-2">
                         <p className="text-primary font-bold text-lg">₹{product.price.toFixed(0)}</p>
                         {hasDiscount && (
                             <p className="text-gray-400 text-sm line-through">₹{originalPrice.toFixed(0)}</p>
                         )}
                     </div>
+                    
+                    {/* Desktop Add to Cart (Icon circle) */}
                     <button
                         onClick={handleAddToCart}
                         disabled={product.stock <= 0}
-                        className={`w-11 h-11 rounded-full flex items-center justify-center transition-all shadow-sm ${product.stock > 0
+                        className={`hidden sm:flex w-11 h-11 rounded-full items-center justify-center transition-all shadow-sm ${product.stock > 0
                             ? 'bg-primary text-white hover:bg-[#0a4f25] hover:shadow-md hover:scale-105'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                         aria-label="Add to cart"
                     >
                         <i className="fa-solid fa-cart-plus text-sm"></i>
+                    </button>
+
+                    {/* Mobile Add to Cart (Full width text button) */}
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={product.stock <= 0}
+                        className={`sm:hidden w-full py-2.5 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-sm ${product.stock > 0
+                            ? 'bg-primary text-white hover:bg-primary-light active:scale-[0.98]'
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            }`}
+                        aria-label="Add to cart"
+                    >
+                        <i className="fa-solid fa-cart-plus"></i> {product.stock > 0 ? 'Add' : 'Out of Stock'}
                     </button>
                 </div>
             </div>
