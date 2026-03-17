@@ -6,6 +6,8 @@ import Testimonials from "@/components/home/Testimonials";
 import BlogsPreview from "@/components/home/BlogsPreview";
 import Affiliates from "@/components/home/Affiliates";
 import ComparisonSection from "@/components/home/OffersGrid";
+import BulkOrderCard from "@/components/home/BulkOrderCard";
+import AboutFactory from "@/components/home/AboutFactory";
 
 export default function Home() {
   return (
@@ -13,12 +15,11 @@ export default function Home() {
       <HeroCarousel />
       <BestSellers />
       <Affiliates />
+      <BulkOrderCard />
       {/* <WhyUsCRO /> */}
       <ComparisonSection />
-
+      <AboutFactory />
       <Testimonials />
-
-
 
       {/* Contact Banner */}
       <section className="py-20 bg-[#FFFDF5]">

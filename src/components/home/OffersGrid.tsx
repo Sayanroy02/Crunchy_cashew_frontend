@@ -69,8 +69,8 @@ export default function ComparisonSection() {
 
   return (
     <section
-      className="py-12 md:py-20 px-4"
-      style={{ background: '#E1EDEB' }}
+      className="py-10 md:py-10 px-4"
+    // style={{ background: '#E1EDEB' }}
     >
       <div className="max-w-4xl mx-auto">
 

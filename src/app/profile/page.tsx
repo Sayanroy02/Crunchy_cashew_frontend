@@ -711,10 +711,16 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                             <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                                 <div>
                                     <div className="flex justify-between items-start mb-2">
-                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">{enq.subject}</h4>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{enq.status || 'Pending'}</span>
+                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">{enq.subject || enq.enquiry_type || 'General Enquiry'}</h4>
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-green-100 text-green-700' : enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{enq.status || 'Pending'}</span>
                                     </div>
                                     <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
+                                    {enq.admin_notes && (
+                                        <div className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3">
+                                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest mb-1">Admin Reply</p>
+                                            <p className="text-xs text-green-800 font-semibold">{enq.admin_notes}</p>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{new Date(enq.created_at).toLocaleDateString()}</div>
                             </div>
@@ -727,13 +733,22 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                     <h3 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3 px-2 border-l-2 border-primary">Visits</h3>
                     <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
                         {visits.map((vis: any, i: any) => (
-                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow">
-                                <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
-                                    <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">{vis.preferred_date}</p>
-                                    <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' ? 'bg-green-100 text-green-700' : vis.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{vis.status || 'Pending'}</span>
+                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                                <div>
+                                    <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
+                                        <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">{vis.date || vis.preferred_date || vis.desired_date || 'N/A'}</p>
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-green-100 text-green-700' : vis.status === 'Rejected' ? 'bg-red-100 text-red-700' : vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}`}>{vis.status || 'Pending'}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-600 mb-1 font-semibold"><span className="text-gray-400">Company/Attendees:</span> {vis.company || vis.company_name || vis.number_of_people || 'N/A'}</p>
+                                    <p className="text-xs text-gray-500 italic mb-4">"{vis.purpose || vis.purpose_of_visit || 'Factory Visit'}"</p>
+                                    {vis.admin_notes && (
+                                        <div className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3">
+                                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest mb-1">Admin Remarks</p>
+                                            <p className="text-xs text-green-800 font-semibold">{vis.admin_notes}</p>
+                                        </div>
+                                    )}
                                 </div>
-                                <p className="text-xs text-gray-600 mb-1 font-semibold"><span className="text-gray-400">Attendees:</span> {vis.number_of_people}</p>
-                                <p className="text-xs text-gray-500 italic">"{vis.purpose_of_visit}"</p>
+                                {vis.created_at && <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{new Date(vis.created_at).toLocaleDateString()}</div>}
                             </div>
                         ))}
                     </div>

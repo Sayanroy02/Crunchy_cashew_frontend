@@ -46,6 +46,8 @@ export const API = {
   CONTACT: `${API_BASE}/api/contact`,
   CONTACT_VISIT: `${API_BASE}/api/contact/visit`,
   CONTACT_ENQUIRY: `${API_BASE}/api/contact/enquiry`,
+  CONTACT_BULK: `${API_BASE}/api/contact/bulk-order`,
+  CONTACT_TRACK: `${API_BASE}/api/contact/track`,
   MY_ENQUIRIES: `${API_BASE}/api/contact/my-enquiries`,
   MY_VISITS: `${API_BASE}/api/contact/my-visits`,
   ADMIN_ENQUIRIES: `${API_BASE}/api/contact/enquiries`,
@@ -56,6 +58,8 @@ export const API = {
   TESTIMONIALS: `${API_BASE}/api/cms/testimonials`,
   BANNERS: `${API_BASE}/api/cms/banners`,
   BLOGS: `${API_BASE}/api/cms/blogs`,
+  BLOGS_BY_SLUG: (slug: string) => `${API_BASE}/api/cms/blogs/slug/${slug}`,
+  BLOGS_SUBMIT: `${API_BASE}/api/cms/blogs/submit`,
   BLOG_DETAIL: (id: string) => `${API_BASE}/api/cms/blogs/${id}`,
 
   // ── Admin CMS ─────────────────────────────────────────────────────────────
@@ -66,6 +70,7 @@ export const API = {
   ADMIN_BANNER_DELETE: (id: string) => `${API_BASE}/api/cms/admin/banners/${id}`,
   ADMIN_BLOGS: `${API_BASE}/api/cms/admin/blogs`,
   ADMIN_BLOG: (id: string) => `${API_BASE}/api/cms/admin/blogs/${id}`,
+  ADMIN_BLOGS_STATUS: (id: string) => `${API_BASE}/api/cms/admin/blogs/${id}/status`,
 
   // ── Traffic ───────────────────────────────────────────────────────────────
   TRAFFIC_STATS: `${API_BASE}/api/traffic/stats`,

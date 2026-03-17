@@ -34,8 +34,8 @@ export default function AdminQueries() {
         const headers = { 'Authorization': `Bearer ${token}` };
         try {
             const [eRes, vRes] = await Promise.all([
-                fetch(API.CONTACT_ENQUIRY, { headers }),
-                fetch(API.CONTACT_VISIT, { headers })
+                fetch(API.ADMIN_ENQUIRIES, { headers }),
+                fetch(API.ADMIN_VISITS, { headers })
             ]);
             if (eRes.ok) setEnquiries(await eRes.json());
             if (vRes.ok) setVisits(await vRes.json());

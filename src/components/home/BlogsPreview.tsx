@@ -29,7 +29,7 @@ export default function BlogsPreview() {
     if (blogs.length === 0) return null;
 
     return (
-        <section className="py-12 md:py-16 bg-white relative">
+        <section className="py-10 md:py-10 bg-white relative">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12">
                     <div className="max-w-2xl">

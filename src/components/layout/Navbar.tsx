@@ -21,6 +21,7 @@ const LEFT_LINKS = [
     { label: 'Bulk', href: '/bulk' },
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blogs' },
+    { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {

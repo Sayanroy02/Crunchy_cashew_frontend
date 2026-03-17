@@ -170,11 +170,10 @@ export default function AdminBlogs() {
                                 </div>
                                 <div className="flex flex-wrap gap-1 mb-4">
                                     {b.category && (
-                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
-                                            b.category === 'Health Articles' ? 'bg-green-100 text-green-700' :
+                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${b.category === 'Health Articles' ? 'bg-green-100 text-green-700' :
                                             b.category === 'Recipes Blog' ? 'bg-amber-100 text-amber-700' :
-                                            'bg-blue-100 text-blue-700'
-                                        }`}>{b.category}</span>
+                                                'bg-blue-100 text-blue-700'
+                                            }`}>{b.category}</span>
                                     )}
                                     {(b.tags || []).slice(0, 3).map((tag: string, i: number) => (
                                         <span key={i} className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-md">#{tag}</span>

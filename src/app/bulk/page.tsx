@@ -481,14 +481,17 @@ export default function BulkOrderPage() {
         e.preventDefault();
         setSubmitStatus('loading');
         try {
-            const res = await fetch(API.CONTACT_ENQUIRY, {
+            const res = await fetch(API.CONTACT_BULK, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
                     phone: formData.phone,
-                    message: `BULK ORDER INQUIRY\nCompany: ${formData.company}\nExpected Volume: ${formData.volume}\nRequirements: ${formData.requirements}`,
+                    company: formData.company,
+                    volume: formData.volume,
+                    requirements: formData.requirements,
+                    message: `BULK ORDER INQUIRY\nCompany: ${formData.company}\nExpected Volume: ${formData.volume}\nRequirements: ${formData.requirements}`, // Kept for backwards compatibility if needed, though mostly obsolete
                 }),
             });
             if (res.ok) {
@@ -505,12 +508,31 @@ export default function BulkOrderPage() {
 
     const handleStatusCheck = async (e: React.FormEvent) => {
         e.preventDefault();
-        setQueryStatus({
-            searched: true,
-            found: true,
-            status: 'Pending Review',
-            notes: 'Our wholesale team will contact you shortly.',
-        });
+        setQueryStatus({ ...queryStatus, searched: true });
+        try {
+            const res = await fetch(API.CONTACT_TRACK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: searchEmail }),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.found) {
+                    setQueryStatus({
+                        searched: true,
+                        found: true,
+                        status: data.status,
+                        notes: data.notes,
+                    });
+                } else {
+                    setQueryStatus({ searched: true, found: false });
+                }
+            } else {
+                setQueryStatus({ searched: true, found: false });
+            }
+        } catch {
+            setQueryStatus({ searched: true, found: false });
+        }
     };
 
     return (

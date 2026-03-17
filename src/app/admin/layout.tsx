@@ -70,6 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Banners', path: '/admin/banners', icon: 'fa-solid fa-images' },
         { name: 'Blogs', path: '/admin/blogs', icon: 'fa-solid fa-blog' },
         { name: 'Queries', path: '/admin/queries', icon: 'fa-solid fa-envelope' },
+        { name: 'Bulk Orders', path: '/admin/bulk-orders', icon: 'fa-solid fa-boxes-stacked' },
         { name: 'Pincodes', path: '/admin/pincodes', icon: 'fa-solid fa-location-dot' },
     ];
 
