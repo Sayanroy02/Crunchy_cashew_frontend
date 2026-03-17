@@ -207,7 +207,7 @@ export default function HeroCarousel() {
                     )}
                 </div>
 
-                {/* Slide title row below banner */}
+                {/* Slide title row below banner
                 {banners.length > 1 && (
                     <div className="flex items-center justify-center gap-3 mt-2">
                         {banners.map((b, i) => (
@@ -226,7 +226,7 @@ export default function HeroCarousel() {
                             </span>
                         ))}
                     </div>
-                )}
+                )} */}
             </div>
         </section>
     );

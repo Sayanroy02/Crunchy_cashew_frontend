@@ -167,7 +167,7 @@ export default function Navbar() {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
 
                     {/* Menu panel */}
-                    <nav className="relative ml-auto w-[80vw] max-w-[320px] h-full bg-white flex flex-col shadow-2xl overflow-hidden animate-slide-in-right">
+                    <nav className="relative mr-auto w-[80vw] max-w-[320px] h-full bg-white flex flex-col shadow-2xl overflow-hidden animate-slide-in-left">
                         {/* Header */}
                         <div className="flex items-center justify-between p-5 border-b border-gray-100">
                             <img src="/images/cc-Logo-01-1.png" alt="Logo" className="h-10" />
@@ -180,8 +180,14 @@ export default function Navbar() {
                         <div className="flex-1 overflow-y-auto p-4 space-y-1">
                             {[
                                 { href: '/', label: 'Home', icon: 'fa-house' },
-                                ...LEFT_LINKS.map(l => ({ href: l.href, label: l.label, icon: l.label === 'Shop' ? 'fa-store' : l.label === 'Bulk' ? 'fa-boxes-stacked' : l.label === 'About' ? 'fa-building' : 'fa-newspaper' })),
-                                { href: '/contact', label: 'Contact', icon: 'fa-envelope' },
+                                ...LEFT_LINKS.map(l => ({ 
+                                    href: l.href, 
+                                    label: l.label, 
+                                    icon: l.label === 'Shop' ? 'fa-store' : 
+                                          l.label === 'Bulk' ? 'fa-boxes-stacked' : 
+                                          l.label === 'About' ? 'fa-building' : 
+                                          l.label === 'Contact' ? 'fa-envelope' : 'fa-newspaper' 
+                                }))
                             ].map(item => (
                                 <Link key={item.href} href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold text-sm transition-colors
