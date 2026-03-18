@@ -10,6 +10,7 @@ interface Blog {
     image_url?: string;
     content: string;
     created_at: string;
+    featured?: boolean;
 }
 
 export default function BlogsPreview() {
@@ -56,6 +57,11 @@ export default function BlogsPreview() {
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         <i className="fa-solid fa-image text-4xl"></i>
+                                    </div>
+                                )}
+                                {blog.featured && (
+                                    <div className="absolute top-4 right-4 bg-amber text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg flex items-center gap-1 z-10">
+                                        <i className="fa-solid fa-star"></i> Featured
                                     </div>
                                 )}
                                 <div className="absolute top-4 left-4 bg-white text-text-dark font-bold text-xs px-3 py-1 rounded-full shadow-sm">

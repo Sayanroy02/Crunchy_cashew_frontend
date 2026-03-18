@@ -13,6 +13,7 @@ interface Blog {
     author?: string;
     category?: string;
     tags?: string[];
+    featured?: boolean;
 }
 
 const CATEGORIES = ['All', 'Health Articles', 'Recipes Blog', 'Sustainability'] as const;
@@ -216,6 +217,12 @@ export default function BlogsDirectory() {
                                         <span className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm ${CATEGORY_COLORS[blog.category] || CATEGORY_COLORS['Uncategorised']}`}>
                                             <i className={`${CATEGORY_ICONS[blog.category] || 'fa-solid fa-tag'} mr-1.5`} />
                                             {blog.category}
+                                        </span>
+                                    )}
+                                    {/* Featured Badge */}
+                                    {blog.featured && (
+                                        <span className="absolute top-4 right-4 bg-amber text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
+                                            <i className="fa-solid fa-star"></i> Featured
                                         </span>
                                     )}
                                     {/* Date */}

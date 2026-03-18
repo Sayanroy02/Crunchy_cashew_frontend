@@ -9,6 +9,7 @@ import Link from 'next/link';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { ORDER_STATUS_CLASSES, PAYMENT_STATUS_CLASSES, CANCELLABLE_STATUSES, COLORS } from '@/constants/styles';
+import CustomerBlogs from '@/components/profile/CustomerBlogs';
 
 interface UserProfile {
     username: string;
@@ -39,37 +40,38 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
 }
 
 const STATUS_STEPS = ['Pending', 'Accepted', 'Dispatched', 'Shipped', 'Delivered'];
-const STATUS_COLORS: Record<string, string> = {
-    Pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    Accepted: 'bg-blue-50 text-blue-700 border-blue-200',
-    Dispatched: 'bg-purple-50 text-purple-700 border-purple-200',
-    Shipped: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    Delivered: 'bg-green-50 text-green-700 border-green-200',
-    Cancelled: 'bg-red-50 text-red-700 border-red-200',
-};
 
-type TabKey = 'home' | 'details' | 'orders' | 'wishlist' | 'queries' | 'reviews';
+type TabKey = 'home' | 'details' | 'orders' | 'wishlist' | 'queries' | 'reviews' | 'blogs';
 
 const SIDEBAR_TABS: { key: TabKey; label: string; icon: string }[] = [
     { key: 'details', label: 'My Accounts', icon: 'fa-user' },
     { key: 'orders', label: 'My Orders', icon: 'fa-box' },
     { key: 'wishlist', label: 'My Wishlist', icon: 'fa-heart' },
     { key: 'reviews', label: 'My Rating & Reviews', icon: 'fa-star' },
+    { key: 'blogs', label: 'My Blogs', icon: 'fa-blog' },
     { key: 'queries', label: 'Queries & Contact', icon: 'fa-clipboard-question' },
 ];
 
+// ── Mobile grid items ──
+// NOTE: key matches the TabKey or a filter value.
+// 'blogs' now correctly maps to the 'blogs' tab directly.
 const MOBILE_GRID = [
-    { key: 'Pending', label: 'Pending Payment', icon: 'fa-wallet', color: 'text-blue-500' },
-    { key: 'Delivered', label: 'Delivered', icon: 'fa-truck-fast', color: 'text-yellow-500' },
-    { key: 'Processing', label: 'Processing', icon: 'fa-arrows-rotate', color: 'text-orange-500' },
-    { key: 'Cancelled', label: 'Cancelled', icon: 'fa-ban', color: 'text-green-500' },
-    { key: 'Wishlist', label: 'Wishlist', icon: 'fa-heart', color: 'text-red-500' },
-    { key: 'Customer Care', label: 'Customer Care', icon: 'fa-headset', color: 'text-purple-500' },
+    { key: 'Pending', label: 'Pending\nPayment', icon: 'fa-wallet', color: 'text-blue-500', tab: 'orders', filter: 'Pending' },
+    { key: 'Delivered', label: 'Delivered', icon: 'fa-truck-fast', color: 'text-yellow-500', tab: 'orders', filter: 'Delivered' },
+    { key: 'Processing', label: 'Processing', icon: 'fa-arrows-rotate', color: 'text-orange-500', tab: 'orders', filter: 'Processing' },
+    { key: 'Cancelled', label: 'Cancelled', icon: 'fa-ban', color: 'text-red-500', tab: 'orders', filter: 'Cancelled' },
+    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart', color: 'text-pink-500', tab: 'wishlist', filter: null },
+    { key: 'blogs', label: 'My Blogs', icon: 'fa-blog', color: 'text-amber-500', tab: 'blogs', filter: null },
+    { key: 'queries', label: 'Customer Care', icon: 'fa-headset', color: 'text-purple-500', tab: 'queries', filter: null },
 ];
 
 export default function ProfilePage() {
     return (
-        <Suspense fallback={<div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center"><div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center">
+                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
             <ProfileContent />
         </Suspense>
     );
@@ -254,8 +256,16 @@ function ProfileContent() {
         });
     }
 
+    // ── Mobile grid tap handler ──
+    const handleMobileGridTap = (item: typeof MOBILE_GRID[number]) => {
+        setActiveTab(item.tab as TabKey);
+        if (item.filter) setMobileOrderFilter(item.filter);
+        else setMobileOrderFilter('All');
+    };
+
     return (
         <div className="min-h-screen bg-[#f8f9fa] font-sans">
+
             {/* ── Order Success Modal ── */}
             {showSuccessModal && successOrderId && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
@@ -281,20 +291,19 @@ function ProfileContent() {
                 </div>
             )}
 
-            {/* ── DESKTOP VIEW ── */}
+            {/* ══════════════════════════════════════
+                DESKTOP VIEW
+            ══════════════════════════════════════ */}
             <div className="hidden md:flex max-w-[1200px] mx-auto pt-10 pb-20 px-6 gap-8 items-start">
 
                 {/* Desktop Sidebar */}
                 <div className="w-72 shrink-0 flex flex-col gap-6">
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
-                        {/* Profile Info Card */}
+                        {/* Profile Info Card — NO camera icon */}
                         <div className="p-6 border-b border-gray-100 flex items-center gap-4">
-                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-black text-primary relative">
+                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-black text-primary">
                                 {initials}
-                                <div className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full shadow border border-gray-100 cursor-pointer">
-                                    <i className="fa-solid fa-camera text-[10px] text-gray-400"></i>
-                                </div>
                             </div>
                             <div className="overflow-hidden">
                                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hello</p>
@@ -314,7 +323,8 @@ function ProfileContent() {
                         </div>
                     </div>
 
-                    <button onClick={() => { dispatch(logout()); router.push('/'); }} className="bg-white rounded-2xl px-4 py-3.5 border border-gray-100 shadow-sm flex items-center gap-3 font-bold text-sm text-gray-500 hover:bg-gray-50 transition-colors">
+                    <button onClick={() => { dispatch(logout()); router.push('/'); }}
+                        className="bg-white rounded-2xl px-4 py-3.5 border border-gray-100 shadow-sm flex items-center gap-3 font-bold text-sm text-gray-500 hover:bg-gray-50 transition-colors">
                         <i className="fa-solid fa-right-from-bracket w-5 text-center text-gray-400"></i> Logout
                     </button>
                 </div>
@@ -326,22 +336,20 @@ function ProfileContent() {
                             <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
                                 <h2 className="text-xl font-black text-gray-800">Personal Information</h2>
                                 {!isEditing && (
-                                    <button onClick={() => setIsEditing(true)} className="text-sm text-primary font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
+                                    <button onClick={() => setIsEditing(true)}
+                                        className="text-sm text-primary font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
                                         <i className="fa-solid fa-pen-to-square" /> Change Information
                                     </button>
                                 )}
                             </div>
 
                             <div className="flex gap-10">
-                                {/* Profile Picture Area */}
-                                <div className="w-32 h-32 bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg relative border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
+                                {/* Profile Picture — NO camera overlay */}
+                                <div className="w-32 h-32 bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
                                     {initials}
-                                    <div className="absolute right-0 bottom-2 bg-white p-2 rounded-full shadow border border-gray-100 cursor-pointer">
-                                        <i className="fa-solid fa-camera text-gray-500 text-xs"></i>
-                                    </div>
                                 </div>
 
-                                {/* Info Form/Display Area */}
+                                {/* Info Form / Display */}
                                 <div className="flex-1">
                                     {!isEditing ? (
                                         <div className="grid grid-cols-2 gap-y-8 gap-x-8">
@@ -365,7 +373,9 @@ function ProfileContent() {
                                             </div>
                                             <div className="col-span-2">
                                                 <p className="text-xs font-bold text-gray-800 mb-2">Address</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 min-h-[80px]">{profile?.address || 'Not provided. Update to receive orders.'}</div>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 min-h-[80px]">
+                                                    {profile?.address || 'Not provided. Update to receive orders.'}
+                                                </div>
                                             </div>
                                         </div>
                                     ) : (
@@ -373,19 +383,34 @@ function ProfileContent() {
                                             <div className="grid grid-cols-2 gap-y-6 gap-x-6">
                                                 <div>
                                                     <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
-                                                    <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors font-semibold" placeholder="10-digit mobile number" />
+                                                    <input type="text" value={editForm.phone}
+                                                        onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
+                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors font-semibold"
+                                                        placeholder="10-digit mobile number" />
                                                 </div>
                                                 <div className="col-span-2">
                                                     <div className="flex justify-between items-center mb-2">
                                                         <label className="text-xs font-bold text-gray-800">Complete Address</label>
-                                                        <button type="button" onClick={handleGetLocation} className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest"><i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate</button>
+                                                        <button type="button" onClick={handleGetLocation}
+                                                            className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest">
+                                                            <i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate
+                                                        </button>
                                                     </div>
-                                                    <textarea rows={4} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors resize-none font-semibold" placeholder="Enter flat/house no, street, area, city, pincode" />
+                                                    <textarea rows={4} value={editForm.address}
+                                                        onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
+                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors resize-none font-semibold"
+                                                        placeholder="Enter flat/house no, street, area, city, pincode" />
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
-                                                <button type="submit" className="px-8 py-3 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-transform text-sm">Save Complete Info</button>
-                                                <button type="button" onClick={() => setIsEditing(false)} className="px-8 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm">Cancel</button>
+                                                <button type="submit"
+                                                    className="px-8 py-3 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-transform text-sm">
+                                                    Save Complete Info
+                                                </button>
+                                                <button type="button" onClick={() => setIsEditing(false)}
+                                                    className="px-8 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm">
+                                                    Cancel
+                                                </button>
                                             </div>
                                         </form>
                                     )}
@@ -416,41 +441,56 @@ function ProfileContent() {
                         <div className="animate-in slide-in-from-right-4 duration-300 max-w-2xl">
                             <h2 className="text-xl font-black text-gray-800 mb-2">My Reviews</h2>
                             <p className="text-sm text-gray-400 mb-6 border-b border-gray-100 pb-4">Share your experience with Crunchy Cashews on our homepage.</p>
-                            <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} />
+                            <ReviewFormRenderer
+                                reviewForm={reviewForm}
+                                setReviewForm={setReviewForm}
+                                reviewStatus={reviewStatus}
+                                handleReviewSubmit={handleReviewSubmit}
+                            />
+                        </div>
+                    )}
+                    {currentDesktopTab === 'blogs' && (
+                        <div className="animate-in slide-in-from-right-4 duration-300">
+                            <CustomerBlogs />
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* ── MOBILE VIEW ── */}
+            {/* ══════════════════════════════════════
+                MOBILE VIEW  (redesigned)
+            ══════════════════════════════════════ */}
             <div className="md:hidden">
                 {activeTab === 'home' ? (
+                    /* ── Home Screen ── */
                     <div className="animate-in fade-in duration-300 bg-[#f8f9fa] min-h-screen">
-                        {/* Wavy Header Segment */}
-                        <div className="relative bg-[#bd1547] text-white pt-8 pb-[140px] shadow-sm">
-                            {/* The color in Image 3 header looks like a vibrant pinkish red, but we strictly use #0c5c2b or the requested color scheme. Let's use a nice gradient green. */}
+
+                        {/* Wavy Header */}
+                        <div className="relative text-white pt-8 pb-[140px] shadow-sm overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-primary to-green-600"></div>
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
 
                             <div className="relative z-10 flex justify-between items-center px-6">
-                                <button onClick={() => router.push('/')} className="w-10 h-10 flex items-center justify-center text-lg active:scale-95 transition-transform"><i className="fa-solid fa-chevron-left" /></button>
+                                <button onClick={() => router.push('/')}
+                                    className="w-10 h-10 flex items-center justify-center text-lg active:scale-95 transition-transform">
+                                    <i className="fa-solid fa-chevron-left" />
+                                </button>
                                 <span className="text-base font-bold tracking-widest uppercase">Profile</span>
                                 <div className="w-10"></div>
                             </div>
 
-                            {/* Wavy bottom SVG */}
-                            <svg className="absolute bottom-0 left-0 w-full translate-y-[1px] text-[#f8f9fa]" viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '70px' }}>
-                                <path fill="currentColor" fillOpacity="1" d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,106.7C672,96,768,128,864,154.7C960,181,1056,203,1152,181.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                            {/* Wavy bottom */}
+                            <svg className="absolute bottom-0 left-0 w-full translate-y-[1px] text-[#f8f9fa]"
+                                viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '70px' }}>
+                                <path fill="currentColor" fillOpacity="1"
+                                    d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,106.7C672,96,768,128,864,154.7C960,181,1056,203,1152,181.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
                             </svg>
                         </div>
 
-                        {/* Avatar */}
+                        {/* Avatar — NO camera icon */}
                         <div className="flex flex-col items-center -mt-[90px] relative z-20 px-6">
                             <div className="w-[100px] h-[100px] bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white border-4 border-[#f8f9fa] shadow-xl shadow-gray-200">
                                 {initials}
-                                <div className="absolute bottom-0 right-1 bg-white p-1.5 rounded-full shadow border border-gray-100 flex items-center justify-center text-primary">
-                                    <i className="fa-solid fa-camera text-[10px]" />
-                                </div>
                             </div>
                             <h2 className="text-2xl font-black text-gray-800 mt-3">{profile?.username}</h2>
                             <p className="text-xs font-semibold text-gray-400 capitalize">{profile?.role}</p>
@@ -458,23 +498,22 @@ function ProfileContent() {
 
                         {/* Mobile Grid Section */}
                         <div className="px-6 mt-8 mb-6">
-                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_var(--theme-amber)] inline-block -ml-1 pr-2">My Orders</h3>
+                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_var(--theme-amber)] inline-block -ml-1 pr-2">
+                                Quick Access
+                            </h3>
                             <div className="grid grid-cols-3 gap-y-8 gap-x-4">
                                 {MOBILE_GRID.map(item => (
-                                    <button key={item.key} onClick={() => {
-                                        if (item.key === 'Wishlist') setActiveTab('wishlist');
-                                        else if (item.key === 'Customer Care') setActiveTab('queries');
-                                        else {
-                                            setActiveTab('orders');
-                                            let filterStatus = item.key;
-                                            if (item.key === 'Processing') filterStatus = 'Processing';
-                                            setMobileOrderFilter(filterStatus);
-                                        }
-                                    }} className="flex flex-col items-center gap-2 group">
-                                        <div className="w-14 h-14 bg-white rounded-[20px] flex items-center justify-center shadow-[0_8px_16px_-4px_rgba(0,0,0,0.05)] border border-gray-100 group-active:scale-95 transition-transform" style={{ color: item.color || '#000' }}>
+                                    <button
+                                        key={item.key}
+                                        onClick={() => handleMobileGridTap(item)}
+                                        className="flex flex-col items-center gap-2 group"
+                                    >
+                                        <div className={`w-14 h-14 bg-white rounded-[20px] flex items-center justify-center shadow-[0_8px_16px_-4px_rgba(0,0,0,0.05)] border border-gray-100 group-active:scale-95 transition-transform ${item.color}`}>
                                             <i className={`fa-solid ${item.icon} text-2xl group-active:scale-110 transition-transform`} />
                                         </div>
-                                        <span className="text-[10px] font-bold text-gray-600 text-center leading-tight whitespace-pre-wrap">{item.label}</span>
+                                        <span className="text-[10px] font-bold text-gray-600 text-center leading-tight whitespace-pre-wrap">
+                                            {item.label}
+                                        </span>
                                     </button>
                                 ))}
                             </div>
@@ -482,48 +521,63 @@ function ProfileContent() {
 
                         {/* List Actions */}
                         <div className="px-6 space-y-3 pb-10">
-                            <button onClick={() => setActiveTab('details')} className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
+                            <button onClick={() => setActiveTab('details')}
+                                className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
                                 <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"><i className="fa-solid fa-user text-gray-400" /></div>
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
+                                        <i className="fa-solid fa-user text-gray-400" />
+                                    </div>
                                     Edit Profile
                                 </span>
                                 <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
                             </button>
-                            <button onClick={() => setActiveTab('details')} className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
+                            <button onClick={() => setActiveTab('details')}
+                                className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
                                 <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center"><i className="fa-solid fa-location-dot text-gray-400" /></div>
+                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
+                                        <i className="fa-solid fa-location-dot text-gray-400" />
+                                    </div>
                                     Shipping Address
                                 </span>
                                 <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
                             </button>
 
                             <div className="pt-6 pb-6 flex justify-center mt-4">
-                                <button onClick={() => { dispatch(logout()); router.push('/'); }} className="flex items-center gap-2 text-gray-400 font-bold text-sm bg-white border border-gray-200 px-6 py-2.5 rounded-full active:bg-gray-50 transition-colors">
+                                <button onClick={() => { dispatch(logout()); router.push('/'); }}
+                                    className="flex items-center gap-2 text-gray-400 font-bold text-sm bg-white border border-gray-200 px-6 py-2.5 rounded-full active:bg-gray-50 transition-colors">
                                     <i className="fa-solid fa-right-from-bracket"></i> Logout
                                 </button>
                             </div>
                         </div>
                     </div>
                 ) : (
+                    /* ── Detail / Sub-screen ── */
                     <div className="animate-in slide-in-from-right-8 duration-300 bg-white min-h-screen">
-                        {/* Detail View Header */}
+
+                        {/* Detail Header */}
                         <div className="flex items-center justify-between bg-white px-5 py-4 sticky top-0 z-30 shadow-sm border-b border-gray-100">
                             <div className="flex items-center gap-4">
-                                <button onClick={() => setActiveTab('home')} className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
+                                <button onClick={() => { setActiveTab('home'); setMobileOrderFilter('All'); }}
+                                    className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
                                     <i className="fa-solid fa-chevron-left text-sm"></i>
                                 </button>
                                 <h2 className="text-xl font-black text-gray-800 tracking-tight">
-                                    {activeTab === 'orders' ? 'My Orders' : SIDEBAR_TABS.find(t => t.key === activeTab)?.label || 'Profile Info'}
+                                    {activeTab === 'orders' ? 'My Orders' :
+                                        activeTab === 'blogs' ? 'My Blogs' :
+                                            SIDEBAR_TABS.find(t => t.key === activeTab)?.label || 'Profile'}
                                 </h2>
                             </div>
-                            <button className="text-gray-400"><i className="fa-solid fa-magnifying-glass font-bold" /></button>
+                            <button className="text-gray-400">
+                                <i className="fa-solid fa-magnifying-glass font-bold" />
+                            </button>
                         </div>
 
-                        {/* Mobile Order Tab Filters */}
+                        {/* Order Filters (only for orders tab) */}
                         {activeTab === 'orders' && (
                             <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky top-[65px] z-20 -mx-1">
                                 {['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'].map(f => (
-                                    <button key={f} onClick={() => setMobileOrderFilter(f)} className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                    <button key={f} onClick={() => setMobileOrderFilter(f)}
+                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {f}
                                     </button>
                                 ))}
@@ -532,19 +586,27 @@ function ProfileContent() {
 
                         {/* Content Area */}
                         <div className="p-5 bg-white min-h-[calc(100vh-65px)] pb-10">
+
+                            {/* ── Details tab ── */}
                             {activeTab === 'details' && (
                                 <div className="space-y-6">
                                     {!isEditing ? (
                                         <div className="space-y-6 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div className="flex justify-between items-center pb-4 border-b border-gray-50">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-xl font-black text-gray-500">{initials}</div>
+                                                    {/* Avatar in detail view — NO camera icon */}
+                                                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-xl font-black text-primary">
+                                                        {initials}
+                                                    </div>
                                                     <div>
                                                         <h3 className="font-black text-sm text-gray-800">{profile?.username}</h3>
                                                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">{profile?.email}</p>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => setIsEditing(true)} className="text-primary bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0"><i className="fa-solid fa-pen text-xs" /></button>
+                                                <button onClick={() => setIsEditing(true)}
+                                                    className="text-primary bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                                                    <i className="fa-solid fa-pen text-xs" />
+                                                </button>
                                             </div>
                                             <div>
                                                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1">Phone</p>
@@ -556,28 +618,85 @@ function ProfileContent() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <form onSubmit={handleUpdateProfile} className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                        <form onSubmit={handleUpdateProfile}
+                                            className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Phone</label>
-                                                <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary" />
+                                                <input type="text" value={editForm.phone}
+                                                    onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary" />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Address</label>
-                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary resize-none" />
-                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5"><i className="fa-solid fa-location-crosshairs"></i> Auto Locate</button>
+                                                <textarea rows={3} value={editForm.address}
+                                                    onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary resize-none" />
+                                                <button type="button" onClick={handleGetLocation}
+                                                    className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5">
+                                                    <i className="fa-solid fa-location-crosshairs"></i> Auto Locate
+                                                </button>
                                             </div>
                                             <div className="flex gap-3 pt-2">
-                                                <button type="submit" className="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20">Save</button>
-                                                <button type="button" onClick={() => setIsEditing(false)} className="px-6 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl">Cancel</button>
+                                                <button type="submit"
+                                                    className="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20">
+                                                    Save
+                                                </button>
+                                                <button type="button" onClick={() => setIsEditing(false)}
+                                                    className="px-6 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl">
+                                                    Cancel
+                                                </button>
                                             </div>
                                         </form>
                                     )}
                                 </div>
                             )}
-                            {activeTab === 'orders' && <OrderListRenderer orders={displayedOrders} tabLoading={tabLoading} cancelOrder={cancelOrder} isMobile />}
-                            {activeTab === 'wishlist' && <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} isMobile />}
-                            {activeTab === 'queries' && <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} isMobile />}
-                            {activeTab === 'reviews' && <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} isMobile />}
+
+                            {/* ── Orders tab ── */}
+                            {activeTab === 'orders' && (
+                                <OrderListRenderer
+                                    orders={displayedOrders}
+                                    tabLoading={tabLoading}
+                                    cancelOrder={cancelOrder}
+                                    isMobile
+                                />
+                            )}
+
+                            {/* ── Wishlist tab ── */}
+                            {activeTab === 'wishlist' && (
+                                <WishlistRenderer
+                                    wishlistProducts={wishlistProducts}
+                                    tabLoading={tabLoading}
+                                    isMobile
+                                />
+                            )}
+
+                            {/* ── Queries tab ── */}
+                            {activeTab === 'queries' && (
+                                <QueriesRenderer
+                                    enquiries={enquiries}
+                                    visits={visits}
+                                    tabLoading={tabLoading}
+                                    isMobile
+                                />
+                            )}
+
+                            {/* ── Reviews tab ── */}
+                            {activeTab === 'reviews' && (
+                                <ReviewFormRenderer
+                                    reviewForm={reviewForm}
+                                    setReviewForm={setReviewForm}
+                                    reviewStatus={reviewStatus}
+                                    handleReviewSubmit={handleReviewSubmit}
+                                    isMobile
+                                />
+                            )}
+
+                            {/* ── Blogs tab ── FIXED: now renders CustomerBlogs correctly ── */}
+                            {activeTab === 'blogs' && (
+                                <div className="p-2">
+                                    <CustomerBlogs />
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
@@ -586,16 +705,25 @@ function ProfileContent() {
     );
 }
 
-// ----------------- RENDER SUBCOMPONENTS -----------------
+// ══════════════════════════════════════════════════════
+// RENDER SUB-COMPONENTS
+// ══════════════════════════════════════════════════════
 
 function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
-    if (tabLoading) return <div className="space-y-4">{[1, 2].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}</div>;
+    if (tabLoading) return (
+        <div className="space-y-4">
+            {[1, 2].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}
+        </div>
+    );
     if (orders.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <i className="fa-solid fa-box-open text-4xl text-gray-200 mb-4 block" />
             <h3 className="text-lg font-black text-gray-800 mb-1">No Orders Yet</h3>
             <p className="text-gray-400 text-sm mb-6">You haven't placed any orders.</p>
-            <Link href="/shop" className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20 hover:scale-105 transition-transform">Explore Store</Link>
+            <Link href="/shop"
+                className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+                Explore Store
+            </Link>
         </div>
     );
 
@@ -603,24 +731,21 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
         <div className={`space-y-4 ${isMobile ? '' : 'grid grid-cols-1 gap-4'}`}>
             {orders.map((order: any) => {
                 const statusClass = ORDER_STATUS_CLASSES[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
-                // Payment status: use payment_status field, fall back to mode
                 const paymentStatus = order.payment_status || (order.payment_mode === 'COD' ? 'COD' : 'Pending');
                 const paymentStatusClass = PAYMENT_STATUS_CLASSES[paymentStatus] || PAYMENT_STATUS_CLASSES.Pending;
                 const canCancel = CANCELLABLE_STATUSES.includes(order.status);
                 return (
-                    <div key={order._id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm shadow-gray-100/50 hover:shadow-md transition-shadow">
-                        {/* Header row */}
+                    <div key={order._id}
+                        className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm shadow-gray-100/50 hover:shadow-md transition-shadow">
                         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 flex-wrap gap-2">
                             <div className="flex items-center gap-2 font-black text-gray-800 text-sm">
                                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order No:</span>
                                 {order._id.slice(-8).toUpperCase()}
                             </div>
                             <div className="flex items-center gap-2">
-                                {/* Payment status badge */}
                                 <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${paymentStatusClass}`}>
                                     {paymentStatus}
                                 </span>
-                                {/* Order status badge */}
                                 <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusClass}`}>
                                     {order.status || 'Pending'}
                                 </span>
@@ -629,37 +754,27 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
                                 </span>
                             </div>
                         </div>
-
-                        {/* Body */}
                         <div className="px-5 py-4 space-y-3">
                             <div className="flex items-center justify-between text-xs">
                                 <span className="text-gray-500 font-semibold">
                                     Ref: <span className="font-bold text-gray-800 ml-1">UW{order._id.slice(0, 10).toUpperCase()}</span>
                                 </span>
-                                <span className="text-gray-500 font-semibold">
-                                    {order.payment_mode || 'COD'}
-                                </span>
+                                <span className="text-gray-500 font-semibold">{order.payment_mode || 'COD'}</span>
                             </div>
                             <div className="flex items-center justify-between text-xs font-semibold">
                                 <span className="text-gray-500">Items: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
-                                <span className="font-black text-sm" style={{ color: COLORS.primary }}>₹{order.total_amount?.toLocaleString('en-IN')}</span>
+                                <span className="font-black text-sm" style={{ color: COLORS.primary }}>
+                                    ₹{order.total_amount?.toLocaleString('en-IN')}
+                                </span>
                             </div>
-
-                            {/* Actions row */}
                             <div className="flex items-center justify-between pt-3 gap-2">
-                                {/* Link to proper order detail page */}
-                                <Link
-                                    href={`/profile/orders/${order._id}`}
-                                    className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors"
-                                >
+                                <Link href={`/profile/orders/${order._id}`}
+                                    className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
                                     View Details
                                 </Link>
-                                {/* Cancel button — only for cancellable statuses */}
                                 {canCancel && (
-                                    <button
-                                        onClick={() => cancelOrder(order._id)}
-                                        className="text-xs font-bold text-red-500 border-2 border-red-100 px-5 py-2 rounded-full hover:bg-red-50 transition-colors"
-                                    >
+                                    <button onClick={() => cancelOrder(order._id)}
+                                        className="text-xs font-bold text-red-500 border-2 border-red-100 px-5 py-2 rounded-full hover:bg-red-50 transition-colors">
                                         Cancel
                                     </button>
                                 )}
@@ -673,13 +788,20 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
 }
 
 function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
-    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+    if (tabLoading) return (
+        <div className="flex justify-center py-10">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+    );
     if (wishlistProducts.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <i className="fa-solid fa-heart-crack text-4xl text-gray-200 mb-5 block" />
             <h3 className="text-lg font-black text-gray-800 mb-1">Wishlist is Empty</h3>
             <p className="text-gray-400 text-sm mb-6">Save your favorite items here.</p>
-            <Link href="/shop" className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20">Start Exploring</Link>
+            <Link href="/shop"
+                className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20">
+                Start Exploring
+            </Link>
         </div>
     );
     return (
@@ -690,14 +812,20 @@ function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
 }
 
 function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
-    if (tabLoading) return <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+    if (tabLoading) return (
+        <div className="flex justify-center py-10">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+    );
     if (enquiries.length === 0 && visits.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
             <i className="fa-solid fa-file-circle-question text-4xl text-gray-200 mb-5 block" />
             <h3 className="text-lg font-black text-gray-800 mb-1">No Active Queries</h3>
             <p className="text-gray-400 text-sm mb-6">You have no pending tickets or visit requests.</p>
             <div className="flex justify-center gap-3">
-                <Link href="/contact" className="bg-gray-800 text-white font-bold px-6 py-2.5 rounded-full text-sm">Contact Us</Link>
+                <Link href="/contact" className="bg-gray-800 text-white font-bold px-6 py-2.5 rounded-full text-sm">
+                    Contact Us
+                </Link>
             </div>
         </div>
     );
@@ -711,8 +839,12 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                             <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
                                 <div>
                                     <div className="flex justify-between items-start mb-2">
-                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">{enq.subject || enq.enquiry_type || 'General Enquiry'}</h4>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-green-100 text-green-700' : enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>{enq.status || 'Pending'}</span>
+                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">
+                                            {enq.subject || enq.enquiry_type || 'General Enquiry'}
+                                        </h4>
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-green-100 text-green-700' :
+                                                enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                                            }`}>{enq.status || 'Pending'}</span>
                                     </div>
                                     <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
                                     {enq.admin_notes && (
@@ -722,7 +854,9 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                         </div>
                                     )}
                                 </div>
-                                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{new Date(enq.created_at).toLocaleDateString()}</div>
+                                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                                    {new Date(enq.created_at).toLocaleDateString()}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -736,10 +870,17 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                             <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
-                                        <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">{vis.date || vis.preferred_date || vis.desired_date || 'N/A'}</p>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-green-100 text-green-700' : vis.status === 'Rejected' ? 'bg-red-100 text-red-700' : vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'}`}>{vis.status || 'Pending'}</span>
+                                        <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">
+                                            {vis.date || vis.preferred_date || vis.desired_date || 'N/A'}
+                                        </p>
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-green-100 text-green-700' :
+                                                vis.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                                                    vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
+                                            }`}>{vis.status || 'Pending'}</span>
                                     </div>
-                                    <p className="text-xs text-gray-600 mb-1 font-semibold"><span className="text-gray-400">Company/Attendees:</span> {vis.company || vis.company_name || vis.number_of_people || 'N/A'}</p>
+                                    <p className="text-xs text-gray-600 mb-1 font-semibold">
+                                        <span className="text-gray-400">Company/Attendees:</span> {vis.company || vis.company_name || vis.number_of_people || 'N/A'}
+                                    </p>
                                     <p className="text-xs text-gray-500 italic mb-4">"{vis.purpose || vis.purpose_of_visit || 'Factory Visit'}"</p>
                                     {vis.admin_notes && (
                                         <div className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3">
@@ -748,7 +889,11 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                         </div>
                                     )}
                                 </div>
-                                {vis.created_at && <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{new Date(vis.created_at).toLocaleDateString()}</div>}
+                                {vis.created_at && (
+                                    <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                                        {new Date(vis.created_at).toLocaleDateString()}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -767,26 +912,51 @@ function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleRev
         </div>
     );
     return (
-        <form onSubmit={handleReviewSubmit} className={`space-y-5 ${isMobile ? 'bg-white rounded-2xl p-5 shadow-sm border border-gray-100' : ''}`}>
+        <form onSubmit={handleReviewSubmit}
+            className={`space-y-5 ${isMobile ? 'bg-white rounded-2xl p-5 shadow-sm border border-gray-100' : ''}`}>
             <div>
                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Rating</label>
                 <StarPicker value={reviewForm.rating} onChange={(v: any) => setReviewForm((r: any) => ({ ...r, rating: v }))} />
             </div>
             <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label><input required type="text" value={reviewForm.name} onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
-                <div><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label><input required type="text" value={reviewForm.city} onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
-                <div className={isMobile ? '' : 'col-span-2'}><label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label><input required type="text" value={reviewForm.state} onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" /></div>
+                <div>
+                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label>
+                    <input required type="text" value={reviewForm.name}
+                        onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))}
+                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+                </div>
+                <div>
+                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label>
+                    <input required type="text" value={reviewForm.city}
+                        onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))}
+                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+                </div>
+                <div className={isMobile ? '' : 'col-span-2'}>
+                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label>
+                    <input required type="text" value={reviewForm.state}
+                        onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))}
+                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+                </div>
             </div>
             <div>
                 <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Your Review</label>
-                <textarea required rows={4} value={reviewForm.description} onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))} className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none resize-none text-sm font-semibold" placeholder="Share your experience..." />
+                <textarea required rows={4} value={reviewForm.description}
+                    onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))}
+                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none resize-none text-sm font-semibold"
+                    placeholder="Share your experience..." />
             </div>
-            {reviewStatus === 'error' && <p className="text-red-500 text-xs font-bold"><i className="fa-solid fa-circle-exclamation mr-1" /> Error submitting review.</p>}
-            <button type="submit" disabled={reviewStatus === 'loading'} className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
-                {reviewStatus === 'loading' ? <i className="fa-solid fa-spinner animate-spin" /> : <i className="fa-solid fa-paper-plane" />}
-                {reviewStatus === 'loading' ? 'Submitting...' : 'Submit Review'}
+            {reviewStatus === 'error' && (
+                <p className="text-red-500 text-xs font-bold">
+                    <i className="fa-solid fa-circle-exclamation mr-1" /> Error submitting review.
+                </p>
+            )}
+            <button type="submit" disabled={reviewStatus === 'loading'}
+                className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
+                {reviewStatus === 'loading'
+                    ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
+                    : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
+                }
             </button>
         </form>
     );
 }
-
