@@ -7,7 +7,21 @@ function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 }
 
-const defaultForm = { name: '', description: '', price: 0, stock: 0, discount: 0, category: 'Cashew', is_available: true, image_url: '' };
+const defaultForm = {
+    name: '',
+    description: '',
+    price: 0,
+    stock: 0,
+    discount: 0,
+    category: 'Cashew',
+    is_available: true,
+    image_url: '',
+    tags: [] as string[],
+    isNew: false,
+    isBestSeller: false,
+    isGift: false,
+    event: { type: '', label: '' }
+};
 
 export default function AdminProducts() {
     const [products, setProducts] = useState<any[]>([]);
@@ -47,6 +61,11 @@ export default function AdminProducts() {
             category: p.category || 'Cashew',
             is_available: p.is_available !== false,
             image_url: p.image_url || '',
+            tags: p.tags || [],
+            isNew: !!p.isNew,
+            isBestSeller: !!p.isBestSeller,
+            isGift: !!p.isGift,
+            event: p.event || { type: '', label: '' }
         });
         setFile(null);
         setError('');
@@ -71,7 +90,13 @@ export default function AdminProducts() {
         setError('');
         const token = getToken();
         const fd = new FormData();
-        Object.entries(formData).forEach(([key, value]) => fd.append(key, value.toString()));
+        Object.entries(formData).forEach(([key, value]) => {
+            if (key === 'tags' || key === 'event') {
+                fd.append(key, JSON.stringify(value));
+            } else {
+                fd.append(key, value.toString());
+            }
+        });
         if (file) fd.append('file', file);
 
         const url = editingId
@@ -221,6 +246,88 @@ export default function AdminProducts() {
                                         <option value="true">Active (visible in shop)</option>
                                         <option value="false">Inactive (hidden)</option>
                                     </select>
+                                </div>
+
+                                {/* Merchandising Tags Section */}
+                                <div className="md:col-span-2 p-4 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
+                                    <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                        <i className="fa-solid fa-tags text-primary"></i> Merchandising & Marketing Tags
+                                    </h3>
+                                    
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        {[
+                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-green-100 text-green-700 border-green-200' },
+                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-amber-100 text-amber-700 border-amber-200' },
+                                            { id: 'isGift', label: 'Gifting Ready', icon: 'fa-gift', color: 'bg-purple-100 text-purple-700 border-purple-200' },
+                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-red-100 text-red-700 border-red-200' }
+                                        ].map(tag => (
+                                            <label key={tag.id} className={`flex items-center gap-2 p-2 border rounded-xl cursor-pointer transition-all hover:shadow-sm ${tag.id === 'isEvent' ? (formData.event?.type ? tag.color : 'bg-white border-gray-200') : ((formData as any)[tag.id] ? tag.color : 'bg-white border-gray-200')}`}>
+                                                <input
+                                                    type="checkbox"
+                                                    className="hidden"
+                                                    checked={tag.id === 'isEvent' ? !!formData.event?.type : !!(formData as any)[tag.id]}
+                                                    onChange={e => {
+                                                        if (tag.id === 'isEvent') {
+                                                            setFormData({ ...formData, event: e.target.checked ? { type: 'holi', label: 'Holi Special' } : { type: '', label: '' } });
+                                                        } else {
+                                                            setFormData({ ...formData, [tag.id]: e.target.checked });
+                                                            // Also add/remove from tags array for indexing
+                                                            const tagValue = tag.id.replace('is', '').toLowerCase();
+                                                            const newTags = e.target.checked 
+                                                                ? [...formData.tags, tagValue]
+                                                                : formData.tags.filter(t => t !== tagValue);
+                                                            setFormData(prev => ({ ...prev, [tag.id]: e.target.checked, tags: Array.from(new Set(newTags)) }));
+                                                        }
+                                                    }}
+                                                />
+                                                <i className={`fa-solid ${tag.icon} text-xs`}></i>
+                                                <span className="text-xs font-bold">{tag.label}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+
+                                    {/* Conditional Event Selection */}
+                                    {formData.event?.type !== '' && (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-200 mt-2 slide-in">
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Select Event Type</label>
+                                                <select 
+                                                    value={formData.event?.type} 
+                                                    onChange={e => {
+                                                        const val = e.target.value;
+                                                        const label = val === 'custom' ? '' : `${val.charAt(0).toUpperCase() + val.slice(1)} Special`;
+                                                        setFormData({ ...formData, event: { type: val, label: label } });
+                                                    }}
+                                                    className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-xs outline-none focus:border-primary"
+                                                >
+                                                    <option value="holi">Holi</option>
+                                                    <option value="eid">Eid</option>
+                                                    <option value="diwali">Diwali</option>
+                                                    <option value="custom">Custom</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Badge Label</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="e.g. DIWALI SPECIAL"
+                                                    value={formData.event?.label}
+                                                    onChange={e => setFormData({ ...formData, event: { ...formData.event!, label: e.target.value } })}
+                                                    className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-xs outline-none focus:border-primary"
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Real-time Badge Preview */}
+                                    <div className="flex flex-wrap gap-2 items-center pt-2">
+                                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-2">Preview:</span>
+                                        {formData.isNew && <span className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">NEW</span>}
+                                        {formData.isBestSeller && <span className="bg-[#f5a623] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">BEST SELLER</span>}
+                                        {formData.isGift && <span className="bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">GIFT</span>}
+                                        {formData.event?.label && <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">{formData.event.label.toUpperCase()}</span>}
+                                        {!formData.isNew && !formData.isBestSeller && !formData.isGift && !formData.event?.type && <span className="text-[9px] text-gray-300 italic">No marketing badges selected</span>}
+                                    </div>
                                 </div>
                                 {editingId ? (
                                     /* EDIT MODE: show thumbnail, no manual URL */

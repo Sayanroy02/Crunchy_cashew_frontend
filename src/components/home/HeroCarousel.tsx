@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { API } from '@/constants/api';
 
+// ─── Types ────────────────────────────────────────────────────────
 interface Banner {
     _id: string;
     title: string;
@@ -10,133 +11,136 @@ interface Banner {
     link?: string;
 }
 
+// ─── Fallback banners (same as original) ─────────────────────────
 const DEFAULTS: Banner[] = [
-    { _id: 'd1', title: 'Premium Quality', image_url: '', link: '/shop' },
-    { _id: 'd2', title: 'Factory Direct', image_url: '', link: '/shop' },
-    { _id: 'd3', title: 'Free Shipping ₹999+', image_url: '', link: '/shop' },
+    { _id: 'd1', title: 'Premium Quality Tea', image_url: '', link: '/shop' },
+    { _id: 'd2', title: 'Factory Direct Prices', image_url: '', link: '/shop' },
+    { _id: 'd3', title: '🚚 Free Shipping on Orders Above ₹999', image_url: '', link: '/shop' },
+    { _id: 'd4', title: 'Best Deals Today', image_url: '', link: '/shop' },
 ];
 
-// Per-slide content config for fallback slides
-const SLIDE_CONFIG = [
+// ─── Card fallback configs ────────────────────────────────────────
+const CARD_CONFIG = [
     {
-        badge: '🏆 Premium Grade',
+        badge: 'Min. 30% Off',
+        label: 'PREMIUM',
+        bg: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%)',
+        accentColor: '#4ade80',
+        logoColor: '#00d084',
         subtitle: 'Straight from Siliguri',
-        cta: 'Shop Now',
-        bg: 'from-amber-400 via-yellow-300 to-amber-200',
-        textDark: true,
-        accent: '#92400e',
-        particle: '#fbbf24',
     },
     {
-        badge: '🏭 Factory Direct',
-        subtitle: 'Best Price Guaranteed',
-        cta: 'Explore',
-        bg: 'from-primary to-emerald-700',
-        textDark: false,
-        accent: '#a7f3d0',
-        particle: '#34d399',
+        badge: 'Up to 50% Off',
+        label: 'DIRECT',
+        bg: 'linear-gradient(135deg, #2d1a0e 0%, #3d2010 60%, #6b3a1f 100%)',
+        accentColor: '#fb923c',
+        logoColor: '#f97316',
+        subtitle: 'Factory Direct Prices',
     },
     {
-        badge: '🚚 Free Shipping',
-        subtitle: 'On Orders Above ₹999',
-        cta: 'Order Now',
-        bg: 'from-[#1a1a2e] via-[#16213e] to-[#0f3460]',
-        textDark: false,
-        accent: '#818cf8',
-        particle: '#6366f1',
+        badge: 'Free Shipping',
+        label: 'OFFER',
+        bg: 'linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1c2432 100%)',
+        accentColor: '#38bdf8',
+        logoColor: '#0ea5e9',
+        subtitle: 'Orders Above ₹999',
+    },
+    {
+        badge: 'Best Price',
+        label: 'DEALS',
+        bg: 'linear-gradient(135deg, #1a0a2e 0%, #2d1454 60%, #3d1a6b 100%)',
+        accentColor: '#e879f9',
+        logoColor: '#a855f7',
+        subtitle: "Today's Top Picks",
     },
 ];
 
-// Floating particle dots for the fallback slides
-function Particles({ color }: { color: string }) {
-    const dots = Array.from({ length: 18 }, (_, i) => ({
-        cx: 10 + (i * 47) % 90,
-        cy: 5 + (i * 31) % 90,
-        r: 1 + (i % 3),
-        dur: 2.5 + (i % 4) * 0.7,
-        dy: -(6 + (i % 10)),
-        delay: (i * 0.3) % 3,
-    }));
+// ─── Single card ──────────────────────────────────────────────────
+function BannerCard({ banner, idx }: { banner: Banner; idx: number }) {
+    const cfg = CARD_CONFIG[idx % CARD_CONFIG.length];
+
     return (
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-            {dots.map((d, i) => (
-                <circle key={i} cx={`${d.cx}%`} cy={`${d.cy}%`} r={d.r} fill={color} opacity="0.35">
-                    <animate attributeName="cy" from={`${d.cy}%`} to={`${d.cy + d.dy}%`} dur={`${d.dur}s`} begin={`${d.delay}s`} repeatCount="indefinite" />
-                    <animate attributeName="opacity" values="0;0.35;0" dur={`${d.dur}s`} begin={`${d.delay}s`} repeatCount="indefinite" />
-                </circle>
-            ))}
-        </svg>
-    );
-}
-
-function FallbackSlide({ banner, idx }: { banner: Banner; idx: number }) {
-    const cfg = SLIDE_CONFIG[idx % SLIDE_CONFIG.length];
-    const tc = cfg.textDark ? 'text-[#1c0a00]' : 'text-white';
-    const tcs = cfg.textDark ? 'text-[#3d1f00]/70' : 'text-white/70';
-    return (
-        <div className={`w-full h-full bg-gradient-to-br ${cfg.bg} relative overflow-hidden flex flex-col justify-center items-center text-center px-8 select-none`}>
-            <Particles color={cfg.particle} />
-
-            {/* Large blurred decorative circle — depth layer */}
-            <div
-                className="absolute rounded-full blur-3xl opacity-20 pointer-events-none"
-                style={{
-                    width: '60%', height: '140%', top: '-20%', right: '-15%',
-                    background: cfg.particle,
-                }}
-            />
-
-            {/* Content */}
-            <div className="relative z-10 flex flex-col items-center gap-3 md:gap-4">
-                <span className={`inline-block ${tc} bg-white/15 border border-white/25 text-[10px] md:text-xs font-black px-4 py-1.5 rounded-full tracking-[.18em] uppercase`}>
-                    {cfg.badge}
-                </span>
-
-                <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black ${tc} leading-[1.05] tracking-tight max-w-2xl`}>
-                    {banner.title}
-                </h2>
-
-                <p className={`text-sm md:text-base font-semibold ${tcs} max-w-md`}>
-                    {cfg.subtitle}
-                </p>
-
-                <a
-                    href={banner.link || '/shop'}
-                    className={`mt-1 md:mt-2 inline-flex items-center gap-2 font-black text-xs md:text-sm px-6 md:px-8 py-2.5 md:py-3 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg`}
-                    style={{ background: cfg.accent, color: cfg.textDark ? '#fff' : '#fff' }}
-                    onClick={e => e.stopPropagation()}
-                >
-                    {cfg.cta}
-                    <i className="fa-solid fa-arrow-right text-[10px]" />
-                </a>
-            </div>
-        </div>
-    );
-}
-
-function ImageSlide({ banner }: { banner: Banner }) {
-    return (
-        <img
-            src={banner.image_url}
-            alt={banner.title}
-            className="w-full h-full object-cover"
+        <a
+            href={banner.link || '/shop'}
             draggable={false}
-        />
+            className="relative w-full h-full overflow-hidden rounded-xl block group select-none"
+        >
+            {banner.image_url ? (
+                <img
+                    src={banner.image_url}
+                    alt={banner.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    draggable={false}
+                />
+            ) : (
+                <div
+                    className="w-full h-full flex flex-col justify-between p-3 md:p-4 relative overflow-hidden"
+                    style={{ background: cfg.bg }}
+                >
+                    {/* Glow */}
+                    <div
+                        className="absolute top-0 right-0 pointer-events-none"
+                        style={{
+                            width: '50%',
+                            height: '100%',
+                            background: `radial-gradient(ellipse at 80% 20%, ${cfg.accentColor}1a 0%, transparent 70%)`,
+                        }}
+                    />
+                    {/* Top: brand + AD */}
+                    <div className="relative z-10 flex items-center justify-between">
+                        <div
+                            className="px-2 py-0.5 rounded-md text-[9px] md:text-[10px] font-black tracking-widest uppercase"
+                            style={{ background: cfg.logoColor, color: '#fff' }}
+                        >
+                            {cfg.label}
+                        </div>
+                        <span
+                            className="text-[8px] font-semibold px-1.5 py-0.5 rounded"
+                            style={{
+                                background: 'rgba(255,255,255,0.1)',
+                                color: 'rgba(255,255,255,0.45)',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                            }}
+                        >
+                            AD
+                        </span>
+                    </div>
+                    {/* Bottom: subtitle + title + badge */}
+                    <div className="relative z-10">
+                        <p className="text-[9px] mb-0.5 truncate" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                            {cfg.subtitle}
+                        </p>
+                        <h3
+                            className="text-sm md:text-base font-bold leading-snug mb-2"
+                            style={{
+                                color: '#fff',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {banner.title}
+                        </h3>
+                        <span
+                            className="inline-flex items-center px-2 py-0.5 rounded-md text-[9px] md:text-[10px] font-bold"
+                            style={{ background: cfg.accentColor, color: '#000' }}
+                        >
+                            {cfg.badge}
+                        </span>
+                    </div>
+                </div>
+            )}
+        </a>
     );
 }
 
-export default function HeroCarousel() {
+// ─── Main component ───────────────────────────────────────────────
+export default function OfferStripCarousel() {
     const [banners, setBanners] = useState<Banner[]>([]);
-    const [current, setCurrent] = useState(0);
-    const [prev, setPrev] = useState<number | null>(null);
-    const [direction, setDirection] = useState<'next' | 'prev'>('next');
-    const [animating, setAnimating] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
     const [loaded, setLoaded] = useState(false);
 
-    const touchStartX = useRef<number>(0);
-    const touchHoldTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+    // ── Original fetch logic ──
     useEffect(() => {
         fetch(API.BANNERS)
             .then(r => r.json())
@@ -145,223 +149,252 @@ export default function HeroCarousel() {
             .finally(() => setTimeout(() => setLoaded(true), 80));
     }, []);
 
-    const navigate = useCallback((dir: 'next' | 'prev') => {
-        if (animating || banners.length <= 1) return;
+    // ── Desktop: page through pairs (0-1, 2-3, 4-5 …) ──
+    const [page, setPage] = useState(0);
+    const [animDir, setAnimDir] = useState<'left' | 'right'>('right');
+    const [animating, setAnimating] = useState(false);
+
+    // How many pages of 2
+    const totalPages = Math.ceil(banners.length / 2);
+
+    const goPage = useCallback((dir: 'left' | 'right') => {
+        if (animating) return;
         setAnimating(true);
-        setDirection(dir);
-        setPrev(current);
-        setCurrent(c => dir === 'next'
-            ? (c + 1) % banners.length
-            : (c - 1 + banners.length) % banners.length
+        setAnimDir(dir);
+        setPage(p => dir === 'right'
+            ? (p + 1) % totalPages
+            : (p - 1 + totalPages) % totalPages
         );
-        setTimeout(() => { setAnimating(false); setPrev(null); }, 680);
-    }, [animating, banners.length, current]);
+        setTimeout(() => setAnimating(false), 350);
+    }, [animating, totalPages]);
 
-    const goTo = useCallback((idx: number) => {
-        if (animating || idx === current || banners.length <= 1) return;
-        setAnimating(true);
-        setDirection(idx > current ? 'next' : 'prev');
-        setPrev(current);
-        setCurrent(idx);
-        setTimeout(() => { setAnimating(false); setPrev(null); }, 680);
-    }, [animating, current, banners.length]);
+    // ── Mobile: raw horizontal scroll ──
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
 
-    // Auto-play
+    const updateScroll = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        setCanScrollLeft(el.scrollLeft > 8);
+        setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
+    }, []);
+
     useEffect(() => {
-        if (banners.length <= 1 || isPaused) return;
-        const t = setInterval(() => navigate('next'), 5500);
-        return () => clearInterval(t);
-    }, [banners.length, isPaused, navigate]);
+        const el = scrollRef.current;
+        if (!el) return;
+        el.addEventListener('scroll', updateScroll, { passive: true });
+        const t = setTimeout(updateScroll, 120);
+        return () => { el.removeEventListener('scroll', updateScroll); clearTimeout(t); };
+    }, [banners, updateScroll]);
 
-    // Touch / swipe
-    const handleTouchStart = (e: React.TouchEvent) => {
-        touchStartX.current = e.touches[0].clientX;
-        touchHoldTimer.current = setTimeout(() => setIsPaused(true), 300);
-    };
-    const handleTouchEnd = (e: React.TouchEvent) => {
-        if (touchHoldTimer.current) clearTimeout(touchHoldTimer.current);
-        setIsPaused(false);
-        const diff = touchStartX.current - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 44) navigate(diff > 0 ? 'next' : 'prev');
+    const mobileScroll = (dir: 'left' | 'right') => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const card = el.querySelector<HTMLElement>('.m-banner-card');
+        const amount = card ? card.offsetWidth + 12 : 260;
+        el.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
     };
 
-    // ── Loading skeleton ──
-    if (banners.length === 0) return (
-        <section className="w-full bg-bg py-4 sm:py-5">
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10">
-                <div className="w-full rounded-2xl md:rounded-3xl bg-gray-100 animate-pulse"
-                    style={{ height: 'clamp(200px, 42vw, 560px)' }} />
+    // ── Skeleton ──
+    if (banners.length === 0) {
+        return (
+            <div className="w-full px-4 md:px-5">
+                <div className="flex gap-3">
+                    {[...Array(2)].map((_, i) => (
+                        <div key={i} className="flex-1 rounded-xl bg-gray-100 animate-pulse" style={{ height: '170px' }} />
+                    ))}
+                </div>
             </div>
-        </section>
-    );
+        );
+    }
 
-    // Slide transition keyframe values
-    // Outgoing: slides out in the opposite direction
-    // Incoming: enters from the direction of travel
-    const ENTER_TRANSLATE = direction === 'next' ? 'translateX(100%)' : 'translateX(-100%)';
-    const EXIT_TRANSLATE = direction === 'next' ? 'translateX(-12%)' : 'translateX(12%)';
+    // Current pair for desktop
+    const pairStart = page * 2;
+    const pair = [banners[pairStart], banners[pairStart + 1]].filter(Boolean);
 
     return (
-        <section className="w-full bg-bg py-4 sm:py-5">
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-10">
+        <section
+            className="w-full py-2"
+            style={{ opacity: loaded ? 1 : 0, transition: 'opacity 0.4s ease' }}
+        >
+            <div className="px-4 md:px-5">
+
+                {/* ════════════════════════════════════════════
+                    DESKTOP  ≥ 768px
+                    Outer rounded rectangle → 2 equal inner cards
+                    Page through pairs with arrow buttons
+                ════════════════════════════════════════════ */}
                 <div
-                    className={`relative w-full overflow-hidden rounded-2xl md:rounded-3xl transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+                    className="hidden md:flex items-center gap-3 relative"
                     style={{
-                        height: 'clamp(200px, 42vw, 560px)',
-                        // Subtle amber ring matching brand
-                        boxShadow: '0 0 0 1.5px rgba(251,178,27,0.30), 0 24px 48px -12px rgba(0,0,0,0.18)',
+                        background: '#f1f3f6',          // Flipkart-style light grey outer bg
+                        borderRadius: '16px',
+                        padding: '10px',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
                     }}
-                    onMouseEnter={() => setIsPaused(true)}
-                    onMouseLeave={() => setIsPaused(false)}
-                    onTouchStart={handleTouchStart}
-                    onTouchEnd={handleTouchEnd}
-                    onTouchCancel={() => { setIsPaused(false); if (touchHoldTimer.current) clearTimeout(touchHoldTimer.current); }}
                 >
+                    {/* Left arrow */}
+                    {totalPages > 1 && (
+                        <button
+                            onClick={() => goPage('left')}
+                            aria-label="Previous"
+                            disabled={animating}
+                            className="absolute -left-4 top-1/2 -translate-y-1/2 z-20
+                                w-8 h-8 rounded-full bg-white
+                                flex items-center justify-center
+                                border border-gray-200 shadow-md
+                                transition-transform duration-150 hover:scale-110 active:scale-95 disabled:opacity-50"
+                        >
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                <path d="M6.5 2L3.5 5l3 3" stroke="#111" strokeWidth="2"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    )}
 
-                    {/* ── Slides ── */}
-                    {banners.map((banner, i) => {
-                        const isActive = i === current;
-                        const isLeaving = i === prev;
-
-                        let transform = 'translateX(100%)';
-                        let opacity = 0;
-                        let scale = 1.02;
-                        let zIndex = 0;
-                        let transition = 'transform 0.68s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.68s ease, scale 0.68s ease';
-
-                        if (isActive) {
-                            transform = 'translateX(0%)';
-                            opacity = 1;
-                            scale = 1;
-                            zIndex = 2;
-                        } else if (isLeaving) {
-                            transform = EXIT_TRANSLATE;
-                            opacity = 0;
-                            scale = 0.98;
-                            zIndex = 1;
-                        } else {
-                            transform = ENTER_TRANSLATE;
-                            transition = 'none';
-                        }
-
-                        return (
+                    {/* 2 equal cards side by side */}
+                    <div
+                        className="flex gap-3 w-full overflow-hidden"
+                        style={{ height: '180px' }}
+                    >
+                        {pair.map((banner, i) => (
                             <div
                                 key={banner._id}
-                                className="absolute inset-0"
-                                style={{ transform, opacity, scale, zIndex, transition, willChange: 'transform, opacity' }}
+                                className="flex-1"
+                                style={{
+                                    // slide-in animation on page change
+                                    animation: animating
+                                        ? `slideIn-${animDir} 0.35s cubic-bezier(0.4,0,0.2,1) forwards`
+                                        : undefined,
+                                }}
                             >
-                                <a href={banner.link || '/shop'} className="block w-full h-full" draggable={false}>
-                                    {banner.image_url
-                                        ? <ImageSlide banner={banner} />
-                                        : <FallbackSlide banner={banner} idx={i} />
-                                    }
-                                </a>
+                                <BannerCard banner={banner} idx={pairStart + i} />
                             </div>
-                        );
-                    })}
+                        ))}
 
-                    {/* ── Prev Arrow ── */}
-                    {banners.length > 1 && (
-                        <button
-                            onClick={e => { e.preventDefault(); navigate('prev'); }}
-                            aria-label="Previous"
-                            className="group absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-10
-                                w-9 h-9 md:w-11 md:h-11
-                                bg-white/20 hover:bg-white/90
-                                backdrop-blur-md
-                                rounded-full
-                                flex items-center justify-center
-                                border border-white/30 hover:border-transparent
-                                shadow-lg hover:shadow-xl
-                                transition-all duration-200
-                                hover:scale-110 active:scale-95"
-                        >
-                            <i className="fa-solid fa-chevron-left text-white group-hover:text-primary text-sm transition-colors duration-200" />
-                        </button>
-                    )}
-
-                    {/* ── Next Arrow ── */}
-                    {banners.length > 1 && (
-                        <button
-                            onClick={e => { e.preventDefault(); navigate('next'); }}
-                            aria-label="Next"
-                            className="group absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-10
-                                w-9 h-9 md:w-11 md:h-11
-                                bg-white/20 hover:bg-white/90
-                                backdrop-blur-md
-                                rounded-full
-                                flex items-center justify-center
-                                border border-white/30 hover:border-transparent
-                                shadow-lg hover:shadow-xl
-                                transition-all duration-200
-                                hover:scale-110 active:scale-95"
-                        >
-                            <i className="fa-solid fa-chevron-right text-white group-hover:text-primary text-sm transition-colors duration-200" />
-                        </button>
-                    )}
-
-                    {/* ── Pause indicator ── */}
-                    <div
-                        className="absolute top-3 right-14 md:right-20 z-20 flex items-center gap-1.5
-                            bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold
-                            px-2.5 py-1 rounded-full pointer-events-none uppercase tracking-widest"
-                        style={{
-                            opacity: isPaused ? 1 : 0,
-                            transform: isPaused ? 'translateY(0)' : 'translateY(-8px)',
-                            transition: 'opacity 0.25s ease, transform 0.25s ease',
-                        }}
-                    >
-                        <span className="flex gap-[3px] items-center h-3">
-                            <span className="w-[2.5px] h-[10px] bg-white rounded-sm" />
-                            <span className="w-[2.5px] h-[10px] bg-white rounded-sm" />
-                        </span>
-                        Paused
+                        {/* If odd number of banners, fill last slot with empty */}
+                        {pair.length === 1 && (
+                            <div className="flex-1 rounded-xl bg-gray-200/60" />
+                        )}
                     </div>
 
-                    {/* ── Dot indicators ── */}
-                    {banners.length > 1 && (
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2 items-center">
-                            {banners.map((_, i) => (
-                                <button
-                                    key={i}
-                                    onClick={e => { e.preventDefault(); goTo(i); }}
-                                    aria-label={`Slide ${i + 1}`}
-                                    className="rounded-full transition-all duration-500 ease-out hover:opacity-100"
-                                    style={{
-                                        height: '5px',
-                                        width: i === current ? '28px' : '5px',
-                                        background: i === current
-                                            ? 'var(--color-amber, #FBB21B)'
-                                            : 'rgba(255,255,255,0.55)',
-                                        boxShadow: i === current ? '0 0 8px 1px rgba(251,178,27,0.55)' : 'none',
-                                    }}
-                                />
-                            ))}
-                        </div>
-                    )}
-
-                    {/* ── Progress bar (auto-play timer) ── */}
-                    {banners.length > 1 && !isPaused && (
-                        <div
-                            key={`progress-${current}`}
-                            className="absolute bottom-0 left-0 h-[3px] z-10 rounded-br-full"
-                            style={{
-                                background: 'linear-gradient(90deg, rgba(251,178,27,0.9), rgba(251,178,27,0.55))',
-                                animation: 'heroProgress 5.5s linear forwards',
-                            }}
-                        />
+                    {/* Right arrow */}
+                    {totalPages > 1 && (
+                        <button
+                            onClick={() => goPage('right')}
+                            aria-label="Next"
+                            disabled={animating}
+                            className="absolute -right-4 top-1/2 -translate-y-1/2 z-20
+                                w-8 h-8 rounded-full bg-white
+                                flex items-center justify-center
+                                border border-gray-200 shadow-md
+                                transition-transform duration-150 hover:scale-110 active:scale-95 disabled:opacity-50"
+                        >
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                <path d="M3.5 2L6.5 5l-3 3" stroke="#111" strokeWidth="2"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
                     )}
                 </div>
 
+                {/* Page dots — desktop */}
+                {totalPages > 1 && (
+                    <div className="hidden md:flex justify-center gap-1.5 mt-2.5">
+                        {Array.from({ length: totalPages }).map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => { if (!animating && i !== page) { setAnimDir(i > page ? 'right' : 'left'); setPage(i); } }}
+                                className="rounded-full transition-all duration-300"
+                                style={{
+                                    height: '4px',
+                                    width: i === page ? '16px' : '4px',
+                                    background: i === page ? '#2874f0' : '#d1d5db',
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
 
+                {/* ════════════════════════════════════════════
+                    MOBILE  < 768px
+                    1 card visible + peek of next, swipe/scroll
+                ════════════════════════════════════════════ */}
+                <div className="md:hidden relative">
+                    {/* Left arrow */}
+                    {canScrollLeft && (
+                        <button
+                            onClick={() => mobileScroll('left')}
+                            aria-label="Scroll left"
+                            className="absolute -left-1 top-1/2 -translate-y-1/2 z-20
+                                w-7 h-7 rounded-full bg-white shadow-md
+                                flex items-center justify-center border border-gray-100
+                                active:scale-95"
+                        >
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                                <path d="M6.5 2L3.5 5l3 3" stroke="#111" strokeWidth="2"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    )}
+
+                    {/* Scroll row */}
+                    <div
+                        ref={scrollRef}
+                        className="flex gap-3 overflow-x-auto"
+                        style={{
+                            scrollSnapType: 'x mandatory',
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none',
+                            WebkitOverflowScrolling: 'touch',
+                        }}
+                    >
+                        {banners.map((banner, i) => (
+                            <div
+                                key={banner._id}
+                                className="m-banner-card flex-shrink-0"
+                                style={{
+                                    width: 'calc(88% - 6px)',   // 1 card + peek
+                                    height: '160px',
+                                    scrollSnapAlign: 'start',
+                                }}
+                            >
+                                <BannerCard banner={banner} idx={i} />
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Right arrow */}
+                    {canScrollRight && (
+                        <button
+                            onClick={() => mobileScroll('right')}
+                            aria-label="Scroll right"
+                            className="absolute -right-1 top-1/2 -translate-y-1/2 z-20
+                                w-7 h-7 rounded-full bg-white shadow-md
+                                flex items-center justify-center border border-gray-100
+                                active:scale-95"
+                        >
+                            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
+                                <path d="M3.5 2L6.5 5l-3 3" stroke="#111" strokeWidth="2"
+                                    strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
             </div>
 
-            {/* Progress bar keyframe — injected once globally */}
             <style>{`
-                @keyframes heroProgress {
-                    from { width: 0%; }
-                    to   { width: 100%; }
+                @keyframes slideIn-right {
+                    from { opacity: 0; transform: translateX(40px); }
+                    to   { opacity: 1; transform: translateX(0); }
                 }
+                @keyframes slideIn-left {
+                    from { opacity: 0; transform: translateX(-40px); }
+                    to   { opacity: 1; transform: translateX(0); }
+                }
+                /* hide webkit scrollbar on mobile row */
+                .m-banner-card::-webkit-scrollbar { display: none; }
             `}</style>
         </section>
     );

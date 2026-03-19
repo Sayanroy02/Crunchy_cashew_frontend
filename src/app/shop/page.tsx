@@ -15,7 +15,9 @@ const PRICE_RANGES = [
 ] as const;
 
 type PriceRangeIndex = number;
-type SortKey = 'default' | 'price_asc' | 'price_desc' | 'discount';
+type SortKey = 'default' | 'price_asc' | 'price_desc' | 'discount' | 'newest' | 'popular';
+type TagFilter = 'all' | 'newest' | 'best_seller' | 'gifting' | 'event';
+type EventFilter = 'all' | 'holi' | 'eid' | 'diwali' | 'custom';
 
 export default function ShopPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -23,6 +25,8 @@ export default function ShopPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortKey, setSortKey] = useState<SortKey>('default');
     const [priceRange, setPriceRange] = useState<PriceRangeIndex>(0); // index into PRICE_RANGES
+    const [tagFilter, setTagFilter] = useState<TagFilter>('all');
+    const [eventFilter, setEventFilter] = useState<EventFilter>('all');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
@@ -39,18 +43,38 @@ export default function ShopPage() {
                 p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (p.category || '').toLowerCase().includes(searchTerm.toLowerCase());
             const matchPrice = p.price >= min && p.price <= max;
-            return matchSearch && matchPrice;
+            
+            let matchTag = true;
+            if (tagFilter === 'newest') matchTag = !!p.isNew;
+            else if (tagFilter === 'best_seller') matchTag = !!p.isBestSeller;
+            else if (tagFilter === 'gifting') matchTag = !!p.isGift;
+            else if (tagFilter === 'event') matchTag = !!p.event?.type;
+
+            let matchEvent = true;
+            if (tagFilter === 'event' && eventFilter !== 'all') {
+                matchEvent = p.event?.type === eventFilter;
+            }
+
+            return matchSearch && matchPrice && matchTag && matchEvent;
         });
 
         if (sortKey === 'price_asc') result = [...result].sort((a, b) => a.price - b.price);
         else if (sortKey === 'price_desc') result = [...result].sort((a, b) => b.price - a.price);
         else if (sortKey === 'discount') result = [...result].sort((a, b) => (b.discount || 0) - (a.discount || 0));
+        else if (sortKey === 'newest') result = [...result].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+        else if (sortKey === 'popular') result = [...result].sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
 
         return result;
-    }, [products, searchTerm, sortKey, priceRange]);
+    }, [products, searchTerm, sortKey, priceRange, tagFilter, eventFilter]);
 
-    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0;
-    const clearAll = () => { setSearchTerm(''); setSortKey('default'); setPriceRange(0); };
+    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all' || eventFilter !== 'all';
+    const clearAll = () => { 
+        setSearchTerm(''); 
+        setSortKey('default'); 
+        setPriceRange(0); 
+        setTagFilter('all'); 
+        setEventFilter('all'); 
+    };
 
     return (
         <div className="bg-bg min-h-screen pb-24">
@@ -106,6 +130,8 @@ export default function ShopPage() {
                         <SidebarContent
                             sortKey={sortKey} setSortKey={setSortKey}
                             priceRange={priceRange} setPriceRange={setPriceRange}
+                            tagFilter={tagFilter} setTagFilter={setTagFilter}
+                            eventFilter={eventFilter} setEventFilter={setEventFilter}
                             hasFilters={hasFilters} clearAll={clearAll}
                             resultCount={filtered.length}
                         />
@@ -126,6 +152,8 @@ export default function ShopPage() {
                                     <SidebarContent
                                         sortKey={sortKey} setSortKey={setSortKey}
                                         priceRange={priceRange} setPriceRange={setPriceRange}
+                                        tagFilter={tagFilter} setTagFilter={setTagFilter}
+                                        eventFilter={eventFilter} setEventFilter={setEventFilter}
                                         hasFilters={hasFilters} clearAll={clearAll}
                                         resultCount={filtered.length}
                                     />
@@ -179,6 +207,8 @@ export default function ShopPage() {
                                 className="hidden sm:block text-sm border-2 border-gray-200 rounded-xl px-3 py-2 bg-white font-semibold text-gray-700 focus:outline-none focus:border-primary transition-colors"
                             >
                                 <option value="default">Sort: Default</option>
+                                <option value="newest">Sort: Newest First</option>
+                                <option value="popular">Sort: Popularity</option>
                                 <option value="price_asc">Price: Low → High</option>
                                 <option value="price_desc">Price: High → Low</option>
                                 <option value="discount">Biggest Discount</option>
@@ -233,11 +263,15 @@ export default function ShopPage() {
 function SidebarContent({
     sortKey, setSortKey,
     priceRange, setPriceRange,
+    tagFilter, setTagFilter,
+    eventFilter, setEventFilter,
     hasFilters, clearAll,
     resultCount
 }: {
     sortKey: SortKey; setSortKey: (v: SortKey) => void;
     priceRange: PriceRangeIndex; setPriceRange: (v: PriceRangeIndex) => void;
+    tagFilter: TagFilter; setTagFilter: (v: TagFilter) => void;
+    eventFilter: EventFilter; setEventFilter: (v: EventFilter) => void;
     hasFilters: boolean; clearAll: () => void;
     resultCount: number;
 }) {
@@ -261,6 +295,8 @@ function SidebarContent({
                 <div className="flex flex-col gap-2">
                     {([
                         { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
+                        { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
+                        { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
                         { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
                         { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
                         { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
@@ -277,6 +313,63 @@ function SidebarContent({
                             <i className={opt.icon} />
                             {opt.label}
                         </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Special Collections */}
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i className="fa-solid fa-layer-group text-primary" /> Collections
+                </h3>
+                <div className="flex flex-col gap-2">
+                    {([
+                        { value: 'all', label: 'All Products', icon: 'fa-solid fa-border-all' },
+                        { value: 'newest', label: 'Newest Arrivals', icon: 'fa-solid fa-sparkles' },
+                        { value: 'best_seller', label: 'Best Sellers', icon: 'fa-solid fa-trophy' },
+                        { value: 'gifting', label: 'Gifting Specials', icon: 'fa-solid fa-gift' },
+                        { value: 'event', label: 'Event Specials', icon: 'fa-solid fa-calendar-star' },
+                    ] as const).map(opt => (
+                        <div key={opt.value} className="flex flex-col gap-2">
+                            <button
+                                onClick={() => {
+                                    setTagFilter(opt.value);
+                                    if (opt.value !== 'event') setEventFilter('all');
+                                }}
+                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                                    tagFilter === opt.value
+                                        ? 'bg-primary text-white shadow-sm'
+                                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                }`}
+                            >
+                                <i className={`${opt.icon} text-xs`} />
+                                {opt.label}
+                            </button>
+                            
+                            {/* Sub-filters for Event */}
+                            {opt.value === 'event' && tagFilter === 'event' && (
+                                <div className="flex flex-wrap gap-2 px-2 py-1 bg-red-50/50 rounded-xl border border-red-100 animate-slide-in">
+                                    {([
+                                        { value: 'all', label: 'All Events' },
+                                        { value: 'holi', label: 'Holi' },
+                                        { value: 'eid', label: 'Eid' },
+                                        { value: 'diwali', label: 'Diwali' },
+                                    ] as const).map(evt => (
+                                        <button
+                                            key={evt.value}
+                                            onClick={() => setEventFilter(evt.value)}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                                                eventFilter === evt.value
+                                                    ? 'bg-red-600 text-white shadow-sm'
+                                                    : 'bg-white text-red-600 border border-red-100 hover:bg-red-50'
+                                            }`}
+                                        >
+                                            {evt.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     ))}
                 </div>
             </div>

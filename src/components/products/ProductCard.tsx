@@ -9,11 +9,22 @@ export interface Product {
     id?: string;
     _id?: string;
     name: string;
+    description?: string;
     price: number;
     discount: number;
     image_url: string;
     category: string;
     stock: number;
+    tags?: string[];
+    isNew?: boolean;
+    isBestSeller?: boolean;
+    isGift?: boolean;
+    event?: {
+        type: string;
+        label: string;
+    };
+    salesCount?: number;
+    createdAt?: string;
 }
 
 interface ProductCardProps {
@@ -84,17 +95,42 @@ export default function ProductCard({ product }: ProductCardProps) {
                     className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-md"
                 />
 
-                {/* Discount Badge */}
-                {hasDiscount && product.stock > 0 && (
-                    <div className="absolute top-3 left-3 bg-[#f5a623] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md z-10 tracking-wide">
-                        {product.discount}% OFF
-                    </div>
-                )}
+                {/* Dynamic Merchandising Badges */}
+                <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                    {product.isNew && (
+                        <div className="bg-green-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            NEW
+                        </div>
+                    )}
+                    {product.isBestSeller && (
+                        <div className="bg-[#f5a623] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            BEST SELLER
+                        </div>
+                    )}
+                    {product.isGift && (
+                        <div className="bg-purple-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            GIFT
+                        </div>
+                    )}
+                    {product.event && product.event.label && (
+                        <div className="bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            {product.event.label}
+                        </div>
+                    )}
+                    {/* Discount Badge (only if not showing all others or prioritize?) */}
+                    {hasDiscount && product.stock > 0 && !product.isNew && !product.isBestSeller && (
+                        <div className="bg-[#f5a623] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
+                            {product.discount}% OFF
+                        </div>
+                    )}
+                </div>
 
                 {/* Out of Stock Badge */}
                 {product.stock <= 0 && (
-                    <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">
-                        Out of Stock
+                    <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px] flex items-center justify-center z-10">
+                        <div className="bg-red-600 text-white text-xs font-black px-4 py-2 rounded-full shadow-xl transform -rotate-12 border-2 border-white">
+                            OUT OF STOCK
+                        </div>
                     </div>
                 )}
 

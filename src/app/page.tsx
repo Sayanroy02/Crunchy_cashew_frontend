@@ -1,5 +1,4 @@
 import Image from "next/image";
-import HeroCarousel from "@/components/home/HeroCarousel";
 import WhyUsCRO from "@/components/home/WhyUsCRO";
 import BestSellers from "@/components/home/BestSellers";
 import Testimonials from "@/components/home/Testimonials";
@@ -8,12 +7,15 @@ import Affiliates from "@/components/home/Affiliates";
 import ComparisonSection from "@/components/home/OffersGrid";
 import BulkOrderCard from "@/components/home/BulkOrderCard";
 import AboutFactory from "@/components/home/AboutFactory";
+import HeroVideo from "@/components/home/HeroAnimationBanner";
+import OfferStripCarousel from "@/components/home/HeroCarousel";
 
 export default function Home() {
   return (
     <>
-      <HeroCarousel />
+      <HeroVideo />
       <BestSellers />
+      <OfferStripCarousel />
       <Affiliates />
       <BulkOrderCard />
       {/* <WhyUsCRO /> */}
