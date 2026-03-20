@@ -1,560 +1,415 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X, Factory, Globe, User, ArrowRight, Minus, Plus, ShieldCheck, Zap, ShoppingCart } from 'lucide-react';
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// Color Constants (Based on brand guidelines)
+const COLORS = {
+  primary: '#0A5246', // Dark Green
+  secondary: '#f6d70f', // Yellow Accent
+  accent: '#99EA78', // Light Green
+  textMuted: '#64748b',
+};
 
-const points = [
+// Platforms Data
+const platforms = [
   {
-    icon: '🏭',
-    label: 'Sourcing',
-    ours: 'Direct from our own factory — zero middlemen',
-    theirs: 'Passes through multiple middlemen',
+    name: 'Our Website',
+    logo: '/images/crunchy-cashews-product.png',
+    price: 399,
+    isBest: true,
+    badge: 'Direct Price',
   },
   {
-    icon: '💰',
-    label: 'Pricing',
-    ours: 'Below market rate, always competitive',
-    theirs: 'Inflated by supply chain markups',
+    name: 'Amazon',
+    logo: '/images/partners/amazon.jpg',
+    price: 499,
   },
   {
-    icon: '🧪',
-    label: 'Production',
-    ours: 'Hygienic, food-grade certified facility',
-    theirs: 'Unverified third-party standards',
+    name: 'Flipkart',
+    logo: '/images/partners/flipkart.png',
+    price: 499,
   },
   {
-    icon: '🏆',
-    label: 'Kernel Quality',
-    ours: 'Premium grade, uniformly white kernels',
-    theirs: 'Inconsistent grades, mixed batches',
+    name: 'Blinkit',
+    logo: '/images/partners/blinkit.png',
+    price: 520,
   },
   {
-    icon: '📦',
-    label: 'Packaging',
-    ours: 'Sealed freshness-lock packs, tamper-proof',
-    theirs: 'Standard packaging, no freshness guarantee',
-  },
-  {
-    icon: '🌿',
-    label: 'Freshness',
-    ours: 'Dispatched within days of roasting',
-    theirs: 'Sits in warehouses for weeks',
+    name: 'Swiggy Instamart',
+    logo: '/images/partners/swiggy-instamart.png',
+    price: 520,
   },
 ];
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+const SAVINGS_PER_PACK = 100;
 
-function useInView(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setInView(true); },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return { ref, inView };
-}
+export default function PriceComparisonSection() {
+  const [quantity, setQuantity] = useState(1);
 
-// ─── Main Export ──────────────────────────────────────────────────────────────
-
-export default function ComparisonSection() {
-  const { ref: headRef, inView: headIn } = useInView(0.2);
+  const totalSavings = useMemo(() => quantity * SAVINGS_PER_PACK, [quantity]);
 
   return (
-    <section
-      className="py-10 md:py-10 px-4"
-    // style={{ background: '#E1EDEB' }}
-    >
-      <div className="max-w-4xl mx-auto">
-
-        {/* ── Page Heading ── */}
-        <div
-          ref={headRef}
-          className="text-center mb-10 md:mb-14"
-          style={{
-            opacity: headIn ? 1 : 0,
-            transform: headIn ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.65s ease, transform 0.65s ease',
-          }}
-        >
-          <span
-            className="inline-block text-xs font-black tracking-[5px] uppercase mb-3"
-            style={{ color: '#0A5246', opacity: 0.6 }}
+    <section className="py-20 px-4 bg-slate-50 overflow-hidden">
+      <div className="max-w-6xl mx-auto space-y-20">
+        
+        {/* 1. HEADER */}
+        <div className="text-center space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0A5246]/5 text-[#0A5246] text-xs font-black uppercase tracking-[3px]"
           >
-            The Difference
-          </span>
-          <h2
-            className="text-3xl md:text-4xl font-black leading-tight tracking-tight"
-            style={{ color: '#0a1f1c' }}
+            <Zap size={14} className="fill-[#0A5246]" />
+            The Price Difference
+          </motion.div>
+          
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-black text-[#0A5246] tracking-tight"
           >
-            Why We{' '}
-            <span
-              style={{
-                color: '#0A5246',
-                borderBottom: '4px solid #f6d70f',
-                paddingBottom: 2,
-              }}
-            >
-              Stand Out
+            Buy Direct. <span className="relative inline-block">
+              <span className="relative z-10">Save More.</span>
+              <motion.div 
+                initial={{ width: 0 }}
+                whileInView={{ width: '100%' }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+              />
             </span>
-          </h2>
-          <p className="mt-3 text-sm md:text-base max-w-md mx-auto" style={{ color: '#3d6560' }}>
-            From farm to your hands — every step is ours to control.
-          </p>
+          </motion.h2>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-medium"
+          >
+            Same premium cashews — lower price because you buy directly from the factory.
+          </motion.p>
         </div>
 
-        {/* ── DESKTOP: Side-by-side table (md and above) ── */}
-        <DesktopTable />
-
-        {/* ── MOBILE: Accordion cards (below md) ── */}
-        <MobileAccordion />
-
-      </div>
-
-      <style>{`
-        @keyframes slideLeft {
-          from { opacity: 0; transform: translateX(-20px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideRight {
-          from { opacity: 0; transform: translateX(20px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(14px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-          0%   { transform: scale(0.4); opacity: 0; }
-          70%  { transform: scale(1.2); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        .anim-left  { animation: slideLeft  0.55s cubic-bezier(.22,1,.36,1) both; }
-        .anim-right { animation: slideRight 0.55s cubic-bezier(.22,1,.36,1) both; }
-        .anim-up    { animation: fadeUp     0.5s  cubic-bezier(.22,1,.36,1) both; }
-        .anim-pop   { animation: popIn      0.4s  cubic-bezier(.34,1.56,.64,1) both; }
-
-        .acc-body {
-          display: grid;
-          grid-template-rows: 0fr;
-          transition: grid-template-rows 0.35s cubic-bezier(.22,1,.36,1);
-        }
-        .acc-body.open {
-          grid-template-rows: 1fr;
-        }
-        .acc-inner { overflow: hidden; }
-
-        .acc-trigger-icon {
-          transition: transform 0.3s cubic-bezier(.22,1,.36,1), color 0.3s;
-        }
-      `}</style>
-    </section>
-  );
-}
-
-// ─── Desktop Table ─────────────────────────────────────────────────────────────
-
-function DesktopTable() {
-  const { ref, inView } = useInView(0.08);
-
-  return (
-    <div
-      ref={ref}
-      className="hidden md:block rounded-3xl overflow-hidden"
-      style={{
-        boxShadow: '0 8px 48px rgba(10,82,70,0.13)',
-        opacity: inView ? 1 : 0,
-        transition: 'opacity 0.4s ease',
-      }}
-    >
-      {/* ── Column Headers with Product Images ── */}
-      <div className="grid grid-cols-2">
-
-        {/* Our Brand */}
-        <div
-          className="flex flex-col items-center pb-6 pt-8 px-8"
-          style={{ background: '#ffffff' }}
-        >
-          <div className="relative w-40 h-40 mb-4">
-            <Image
-              src="/images/crunchy-cashews-product.png"
-              alt="Crunchy Cashews"
-              fill
-              className="object-contain drop-shadow-lg"
-            />
+        {/* 2. PRICE COMPARISON STRIP */}
+        <div className="relative">
+          {/* Mobile Scroll Indicator */}
+          <div className="md:hidden flex justify-center mb-4 text-slate-400 text-[10px] font-bold uppercase tracking-widest animate-pulse">
+            Swipe to compare →
           </div>
-          <p className="text-xl font-black tracking-tight" style={{ color: '#0A5246' }}>
-            Crunchy Cashews
-          </p>
-          <span
-            className="mt-2 text-[9px] font-bold tracking-[3px] uppercase px-3 py-1 rounded-full"
-            style={{ background: '#E1EDEB', color: '#0A5246' }}
-          >
-            Factory Direct
-          </span>
-        </div>
-
-        {/* Other Brands */}
-        <div
-          className="flex flex-col items-center pb-6 pt-8 px-8"
-          style={{ background: '#f5f0e6', borderLeft: '1.5px solid #ddd7cc' }}
-        >
-          <div className="relative w-40 h-40 mb-4">
-            <Image
-              src="/images/other-brands.png"
-              alt="Other Brands"
-              fill
-              className="object-contain"
-              style={{ filter: 'grayscale(25%) opacity(0.72)' }}
-            />
-          </div>
-          <p className="text-xl font-black tracking-tight" style={{ color: '#4a4540' }}>
-            Other Brands
-          </p>
-          <span
-            className="mt-2 text-[9px] font-bold tracking-[3px] uppercase px-3 py-1 rounded-full"
-            style={{ background: '#e8e2d8', color: '#6a6560' }}
-          >
-            Via Middlemen
-          </span>
-        </div>
-      </div>
-
-      {/* Gradient divider */}
-      <div style={{ height: '2px', background: 'linear-gradient(90deg, #0A5246 50%, #ddd7cc 50%)' }} />
-
-      {/* Rows */}
-      {points.map((p, i) => (
-        <DesktopRow
-          key={p.label}
-          point={p}
-          index={i}
-          inView={inView}
-          isLast={i === points.length - 1}
-        />
-      ))}
-    </div>
-  );
-}
-
-function DesktopRow({
-  point,
-  index,
-  inView,
-  isLast,
-}: {
-  point: typeof points[0];
-  index: number;
-  inView: boolean;
-  isLast: boolean;
-}) {
-  const delay = `${index * 70 + 100}ms`;
-
-  return (
-    <div
-      className="grid grid-cols-2"
-      style={{ borderBottom: isLast ? 'none' : '1.5px solid #ede8df' }}
-    >
-      {/* Our side */}
-      <div
-        className={inView ? 'anim-left' : ''}
-        style={{
-          animationDelay: delay,
-          opacity: inView ? undefined : 0,
-          padding: '18px 24px',
-          background: '#ffffff',
-        }}
-      >
-        <div className="flex items-start gap-3">
-          <span
-            className={inView ? 'anim-pop' : ''}
-            style={{
-              animationDelay: `${index * 70 + 220}ms`,
-              flexShrink: 0,
-              marginTop: 2,
-              width: 22,
-              height: 22,
-              borderRadius: '50%',
-              background: '#0A5246',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 11,
-              fontWeight: 900,
-              color: '#f6d70f',
-            }}
-          >
-            ✓
-          </span>
-          <div>
-            <p
-              className="text-[9px] font-black tracking-[2.5px] uppercase mb-1"
-              style={{ color: '#0A5246', opacity: 0.55 }}
-            >
-              {point.icon} {point.label}
-            </p>
-            <p className="text-sm font-semibold leading-snug" style={{ color: '#1a1f1c' }}>
-              {point.ours}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Their side */}
-      <div
-        className={inView ? 'anim-right' : ''}
-        style={{
-          animationDelay: delay,
-          opacity: inView ? undefined : 0,
-          padding: '18px 24px',
-          background: '#f9f5ed',
-          borderLeft: '1.5px solid #ddd7cc',
-        }}
-      >
-        <div className="flex items-start gap-3">
-          <span
-            style={{
-              flexShrink: 0,
-              marginTop: 2,
-              width: 22,
-              height: 22,
-              borderRadius: '50%',
-              background: '#e5e0d6',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 11,
-              fontWeight: 900,
-              color: '#cc2222',
-            }}
-          >
-            ✕
-          </span>
-          <div>
-            <p
-              className="text-[9px] font-black tracking-[2.5px] uppercase mb-1"
-              style={{ color: '#7a7068' }}
-            >
-              {point.label}
-            </p>
-            <p className="text-sm leading-snug" style={{ color: '#3a3530' }}>
-              {point.theirs}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Mobile Accordion ──────────────────────────────────────────────────────────
-
-function MobileAccordion() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const { ref, inView } = useInView(0.05);
-
-  return (
-    <div ref={ref} className="md:hidden flex flex-col gap-3">
-
-      {/* Product image cards */}
-      <div
-        className={`grid grid-cols-2 gap-3 mb-2 ${inView ? 'anim-up' : ''}`}
-        style={{ opacity: inView ? undefined : 0 }}
-      >
-        {/* Our product */}
-        <div
-          className="rounded-2xl flex flex-col items-center py-5 px-3"
-          style={{
-            background: '#ffffff',
-            boxShadow: '0 2px 16px rgba(10,82,70,0.10)',
-            border: '1.5px solid #c8e0da',
-          }}
-        >
-          <div className="relative w-24 h-24 mb-3">
-            <Image
-              src="/images/crunchy-cashews-product.png"
-              alt="Crunchy Cashews"
-              fill
-              className="object-contain"
-            />
-          </div>
-          <p className="text-xs font-black text-center" style={{ color: '#0A5246' }}>
-            Crunchy Cashews
-          </p>
-          <span
-            className="mt-1.5 text-[7px] font-bold tracking-[2px] uppercase px-2.5 py-1 rounded-full"
-            style={{ background: '#E1EDEB', color: '#0A5246' }}
-          >
-            Factory Direct
-          </span>
-        </div>
-
-        {/* Other brands */}
-        <div
-          className="rounded-2xl flex flex-col items-center py-5 px-3"
-          style={{
-            background: '#f5f0e6',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
-            border: '1.5px solid #ddd7cc',
-          }}
-        >
-          <div className="relative w-24 h-24 mb-3">
-            <Image
-              src="/images/other-brands.png"
-              alt="Other Brands"
-              fill
-              className="object-contain"
-              style={{ filter: 'grayscale(25%) opacity(0.7)' }}
-            />
-          </div>
-          <p className="text-xs font-black text-center" style={{ color: '#4a4540' }}>
-            Other Brands
-          </p>
-          <span
-            className="mt-1.5 text-[7px] font-bold tracking-[2px] uppercase px-2.5 py-1 rounded-full"
-            style={{ background: '#e2ddd4', color: '#6a6560' }}
-          >
-            Via Middlemen
-          </span>
-        </div>
-      </div>
-
-      {/* Accordion rows */}
-      {points.map((p, i) => {
-        const isOpen = openIndex === i;
-        return (
-          <div
-            key={p.label}
-            className={`rounded-2xl overflow-hidden ${inView ? 'anim-up' : ''}`}
-            style={{
-              animationDelay: `${i * 55 + 80}ms`,
-              opacity: inView ? undefined : 0,
-              boxShadow: isOpen
-                ? '0 4px 22px rgba(10,82,70,0.15)'
-                : '0 1px 6px rgba(0,0,0,0.05)',
-              border: isOpen ? '1.5px solid #0A5246' : '1.5px solid #d4cfc4',
-              background: '#ffffff',
-              transition: 'box-shadow 0.3s, border-color 0.3s',
-            }}
-          >
-            {/* Trigger */}
-            <button
-              onClick={() => setOpenIndex(isOpen ? null : i)}
-              className="w-full flex items-center justify-between px-4 py-3.5 text-left"
-              style={{
-                background: isOpen ? '#0A5246' : '#ffffff',
-                transition: 'background 0.3s',
-              }}
-            >
-              <div className="flex items-center gap-2.5">
-                <span className="text-base leading-none">{p.icon}</span>
-                <span
-                  className="text-sm font-black"
-                  style={{ color: isOpen ? '#ffffff' : '#1a1f1c' }}
-                >
-                  {p.label}
-                </span>
-              </div>
-              <span
-                className="acc-trigger-icon text-xl font-black leading-none select-none"
-                style={{
-                  color: isOpen ? '#f6d70f' : '#0A5246',
-                  transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
-                  display: 'inline-block',
-                }}
+          
+          <div className="flex md:grid md:grid-cols-5 gap-4 overflow-x-auto md:overflow-visible pb-8 md:pb-0 px-2 scrollbar-hide">
+            {platforms.map((platform, idx) => (
+              <motion.div
+                key={platform.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -8 }}
+                className={`relative min-w-[240px] md:min-w-0 p-8 rounded-[2rem] flex flex-col items-center justify-between transition-all duration-300 ${
+                  platform.isBest 
+                  ? 'bg-white shadow-[0_30px_60px_-15px_rgba(10,82,70,0.25)] ring-4 ring-[#0A5246] z-10 scale-105' 
+                  : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100'
+                }`}
               >
-                +
-              </span>
-            </button>
-
-            {/* Body */}
-            <div className={`acc-body ${isOpen ? 'open' : ''}`}>
-              <div className="acc-inner">
-
-                {/* Our row */}
-                <div
-                  className="flex items-start gap-3 px-4 py-3.5"
-                  style={{ borderTop: '1px solid #eee9e0', borderBottom: '1px dashed #ede8df' }}
-                >
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      marginTop: 2,
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                      background: '#0A5246',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 10,
-                      fontWeight: 900,
-                      color: '#f6d70f',
-                    }}
-                  >
-                    ✓
-                  </span>
-                  <div>
-                    <p
-                      className="text-[8px] font-black tracking-[2px] uppercase mb-0.5"
-                      style={{ color: '#0A5246', opacity: 0.6 }}
-                    >
-                      Crunchy Cashews
-                    </p>
-                    <p className="text-sm font-semibold leading-snug" style={{ color: '#1a1f1c' }}>
-                      {p.ours}
-                    </p>
+                {platform.isBest && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#0A5246] text-[#f6d70f] text-[10px] font-black uppercase tracking-widest px-5 py-2 rounded-full shadow-lg whitespace-nowrap">
+                    Best Price
+                  </div>
+                )}
+                
+                <div className="w-28 h-28 relative mb-6">
+                  <Image 
+                    src={platform.logo} 
+                    alt={platform.name} 
+                    fill 
+                    className="object-contain"
+                  />
+                </div>
+                
+                <div className="text-center space-y-2">
+                  <p className={`text-xs font-black uppercase tracking-widest ${platform.isBest ? 'text-[#0A5246]' : 'text-slate-400'}`}>
+                    {platform.name}
+                  </p>
+                  <div className="flex flex-col items-center gap-1">
+                    {platform.isBest ? (
+                      <div className="flex flex-col items-center">
+                        <span className="text-4xl font-black text-[#0A5246]">₹{platform.price}</span>
+                        <span className="text-[10px] font-bold text-[#99EA78] uppercase tracking-tighter">Factory Price</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <span className="text-2xl font-black text-slate-400 line-through decoration-red-500/50 decoration-2">₹{platform.price}</span>
+                        <span className="text-[10px] font-bold text-red-400 uppercase tracking-tighter">Marketplace Markup</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                {/* Their row */}
-                <div
-                  className="flex items-start gap-3 px-4 py-3.5"
-                  style={{ background: '#f9f5ed' }}
-                >
-                  <span
-                    style={{
-                      flexShrink: 0,
-                      marginTop: 2,
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                      background: '#e5e0d6',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 10,
-                      fontWeight: 900,
-                      color: '#cc2222',
-                    }}
-                  >
-                    ✕
-                  </span>
-                  <div>
-                    <p
-                      className="text-[8px] font-black tracking-[2px] uppercase mb-0.5"
-                      style={{ color: '#7a7068' }}
-                    >
-                      Other Brands
-                    </p>
-                    <p className="text-sm leading-snug" style={{ color: '#3a3530' }}>
-                      {p.theirs}
-                    </p>
+                {platform.isBest && (
+                  <div className="mt-6 flex items-center gap-2 text-[#0A5246] bg-[#99EA78]/20 px-4 py-1.5 rounded-full border border-[#99EA78]/30">
+                    <span className="text-[10px] font-black tracking-widest uppercase">Save ₹100 per pack</span>
                   </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* 3. SAVINGS CALCULATOR */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-7 bg-white rounded-[2.5rem] p-10 md:p-14 shadow-2xl shadow-slate-200/50 relative overflow-hidden flex flex-col justify-center"
+          >
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[#f6d70f]/5 rounded-full -mr-40 -mt-40 blur-3xl" />
+            
+            <div className="relative space-y-10">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-black text-[#0A5246] tracking-tight">How much will you save?</h3>
+                <p className="text-slate-500 font-medium italic">Adjust the quantity to see your direct savings grow</p>
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Select pack quantity</label>
+                <div className="flex items-center gap-8">
+                  <motion.button 
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center text-[#0A5246] hover:bg-[#99EA78]/20 transition-colors"
+                  >
+                    <Minus size={28} />
+                  </motion.button>
+                  <div className="relative">
+                    <span className="text-6xl font-black text-[#0A5246] w-20 text-center block leading-none">{quantity}</span>
+                    <span className="absolute -right-12 bottom-1 text-slate-300 font-black text-xl uppercase tracking-widest">Packs</span>
+                  </div>
+                  <motion.button 
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-16 h-16 rounded-2xl bg-[#0A5246] flex items-center justify-center text-white hover:bg-[#0A5246]/90 transition-colors shadow-xl shadow-[#0A5246]/20"
+                  >
+                    <Plus size={28} />
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-5 bg-[#0A5246] rounded-[2.5rem] p-12 text-center flex flex-col items-center justify-center space-y-4 shadow-2xl shadow-[#0A5246]/30 relative overflow-hidden"
+          >
+            <div className="absolute top-0 left-0 w-full h-full">
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#99EA78]/10 rounded-full translate-x-1/2 translate-y-1/2" />
+              <div className="absolute top-0 left-0 w-24 h-24 bg-[#f6d70f]/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
+            </div>
+
+            <p className="text-[#99EA78] font-black uppercase tracking-[0.4em] text-xs relative z-10">Total Direct Savings</p>
+            
+            <div className="relative z-10 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-white/40">₹</span>
+              <div className="overflow-hidden h-24 flex items-center">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={totalSavings}
+                    initial={{ y: 40, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -40, opacity: 0 }}
+                    transition={{ type: "spring", damping: 12, stiffness: 100 }}
+                    className="text-7xl md:text-8xl font-black text-white tracking-tighter"
+                  >
+                    {totalSavings}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
+            
+            <p className="text-white/60 font-medium text-sm relative z-10 max-w-[200px]">Money that stays in your pocket instead of paying for middlemen.</p>
+
+            <motion.div 
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              className="mt-4 bg-[#99EA78] text-[#0A5246] px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest relative z-10"
+            >
+              Smart Choice!
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* 4. WHY WE ARE CHEAPER (VISUAL FLOW) */}
+        <div className="space-y-12">
+          <div className="text-center space-y-2">
+            <h3 className="text-3xl font-black text-[#0A5246]">The Direct Advantage</h3>
+            <p className="text-slate-500 font-medium">Why we can offer premium quality at lower prices.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
+            {/* Our Flow */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="bg-[#99EA78]/5 rounded-[2.5rem] p-10 border-2 border-[#99EA78]/20 flex flex-col"
+            >
+              <div className="flex items-center gap-4 mb-10">
+                <div className="w-12 h-12 rounded-2xl bg-[#0A5246] flex items-center justify-center text-[#f6d70f]">
+                  <Check size={24} strokeWidth={3} />
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-[#0A5246]">Our Direct Supply Chain</h4>
+                  <p className="text-[10px] font-bold text-[#0A5246]/60 uppercase tracking-widest">Minimal Touchpoints</p>
+                </div>
+              </div>
+
+              <div className="flex-grow flex items-center justify-between px-4 pb-4">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-20 h-20 rounded-3xl bg-white shadow-xl flex items-center justify-center text-[#0A5246] border border-white">
+                    <Factory size={36} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#0A5246]">Factory</span>
+                </div>
+                
+                <motion.div 
+                  animate={{ x: [0, 10, 0] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                >
+                  <ArrowRight size={24} className="text-[#99EA78]" />
+                </motion.div>
+                
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-20 h-20 rounded-3xl bg-white shadow-xl flex items-center justify-center text-[#0A5246] border border-white">
+                    <Globe size={36} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#0A5246]">Website</span>
                 </div>
 
+                <motion.div 
+                  animate={{ x: [0, 10, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, delay: 0.2 }}
+                >
+                  <ArrowRight size={24} className="text-[#99EA78]" />
+                </motion.div>
+
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-20 h-20 rounded-3xl bg-[#0A5246] shadow-xl flex items-center justify-center text-white ring-4 ring-[#99EA78]/30">
+                    <User size={36} />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#0A5246]">Customer</span>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-[#0A5246] rounded-2xl text-center">
+                <p className="text-white text-xs font-bold uppercase tracking-widest">No Middlemen. No Extra Charges.</p>
+              </div>
+            </motion.div>
+
+            {/* Marketplace Flow */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-slate-100/50 rounded-[2.5rem] p-10 border-2 border-slate-200/50 flex flex-col opacity-60"
+            >
+              <div className="flex items-center gap-4 mb-10">
+                <div className="w-12 h-12 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-500">
+                  <X size={24} strokeWidth={3} />
+                </div>
+                <div>
+                  <h4 className="text-xl font-black text-slate-500 font-medium">Marketplace Chain</h4>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Multiple Inflations</p>
+                </div>
+              </div>
+
+              <div className="flex-grow flex flex-wrap items-center justify-center gap-4">
+                {[
+                  { icon: Factory, label: 'Factory' },
+                  { icon: Globe, label: 'Distributor' },
+                  { icon: Globe, label: 'Retailer' },
+                  { icon: Globe, label: 'App Fees' },
+                  { icon: User, label: 'Customer' },
+                ].map((item, i, arr) => (
+                  <React.Fragment key={i}>
+                    <div className="flex flex-col items-center gap-2">
+                       <div className="w-14 h-14 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-300">
+                         <item.icon size={24} />
+                       </div>
+                       <span className="text-[8px] font-bold uppercase tracking-tighter text-slate-400">{item.label}</span>
+                    </div>
+                    {i < arr.length - 1 && <ArrowRight size={14} className="text-slate-200" />}
+                  </React.Fragment>
+                ))}
+              </div>
+
+              <div className="mt-8 p-4 border-2 border-dashed border-red-200 rounded-2xl text-center">
+                <p className="text-red-400 text-xs font-bold uppercase tracking-widest">Markups Added at Every Step</p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* 5. TRUST + CTA */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative rounded-[3rem] p-12 md:p-24 text-center overflow-hidden shadow-[0_50px_100px_-20px_rgba(10,82,70,0.3)]"
+        >
+          {/* Background Elements */}
+          <div className="absolute inset-0 bg-[#0A5246]">
+             <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-white/5 to-transparent" />
+             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+          </div>
+
+          <div className="relative z-10 space-y-10">
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/10">
+                <ShieldCheck className="text-[#f6d70f]" size={24} />
+                <span className="text-white text-[10px] font-black uppercase tracking-[0.3em]">Pure. Fresh. Factory Direct.</span>
+              </div>
+              
+              <h3 className="text-4xl md:text-7xl font-black text-white tracking-tight leading-[0.9]">
+                Same product. <br/>
+                <span className="text-[#f6d70f]">Better price.</span> <br/>
+                Direct from source.
+              </h3>
+            </div>
+
+            <p className="text-white/70 max-w-2xl mx-auto text-lg font-medium">
+              Don't pay extra for marketplace convenience when you can get it fresher and cheaper directly from our roasting facility. 
+              <span className="text-white font-bold ml-1">The smartest way to buy cashews.</span>
+            </p>
+
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="group relative bg-[#f6d70f] text-[#0A5246] px-12 py-6 rounded-2xl font-black text-xl flex items-center gap-4 shadow-[0_20px_40px_rgba(246,215,15,0.3)] transition-shadow hover:shadow-[0_25px_50px_rgba(246,215,15,0.5)]"
+              >
+                Buy Direct & Save More
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+              
+              <div className="flex items-center gap-2 text-white/50 text-xs font-bold uppercase tracking-widest">
+                <ShoppingCart size={16} />
+                Free Shipping on Orders over ₹500
               </div>
             </div>
           </div>
-        );
-      })}
-    </div>
+        </motion.div>
+      </div>
+    </section>
   );
 }
