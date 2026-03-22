@@ -112,7 +112,18 @@ export default function AdminTestimonials() {
                             <StarDisplay rating={t.rating} />
                             <p className="text-gray-600 text-sm mt-2 italic leading-relaxed line-clamp-3">"{t.description}"</p>
                             {t.created_at && (
-                                <p className="text-gray-300 text-xs mt-2">{new Date(t.created_at).toLocaleDateString('en-IN')}</p>
+                                <p className="text-gray-300 text-[10px] font-bold uppercase tracking-wider mt-2">{new Date(t.created_at).toLocaleDateString('en-IN')}</p>
+                            )}
+
+                            {t.video_url && (
+                                <div className="mt-4 rounded-xl overflow-hidden border border-amber/20 bg-black">
+                                    <video 
+                                        src={t.video_url} 
+                                        controls 
+                                        className="w-full aspect-video object-cover"
+                                        poster="/images/video-placeholder.png" // Optional placeholder
+                                    />
+                                </div>
                             )}
                             <div className="flex gap-2 mt-4 pt-3 border-t border-gray-50">
                                 {!t.approved && (

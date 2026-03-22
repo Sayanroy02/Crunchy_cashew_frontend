@@ -10,6 +10,7 @@ interface Testimonial {
     state: string;
     description: string;
     rating?: number;
+    video_url?: string;
 }
 
 function StarRating({ rating = 5 }: { rating?: number }) {
@@ -43,9 +44,17 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
 export default function Testimonials() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [formOpen, setFormOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: '', city: '', state: '', description: '', rating: 5 });
+    const [formData, setFormData] = useState({ name: '', city: '', state: '', description: '', rating: 5, video_url: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Video Recording State
+    const [isRecording, setIsRecording] = useState(false);
+    const [videoBlob, setVideoBlob] = useState<Blob | null>(null);
+    const [videoPreview, setVideoPreview] = useState<string | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const streamRef = useRef<MediaStream | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         fetch(API.TESTIMONIALS)
@@ -54,20 +63,72 @@ export default function Testimonials() {
             .catch(err => console.error('Failed to fetch testimonials', err));
     }, []);
 
+    const startRecording = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            streamRef.current = stream;
+            if (videoRef.current) videoRef.current.srcObject = stream;
+
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+            const chunks: Blob[] = [];
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) chunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                setVideoBlob(blob);
+                setVideoPreview(URL.createObjectURL(blob));
+                // Stop all tracks
+                stream.getTracks().forEach(track => track.stop());
+            };
+
+            mediaRecorder.start();
+            setIsRecording(true);
+            setVideoBlob(null);
+            setVideoPreview(null);
+        } catch (err) {
+            console.error("Error accessing camera:", err);
+            alert("Could not access camera. Please check permissions.");
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current && isRecording) {
+            mediaRecorderRef.current.stop();
+            setIsRecording(false);
+        }
+    };
+
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitStatus('loading');
         try {
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', formData.name);
+            formDataToSend.append('city', formData.city);
+            formDataToSend.append('state', formData.state);
+            formDataToSend.append('description', formData.description);
+            formDataToSend.append('rating', formData.rating.toString());
+            
+            if (videoBlob) {
+                formDataToSend.append('video', videoBlob, 'testimonial.webm');
+            }
+
             const res = await fetch(API.TESTIMONIALS, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: formDataToSend
+                // Note: No 'Content-Type' header, browser sets it for FormData
             });
             if (res.ok) {
                 setSubmitStatus('success');
                 setTimeout(() => {
                     setFormOpen(false);
-                    setFormData({ name: '', city: '', state: '', description: '', rating: 5 });
+                    setFormData({ name: '', city: '', state: '', description: '', rating: 5, video_url: '' });
+                    setVideoBlob(null);
+                    setVideoPreview(null);
                     setSubmitStatus('idle');
                 }, 3000);
             } else setSubmitStatus('error');
@@ -175,6 +236,57 @@ export default function Testimonials() {
                                         onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
                                         placeholder="Tell us about your experience..."
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary resize-none" />
+                                </div>
+                                <div className="bg-amber/5 p-5 rounded-2xl border border-amber/10">
+                                    <label className="text-sm font-bold text-amber-700 block mb-3 flex items-center gap-2">
+                                        <i className="fa-solid fa-camera"></i> Record Video Review (Optional)
+                                    </label>
+                                    
+                                    <div className="relative aspect-video bg-black rounded-xl overflow-hidden mb-4 border-2 border-dashed border-amber/20">
+                                        {isRecording ? (
+                                            <video ref={videoRef} autoPlay muted className="w-full h-full object-cover mirror" />
+                                        ) : videoPreview ? (
+                                            <video src={videoPreview} controls className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center text-amber-600/40">
+                                                <i className="fa-solid fa-video-slash text-4xl mb-2"></i>
+                                                <p className="text-xs font-bold uppercase tracking-widest text-center px-4">Camera Preview will appear here</p>
+                                            </div>
+                                        )}
+                                        
+                                        {isRecording && (
+                                            <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest animate-pulse">
+                                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                                                Recording
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div className="flex gap-3">
+                                        {!isRecording && !videoPreview ? (
+                                            <button type="button" onClick={startRecording}
+                                                className="flex-1 bg-amber text-black font-black py-3 rounded-xl hover:bg-amber/90 transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
+                                                <i className="fa-solid fa-circle text-red-600 text-[8px]"></i> Start Recording
+                                            </button>
+                                        ) : isRecording ? (
+                                            <button type="button" onClick={stopRecording}
+                                                className="flex-1 bg-red-600 text-white font-black py-3 rounded-xl hover:bg-red-700 transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
+                                                <i className="fa-solid fa-stop"></i> Stop Recording
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button type="button" onClick={startRecording}
+                                                    className="flex-1 bg-white border border-amber/30 text-amber-700 font-bold py-3 rounded-xl hover:bg-amber/5 transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
+                                                    <i className="fa-solid fa-rotate-right"></i> Re-record
+                                                </button>
+                                                <button type="button" onClick={() => { setVideoBlob(null); setVideoPreview(null); }}
+                                                    className="w-12 bg-gray-100 text-gray-400 hover:text-red-500 rounded-xl transition flex items-center justify-center">
+                                                    <i className="fa-solid fa-trash-can"></i>
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                    <p className="text-[10px] text-amber-600/70 mt-3 font-medium italic">* Share a short video review to help others!</p>
                                 </div>
                                 {submitStatus === 'error' && <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>}
                                 <button type="submit" disabled={submitStatus === 'loading'}
