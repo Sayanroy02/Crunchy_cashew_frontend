@@ -33,6 +33,7 @@ export const API = {
   ADMIN_ORDER_STATUS: (id: string) => `${API_BASE}/api/admin/orders/${id}/status`,
   ADMIN_USERS: `${API_BASE}/api/admin/users`,
   ADMIN_CHANGE_PW: `${API_BASE}/api/admin/change-password`,
+  ADMIN_UPDATE_PROFILE: `${API_BASE}/api/admin/update-profile`,
   ADMIN_BULK_ORDERS: `${API_BASE}/api/admin/bulk-orders`,
   ADMIN_BULK_STATUS: (id: string) => `${API_BASE}/api/admin/bulk-orders/${id}/status`,
 

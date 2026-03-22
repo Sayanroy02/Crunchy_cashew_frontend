@@ -31,9 +31,9 @@ export default function BestSellers() {
 
     return (
         // ✅ py-16 md:py-24 → pt-8 pb-16 md:pt-10 md:pb-20: cuts top padding roughly in half
-        <section className="pt-8 pb-16 md:pt-10 md:pb-20 bg-bg">
+        <section className="py-8 md:py-12 bg-bg">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <div className="text-center mb-12">
+                <div className="text-center mb-8">
                     <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">Handpicked For You</span>
                     <h2 className="text-3xl md:text-4xl font-black text-[#2c1a0e] mb-3">
                         Our Best Sellers

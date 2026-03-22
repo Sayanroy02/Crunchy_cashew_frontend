@@ -3,6 +3,7 @@ import AddToCartButton from '@/app/shop/[id]/AddToCartButton';
 import Link from 'next/link';
 import PincodeWidget from '@/components/PincodeWidget';
 import { API } from '@/constants/api';
+import ProductComparison from '@/components/products/ProductComparison';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -131,6 +132,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         </div>
                     </div>
                 </div>
+                
+                {/* Full Price Comparison & Savings Calculator */}
+                <ProductComparison product={product} />
 
                 {/* Related Products */}
                 {relatedProducts.length > 0 && (

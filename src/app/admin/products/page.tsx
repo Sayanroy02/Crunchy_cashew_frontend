@@ -20,7 +20,13 @@ const defaultForm = {
     isNew: false,
     isBestSeller: false,
     isGift: false,
-    event: { type: '', label: '' }
+    event: { type: '', label: '' },
+    marketplace_prices: {
+        amazon: { price: 0, link: '' },
+        flipkart: { price: 0, link: '' },
+        blinkit: { price: 0, link: '' },
+        swiggy: { price: 0, link: '' }
+    }
 };
 
 export default function AdminProducts() {
@@ -65,7 +71,8 @@ export default function AdminProducts() {
             isNew: !!p.isNew,
             isBestSeller: !!p.isBestSeller,
             isGift: !!p.isGift,
-            event: p.event || { type: '', label: '' }
+            event: p.event || { type: '', label: '' },
+            marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices
         });
         setFile(null);
         setError('');
@@ -91,7 +98,7 @@ export default function AdminProducts() {
         const token = getToken();
         const fd = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'tags' || key === 'event') {
+            if (key === 'tags' || key === 'event' || key === 'marketplace_prices') {
                 fd.append(key, JSON.stringify(value));
             } else {
                 fd.append(key, value.toString());
@@ -125,6 +132,19 @@ export default function AdminProducts() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleMPChange = (platform: string, field: string, value: any) => {
+        setFormData(prev => ({
+            ...prev,
+            marketplace_prices: {
+                ...prev.marketplace_prices,
+                [platform]: {
+                    ...(prev.marketplace_prices as any)[platform],
+                    [field]: value
+                }
+            }
+        }));
     };
 
     const field = (label: string, key: string, type = 'text', required = true) => (
@@ -253,7 +273,7 @@ export default function AdminProducts() {
                                     <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
                                         <i className="fa-solid fa-tags text-primary"></i> Merchandising & Marketing Tags
                                     </h3>
-                                    
+
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                         {[
                                             { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-green-100 text-green-700 border-green-200' },
@@ -273,7 +293,7 @@ export default function AdminProducts() {
                                                             setFormData({ ...formData, [tag.id]: e.target.checked });
                                                             // Also add/remove from tags array for indexing
                                                             const tagValue = tag.id.replace('is', '').toLowerCase();
-                                                            const newTags = e.target.checked 
+                                                            const newTags = e.target.checked
                                                                 ? [...formData.tags, tagValue]
                                                                 : formData.tags.filter(t => t !== tagValue);
                                                             setFormData(prev => ({ ...prev, [tag.id]: e.target.checked, tags: Array.from(new Set(newTags)) }));
@@ -291,8 +311,8 @@ export default function AdminProducts() {
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-200 mt-2 slide-in">
                                             <div className="space-y-1">
                                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Select Event Type</label>
-                                                <select 
-                                                    value={formData.event?.type} 
+                                                <select
+                                                    value={formData.event?.type}
                                                     onChange={e => {
                                                         const val = e.target.value;
                                                         const label = val === 'custom' ? '' : `${val.charAt(0).toUpperCase() + val.slice(1)} Special`;
@@ -308,8 +328,8 @@ export default function AdminProducts() {
                                             </div>
                                             <div className="space-y-1">
                                                 <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Badge Label</label>
-                                                <input 
-                                                    type="text" 
+                                                <input
+                                                    type="text"
                                                     placeholder="e.g. DIWALI SPECIAL"
                                                     value={formData.event?.label}
                                                     onChange={e => setFormData({ ...formData, event: { ...formData.event!, label: e.target.value } })}
@@ -329,6 +349,80 @@ export default function AdminProducts() {
                                         {!formData.isNew && !formData.isBestSeller && !formData.isGift && !formData.event?.type && <span className="text-[9px] text-gray-300 italic">No marketing badges selected</span>}
                                     </div>
                                 </div>
+
+                                {/* Marketplace Prices Section */}
+                                <div className="md:col-span-2 p-5 bg-blue-50/30 rounded-2xl border border-blue-100 space-y-4">
+                                    <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                        <i className="fa-solid fa-shop text-blue-600"></i> Marketplace Prices
+                                    </h3>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {/* Amazon */}
+                                        <div className="p-3 bg-white rounded-xl border border-gray-100 space-y-3 shadow-sm">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Amazon</p>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-gray-500">Price (₹)</label>
+                                                    <input type="number" value={formData.marketplace_prices.amazon.price} onChange={e => handleMPChange('amazon', 'price', Number(e.target.value))}
+                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-gray-500">Link</label>
+                                                    <input type="text" value={formData.marketplace_prices.amazon.link} onChange={e => handleMPChange('amazon', 'link', e.target.value)}
+                                                        placeholder="https://..." className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Flipkart */}
+                                        <div className="p-3 bg-white rounded-xl border border-gray-100 space-y-3 shadow-sm">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Flipkart</p>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-gray-500">Price (₹)</label>
+                                                    <input type="number" value={formData.marketplace_prices.flipkart.price} onChange={e => handleMPChange('flipkart', 'price', Number(e.target.value))}
+                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-bold text-gray-500">Link</label>
+                                                    <input type="text" value={formData.marketplace_prices.flipkart.link} onChange={e => handleMPChange('flipkart', 'link', e.target.value)}
+                                                        placeholder="https://..." className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Blinkit */}
+                                        <div className="p-3 bg-white rounded-xl border border-gray-100 space-y-3 shadow-sm">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Blinkit</p>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <label className="text-[10px] font-bold text-gray-500">Price (₹)</label>
+                                                <input type="number" value={formData.marketplace_prices.blinkit.price} onChange={e => handleMPChange('blinkit', 'price', Number(e.target.value))}
+                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-500">Link</label>
+                                                <input type="text" value={formData.marketplace_prices.blinkit.link} onChange={e => handleMPChange('blinkit', 'link', e.target.value)}
+                                                    placeholder="https://..." className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                            </div>
+                                        </div>
+
+                                        {/* Swiggy */}
+                                        <div className="p-3 bg-white rounded-xl border border-gray-100 space-y-3 shadow-sm">
+                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Swiggy Instamart</p>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <label className="text-[10px] font-bold text-gray-500">Price (₹)</label>
+                                                <input type="number" value={formData.marketplace_prices.swiggy.price} onChange={e => handleMPChange('swiggy', 'price', Number(e.target.value))}
+                                                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-bold text-gray-500">Link</label>
+                                                <input type="text" value={formData.marketplace_prices.swiggy.link} onChange={e => handleMPChange('swiggy', 'link', e.target.value)}
+                                                    placeholder="https://..." className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-blue-500" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {editingId ? (
                                     /* EDIT MODE: show thumbnail, no manual URL */
                                     <div className="space-y-2 md:col-span-2">

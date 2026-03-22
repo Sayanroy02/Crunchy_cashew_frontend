@@ -4,11 +4,12 @@ import BestSellers from "@/components/home/BestSellers";
 import Testimonials from "@/components/home/Testimonials";
 import BlogsPreview from "@/components/home/BlogsPreview";
 import Affiliates from "@/components/home/Affiliates";
-import ComparisonSection from "@/components/home/OffersGrid";
-import BulkOrderCard from "@/components/home/BulkOrderCard";
-import AboutFactory from "@/components/home/AboutFactory";
 import HeroVideo from "@/components/home/HeroAnimationBanner";
 import OfferStripCarousel from "@/components/home/HeroCarousel";
+import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
+import DirectAdvantage from "@/components/home/OffersGrid";
+import BulkOrderCard from "@/components/home/BulkOrderCard";
+import AboutFactory from "@/components/home/AboutFactory";
 
 export default function Home() {
   return (
@@ -16,10 +17,11 @@ export default function Home() {
       <HeroVideo />
       <BestSellers />
       <OfferStripCarousel />
+      <DirectAdvantage />
       <Affiliates />
-      <BulkOrderCard />
       {/* <WhyUsCRO /> */}
-      <ComparisonSection />
+      <PriceComparisonPreview />
+      <BulkOrderCard />
       <AboutFactory />
       <Testimonials />
 

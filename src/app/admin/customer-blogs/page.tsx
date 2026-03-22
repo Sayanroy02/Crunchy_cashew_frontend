@@ -11,6 +11,7 @@ export default function AdminCustomerBlogs() {
     const [blogs, setBlogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
+    const [selectedBlog, setSelectedBlog] = useState<any | null>(null);
 
     const fetchBlogs = async () => {
         try {
@@ -139,6 +140,13 @@ export default function AdminCustomerBlogs() {
                                 </div>
 
                                 <div className="mt-auto pt-6 border-t border-gray-100 flex flex-wrap gap-3">
+                                    <button 
+                                        onClick={() => setSelectedBlog(b)}
+                                        className="w-full bg-primary text-white font-black py-3 rounded-xl hover:bg-primary/90 transition shadow-lg shadow-primary/20 flex items-center justify-center gap-2 text-sm uppercase tracking-widest mb-1"
+                                    >
+                                        <i className="fa-solid fa-book-open"></i> Read Full Article
+                                    </button>
+                                    
                                     {b.status !== 'published' && (
                                         <button 
                                             disabled={statusUpdating === b._id}
@@ -173,6 +181,60 @@ export default function AdminCustomerBlogs() {
                             </div>
                         </div>
                     ))}
+                </div>
+            )}
+
+            {/* Read Modal */}
+            {selectedBlog && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col animate-in zoom-in-95 duration-300">
+                        {/* Modal Header */}
+                        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                            <div className="flex items-center gap-2">
+                                <span className="bg-green-50 text-primary text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">{selectedBlog.category}</span>
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{new Date(selectedBlog.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <button 
+                                onClick={() => setSelectedBlog(null)}
+                                className="w-10 h-10 bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-600 rounded-full flex items-center justify-center transition"
+                            >
+                                <i className="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+
+                        {/* Modal Content */}
+                        <div className="flex-1 overflow-y-auto p-6 md:p-10">
+                            {selectedBlog.image_url && (
+                                <img src={selectedBlog.image_url} alt={selectedBlog.title} className="w-full h-80 object-cover rounded-2xl mb-8 shadow-lg" />
+                            )}
+                            
+                            <h2 className="text-3xl md:text-4xl font-black text-gray-800 mb-6 leading-tight">{selectedBlog.title}</h2>
+                            
+                            <div className="flex items-center gap-4 mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-100 w-fit">
+                                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-lg font-black text-primary">
+                                    {selectedBlog.author?.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-none mb-1">Author</p>
+                                    <p className="text-base font-bold text-gray-700">{selectedBlog.author}</p>
+                                </div>
+                            </div>
+
+                            <div className="prose prose-lg max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-wrap">
+                                {selectedBlog.content}
+                            </div>
+                        </div>
+
+                        {/* Modal Footer */}
+                        <div className="p-6 border-t border-gray-100 flex justify-end">
+                            <button 
+                                onClick={() => setSelectedBlog(null)}
+                                className="bg-gray-800 text-white font-black px-8 py-3 rounded-xl hover:bg-gray-700 transition uppercase tracking-widest text-sm"
+                            >
+                                Close Reader
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
