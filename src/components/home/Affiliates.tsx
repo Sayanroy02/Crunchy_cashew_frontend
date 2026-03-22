@@ -2,13 +2,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 
-/**
- * Brand colors from global CSS:
- * --color-yellow: #f6d70f
- * --color-amber:  #FBB21B
- * Gradient: #f6d70f → #FBB21B → #f97316 (yellow → amber → orange)
- */
-
 const platforms = [
     {
         name: 'Amazon',
@@ -24,7 +17,7 @@ const platforms = [
         shadow: 'rgba(40,116,240,0.5)',
         imgSrc: '/images/partners/flipkart.png',
         containerBg: '#2874F0',
-        imgScale: '75%',
+        imgScale: '100%',
     },
     {
         name: 'blinkit',
@@ -40,7 +33,7 @@ const platforms = [
         shadow: 'rgba(252,128,25,0.5)',
         imgSrc: '/images/partners/swiggy-instamart.png',
         containerBg: '#0050FF',
-        imgScale: '78%',
+        imgScale: '96%',   // was 78% — now big
     },
 ];
 
@@ -78,6 +71,7 @@ function LogoIcon({ p, index, show, size }: { p: Platform; index: number; show: 
                 background: p.containerBg !== 'transparent' ? p.containerBg : undefined,
                 textDecoration: 'none', cursor: 'pointer',
                 overflow: 'hidden',
+                padding: 0,
                 opacity: show ? 1 : 0,
                 transform: show
                     ? (hov ? 'translateY(-5px) scale(1.12)' : 'translateY(0) scale(1)')
@@ -118,10 +112,7 @@ function LogoIcon({ p, index, show, size }: { p: Platform; index: number; show: 
     );
 }
 
-/**
- * SVG bg — yellow #f6d70f → amber #FBB21B → orange #f97316 gradient (left to right)
- * Green (#0A5246) organic accents at low opacity for brand tie-in
- */
+/** Rich green desktop banner background */
 const DesktopBg = () => (
     <svg
         aria-hidden
@@ -131,40 +122,110 @@ const DesktopBg = () => (
         xmlns="http://www.w3.org/2000/svg"
     >
         <defs>
-            <linearGradient id="bannerGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#f6d70f" />
-                <stop offset="50%" stopColor="#FBB21B" />
-                <stop offset="100%" stopColor="#f97316" />
+            {/* Main horizontal gradient */}
+            <linearGradient id="bgMain" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#041f1a" />
+                <stop offset="35%" stopColor="#063d34" />
+                <stop offset="65%" stopColor="#0A5246" />
+                <stop offset="100%" stopColor="#0d6b59" />
             </linearGradient>
+            {/* Radial glow centre */}
+            <radialGradient id="glow1" cx="72%" cy="50%" r="38%">
+                <stop offset="0%" stopColor="#1a8c74" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#0A5246" stopOpacity="0" />
+            </radialGradient>
+            {/* Left glow */}
+            <radialGradient id="glow2" cx="12%" cy="50%" r="28%">
+                <stop offset="0%" stopColor="#0d6b59" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#0A5246" stopOpacity="0" />
+            </radialGradient>
+            {/* Yellow accent glow top-right */}
+            <radialGradient id="glowYellow" cx="92%" cy="10%" r="22%">
+                <stop offset="0%" stopColor="#f6d70f" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="#f6d70f" stopOpacity="0" />
+            </radialGradient>
+            <filter id="blur2" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2" />
+            </filter>
         </defs>
 
-        {/* Gradient base */}
-        <rect width="1200" height="90" fill="url(#bannerGrad)" />
+        {/* Base */}
+        <rect width="1200" height="90" fill="url(#bgMain)" />
+        <rect width="1200" height="90" fill="url(#glow1)" />
+        <rect width="1200" height="90" fill="url(#glow2)" />
+        <rect width="1200" height="90" fill="url(#glowYellow)" />
 
-        {/* Green organic blobs — tie back to brand primary */}
-        <path d="M-10 0 Q55 -8 82 32 Q102 58 68 90 L0 90Z" fill="#0A5246" opacity="0.12" />
-        <path d="M1125 0 Q1185 12 1210 52 Q1228 78 1200 90 L1118 90Z" fill="#0A5246" opacity="0.12" />
+        {/* ── Diagonal stripe band ── */}
+        {[-60, 60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140, 1260].map((x, i) => (
+            <line key={i}
+                x1={x} y1="0" x2={x + 90} y2="90"
+                stroke="#ffffff" strokeWidth="0.6" opacity="0.04"
+            />
+        ))}
 
-        {/* Subtle wave overlay for depth */}
-        <path d="M0 60 Q300 30 600 55 Q900 80 1200 45 L1200 90 L0 90Z" fill="#ffffff" opacity="0.06" />
+        {/* ── Horizontal rule lines ── */}
+        <line x1="0" y1="22" x2="1200" y2="22" stroke="#ffffff" strokeWidth="0.5" opacity="0.07" />
+        <line x1="0" y1="67" x2="1200" y2="67" stroke="#ffffff" strokeWidth="0.5" opacity="0.07" />
 
-        {/* Green accent arcs */}
-        <path d="M0 72 Q130 42 250 68" fill="none" stroke="#0A5246" strokeWidth="1.2" strokeLinecap="round" opacity="0.15" />
-        <path d="M955 18 Q1075 42 1200 22" fill="none" stroke="#0A5246" strokeWidth="1.2" strokeLinecap="round" opacity="0.12" />
+        {/* ── Wave sweep ── */}
+        <path d="M0 55 Q200 35 400 52 Q600 68 800 48 Q1000 28 1200 50 L1200 90 L0 90Z"
+            fill="#ffffff" opacity="0.035" />
+        <path d="M0 70 Q150 55 350 65 Q600 78 850 58 Q1050 42 1200 62 L1200 90 L0 90Z"
+            fill="#ffffff" opacity="0.025" />
 
-        {/* Dot grid */}
-        {[80, 280, 480, 680, 880, 1080].map(x =>
-            [20, 45, 70].map(y => (
-                <circle key={`${x}-${y}`} cx={x} cy={y} r="1.2" fill="#0A5246" opacity="0.1" />
+        {/* ── Left organic blob ── */}
+        <path d="M-15 -5 Q40 -10 72 28 Q95 55 65 90 L0 90Z"
+            fill="#f6d70f" opacity="0.08" />
+        <path d="M-15 -5 Q40 -10 58 22 Q72 42 50 90 L0 90Z"
+            fill="#ffffff" opacity="0.04" />
+
+        {/* ── Right organic blob ── */}
+        <path d="M1215 -5 Q1165 8 1140 42 Q1120 68 1148 90 L1200 90Z"
+            fill="#f6d70f" opacity="0.08" />
+
+        {/* ── Corner arc flourish left ── */}
+        <path d="M0 90 Q35 55 80 38 Q120 24 165 35"
+            fill="none" stroke="#f6d70f" strokeWidth="1.5" strokeLinecap="round" opacity="0.2" />
+        <path d="M0 90 Q28 62 65 48 Q100 36 140 42"
+            fill="none" stroke="#ffffff" strokeWidth="0.8" strokeLinecap="round" opacity="0.1" />
+
+        {/* ── Corner arc flourish right ── */}
+        <path d="M1200 0 Q1162 30 1120 44 Q1080 56 1040 50"
+            fill="none" stroke="#f6d70f" strokeWidth="1.5" strokeLinecap="round" opacity="0.2" />
+        <path d="M1200 0 Q1168 25 1130 38 Q1095 50 1060 45"
+            fill="none" stroke="#ffffff" strokeWidth="0.8" strokeLinecap="round" opacity="0.1" />
+
+        {/* ── Cashew-shape ellipses scattered ── */}
+        <ellipse cx="310" cy="22" rx="28" ry="10" transform="rotate(18 310 22)"
+            fill="none" stroke="#f6d70f" strokeWidth="1.2" opacity="0.14" />
+        <ellipse cx="780" cy="68" rx="22" ry="8" transform="rotate(-14 780 68)"
+            fill="none" stroke="#f6d70f" strokeWidth="1.2" opacity="0.12" />
+        <ellipse cx="550" cy="40" rx="18" ry="7" transform="rotate(8 550 40)"
+            fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.08" />
+        <ellipse cx="1050" cy="28" rx="24" ry="9" transform="rotate(-20 1050 28)"
+            fill="none" stroke="#f6d70f" strokeWidth="1" opacity="0.11" />
+
+        {/* ── Dot grid (yellow + white mix) ── */}
+        {[120, 240, 380, 500, 640, 760, 900, 1020, 1150].map((x, xi) =>
+            [15, 45, 75].map((y, yi) => (
+                <circle key={`${xi}-${yi}`} cx={x} cy={y} r="1.4"
+                    fill={yi === 1 ? '#f6d70f' : '#ffffff'}
+                    opacity={yi === 1 ? 0.12 : 0.07} />
             ))
         )}
 
-        {/* Cashew ellipse accents */}
-        <ellipse cx="190" cy="45" rx="22" ry="13" transform="rotate(28 190 45)" fill="none" stroke="#0A5246" strokeWidth="1" opacity="0.08" />
-        <ellipse cx="960" cy="30" rx="18" ry="11" transform="rotate(-22 960 30)" fill="none" stroke="#0A5246" strokeWidth="1" opacity="0.08" />
+        {/* ── Small star/cross accents ── */}
+        {[200, 460, 700, 950].map((x, i) => (
+            <g key={i} transform={`translate(${x}, ${i % 2 === 0 ? 18 : 72})`} opacity="0.15">
+                <line x1="-4" y1="0" x2="4" y2="0" stroke="#f6d70f" strokeWidth="1.2" />
+                <line x1="0" y1="-4" x2="0" y2="4" stroke="#f6d70f" strokeWidth="1.2" />
+            </g>
+        ))}
 
-        {/* Bottom rule */}
-        <line x1="0" y1="88" x2="1200" y2="88" stroke="#0A5246" strokeWidth="1.5" opacity="0.18" />
+        {/* ── Bottom border rule ── */}
+        <line x1="0" y1="88.5" x2="1200" y2="88.5" stroke="#f6d70f" strokeWidth="1.5" opacity="0.25" />
+        {/* Top border rule */}
+        <line x1="0" y1="1.5" x2="1200" y2="1.5" stroke="#ffffff" strokeWidth="1" opacity="0.08" />
     </svg>
 );
 
@@ -173,35 +234,103 @@ const MobileBg = () => (
         aria-hidden
         style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
         preserveAspectRatio="xMidYMid slice"
-        viewBox="0 0 390 460"
+        viewBox="0 0 390 400"
         xmlns="http://www.w3.org/2000/svg"
     >
         <defs>
-            {/* Vertical gradient for mobile (top → bottom) */}
-            <linearGradient id="bannerGradMob" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#f6d70f" />
-                <stop offset="55%" stopColor="#FBB21B" />
-                <stop offset="100%" stopColor="#f97316" />
+            <linearGradient id="bgMainMob" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#041f1a" />
+                <stop offset="40%" stopColor="#063d34" />
+                <stop offset="75%" stopColor="#0A5246" />
+                <stop offset="100%" stopColor="#0d6b59" />
             </linearGradient>
+            <radialGradient id="glowMobC" cx="50%" cy="42%" r="52%">
+                <stop offset="0%" stopColor="#1a8c74" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#0A5246" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="glowMobTR" cx="88%" cy="8%" r="35%">
+                <stop offset="0%" stopColor="#f6d70f" stopOpacity="0.16" />
+                <stop offset="100%" stopColor="#f6d70f" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="glowMobBL" cx="10%" cy="92%" r="35%">
+                <stop offset="0%" stopColor="#f6d70f" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#f6d70f" stopOpacity="0" />
+            </radialGradient>
         </defs>
 
-        <rect width="390" height="460" fill="url(#bannerGradMob)" />
-        <path d="M-20 180 Q50 80 150 130 Q210 165 175 260 Q145 345 60 320 Q-15 295 -20 180Z" fill="#0A5246" opacity="0.1" />
-        <path d="M240 -15 Q345 35 385 150 Q410 245 340 295 Q275 335 230 260 Q195 185 240 -15Z" fill="#0A5246" opacity="0.1" />
+        <rect width="390" height="400" fill="url(#bgMainMob)" />
+        <rect width="390" height="400" fill="url(#glowMobC)" />
+        <rect width="390" height="400" fill="url(#glowMobTR)" />
+        <rect width="390" height="400" fill="url(#glowMobBL)" />
 
-        {/* Wave overlay */}
-        <path d="M0 320 Q100 290 200 310 Q300 330 390 305 L390 460 L0 460Z" fill="#ffffff" opacity="0.05" />
+        {/* Diagonal stripes */}
+        {[-80, 20, 120, 220, 320, 420].map((x, i) => (
+            <line key={i} x1={x} y1="0" x2={x + 400} y2="400"
+                stroke="#ffffff" strokeWidth="0.8" opacity="0.04" />
+        ))}
 
-        <path d="M15 420 Q100 360 200 390 Q255 408 240 458" fill="none" stroke="#0A5246" strokeWidth="1.6" strokeLinecap="round" opacity="0.15" />
-        <path d="M155 12 Q235 -16 318 28 Q365 55 352 108" fill="none" stroke="#0A5246" strokeWidth="1.6" strokeLinecap="round" opacity="0.12" />
-        <ellipse cx="52" cy="60" rx="16" ry="10" transform="rotate(30 52 60)" fill="none" stroke="#0A5246" strokeWidth="1" opacity="0.08" />
-        <ellipse cx="335" cy="285" rx="14" ry="9" transform="rotate(-20 335 285)" fill="none" stroke="#0A5246" strokeWidth="1" opacity="0.08" />
-        {[55, 150, 245, 335].map(x =>
-            [80, 185, 290, 395].map(y => (
-                <circle key={`${x}-${y}`} cx={x} cy={y} r="1.3" fill="#0A5246" opacity="0.09" />
+        {/* Vertical rules */}
+        <line x1="30" y1="0" x2="30" y2="400" stroke="#ffffff" strokeWidth="0.5" opacity="0.06" />
+        <line x1="360" y1="0" x2="360" y2="400" stroke="#ffffff" strokeWidth="0.5" opacity="0.06" />
+
+        {/* Horizontal rules */}
+        <line x1="0" y1="90" x2="390" y2="90" stroke="#ffffff" strokeWidth="0.5" opacity="0.07" />
+        <line x1="0" y1="310" x2="390" y2="310" stroke="#ffffff" strokeWidth="0.5" opacity="0.07" />
+
+        {/* Wave sweeps */}
+        <path d="M0 250 Q100 225 195 242 Q290 258 390 235 L390 400 L0 400Z" fill="#ffffff" opacity="0.03" />
+        <path d="M0 290 Q80 268 195 280 Q310 292 390 270 L390 400 L0 400Z" fill="#ffffff" opacity="0.025" />
+
+        {/* Corner blobs */}
+        <path d="M-10 -10 Q55 5 75 65 Q88 110 50 145 Q15 175 -10 130Z" fill="#f6d70f" opacity="0.07" />
+        <path d="M400 -10 Q340 10 322 68 Q308 112 338 148 Q368 180 400 145Z" fill="#f6d70f" opacity="0.07" />
+        <path d="M-10 400 Q30 348 75 340 Q118 332 130 375 Q140 408 -10 410Z" fill="#ffffff" opacity="0.04" />
+        <path d="M400 400 Q360 350 318 342 Q275 334 262 378 Q252 410 400 410Z" fill="#ffffff" opacity="0.04" />
+
+        {/* Arc flourishes */}
+        <path d="M10 380 Q80 310 155 290 Q225 272 275 300"
+            fill="none" stroke="#f6d70f" strokeWidth="1.8" strokeLinecap="round" opacity="0.2" />
+        <path d="M10 395 Q75 330 145 312 Q210 296 255 318"
+            fill="none" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" opacity="0.1" />
+        <path d="M380 20 Q310 80 240 95 Q175 108 145 82"
+            fill="none" stroke="#f6d70f" strokeWidth="1.8" strokeLinecap="round" opacity="0.2" />
+        <path d="M380 8 Q315 65 248 78 Q185 90 158 68"
+            fill="none" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" opacity="0.1" />
+
+        {/* Cashew ellipses */}
+        <ellipse cx="68" cy="185" rx="32" ry="12" transform="rotate(35 68 185)"
+            fill="none" stroke="#f6d70f" strokeWidth="1.3" opacity="0.15" />
+        <ellipse cx="322" cy="210" rx="28" ry="10" transform="rotate(-28 322 210)"
+            fill="none" stroke="#f6d70f" strokeWidth="1.3" opacity="0.13" />
+        <ellipse cx="195" cy="350" rx="35" ry="11" transform="rotate(10 195 350)"
+            fill="none" stroke="#ffffff" strokeWidth="0.9" opacity="0.08" />
+        <ellipse cx="195" cy="55" rx="30" ry="10" transform="rotate(-5 195 55)"
+            fill="none" stroke="#f6d70f" strokeWidth="1" opacity="0.1" />
+
+        {/* Dot grid */}
+        {[45, 130, 195, 260, 345].map((x, xi) =>
+            [55, 135, 200, 270, 345].map((y, yi) => (
+                <circle key={`${xi}-${yi}`} cx={x} cy={y} r="1.5"
+                    fill={(xi + yi) % 3 === 0 ? '#f6d70f' : '#ffffff'}
+                    opacity={(xi + yi) % 3 === 0 ? 0.13 : 0.07} />
             ))
         )}
-        <line x1="0" y1="457" x2="390" y2="457" stroke="#0A5246" strokeWidth="1.5" opacity="0.18" />
+
+        {/* Star/cross accents */}
+        {[[60, 60], [330, 140], [55, 330], [335, 310], [195, 120], [195, 285]].map(([x, y], i) => (
+            <g key={i} transform={`translate(${x}, ${y})`} opacity="0.18">
+                <line x1="-5" y1="0" x2="5" y2="0" stroke="#f6d70f" strokeWidth="1.4" />
+                <line x1="0" y1="-5" x2="0" y2="5" stroke="#f6d70f" strokeWidth="1.4" />
+            </g>
+        ))}
+
+        {/* Concentric rings */}
+        <circle cx="195" cy="200" r="80" fill="none" stroke="#ffffff" strokeWidth="0.6" opacity="0.04" />
+        <circle cx="195" cy="200" r="120" fill="none" stroke="#ffffff" strokeWidth="0.6" opacity="0.03" />
+
+        {/* Border rules */}
+        <line x1="0" y1="1.5" x2="390" y2="1.5" stroke="#ffffff" strokeWidth="1" opacity="0.08" />
+        <line x1="0" y1="397.5" x2="390" y2="397.5" stroke="#f6d70f" strokeWidth="1.5" opacity="0.25" />
     </svg>
 );
 
@@ -243,7 +372,8 @@ export default function Affiliates() {
         return () => obs.disconnect();
     }, [triggered]);
 
-    const logoSize = isMobile ? 60 : 68;
+    // Slightly larger logo tiles so logos aren't cramped
+    const logoSize = isMobile ? 64 : 72;
 
     return (
         <>
@@ -276,7 +406,6 @@ export default function Affiliates() {
                     position: 'relative',
                     width: '100%',
                     overflow: 'hidden',
-                    borderRadius: 0,
                     minHeight: isMobile ? 'auto' : 90,
                     clipPath: phase >= 1 ? undefined : 'inset(0 100% 0 0)',
                     animation: phase >= 1 ? 'affBannerSweep 0.55s cubic-bezier(0.22,1,0.36,1) forwards' : 'none',
@@ -289,10 +418,12 @@ export default function Affiliates() {
                         <div style={{
                             position: 'relative', zIndex: 2,
                             display: 'flex', alignItems: 'center',
-                            padding: '10px 20px',
-                            gap: 12,
+                            // ↓ reduced vertical padding (was 10px → 6px) so banner stays compact
+                            padding: '6px 16px',
+                            gap: 10,
                             minHeight: 90,
                         }}>
+                            {/* Brand + text */}
                             <div style={{
                                 display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
                                 opacity: phase >= 3 ? 1 : 0,
@@ -312,15 +443,15 @@ export default function Affiliates() {
                                             src="/images/cc-Logo-01-1.png"
                                             alt="Crunchy Cashews"
                                             style={{
-                                                width: 80, height: 80, objectFit: 'contain', flexShrink: 0,
+                                                width: 76, height: 76, objectFit: 'contain', flexShrink: 0,
                                                 animation: 'affLogoPulse 3s ease-in-out infinite',
                                             }}
                                         />
                                         <div>
-                                            <p style={{ margin: 0, lineHeight: 1.25, fontSize: 17, fontWeight: 400, color: '#5c2d06' }}>
+                                            <p style={{ margin: 0, lineHeight: 1.25, fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.75)', fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                                                 We are also
                                             </p>
-                                            <p style={{ margin: 0, lineHeight: 1.1, fontSize: 27, fontWeight: 900, color: '#0A5246' }}>
+                                            <p style={{ margin: 0, lineHeight: 1.1, fontSize: 26, fontWeight: 900, color: '#f6d70f', fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>
                                                 Available on
                                             </p>
                                         </div>
@@ -330,7 +461,8 @@ export default function Affiliates() {
 
                             <div style={{ flex: 1 }} />
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                            {/* Platform logos */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                                 {phase < 4
                                     ? platforms.map((_, i) => (
                                         <Skel key={i} w={logoSize} h={logoSize} r={logoSize * 0.18} delay={i * 0.1} />
@@ -341,8 +473,9 @@ export default function Affiliates() {
                                 }
                             </div>
 
+                            {/* Delivery illustration */}
                             <div style={{
-                                flexShrink: 0, marginLeft: 8, height: 90,
+                                flexShrink: 0, marginLeft: 6, height: 90,
                                 display: 'flex', alignItems: 'center',
                                 opacity: phase >= 2 ? 1 : 0,
                                 animation: phase >= 2 && phase < 5
@@ -351,13 +484,13 @@ export default function Affiliates() {
                                 transform: phase >= 5 ? 'translateX(0)' : undefined,
                             }}>
                                 {!deliveryReady
-                                    ? <Skel w={100} h={80} r={8} />
+                                    ? <Skel w={90} h={76} r={8} />
                                     : (
                                         <img
                                             src="/images/online-order.png"
                                             alt="Order Delivery"
                                             style={{
-                                                height: 90, width: 'auto', objectFit: 'contain',
+                                                height: 86, width: 'auto', objectFit: 'contain',
                                                 filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.12))',
                                                 display: 'block',
                                             }}
@@ -374,25 +507,28 @@ export default function Affiliates() {
                             position: 'relative', zIndex: 2,
                             display: 'flex', flexDirection: 'column',
                             alignItems: 'center',
-                            padding: '28px 16px 24px',
-                            gap: 10,
+                            // ↓ reduced padding (was 28/24 → 20/18)
+                            padding: '20px 16px 18px',
+                            gap: 8,
                         }}>
+                            {/* Brand logo */}
                             <div style={{
                                 opacity: phase >= 3 ? 1 : 0,
                                 animation: phase >= 3 ? 'affFadeUp 0.5s ease forwards' : 'none',
                             }}>
                                 {phase < 3
-                                    ? <Skel w={88} h={88} r={44} />
+                                    ? <Skel w={80} h={80} r={40} />
                                     : (
                                         <img
                                             src="/images/cc-Logo-01-1.png"
                                             alt="Crunchy Cashews"
-                                            style={{ width: 88, height: 88, objectFit: 'contain', animation: 'affLogoPulse 3s ease-in-out infinite' }}
+                                            style={{ width: 80, height: 80, objectFit: 'contain', animation: 'affLogoPulse 3s ease-in-out infinite' }}
                                         />
                                     )
                                 }
                             </div>
 
+                            {/* Text */}
                             <div style={{
                                 textAlign: 'center',
                                 opacity: phase >= 3 ? 1 : 0,
@@ -405,13 +541,14 @@ export default function Affiliates() {
                                     </div>
                                 ) : (
                                     <>
-                                        <p style={{ margin: 0, fontSize: 18, fontWeight: 400, color: '#5c2d06' }}>We are also</p>
-                                        <p style={{ margin: 0, fontSize: 28, fontWeight: 900, color: '#0A5246', letterSpacing: '0.02em' }}>AVAILABLE ON</p>
+                                        <p style={{ margin: 0, fontSize: 16, fontWeight: 400, color: 'rgba(255,255,255,0.75)', fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>We are also</p>
+                                        <p style={{ margin: 0, fontSize: 26, fontWeight: 900, color: '#f6d70f', letterSpacing: '0.02em', fontFamily: 'var(--font-montserrat), Montserrat, sans-serif' }}>AVAILABLE ON</p>
                                     </>
                                 )}
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginTop: 6 }}>
+                            {/* Platform logos */}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap', marginTop: 4 }}>
                                 {phase < 4
                                     ? platforms.map((_, i) => <Skel key={i} w={logoSize} h={logoSize} r={logoSize * 0.18} delay={i * 0.1} />)
                                     : platforms.map((p, i) => (
@@ -420,8 +557,9 @@ export default function Affiliates() {
                                 }
                             </div>
 
+                            {/* Delivery illustration */}
                             <div style={{
-                                marginTop: 8,
+                                marginTop: 6,
                                 opacity: phase >= 2 ? 1 : 0,
                                 animation: phase >= 2 && phase < 5
                                     ? 'affDeliveryRoll 1.1s cubic-bezier(0.25,0.8,0.35,1) forwards'
@@ -429,12 +567,12 @@ export default function Affiliates() {
                                 transform: phase >= 5 ? 'translateX(0)' : undefined,
                             }}>
                                 {!deliveryReady
-                                    ? <Skel w={150} h={120} r={8} />
+                                    ? <Skel w={140} h={110} r={8} />
                                     : (
                                         <img
                                             src="/images/online-order.png"
                                             alt="Order Delivery"
-                                            style={{ height: 130, width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.12))', display: 'block' }}
+                                            style={{ height: 118, width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 3px 10px rgba(0,0,0,0.12))', display: 'block' }}
                                         />
                                     )
                                 }
