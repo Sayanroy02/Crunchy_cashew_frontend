@@ -48,8 +48,7 @@ export default function BestSellers() {
                 if (activeTag === 'gifting') return !!p.isGift;
                 if (activeTag === 'event') return !!p.event?.type;
                 return true;
-            })
-            .slice(0, 4); // cap at 4 cards like the original
+            });
     }, [products, activeTag]);
 
     return (
@@ -90,23 +89,48 @@ export default function BestSellers() {
                     ))}
                 </div>
 
-                {/* Product Grid */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 min-h-[280px]">
-                    {loading ? (
-                        [0, 1, 2, 3].map(i => <SkeletonCard key={i} />)
-                    ) : filtered.length === 0 ? (
-                        // Empty state — spans full grid width
-                        <div className="col-span-2 lg:col-span-4 flex flex-col items-center justify-center py-16 text-center">
-                            <i className="fa-solid fa-box-open text-5xl text-gray-200 mb-4 block" />
-                            <p className="text-gray-400 font-medium">
-                                No products in this collection yet.
-                            </p>
-                        </div>
-                    ) : (
-                        filtered.map(product => (
-                            <ProductCard key={product.id ?? (product as any)._id} product={product} />
-                        ))
-                    )}
+                {/* Product Grid with Horizontal Scroll */}
+                <div className="relative group/scroll">
+                    {/* Navigation Buttons (Desktop Only) */}
+                    <button 
+                        onClick={() => {
+                            const container = document.getElementById('bestseller-scroll');
+                            if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
+                        }}
+                        className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
+                    >
+                        <i className="fa-solid fa-chevron-left"></i>
+                    </button>
+                    
+                    <button 
+                        onClick={() => {
+                            const container = document.getElementById('bestseller-scroll');
+                            if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
+                        }}
+                        className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
+                    >
+                        <i className="fa-solid fa-chevron-right"></i>
+                    </button>
+
+                    <div 
+                        id="bestseller-scroll"
+                        className="flex gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x scroll-smooth"
+                    >
+                        {loading ? (
+                            [0, 1, 2, 3, 4, 5].map(i => <div key={i} className="flex-none w-[70%] sm:w-[45%] lg:w-[calc(25%-18px)] snap-start"><SkeletonCard /></div>)
+                        ) : filtered.length === 0 ? (
+                            <div className="w-full flex flex-col items-center justify-center py-16 text-center bg-white rounded-2xl border border-gray-100">
+                                <i className="fa-solid fa-box-open text-5xl text-gray-200 mb-4 block" />
+                                <p className="text-gray-400 font-medium">No products in this collection yet.</p>
+                            </div>
+                        ) : (
+                            filtered.map(product => (
+                                <div key={product.id ?? (product as any)._id} className="flex-none w-[70%] sm:w-[45%] lg:w-[calc(25%-18px)] snap-start mb-2 group">
+                                    <ProductCard product={product} />
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
 
                 {/* CTA */}

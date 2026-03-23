@@ -1,5 +1,6 @@
-import React from 'react';
-import AddToCartButton from '@/app/shop/[id]/AddToCartButton';
+import React, { Suspense } from 'react';
+import AddToCartButton from './AddToCartButton';
+import ProductGallery from './ProductGallery';
 import Link from 'next/link';
 import PincodeWidget from '@/components/PincodeWidget';
 import { API } from '@/constants/api';
@@ -50,20 +51,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
                 {/* Main Product */}
                 <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col lg:flex-row">
-                    {/* Image */}
-                    <div className="lg:w-[45%] bg-gray-50 p-8 md:p-16 flex justify-center items-center min-h-[320px]">
-                        {product.image_url ? (
-                            <img
-                                src={product.image_url}
-                                alt={product.name}
-                                className="w-full max-w-[360px] h-auto object-contain drop-shadow-2xl"
-                            />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center text-gray-300 gap-4">
-                                <span className="text-8xl">🥜</span>
-                                <p className="text-sm font-medium text-gray-400">No image available</p>
-                            </div>
-                        )}
+                    {/* Image Gallery */}
+                    <div className="lg:w-[45%] bg-gray-50 border-r border-gray-100">
+                        <ProductGallery 
+                            images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
+                            name={product.name} 
+                        />
                     </div>
 
                     {/* Details */}

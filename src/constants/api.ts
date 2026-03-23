@@ -78,4 +78,5 @@ export const API = {
 
   // ── Traffic ───────────────────────────────────────────────────────────────
   TRAFFIC_STATS: `${API_BASE}/api/traffic/stats`,
+  TRAFFIC_VISIT: `${API_BASE}/api/traffic/visit`,
 } as const;

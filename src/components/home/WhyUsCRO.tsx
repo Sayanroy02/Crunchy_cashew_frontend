@@ -228,7 +228,7 @@ function MobileCarousel() {
 // ─── Export ───────────────────────────────────────────────────────────────────
 export default function WhyUsCRO() {
     return (
-        <section className="bg-bg py-10 md:py-8 overflow-hidden">
+        <section className="bg-bg-cream py-10 md:py-8 overflow-hidden">
             <div className="text-center px-5 mb-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary mb-2">Handpicked for you</p>
                 <h2 className="font-heading font-black text-[26px] md:text-[32px] text-[#1a2e28] leading-tight mb-2">

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/lib/store/features/cartSlice';
+import { useSnackbar } from '@/context/SnackbarContext';
 
 export interface Product {
     id?: string;
@@ -33,6 +34,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const dispatch = useDispatch();
+    const { showSnackbar } = useSnackbar();
 
     const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -57,9 +59,11 @@ export default function ProductCard({ product }: ProductCardProps) {
             if (list.includes(targetId)) {
                 list = list.filter(id => id !== targetId);
                 setIsWishlisted(false);
+                showSnackbar('Removed from wishlist', 'info');
             } else {
                 list.push(targetId);
                 setIsWishlisted(true);
+                showSnackbar('Added to wishlist', 'success');
             }
 
             localStorage.setItem('wishlistItems', JSON.stringify(list));
@@ -75,6 +79,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             quantity: 1,
             image_url: product.image_url
         }));
+        showSnackbar('Added to cart', 'success');
     };
 
     // Calculate original price before discount

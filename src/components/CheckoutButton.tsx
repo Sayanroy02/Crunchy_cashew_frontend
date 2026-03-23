@@ -21,6 +21,7 @@
 import React, { useState } from 'react';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import { useSnackbar } from '@/context/SnackbarContext';
 
 
 interface OrderPayload {
@@ -64,6 +65,7 @@ export default function CheckoutButton({
   onError,
 }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
+  const { showSnackbar } = useSnackbar();
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -89,6 +91,7 @@ export default function CheckoutButton({
 
       // ── COD: done — no payment gateway needed ────────────────────────────
       if (orderPayload.payment_mode === 'COD') {
+        showSnackbar('Order placed successfully!', 'success');
         onSuccess(orderId);
         return;
       }
@@ -150,6 +153,7 @@ export default function CheckoutButton({
               throw new Error(errData.detail || 'Payment verification failed');
             }
 
+            showSnackbar('Payment verified!', 'success');
             onSuccess(orderId);
           } catch (verifyErr: any) {
             onError(verifyErr.message || 'Payment verification failed');

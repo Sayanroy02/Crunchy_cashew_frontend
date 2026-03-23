@@ -6,9 +6,9 @@ import { Check, X, Factory, Globe, User, ArrowRight } from 'lucide-react';
 
 export default function DirectAdvantage() {
   return (
-    <section className="py-12 md:py-16 px-4 bg-white overflow-hidden">
+    <section className="py-12 md:py-16 px-4 bg-bg-cream overflow-hidden">
       <div className="max-w-5xl mx-auto space-y-10">
-        
+
         <div className="text-center space-y-2">
           <h3 className="text-2xl md:text-3xl font-black text-[#0A5246] tracking-tight">The Direct Advantage</h3>
           <p className="text-slate-500 font-medium text-sm md:text-base italic">Why our premium cashews cost less than marketplaces.</p>
@@ -16,7 +16,7 @@ export default function DirectAdvantage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {/* Our Flow */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -39,11 +39,11 @@ export default function DirectAdvantage() {
                 </div>
                 <span className="text-[8px] font-black uppercase tracking-widest text-[#0A5246]">Factory</span>
               </div>
-              
+
               <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
                 <ArrowRight size={18} className="text-[#99EA78]" />
               </motion.div>
-              
+
               <div className="flex flex-col items-center gap-2">
                 <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center text-[#0A5246]">
                   <Globe size={28} />
@@ -69,7 +69,7 @@ export default function DirectAdvantage() {
           </motion.div>
 
           {/* Marketplace Flow */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -95,10 +95,10 @@ export default function DirectAdvantage() {
               ].map((item, i, arr) => (
                 <React.Fragment key={i}>
                   <div className="flex flex-col items-center gap-1.5">
-                     <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-300">
-                       <item.icon size={18} />
-                     </div>
-                     <span className="text-[7px] font-bold uppercase tracking-tighter text-slate-400">{item.label}</span>
+                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-300">
+                      <item.icon size={18} />
+                    </div>
+                    <span className="text-[7px] font-bold uppercase tracking-tighter text-slate-400">{item.label}</span>
                   </div>
                   {i < arr.length - 1 && <ArrowRight size={10} className="text-slate-200" />}
                 </React.Fragment>

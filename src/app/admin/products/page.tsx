@@ -16,6 +16,7 @@ const defaultForm = {
     category: 'Cashew',
     is_available: true,
     image_url: '',
+    image_urls: [] as string[],
     tags: [] as string[],
     isNew: false,
     isBestSeller: false,
@@ -35,7 +36,7 @@ export default function AdminProducts() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [formData, setFormData] = useState({ ...defaultForm });
-    const [file, setFile] = useState<File | null>(null);
+    const [files, setFiles] = useState<File[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
@@ -51,7 +52,7 @@ export default function AdminProducts() {
     const openAdd = () => {
         setEditingId(null);
         setFormData({ ...defaultForm });
-        setFile(null);
+        setFiles([]);
         setError('');
         setIsModalOpen(true);
     };
@@ -72,9 +73,10 @@ export default function AdminProducts() {
             isBestSeller: !!p.isBestSeller,
             isGift: !!p.isGift,
             event: p.event || { type: '', label: '' },
-            marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices
+            marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices,
+            image_urls: p.image_urls || (p.image_url ? [p.image_url] : [])
         });
-        setFile(null);
+        setFiles([]);
         setError('');
         setIsModalOpen(true);
     };
@@ -98,13 +100,13 @@ export default function AdminProducts() {
         const token = getToken();
         const fd = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'tags' || key === 'event' || key === 'marketplace_prices') {
+            if (key === 'tags' || key === 'event' || key === 'marketplace_prices' || key === 'image_urls') {
                 fd.append(key, JSON.stringify(value));
             } else {
                 fd.append(key, value.toString());
             }
         });
-        if (file) fd.append('file', file);
+        files.forEach(f => fd.append('files', f));
 
         const url = editingId
             ? API.PRODUCT_DETAIL(editingId)
@@ -120,7 +122,7 @@ export default function AdminProducts() {
             if (res.ok) {
                 setIsModalOpen(false);
                 setFormData({ ...defaultForm });
-                setFile(null);
+                setFiles([]);
                 setEditingId(null);
                 fetchProducts();
             } else {
@@ -423,34 +425,71 @@ export default function AdminProducts() {
                                     </div>
                                 </div>
 
-                                {editingId ? (
-                                    /* EDIT MODE: show thumbnail, no manual URL */
-                                    <div className="space-y-2 md:col-span-2">
-                                        <label className="text-sm font-semibold text-gray-700">Current Image (auto-filled)</label>
-                                        <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-                                            {formData.image_url ? (
-                                                <img src={formData.image_url} alt="Current" className="w-20 h-20 object-cover rounded-lg border border-gray-200 flex-shrink-0" />
-                                            ) : (
-                                                <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">🖼️</div>
-                                            )}
-                                            <div>
-                                                <p className="text-xs font-semibold text-gray-600">Image is auto-filled from existing product.</p>
-                                                <p className="text-xs text-gray-400 mt-0.5">Upload a new file below to replace it.</p>
+                                <div className="space-y-3 md:col-span-2">
+                                    <label className="text-sm font-semibold text-gray-700 flex justify-between items-center">
+                                        <span>Product Gallery (Max 5 Images)</span>
+                                        <span className="text-xs font-normal text-gray-400">{(formData.image_urls?.length || 0) + files.length} / 5</span>
+                                    </label>
+                                    
+                                    <div className="grid grid-cols-5 gap-2">
+                                        {/* Existing Images */}
+                                        {formData.image_urls?.map((url, idx) => (
+                                            <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
+                                                <img src={url} className="w-full h-full object-cover" />
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setFormData(prev => ({ ...prev, image_urls: prev.image_urls.filter((_, i) => i !== idx) }))}
+                                                    className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <i className="fa-solid fa-xmark"></i>
+                                                </button>
                                             </div>
+                                        ))}
+                                        
+                                        {/* New File Previews (if any) */}
+                                        {files.map((f, idx) => (
+                                            <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border-2 border-primary/30 bg-primary/5">
+                                                <div className="w-full h-full flex items-center justify-center text-xs text-primary font-bold">NEW</div>
+                                                <button 
+                                                    type="button"
+                                                    onClick={() => setFiles(prev => prev.filter((_, i) => i !== idx))}
+                                                    className="absolute top-1 right-1 bg-gray-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]"
+                                                >
+                                                    <i className="fa-solid fa-xmark"></i>
+                                                </button>
+                                            </div>
+                                        ))}
+
+                                        {/* Empty slots placeholders */}
+                                        {Array.from({ length: Math.max(0, 5 - (formData.image_urls?.length || 0) - files.length) }).map((_, i) => (
+                                            <div key={i} className="aspect-square rounded-lg border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center text-gray-300">
+                                                <i className="fa-solid fa-image"></i>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="relative">
+                                        <input 
+                                            type="file" 
+                                            multiple 
+                                            accept="image/*" 
+                                            onChange={e => {
+                                                const selected = Array.from(e.target.files || []);
+                                                const total = (formData.image_urls?.length || 0) + files.length + selected.length;
+                                                if (total > 5) {
+                                                    setError('Maximum 5 images allowed per product.');
+                                                    return;
+                                                }
+                                                setFiles(prev => [...prev, ...selected]);
+                                                setError('');
+                                            }}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                                        />
+                                        <div className="w-full text-sm text-primary font-bold py-2.5 px-4 rounded-xl border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition text-center flex items-center justify-center gap-2">
+                                            <i className="fa-solid fa-cloud-arrow-up"></i>
+                                            Add Images
                                         </div>
                                     </div>
-                                ) : (
-                                    /* ADD MODE: manual URL available */
-                                    <div className="space-y-1 md:col-span-2">
-                                        <label className="text-sm font-semibold text-gray-700">Image URL (Cloudinary) — or upload below</label>
-                                        <input type="url" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })}
-                                            placeholder="https://res.cloudinary.com/..." className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary" />
-                                    </div>
-                                )}
-                                <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-semibold text-gray-700">Upload Image File (optional)</label>
-                                    <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
-                                        className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border-2 border-gray-200 rounded-xl p-2" />
                                 </div>
                                 <div className="md:col-span-2 pt-2">
                                     <button type="submit" disabled={isSubmitting}

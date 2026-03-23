@@ -153,6 +153,10 @@ export default function CheckoutPage() {
         alert(`Payment failed: ${message}`);
     };
 
+    const shippingThreshold = 600;
+    const shippingFee = totalAmount >= shippingThreshold ? 0 : 45;
+    const finalTotal = totalAmount + shippingFee;
+
     // Build the order payload from current form state
     const getOrderPayload = () => ({
         customer: {
@@ -166,7 +170,8 @@ export default function CheckoutPage() {
             quantity: i.quantity,
             price: i.price
         })),
-        total_amount: totalAmount,
+        total_amount: finalTotal,
+        shipping_fee: shippingFee,
         payment_mode: formData.paymentMethod,
         status: 'Order placed'
     });
@@ -310,11 +315,13 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-white/80">Shipping</span>
-                                    <span className="font-semibold text-primary-light">Free</span>
+                                    <span className={`font-semibold ${shippingFee === 0 ? 'text-[#86efac]' : ''}`}>
+                                        {shippingFee === 0 ? 'FREE' : `₹${shippingFee.toFixed(2)}`}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between items-center text-xl mt-4 pt-4 border-t border-white/20">
                                     <span className="font-bold text-yellow">Total</span>
-                                    <span className="font-bold text-white">₹{totalAmount.toFixed(2)}</span>
+                                    <span className="font-bold text-white">₹{finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
 

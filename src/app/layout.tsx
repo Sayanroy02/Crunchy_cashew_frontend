@@ -5,7 +5,9 @@ import StoreProvider from "@/components/StoreProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatingBackground from "@/components/layout/FloatingBackground";
+import CookieConsent from "@/components/common/CookieConsent";
 import { COLORS } from "@/constants/styles";
+import { SnackbarProvider } from "@/context/SnackbarContext";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -59,12 +61,15 @@ export default function RootLayout({
         } as React.CSSProperties}
       >
         <StoreProvider>
-          <FloatingBackground />
-          <Navbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
+          <SnackbarProvider>
+            <FloatingBackground />
+            <Navbar />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+            <CookieConsent />
+          </SnackbarProvider>
         </StoreProvider>
       </body>
     </html>

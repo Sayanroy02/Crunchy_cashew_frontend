@@ -73,6 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Queries', path: '/admin/queries', icon: 'fa-solid fa-envelope' },
         { name: 'Bulk Orders', path: '/admin/bulk-orders', icon: 'fa-solid fa-boxes-stacked' },
         { name: 'Pincodes', path: '/admin/pincodes', icon: 'fa-solid fa-location-dot' },
+        { name: 'Visitors', path: '/admin/unregistered', icon: 'fa-solid fa-user-secret' },
         { name: 'Profile', path: '/admin/profile', icon: 'fa-solid fa-user-gear' },
     ];
 

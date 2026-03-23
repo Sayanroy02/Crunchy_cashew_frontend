@@ -56,7 +56,7 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
 
 export default function BulkOrderCard() {
     return (
-        <section className="py-10 bg-[#F5F0E8]">
+        <section className="py-10 bg-bg-cream">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
