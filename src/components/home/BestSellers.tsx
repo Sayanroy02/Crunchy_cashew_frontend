@@ -63,9 +63,9 @@ export default function BestSellers() {
                     <h2 className="text-3xl md:text-4xl font-black text-[#2c1a0e] mb-3">
                         Our Best Sellers
                     </h2>
-                    <p className="text-gray-500 max-w-xl mx-auto text-sm">
+                    {/* <p className="text-gray-500 max-w-xl mx-auto text-sm">
                         Experience the crunch. Premium, sustainably packaged, straight from our factory.
-                    </p>
+                    </p> */}
                 </div>
 
                 {/* Tag Filter Pills */}
@@ -92,7 +92,7 @@ export default function BestSellers() {
                 {/* Product Grid with Horizontal Scroll */}
                 <div className="relative group/scroll">
                     {/* Navigation Buttons (Desktop Only) */}
-                    <button 
+                    <button
                         onClick={() => {
                             const container = document.getElementById('bestseller-scroll');
                             if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
@@ -101,8 +101,8 @@ export default function BestSellers() {
                     >
                         <i className="fa-solid fa-chevron-left"></i>
                     </button>
-                    
-                    <button 
+
+                    <button
                         onClick={() => {
                             const container = document.getElementById('bestseller-scroll');
                             if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
@@ -112,7 +112,7 @@ export default function BestSellers() {
                         <i className="fa-solid fa-chevron-right"></i>
                     </button>
 
-                    <div 
+                    <div
                         id="bestseller-scroll"
                         className="flex gap-4 md:gap-6 overflow-x-auto pb-4 scrollbar-hide snap-x scroll-smooth"
                     >

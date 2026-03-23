@@ -120,7 +120,7 @@ export default function CartPage() {
 
                     {/* Order Summary */}
                     <div className="lg:w-1/3">
-                        <div className="bg-text-dark text-white rounded-3xl p-8 shadow-2xl sticky top-28">
+                        <div className="bg-primary text-white rounded-3xl p-8 shadow-2xl sticky top-28">
                             <h2 className="text-2xl font-heading font-bold mb-6 text-highlight border-b border-gray-700 pb-4">Order Summary</h2>
 
                             <div className="flex flex-col gap-4 mb-8">
