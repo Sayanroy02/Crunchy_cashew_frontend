@@ -225,7 +225,7 @@ export default function ContactPage() {
                 <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
 
                     {/* ── Sidebar ── */}
-                    <aside className="bg-[#0A5246] lg:w-72 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
+                    <aside className="bg-[#0d0d0d] lg:w-72 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
                         <div aria-hidden className="absolute -bottom-12 -right-12 w-52 h-52 rounded-full bg-[#FBB21B]/10 pointer-events-none" />
                         <div aria-hidden className="absolute top-24 -left-8 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
 

@@ -86,7 +86,7 @@ export default function Testimonials() {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
-                        <span className="text-amber font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
+                        <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
                         <h2 className="text-3xl md:text-4xl font-black text-black">Testimonials</h2>
                     </div>
                     <div className="flex items-center gap-3">
@@ -100,7 +100,7 @@ export default function Testimonials() {
                         </button>
                         <button
                             onClick={() => setFormOpen(true)}
-                            className="border-2 border-amber text-amber hover:bg-amber hover:text-black px-5 py-2 rounded-full text-sm font-bold transition-all"
+                            className="border-2 border-primary text-primary hover:bg-primary hover:text-white px-5 py-2 rounded-full text-sm font-bold transition-all"
                         >
                             ✍ Share Your Experience
                         </button>
@@ -242,7 +242,7 @@ export default function Testimonials() {
                                 <button
                                     type="submit"
                                     disabled={submitStatus === 'loading'}
-                                    className="w-full bg-amber text-black font-black py-3 rounded-xl hover:bg-amber/80 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60 shadow-lg shadow-amber/20"
+                                    className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary/80 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60 shadow-lg shadow-primary/20"
                                 >
                                     {submitStatus === 'loading'
                                         ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>

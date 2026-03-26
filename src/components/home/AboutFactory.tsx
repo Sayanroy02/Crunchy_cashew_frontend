@@ -33,7 +33,7 @@ export default function AboutFactory() {
     };
 
     return (
-        <section className="py-15 mb:py-15 bg-bg-cream relative overflow-hidden">
+        <section className="py-5 mb:py-5 bg-bg-cream relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-16">
 

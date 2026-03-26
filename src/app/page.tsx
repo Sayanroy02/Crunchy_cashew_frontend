@@ -1,16 +1,17 @@
 import Image from "next/image";
-import WhyUsCRO from "@/components/home/WhyUsCRO";
+// import WhyUsCRO from "@/components/home/WhyUsCRO";
 import BestSellers from "@/components/home/BestSellers";
 import Testimonials from "@/components/home/Testimonials";
 import BlogsPreview from "@/components/home/BlogsPreview";
 import Affiliates from "@/components/home/Affiliates";
 import HeroVideo from "@/components/home/HeroAnimationBanner";
-import OfferStripCarousel from "@/components/home/HeroCarousel";
-import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
+// import OfferStripCarousel from "@/components/home/HeroCarousel";
+// import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
 import DirectAdvantage from "@/components/home/OffersGrid";
 import BulkOrderCard from "@/components/home/BulkOrderCard";
 import AboutFactory from "@/components/home/AboutFactory";
 import InstaVideos from "@/components/home/InstaVideos";
+// import SectionDivider from "@/components/ui/SectionDivider";
 
 export default function Home() {
   return (
@@ -19,7 +20,6 @@ export default function Home() {
       <BestSellers />
       <Affiliates />
       {/* <WhyUsCRO /> */}
-
       <BulkOrderCard />
       <AboutFactory />
       <InstaVideos />
@@ -29,7 +29,7 @@ export default function Home() {
       <Testimonials />
 
       {/* Contact Banner */}
-      <section className="py-20 bg-[#FFFDF5]">
+      <section className="py-20 bg-bg-cream">
         <div className="max-w-6xl mx-auto px-6">
           <div className="relative">
 

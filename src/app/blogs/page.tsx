@@ -84,8 +84,25 @@ export default function BlogsDirectory() {
     return (
         <div className="bg-bg min-h-screen pb-24">
             {/* Hero Header */}
-            <section className="bg-black text-white pt-28 pb-20 px-6 relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_top_right,var(--theme-primary),transparent)]" />
+            <section className="text-white pt-16 pb-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%)' }}>
+                {/* Dot grid overlay */}
+                <div
+                    className="absolute inset-0 opacity-[0.07] pointer-events-none"
+                    style={{
+                        backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
+                        backgroundSize: '24px 24px',
+                    }}
+                />
+                {/* Left decorative image */}
+                <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none"
+                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
+                    <img src="/images/Cashew-parachute-03-p-800.png" alt="" className="w-full h-full object-contain object-bottom" style={{ transform: 'scaleX(-1)', opacity: 0.85 }} />
+                </div>
+                {/* Right decorative image */}
+                <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none"
+                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
+                    <img src="/images/Cashew-parachute-1-03-03.png" alt="" className="w-full h-full object-contain object-bottom" style={{ opacity: 0.85 }} />
+                </div>
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-pen-nib" /> Our Journal
@@ -135,17 +152,15 @@ export default function BlogsDirectory() {
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold whitespace-nowrap border-b-2 transition-all ${
-                                        isActive
-                                            ? 'border-primary text-primary'
-                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                    }`}
+                                    className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold whitespace-nowrap border-b-2 transition-all ${isActive
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                        }`}
                                 >
                                     <i className={CATEGORY_ICONS[cat]} />
                                     {cat}
-                                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
-                                        isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'
-                                    }`}>
+                                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'
+                                        }`}>
                                         {count}
                                     </span>
                                 </button>

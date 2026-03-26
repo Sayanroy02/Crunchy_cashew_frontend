@@ -1,48 +1,156 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <footer className="bg-black text-white pt-16 pb-8 mx-auto w-full mt-24">
-            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                <div className="flex flex-col gap-4">
-                    <h2 className="text-2xl font-bold font-heading text-bg-cream">Crunchy Cashews</h2>
-                    <p className="text-gray-400 text-sm">Premium cashew manufacturer & supplier based in Siliguri, India. Quality delivered fresh.</p>
+        <footer className="relative bg-[#0A1F1B] text-white overflow-hidden mt-10">
+
+            {/* Decorative background blobs */}
+            <div className="absolute top-0 left-0 w-72 h-72 bg-[#0A5246] opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+            <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#0A5246] opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#0B5143] opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+            {/* Top accent line */}
+            <div className="w-full h-1 bg-gradient-to-r from-[#0A5246] via-[#4CAF88] to-[#0A5246]" />
+
+            {/* Main Footer Grid */}
+            <div className="max-w-7xl mx-auto px-6 pt-12 pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+                {/* Brand */}
+                <div className="flex flex-col gap-5 lg:col-span-1">
+                    <div>
+                        <div className="inline-flex items-center gap-2 mb-3">
+                            <img src="/images/cc-Logo-01-1.png" alt="Crunchy Cashews Logo" className="w-10 h-10 object-contain" />
+                            <h2 className="text-xl font-black text-white tracking-tight">Crunchy Cashews</h2>
+                        </div>
+                        <p className="text-gray-400 text-sm leading-relaxed">
+                            Premium cashew manufacturer & supplier based in Siliguri, India. Farm-fresh quality, delivered with care.
+                        </p>
+                    </div>
+                    {/* Social Links */}
+                    <div className="flex gap-3">
+                        {[
+                            { icon: 'fa-brands fa-instagram', href: '#' },
+                            { icon: 'fa-brands fa-facebook-f', href: '#' },
+                            { icon: 'fa-brands fa-whatsapp', href: '#' },
+                            { icon: 'fa-brands fa-youtube', href: '#' },
+                        ].map((s, i) => (
+                            <a
+                                key={i}
+                                href={s.href}
+                                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#0A5246] hover:text-white hover:border-[#0A5246] transition-all duration-200 hover:scale-110"
+                            >
+                                <i className={`${s.icon} text-xs`} />
+                            </a>
+                        ))}
+                    </div>
                 </div>
 
+                {/* Quick Links */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-lg font-semibold text-highlight">Quick Links</h3>
-                    <ul className="flex flex-col gap-2">
-                        <li><Link href="/" className="text-gray-400 hover:text-white transition-colors duration-300">Home</Link></li>
-                        <li><Link href="/shop" className="text-gray-400 hover:text-white transition-colors duration-300">Shop</Link></li>
-                        <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors duration-300">About Us</Link></li>
-                        <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors duration-300">Contact</Link></li>
+                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Navigate</h3>
+                    <ul className="flex flex-col gap-2.5">
+                        {[
+                            { label: 'Home', href: '/' },
+                            { label: 'Shop', href: '/shop' },
+                            { label: 'About Us', href: '/about' },
+                            { label: 'Contact', href: '/contact' },
+                        ].map(link => (
+                            <li key={link.href}>
+                                <Link
+                                    href={link.href}
+                                    className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                                >
+                                    <span className="w-0 group-hover:w-3 h-[2px] bg-[#4CAF88] transition-all duration-300 rounded-full" />
+                                    {link.label}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
+                {/* Products */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-lg font-semibold text-highlight">Contact Us</h3>
-                    <ul className="flex flex-col gap-2 text-gray-400 text-sm">
-                        <li><a href="tel:+919876543210" className="hover:text-white"><i className="fa-solid fa-phone mr-2"></i> +91 98765 43210</a></li>
-                        <li><a href="mailto:info@crunchycashews.in" className="hover:text-white"><i className="fa-solid fa-envelope mr-2"></i> info@crunchycashews.in</a></li>
-                        <li><i className="fa-solid fa-location-dot mr-2"></i> Siliguri, West Bengal, India</li>
+                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Our Range</h3>
+                    <ul className="flex flex-col gap-2.5">
+                        {[
+                            'Classic Plain Cashews',
+                            'Pepper Roasted',
+                            'Garlic Butter',
+                            'Gift Hampers',
+                            'Bulk / B2B Supply',
+                        ].map(item => (
+                            <li key={item}>
+                                <Link
+                                    href="/shop"
+                                    className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                                >
+                                    <span className="w-0 group-hover:w-3 h-[2px] bg-[#4CAF88] transition-all duration-300 rounded-full" />
+                                    {item}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
+                {/* Contact */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-lg font-semibold text-highlight">For Bulk Orders</h3>
-                    <p className="text-gray-400 text-sm mb-2">Looking for B2B supply? Contact us directly for special bulk pricing.</p>
-                    <Link href="/contact" className="inline-block bg-primary text-white text-center py-2 px-4 rounded-full font-medium hover:bg-green-800 transition-colors w-max">
-                        Request Quote
-                    </Link>
+                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Contact Us</h3>
+                    <ul className="flex flex-col gap-4">
+                        <li>
+                            <a href="tel:+919876543210" className="group flex items-start gap-3 hover:text-white transition-colors">
+                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
+                                    <i className="fa-solid fa-phone text-[#4CAF88] text-xs" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-0.5">Call Us</p>
+                                    <p className="text-sm text-gray-300 group-hover:text-white">+91 98765 43210</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:info@crunchycashews.in" className="group flex items-start gap-3 hover:text-white transition-colors">
+                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
+                                    <i className="fa-solid fa-envelope text-[#4CAF88] text-xs" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
+                                    <p className="text-sm text-gray-300 group-hover:text-white">info@crunchycashews.in</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <div className="flex items-start gap-3">
+                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
+                                    <i className="fa-solid fa-location-dot text-[#4CAF88] text-xs" />
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-0.5">Location</p>
+                                    <p className="text-sm text-gray-300">Siliguri, West Bengal, India</p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} Crunchy Cashews. All rights reserved.</p>
-                <div className="flex gap-4">
-                    <Link href="/terms" className="text-sm text-gray-500 hover:text-white">Terms of Service</Link>
-                    <Link href="/privacy" className="text-sm text-gray-500 hover:text-white">Privacy Policy</Link>
+            {/* Bottom Bar */}
+            <div className="relative border-t border-white/10">
+                <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <p className="text-xs text-gray-600">
+                        &copy; {new Date().getFullYear()} <span className="text-gray-500">Crunchy Cashews.</span> All rights reserved.
+                    </p>
+                    <div className="flex items-center gap-1 text-gray-600 text-xs">
+                        <span>Made with</span>
+                        <i className="fa-solid fa-heart text-[#4CAF88] text-xs mx-1" />
+                        <span>in Siliguri</span>
+                    </div>
+                    <div className="flex gap-5">
+                        <Link href="/terms" className="text-xs text-gray-600 hover:text-[#4CAF88] transition-colors">Terms</Link>
+                        <Link href="/privacy" className="text-xs text-gray-600 hover:text-[#4CAF88] transition-colors">Privacy</Link>
+                    </div>
                 </div>
             </div>
         </footer>

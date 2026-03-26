@@ -43,7 +43,7 @@ export default function ShopPage() {
                 p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (p.category || '').toLowerCase().includes(searchTerm.toLowerCase());
             const matchPrice = p.price >= min && p.price <= max;
-            
+
             let matchTag = true;
             if (tagFilter === 'newest') matchTag = !!p.isNew;
             else if (tagFilter === 'best_seller') matchTag = !!p.isBestSeller;
@@ -68,19 +68,36 @@ export default function ShopPage() {
     }, [products, searchTerm, sortKey, priceRange, tagFilter, eventFilter]);
 
     const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all' || eventFilter !== 'all';
-    const clearAll = () => { 
-        setSearchTerm(''); 
-        setSortKey('default'); 
-        setPriceRange(0); 
-        setTagFilter('all'); 
-        setEventFilter('all'); 
+    const clearAll = () => {
+        setSearchTerm('');
+        setSortKey('default');
+        setPriceRange(0);
+        setTagFilter('all');
+        setEventFilter('all');
     };
 
     return (
         <div className="bg-bg min-h-screen pb-24">
             {/* Header */}
-            <section className="bg-black text-white pt-28 pb-20 px-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--theme-primary),transparent)] opacity-30 pointer-events-none" />
+            <section className="text-white pt-20 pb-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%)' }}>
+                {/* Dot grid overlay */}
+                <div
+                    className="absolute inset-0 opacity-[0.07] pointer-events-none"
+                    style={{
+                        backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
+                        backgroundSize: '24px 24px',
+                    }}
+                />
+                {/* Left decorative image */}
+                {/* <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none"
+                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
+                    <img src="/images/Right-Hero-Section.png" alt="" className="w-full h-full object-contain object-bottom" style={{ transform: 'scaleX(-1)', opacity: 0.85 }} />
+                </div> */}
+                {/* Right decorative image */}
+                {/* <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none"
+                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
+                    <img src="/images/Right-Hero-Section.png" alt="" className="w-full h-full object-contain object-bottom" style={{ opacity: 0.85 }} />
+                </div> */}
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <span className="inline-flex items-center gap-2 bg-white/10 border border-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-store" /> Premium Cashews
@@ -304,11 +321,10 @@ function SidebarContent({
                         <button
                             key={opt.value}
                             onClick={() => setSortKey(opt.value)}
-                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                                sortKey === opt.value
-                                    ? 'bg-primary text-white shadow-sm'
-                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                            }`}
+                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
+                                ? 'bg-primary text-white shadow-sm'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                }`}
                         >
                             <i className={opt.icon} />
                             {opt.label}
@@ -336,16 +352,15 @@ function SidebarContent({
                                     setTagFilter(opt.value);
                                     if (opt.value !== 'event') setEventFilter('all');
                                 }}
-                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                                    tagFilter === opt.value
-                                        ? 'bg-primary text-white shadow-sm'
-                                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                                }`}
+                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === opt.value
+                                    ? 'bg-primary text-white shadow-sm'
+                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                    }`}
                             >
                                 <i className={`${opt.icon} text-xs`} />
                                 {opt.label}
                             </button>
-                            
+
                             {/* Sub-filters for Event */}
                             {opt.value === 'event' && tagFilter === 'event' && (
                                 <div className="flex flex-wrap gap-2 px-2 py-1 bg-red-50/50 rounded-xl border border-red-100 animate-slide-in">
@@ -358,11 +373,10 @@ function SidebarContent({
                                         <button
                                             key={evt.value}
                                             onClick={() => setEventFilter(evt.value)}
-                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                                eventFilter === evt.value
-                                                    ? 'bg-red-600 text-white shadow-sm'
-                                                    : 'bg-white text-red-600 border border-red-100 hover:bg-red-50'
-                                            }`}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${eventFilter === evt.value
+                                                ? 'bg-red-600 text-white shadow-sm'
+                                                : 'bg-white text-red-600 border border-red-100 hover:bg-red-50'
+                                                }`}
                                         >
                                             {evt.label}
                                         </button>
@@ -384,11 +398,10 @@ function SidebarContent({
                         <button
                             key={idx}
                             onClick={() => setPriceRange(idx)}
-                            className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                                priceRange === idx
-                                    ? 'bg-primary text-white shadow-sm'
-                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                            }`}
+                            className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${priceRange === idx
+                                ? 'bg-primary text-white shadow-sm'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                }`}
                         >
                             <span>{range.label}</span>
                             {priceRange === idx && <i className="fa-solid fa-check text-white text-xs" />}
