@@ -71,6 +71,7 @@ body {
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -96,6 +97,7 @@ body {
     transform: translate(-50%, 100%);
     opacity: 0;
   }
+
   100% {
     transform: translate(-50%, 0);
     opacity: 1;
@@ -111,6 +113,7 @@ body {
     transform: translateY(100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -126,6 +129,7 @@ body {
     transform: translateY(-200%);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;

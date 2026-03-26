@@ -76,6 +76,12 @@ export const API = {
   ADMIN_BLOG: (id: string) => `${API_BASE}/api/cms/admin/blogs/${id}`,
   ADMIN_BLOG_STATUS: (id: string) => `${API_BASE}/api/cms/admin/blogs/${id}/status`,
 
+  // ── Insta Videos ────────────────────────────────────────────────────────
+  INSTA_VIDEOS: `${API_BASE}/api/cms/insta-videos`,
+  ADMIN_INSTA_VIDEOS: `${API_BASE}/api/cms/admin/insta-videos`,
+  ADMIN_INSTA_VIDEO_UPDATE: (id: string) => `${API_BASE}/api/cms/admin/insta-videos/${id}`,
+  ADMIN_INSTA_VIDEO_DELETE: (id: string) => `${API_BASE}/api/cms/admin/insta-videos/${id}`,
+
   // ── Traffic ───────────────────────────────────────────────────────────────
   TRAFFIC_STATS: `${API_BASE}/api/traffic/stats`,
   TRAFFIC_VISIT: `${API_BASE}/api/traffic/visit`,

@@ -10,19 +10,22 @@ import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
 import DirectAdvantage from "@/components/home/OffersGrid";
 import BulkOrderCard from "@/components/home/BulkOrderCard";
 import AboutFactory from "@/components/home/AboutFactory";
+import InstaVideos from "@/components/home/InstaVideos";
 
 export default function Home() {
   return (
     <>
       <HeroVideo />
       <BestSellers />
-      <OfferStripCarousel />
-      <DirectAdvantage />
       <Affiliates />
       {/* <WhyUsCRO /> */}
-      <PriceComparisonPreview />
+
       <BulkOrderCard />
+      <InstaVideos />
       <AboutFactory />
+      {/* <PriceComparisonPreview /> */}
+      {/* <OfferStripCarousel /> */}
+      {/* <DirectAdvantage /> */}
       <Testimonials />
 
       {/* Contact Banner */}

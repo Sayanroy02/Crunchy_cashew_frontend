@@ -6,22 +6,22 @@ import Link from 'next/link';
 const grades = [
     {
         id: 'ww180',
-        name: 'WW 180 - Jumbo Grade',
+        name: 'WW 180',
         img: '/images/WW180-min.png',
     },
     {
         id: 'ww320',
-        name: 'WW 320 - Most Popular',
+        name: 'WW 320',
         img: '/images/WW320-min.png',
     },
     {
         id: 'sw320',
-        name: 'SW 320 - Scorched',
+        name: 'SW 320',
         img: '/images/SW320-min.png',
     },
     {
         id: 'lwp',
-        name: 'LWP - Large Pieces',
+        name: 'LWP',
         img: '/images/LWP-min.png',
     },
 ];
@@ -30,7 +30,7 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
         <Link
             href="/bulk"
-            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center gap-4 w-[160px] md:w-auto"
+            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center gap-1 w-[160px] md:w-auto"
         >
             {/* Circular image only */}
             <div className="grade-circle w-full aspect-square rounded-full overflow-hidden"
@@ -47,7 +47,7 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
             </div>
 
             {/* Label */}
-            <span className="text-center font-bold text-[#2D6A4F] text-sm md:text-base leading-snug">
+            <span className="text-center font-bold text-[#2D6A4F] text-xl md:text-base leading-snug">
                 {grade.name}
             </span>
         </Link>
@@ -60,7 +60,7 @@ export default function BulkOrderCard() {
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
-                <div className="text-center mb-12">
+                <div className="text-center mb-4">
                     <span className="text-[#2D6A4F] font-bold tracking-widest uppercase text-xs mb-2 block">
                         Wholesale & B2B
                     </span>
@@ -78,7 +78,7 @@ export default function BulkOrderCard() {
 
                 {/* Mobile: horizontal scroll */}
                 <div
-                    className="flex md:hidden overflow-x-auto pb-6 gap-6 snap-x snap-mandatory px-2"
+                    className="flex md:hidden overflow-x-auto pb-4 gap-4 snap-x snap-mandatory px-2"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {grades.map((grade) => (
@@ -87,7 +87,7 @@ export default function BulkOrderCard() {
                 </div>
 
                 {/* Desktop: equal 4-column grid */}
-                <div className="hidden md:grid grid-cols-4 gap-8 mb-10">
+                <div className="hidden md:grid grid-cols-4 gap-1 mb-1">
                     {grades.map((grade) => (
                         <GradeCard key={grade.id} grade={grade} />
                     ))}

@@ -115,13 +115,12 @@ export default function AdminTestimonials() {
                                 <p className="text-gray-300 text-[10px] font-bold uppercase tracking-wider mt-2">{new Date(t.created_at).toLocaleDateString('en-IN')}</p>
                             )}
 
-                            {t.video_url && (
-                                <div className="mt-4 rounded-xl overflow-hidden border border-amber/20 bg-black">
-                                    <video 
-                                        src={t.video_url} 
-                                        controls 
-                                        className="w-full aspect-video object-cover"
-                                        poster="/images/video-placeholder.png" // Optional placeholder
+                            {t.image_url && (
+                                <div className="mt-4 rounded-xl overflow-hidden border border-amber/20 bg-black aspect-[4/3]">
+                                    <img 
+                                        src={t.image_url} 
+                                        alt={`Review image by ${t.name}`}
+                                        className="w-full h-full object-cover"
                                     />
                                 </div>
                             )}

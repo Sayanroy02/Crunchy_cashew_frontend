@@ -10,7 +10,7 @@ interface Testimonial {
     state: string;
     description: string;
     rating?: number;
-    video_url?: string;
+    image_url?: string;
 }
 
 function StarRating({ rating = 5 }: { rating?: number }) {
@@ -44,15 +44,13 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
 export default function Testimonials() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [formOpen, setFormOpen] = useState(false);
-    const [formData, setFormData] = useState({ name: '', city: '', state: '', description: '', rating: 5, video_url: '' });
+    const [formData, setFormData] = useState({ name: '', city: '', state: '', description: '', rating: 5, image_url: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Video Upload State
-    const [videoFile, setVideoFile] = useState<File | null>(null);
-    const [videoPreview, setVideoPreview] = useState<string | null>(null);
-    const [durationError, setDurationError] = useState<string | null>(null);
+    // Image Upload State
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -66,33 +64,17 @@ export default function Testimonials() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        setDurationError(null);
-        
-        // Basic type check
-        if (!file.type.startsWith('video/')) {
-            setDurationError("Please upload a valid video file.");
+        if (!file.type.startsWith('image/')) {
+            alert("Please upload a valid image file.");
             return;
         }
 
-        const video = document.createElement('video');
-        video.preload = 'metadata';
-        video.onloadedmetadata = () => {
-            window.URL.revokeObjectURL(video.src);
-            if (video.duration < 30) {
-                setDurationError(`Video must be at least 30 seconds long. Your video is ${Math.round(video.duration)}s.`);
-                setVideoFile(null);
-                setVideoPreview(null);
-            } else {
-                setVideoFile(file);
-                setVideoPreview(URL.createObjectURL(file));
-            }
-        };
-        video.src = URL.createObjectURL(file);
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
     };
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (durationError) return;
 
         setSubmitStatus('loading');
         try {
@@ -102,9 +84,9 @@ export default function Testimonials() {
             formDataToSend.append('state', formData.state);
             formDataToSend.append('description', formData.description);
             formDataToSend.append('rating', formData.rating.toString());
-            
-            if (videoFile) {
-                formDataToSend.append('video', videoFile);
+
+            if (imageFile) {
+                formDataToSend.append('image', imageFile);
             }
 
             const res = await fetch(API.TESTIMONIALS, {
@@ -115,9 +97,9 @@ export default function Testimonials() {
                 setSubmitStatus('success');
                 setTimeout(() => {
                     setFormOpen(false);
-                    setFormData({ name: '', city: '', state: '', description: '', rating: 5, video_url: '' });
-                    setVideoFile(null);
-                    setVideoPreview(null);
+                    setFormData({ name: '', city: '', state: '', description: '', rating: 5, image_url: '' });
+                    setImageFile(null);
+                    setImagePreview(null);
                     setSubmitStatus('idle');
                 }, 3000);
             } else setSubmitStatus('error');
@@ -129,13 +111,13 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-5 md:py-10 bg-primary overflow-hidden">
+        <section className="py-5 md:py-10 bg-bg-cream overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
                         <span className="text-amber font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
-                        <h2 className="text-3xl md:text-4xl font-black text-white">Testimonials</h2>
+                        <h2 className="text-3xl md:text-4xl font-black text-black">Testimonials</h2>
                     </div>
                     <div className="flex items-center gap-3">
                         {/* Scroll arrows */}
@@ -168,34 +150,13 @@ export default function Testimonials() {
                                 key={t._id}
                                 className="flex-shrink-0 w-72 md:w-80 bg-white/10 backdrop-blur rounded-3xl overflow-hidden snap-start border border-white/10 hover:bg-white/15 transition-all flex flex-col"
                             >
-                                {t.video_url ? (
-                                    <div 
-                                        onClick={() => setSelectedVideo(t.video_url!)}
-                                        className="relative aspect-video bg-black group/vid cursor-pointer"
-                                    >
-                                        <video 
-                                            src={t.video_url} 
-                                            muted 
-                                            playsInline
-                                            loop
-                                            className="w-full h-full object-cover opacity-80 group-hover/vid:opacity-100 transition-opacity"
-                                            onMouseEnter={e => {
-                                                const playPromise = e.currentTarget.play();
-                                                if (playPromise !== undefined) {
-                                                    playPromise.catch(() => { /* Autoplay was prevented */ });
-                                                }
-                                            }}
-                                            onMouseLeave={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                                {t.image_url ? (
+                                    <div className="relative aspect-[4/3] bg-black group overflow-hidden">
+                                        <img
+                                            src={t.image_url}
+                                            alt={`Review by ${t.name}`}
+                                            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                                         />
-                                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/vid:bg-transparent transition-all">
-                                            <div className="w-12 h-12 rounded-full bg-amber text-black flex items-center justify-center shadow-xl group-hover/vid:scale-110 transition-transform">
-                                                <i className="fa-solid fa-play text-lg ml-1"></i>
-                                            </div>
-                                        </div>
-                                        <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur px-2.5 py-1 rounded-full border border-white/10">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                                            <span className="text-[10px] text-white font-black uppercase tracking-widest">Video Review</span>
-                                        </div>
                                     </div>
                                 ) : (
                                     <div className="p-6 pb-0 flex items-start justify-between">
@@ -208,7 +169,7 @@ export default function Testimonials() {
 
                                 <div className="p-6 pt-4 flex-1 flex flex-col">
                                     <StarRating rating={t.rating} />
-                                    <p className={`text-white/90 text-sm leading-relaxed mt-3 mb-4 ${t.video_url ? 'line-clamp-2' : 'line-clamp-4'}`}>
+                                    <p className={`text-white/90 text-sm leading-relaxed mt-3 mb-4 ${t.image_url ? 'line-clamp-3' : 'line-clamp-4'}`}>
                                         "{t.description}"
                                     </p>
                                     <div className="mt-auto pt-3 border-t border-white/10 flex items-center justify-between gap-2">
@@ -216,9 +177,9 @@ export default function Testimonials() {
                                             <p className="text-white font-bold text-sm">{t.name}</p>
                                             <p className="text-white/50 text-xs mt-0.5">{t.city}, {t.state}</p>
                                         </div>
-                                        {t.video_url && (
+                                        {t.image_url && (
                                             <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white/40">
-                                                <i className="fa-solid fa-video text-[10px]"></i>
+                                                <i className="fa-solid fa-image text-[10px]"></i>
                                             </div>
                                         )}
                                     </div>
@@ -233,25 +194,7 @@ export default function Testimonials() {
                     </div>
                 )}
 
-                {/* Video Modal */}
-                {selectedVideo && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setSelectedVideo(null)}>
-                        <div className="relative w-full max-w-4xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10 flex items-center justify-center" onClick={e => e.stopPropagation()}>
-                            <video 
-                                src={selectedVideo} 
-                                controls 
-                                autoPlay 
-                                className="w-full h-full"
-                            />
-                            <button 
-                                onClick={() => setSelectedVideo(null)}
-                                className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all border border-white/10"
-                            >
-                                <i className="fa-solid fa-xmark text-xl"></i>
-                            </button>
-                        </div>
-                    </div>
-                )}
+
 
                 {/* Submit Form */}
                 {formOpen && (
@@ -289,60 +232,51 @@ export default function Testimonials() {
                                 </div>
                                 <div className="bg-amber/5 p-5 rounded-2xl border border-amber/10">
                                     <label className="text-sm font-bold text-amber-700 block mb-3 flex items-center gap-2">
-                                        <i className="fa-solid fa-cloud-arrow-up"></i> Upload Video Review (Optional)
+                                        <i className="fa-solid fa-cloud-arrow-up"></i> Upload Image (Optional)
                                     </label>
-                                    
-                                    <input 
-                                        type="file" 
+
+                                    <input
+                                        type="file"
                                         ref={fileInputRef}
                                         onChange={handleFileChange}
-                                        accept="video/*"
+                                        accept="image/*"
                                         className="hidden"
                                     />
 
-                                    <div 
+                                    <div
                                         onClick={() => fileInputRef.current?.click()}
-                                        className={`relative aspect-video bg-black rounded-xl overflow-hidden mb-4 border-2 border-dashed transition-all cursor-pointer ${videoPreview ? 'border-amber/40' : 'border-amber/20 hover:border-amber/40'}`}
+                                        className={`relative aspect-[4/3] bg-gray-50 rounded-xl overflow-hidden mb-4 border-2 border-dashed transition-all cursor-pointer ${imagePreview ? 'border-amber/40' : 'border-amber/20 hover:border-amber/40'}`}
                                     >
-                                        {videoPreview ? (
-                                            <video src={videoPreview} controls className="w-full h-full object-cover" />
+                                        {imagePreview ? (
+                                            <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
                                         ) : (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center text-amber-600/40">
-                                                <i className="fa-solid fa-file-video text-4xl mb-3"></i>
-                                                <p className="text-xs font-bold uppercase tracking-widest text-center px-4">Click to select video</p>
-                                                <p className="text-[10px] mt-2 italic font-medium">MP4, WebM, or MOV (Min. 30s)</p>
+                                                <i className="fa-solid fa-image text-4xl mb-3"></i>
+                                                <p className="text-xs font-bold uppercase tracking-widest text-center px-4">Click to select image</p>
+                                                <p className="text-[10px] mt-2 italic font-medium">JPG, PNG, WEBP</p>
                                             </div>
                                         )}
                                     </div>
 
-                                    {durationError && (
-                                        <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-start gap-2 animate-shake">
-                                            <i className="fa-solid fa-circle-exclamation text-red-500 mt-0.5 text-xs"></i>
-                                            <p className="text-red-600 text-[11px] font-bold leading-tight">{durationError}</p>
-                                        </div>
-                                    )}
-
-                                    {videoFile && !durationError && (
+                                    {imageFile && (
                                         <div className="flex gap-3">
                                             <button type="button" onClick={() => fileInputRef.current?.click()}
                                                 className="flex-1 bg-white border border-amber/30 text-amber-700 font-bold py-3 rounded-xl hover:bg-amber/5 transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest">
-                                                <i className="fa-solid fa-file-export"></i> Change File
+                                                <i className="fa-solid fa-file-export"></i> Change Image
                                             </button>
-                                            <button type="button" onClick={() => { setVideoFile(null); setVideoPreview(null); setDurationError(null); }}
+                                            <button type="button" onClick={() => { setImageFile(null); setImagePreview(null); }}
                                                 className="w-12 bg-gray-100 text-gray-400 hover:text-red-500 rounded-xl transition flex items-center justify-center">
                                                 <i className="fa-solid fa-trash-can"></i>
                                             </button>
                                         </div>
                                     )}
-                                    
-                                    {!videoFile && !durationError && (
+
+                                    {!imageFile && (
                                         <button type="button" onClick={() => fileInputRef.current?.click()}
                                             className="w-full bg-amber text-black font-black py-4 rounded-xl hover:bg-amber/90 transition flex items-center justify-center gap-2 text-xs uppercase tracking-widest shadow-lg shadow-amber/10">
-                                            <i className="fa-solid fa-plus"></i> Select Video File
+                                            <i className="fa-solid fa-plus"></i> Select Image File
                                         </button>
                                     )}
-                                    
-                                    <p className="text-[10px] text-amber-600/70 mt-3 font-medium italic text-center">* Video testimonial must be at least 30 seconds long.</p>
                                 </div>
                                 {submitStatus === 'error' && <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>}
                                 <button type="submit" disabled={submitStatus === 'loading'}

@@ -81,7 +81,7 @@ export default function PriceComparisonPreview() {
   const savings = avgMpPrice - product.price;
 
   return (
-    <section className="py-24 px-4 bg-bg-cream overflow-hidden">
+    <section className="py-10 px-4 bg-bg-cream overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* 1. HEADER */}
         <div className="text-center space-y-4">
@@ -91,8 +91,8 @@ export default function PriceComparisonPreview() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0A5246]/5 text-[#0A5246] text-xs font-black uppercase tracking-[3px]"
           >
-            <Zap size={14} className="fill-[#0A5246]" />
-            The Price Difference
+            {/* <Zap size={14} className="fill-[#0A5246]" /> */}
+            {/* The Price Difference */}
           </motion.div>
 
           <motion.h2
@@ -137,8 +137,8 @@ export default function PriceComparisonPreview() {
                 transition={{ delay: idx * 0.1 }}
                 whileHover={{ y: -8 }}
                 className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${platform.isBest
-                    ? 'bg-white shadow-[0_30px_60px_-15px_rgba(10,82,70,0.25)] ring-4 ring-[#0A5246] z-10 scale-105'
-                    : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
+                  ? 'bg-white shadow-[0_30px_60px_-15px_rgba(10,82,70,0.25)] ring-4 ring-[#0A5246] z-10 scale-105'
+                  : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
                   }`}
               >
                 {platform.isBest && (
@@ -232,8 +232,8 @@ export default function PriceComparisonPreview() {
                     <div
                       key={p.name}
                       className={`flex items-center justify-between p-5 rounded-[1.5rem] transition-all duration-300 ${p.isBest
-                          ? "bg-white shadow-lg border border-slate-50 ring-1 ring-[#0A5246]/5 scale-[1.02]"
-                          : "bg-transparent hover:bg-white/30"
+                        ? "bg-white shadow-lg border border-slate-50 ring-1 ring-[#0A5246]/5 scale-[1.02]"
+                        : "bg-transparent hover:bg-white/30"
                         }`}
                     >
                       <div className="flex items-center gap-4">
