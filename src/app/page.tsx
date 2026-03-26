@@ -21,8 +21,8 @@ export default function Home() {
       {/* <WhyUsCRO /> */}
 
       <BulkOrderCard />
-      <InstaVideos />
       <AboutFactory />
+      <InstaVideos />
       {/* <PriceComparisonPreview /> */}
       {/* <OfferStripCarousel /> */}
       {/* <DirectAdvantage /> */}

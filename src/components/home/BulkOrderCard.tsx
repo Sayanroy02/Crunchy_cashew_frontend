@@ -30,11 +30,17 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
         <Link
             href="/bulk"
-            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center gap-1 w-[160px] md:w-auto"
+            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto"
+            style={{ gap: '6px' }}
         >
-            {/* Circular image only */}
-            <div className="grade-circle w-full aspect-square rounded-full overflow-hidden"
-                style={{ transition: 'transform 0.3s ease' }}
+            {/* Circular image */}
+            <div
+                className="grade-circle rounded-full overflow-hidden"
+                style={{
+                    width: '100%',
+                    aspectRatio: '1 / 1',
+                    transition: 'transform 0.3s ease',
+                }}
             >
                 <img
                     src={grade.img}
@@ -46,8 +52,11 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
                 />
             </div>
 
-            {/* Label */}
-            <span className="text-center font-bold text-[#2D6A4F] text-xl md:text-base leading-snug">
+            {/* Label — fixed size, tight margin */}
+            <span
+                className="text-center font-bold text-[#2D6A4F]"
+                style={{ fontSize: '1.3rem', lineHeight: '1.2', marginTop: '2px' }}
+            >
                 {grade.name}
             </span>
         </Link>
@@ -56,16 +65,16 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
 
 export default function BulkOrderCard() {
     return (
-        <section className="py-10 bg-bg-cream">
+        <section className="py-6 bg-bg-cream">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
-                <div className="text-center mb-4">
+                <div className="text-center mb-3">
                     <span className="text-[#2D6A4F] font-bold tracking-widest uppercase text-xs mb-2 block">
                         Wholesale & B2B
                     </span>
                     <h2
-                        className="text-3xl md:text-5xl font-bold text-gray-900 mb-4"
+                        className="text-3xl md:text-5xl font-bold text-gray-900 mb-3"
                         style={{ fontFamily: 'Georgia, serif' }}
                     >
                         Bulk Orders & Gradings
@@ -87,14 +96,14 @@ export default function BulkOrderCard() {
                 </div>
 
                 {/* Desktop: equal 4-column grid */}
-                <div className="hidden md:grid grid-cols-4 gap-1 mb-1">
+                <div className="hidden md:grid grid-cols-4 gap-4 mb-2">
                     {grades.map((grade) => (
                         <GradeCard key={grade.id} grade={grade} />
                     ))}
                 </div>
 
                 {/* CTA Banner */}
-                <div className="mt-6 bg-[#1E4D35] rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="mt-2 bg-[#1E4D35] rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
                     <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
 
