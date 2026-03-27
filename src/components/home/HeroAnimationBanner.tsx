@@ -16,36 +16,38 @@ export default function HeroVideo() {
 
     return (
         <section
+            aria-label="Crunchy Cashews – Premium Cashew Nuts from Factory to Doorstep"
             className="relative w-full overflow-hidden bg-[#1a0a04]"
             style={{ height: 'clamp(600px, 100svh, 820px)' }}
         >
             {/* ── Video ── */}
             <video
                 ref={videoRef}
-                src="/videos/cashew-animation-hero.mp4"
+                src="https://res.cloudinary.com/dvhgznmk5/video/upload/v1774628557/cc-main-video_gk6uwc.mp4"
                 autoPlay
                 muted
                 loop
                 playsInline
+                preload="auto"
                 className="absolute inset-0 w-full h-full object-cover"
-                style={{ objectPosition: 'center center' }}
+                style={{ objectPosition: 'clamp(20%, 35%, 50%) center' }}
             />
 
-            {/* ── Mobile overlay: uniform dark so text is always readable ── */}
+            {/* ── Mobile overlay ── */}
             <div
                 className="absolute inset-0 md:hidden"
-                style={{ background: 'rgba(10,4,0,0.68)' }}
+                style={{ background: 'rgba(10,4,0,0.72)' }}
             />
 
-            {/* ── Desktop overlay: gradient left-to-right ── */}
+            {/* ── Desktop overlay ── */}
             <div
                 className="absolute inset-0 hidden md:block"
                 style={{
                     background: `linear-gradient(
                         to right,
-                        rgba(10,4,0,0.88) 0%,
-                        rgba(10,4,0,0.62) 40%,
-                        rgba(10,4,0,0.12) 68%,
+                        rgba(10,4,0,0.90) 0%,
+                        rgba(10,4,0,0.65) 42%,
+                        rgba(10,4,0,0.14) 68%,
                         rgba(10,4,0,0.00) 100%
                     )`,
                 }}
@@ -54,85 +56,91 @@ export default function HeroVideo() {
             {/* ── Bottom fade ── */}
             <div
                 className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(10,4,0,0.6) 0%, transparent 100%)' }}
+                style={{ background: 'linear-gradient(to top, rgba(10,4,0,0.65) 0%, transparent 100%)' }}
             />
 
             {/* ── Content ── */}
             <div className="absolute inset-0 flex items-center">
                 <div className="w-full max-w-screen-xl mx-auto px-6 sm:px-10 lg:px-16">
-                    <div className="flex flex-col items-center text-center md:items-start md:text-left max-w-full md:max-w-[540px]">
+                    <div className="flex flex-col items-center text-center md:items-start md:text-left max-w-full md:max-w-[580px]">
 
                         {/* Eyebrow */}
-                        <div className="flex items-center gap-2 mb-4 md:mb-5">
-                            <span className="h-[2px] w-7 bg-amber rounded-full" />
-                            <span className="text-amber text-[10px] md:text-xs font-black uppercase tracking-[.2em]">
+                        <div className="flex items-center gap-2 mb-4">
+                            <span className="h-[2px] w-5 bg-amber rounded-full" />
+                            <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
                                 Premium Cashews · Since 2018
                             </span>
-                            <span className="h-[2px] w-7 bg-amber rounded-full md:hidden" />
+                            <span className="h-[2px] w-5 bg-amber rounded-full md:hidden" />
                         </div>
 
-                        {/* Brand name */}
+                        {/* H1 */}
                         <h1
-                            className="text-white font-black leading-[1.0] tracking-tight mb-3 md:mb-4"
-                            style={{ fontSize: 'clamp(3rem, 10vw, 5rem)' }}
+                            className="text-white font-black leading-[1.0] tracking-tight mb-4"
+                            style={{ fontSize: 'clamp(2.8rem, 9.5vw, 5rem)' }}
                         >
                             Crunchy
                             <span className="block text-amber">Cashews</span>
                         </h1>
 
-                        {/* Tagline */}
+                        {/* Tagline — matches image 2 style */}
                         <p
-                            className="text-white/75 font-medium leading-relaxed mb-6 md:mb-7"
-                            style={{ fontSize: 'clamp(0.875rem, 2.5vw, 1.05rem)', maxWidth: '360px' }}
+                            className="text-white/80 font-medium leading-relaxed mb-5"
+                            style={{ fontSize: 'clamp(0.88rem, 2.2vw, 1rem)', maxWidth: '360px' }}
                         >
-                            Hand-picked, roasted to perfection. Delivered
-                            fresh from our factory in Siliguri to your door.
+                            Hand-picked, roasted to perfection.<br />
+                            Delivered fresh from our factory in Siliguri
+                            to your door.
                         </p>
 
-                        {/* Trust badges */}
-                        <div className="flex items-center justify-center md:justify-start gap-5 mb-7 md:mb-8">
+                        {/* Trust badges — 3 only, single row like image 2 */}
+                        <div className="flex items-center justify-center md:justify-start gap-5 mb-6">
                             {[
                                 { icon: 'fa-shield-halved', text: 'FSSAI' },
                                 { icon: 'fa-truck-fast', text: 'Pan India' },
                                 { icon: 'fa-leaf', text: 'Natural' },
                             ].map(b => (
-                                <div key={b.text} className="flex flex-col items-center md:flex-row md:items-center gap-1 md:gap-1.5">
-                                    <i className={`fa-solid ${b.icon} text-amber text-sm`} />
-                                    <span className="text-white/60 text-[9px] md:text-[10px] font-bold uppercase tracking-wider">
+                                <div key={b.text} className="flex items-center gap-1.5">
+                                    <i className={`fa-solid ${b.icon} text-amber text-xs`} />
+                                    <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
                                         {b.text}
                                     </span>
                                 </div>
                             ))}
                         </div>
 
-                        {/* CTA buttons — full width stacked on mobile, inline on desktop */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+                        {/* CTA buttons — auto width, no stretching */}
+                        <div className="flex items-center gap-3">
                             <Link
                                 href="/shop"
-                                className="group inline-flex items-center justify-center gap-2.5
+                                aria-label="Shop premium cashews online"
+                                className="group inline-flex items-center gap-2
                                     bg-amber hover:bg-yellow active:scale-[0.97]
-                                    text-[#1c0800] font-black text-sm md:text-base
-                                    px-8 py-4 md:py-3.5 rounded-full
-                                    shadow-lg shadow-amber/40 hover:shadow-amber/60
-                                    transition-all duration-200 hover:scale-[1.02]"
+                                    text-[#1c0800] font-black text-sm
+                                    px-6 py-3 rounded-full
+                                    shadow-lg shadow-amber/40
+                                    transition-all duration-200 hover:scale-[1.02]
+                                    whitespace-nowrap"
                             >
-                                <i className="fa-solid fa-store" />
+                                <i className="fa-solid fa-store text-xs" />
                                 Shop Now
-                                <i className="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition-transform" />
+                                <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                             </Link>
 
                             <Link
                                 href="/bulk"
-                                className="group inline-flex items-center justify-center gap-2.5
+                                aria-label="Place a bulk or wholesale cashew order"
+                                className="group inline-flex items-center gap-2
                                     bg-white/10 hover:bg-white/20 active:scale-[0.97]
-                                    text-white font-black text-sm md:text-base
-                                    px-8 py-4 md:py-3.5 rounded-full
+                                    text-white font-black text-sm
+                                    px-6 py-3 rounded-full
                                     border border-white/30 hover:border-white/55
                                     backdrop-blur-sm
-                                    transition-all duration-200 hover:scale-[1.02]"
+                                    transition-all duration-200 hover:scale-[1.02]
+                                    whitespace-nowrap"
                             >
-                                <i className="fa-solid fa-boxes-stacked" />
+                                <i className="fa-solid fa-boxes-stacked text-xs" />
                                 Bulk Order
+                                <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                             </Link>
                         </div>
 
