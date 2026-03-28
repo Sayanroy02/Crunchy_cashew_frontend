@@ -101,7 +101,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <BlogsPreview />
+
       </section>
       {/* <DirectAdvantage /> */}
       <BulkOrderCard />
@@ -111,7 +111,7 @@ export default function Home() {
       {/* <OfferStripCarousel /> */}
 
       <Testimonials />
-
+      <BlogsPreview />
 
     </>
   );
