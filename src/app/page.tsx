@@ -11,6 +11,7 @@ import DirectAdvantage from "@/components/home/OffersGrid";
 import BulkOrderCard from "@/components/home/BulkOrderCard";
 import AboutFactory from "@/components/home/AboutFactory";
 import InstaVideos from "@/components/home/InstaVideos";
+import WhyUsCRO from "@/components/home/WhyUsCRO";
 // import SectionDivider from "@/components/ui/SectionDivider";
 
 export default function Home() {
@@ -18,8 +19,8 @@ export default function Home() {
     <>
       <HeroVideo />
       <BestSellers />
-      <Affiliates />
-      {/* <WhyUsCRO /> */}
+      {/* <Affiliates /> */}
+      <WhyUsCRO />
       <BulkOrderCard />
       <AboutFactory />
       <InstaVideos />
