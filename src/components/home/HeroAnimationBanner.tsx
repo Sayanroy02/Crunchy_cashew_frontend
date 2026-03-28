@@ -1,18 +1,40 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function HeroVideo() {
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const desktopVideoRef = useRef<HTMLVideoElement>(null);
+    const mobileVideoRef = useRef<HTMLVideoElement>(null);
+
+    // Desktop: always visible. Mobile: reveals after 5s.
+    const [mobileContentVisible, setMobileContentVisible] = useState(false);
 
     useEffect(() => {
-        const v = videoRef.current;
-        if (v) {
-            v.muted = true;
-            v.play().catch(() => { });
+        const isMobile = window.matchMedia('(max-width: 767px)').matches;
+
+        // Play video immediately on both
+        const desktopV = desktopVideoRef.current;
+        if (desktopV) { desktopV.muted = true; desktopV.play().catch(() => { }); }
+
+        const mobileV = mobileVideoRef.current;
+        if (mobileV) { mobileV.muted = true; mobileV.play().catch(() => { }); }
+
+        // Only delay content reveal on mobile
+        if (isMobile) {
+            const timer = setTimeout(() => setMobileContentVisible(true), 5000);
+            return () => clearTimeout(timer);
+        } else {
+            setMobileContentVisible(true);
         }
     }, []);
+
+    // Shared stagger style helper
+    const stagger = (delay: number, visible: boolean): React.CSSProperties => ({
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0px)' : 'translateY(18px)',
+        transition: `opacity 0.7s ${delay}s ease, transform 0.7s ${delay}s cubic-bezier(0.22,1,0.36,1)`,
+    });
 
     return (
         <section
@@ -20,28 +42,38 @@ export default function HeroVideo() {
             className="relative w-full overflow-hidden bg-[#1a0a04]"
             style={{ height: 'clamp(600px, 100svh, 820px)' }}
         >
-            {/* ── Video ── */}
+            {/* ── Desktop Video ── */}
             <video
-                ref={videoRef}
-                src="https://res.cloudinary.com/dvhgznmk5/video/upload/v1774628557/cc-main-video_gk6uwc.mp4"
-                autoPlay
+                ref={desktopVideoRef}
+                src="https://res.cloudinary.com/dvhgznmk5/video/upload/q_auto,f_auto/v1774628557/cc-main-video_gk6uwc.mp4"
                 muted
                 loop
                 playsInline
                 preload="auto"
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ objectPosition: 'clamp(20%, 35%, 50%) center' }}
+                className="absolute inset-0 w-full h-full object-cover hidden md:block"
+                style={{ objectPosition: '35% center' }}
+            />
+
+            {/* ── Mobile Video ── */}
+            <video
+                ref={mobileVideoRef}
+                src="https://res.cloudinary.com/dvhgznmk5/video/upload/q_auto,f_auto,w_720/v1774631519/Social_Media_Video_Ads_KqlKM4R3_kgnpez.mp4"
+                muted
+                playsInline
+                preload="auto"
+                className="absolute inset-0 w-full h-full object-cover md:hidden"
+                style={{ objectPosition: 'center center' }}
             />
 
             {/* ── Mobile overlay ── */}
             <div
-                className="absolute inset-0 md:hidden"
-                style={{ background: 'rgba(10,4,0,0.72)' }}
+                className="absolute inset-0 md:hidden pointer-events-none"
+                style={{ background: 'rgba(10,4,0,0.60)' }}
             />
 
             {/* ── Desktop overlay ── */}
             <div
-                className="absolute inset-0 hidden md:block"
+                className="absolute inset-0 hidden md:block pointer-events-none"
                 style={{
                     background: `linear-gradient(
                         to right,
@@ -56,44 +88,158 @@ export default function HeroVideo() {
             {/* ── Bottom fade ── */}
             <div
                 className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
-                style={{ background: 'linear-gradient(to top, rgba(10,4,0,0.65) 0%, transparent 100%)' }}
+                style={{ background: 'linear-gradient(to top, rgba(10,4,0,0.75) 0%, transparent 100%)' }}
             />
 
-            {/* ── Content ── */}
-            <div className="absolute inset-0 flex items-center">
-                <div className="w-full max-w-screen-xl mx-auto px-6 sm:px-10 lg:px-16">
-                    <div className="flex flex-col items-center text-center md:items-start md:text-left max-w-full md:max-w-[580px]">
+            {/* ════════════════════
+                MOBILE: Top block
+                Eyebrow + H1 pinned above the packet (~top 13%)
+            ════════════════════ */}
+            <div
+                className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
+                style={{ top: '13%' }}
+            >
+                {/* Eyebrow */}
+                <div
+                    className="flex items-center gap-2 mb-3"
+                    style={stagger(0.05, mobileContentVisible)}
+                >
+                    <span className="h-[2px] w-5 bg-amber rounded-full" />
+                    <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
+                        Premium Cashews · Since 2018
+                    </span>
+                    <span className="h-[2px] w-5 bg-amber rounded-full" />
+                </div>
 
-                        {/* Eyebrow */}
+                {/* H1 */}
+                <h1
+                    className="text-white font-black leading-[1.0] tracking-tight"
+                    style={{
+                        fontSize: 'clamp(2.6rem, 12vw, 3.6rem)',
+                        ...stagger(0.14, mobileContentVisible),
+                    }}
+                >
+                    Crunchy
+                    <span className="block text-amber">Cashews</span>
+                </h1>
+            </div>
+
+            {/* ════════════════════
+                MOBILE: Bottom block
+                Tagline + Badges + Buttons pinned below the packet (~bottom 10%)
+            ════════════════════ */}
+            <div
+                className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
+                style={{ bottom: '10%' }}
+            >
+                {/* Tagline */}
+                <p
+                    className="text-white/80 font-medium leading-relaxed mb-4"
+                    style={{
+                        fontSize: 'clamp(0.82rem, 3.5vw, 0.95rem)',
+                        maxWidth: '300px',
+                        ...stagger(0.22, mobileContentVisible),
+                    }}
+                >
+                    Hand-picked, roasted to perfection.<br />
+                    Delivered fresh from our factory in Siliguri to your door.
+                </p>
+
+                {/* Trust badges */}
+                <div
+                    className="flex items-center justify-center gap-5 mb-5"
+                    style={stagger(0.32, mobileContentVisible)}
+                >
+                    {[
+                        { icon: 'fa-shield-halved', text: 'FSSAI' },
+                        { icon: 'fa-truck-fast', text: 'Pan India' },
+                        { icon: 'fa-leaf', text: 'Natural' },
+                    ].map(b => (
+                        <div key={b.text} className="flex items-center gap-1.5">
+                            <i className={`fa-solid ${b.icon} text-amber text-xs`} />
+                            <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
+                                {b.text}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* CTA buttons */}
+                <div
+                    className="flex items-center gap-3"
+                    style={{
+                        opacity: mobileContentVisible ? 1 : 0,
+                        transform: mobileContentVisible ? 'translateY(0px) scale(1)' : 'translateY(12px) scale(0.95)',
+                        transition: 'opacity 0.7s 0.42s ease, transform 0.7s 0.42s cubic-bezier(0.34,1.56,0.64,1)',
+                    }}
+                >
+                    <Link
+                        href="/shop"
+                        aria-label="Shop premium cashews online"
+                        className="group inline-flex items-center gap-2
+                            bg-amber hover:bg-yellow active:scale-[0.97]
+                            text-[#1c0800] font-black text-sm
+                            px-6 py-3 rounded-full
+                            shadow-lg shadow-amber/40
+                            transition-all duration-200 hover:scale-[1.02]
+                            whitespace-nowrap"
+                    >
+                        <i className="fa-solid fa-store text-xs" />
+                        Shop Now
+                        <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+
+                    <Link
+                        href="/bulk"
+                        aria-label="Place a bulk or wholesale cashew order"
+                        className="group inline-flex items-center gap-2
+                            bg-white/10 hover:bg-white/20 active:scale-[0.97]
+                            text-white font-black text-sm
+                            px-6 py-3 rounded-full
+                            border border-white/30 hover:border-white/55
+                            backdrop-blur-sm
+                            transition-all duration-200 hover:scale-[1.02]
+                            whitespace-nowrap"
+                    >
+                        <i className="fa-solid fa-boxes-stacked text-xs" />
+                        Bulk Order
+                        <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
+                    </Link>
+                </div>
+            </div>
+
+            {/* ════════════════════
+                DESKTOP LAYOUT
+                Original left-aligned, always visible (no delay)
+            ════════════════════ */}
+            <div className="hidden md:flex absolute inset-0 items-center">
+                <div className="w-full max-w-screen-xl mx-auto px-10 lg:px-16">
+                    <div className="flex flex-col items-start text-left max-w-[580px]">
+
                         <div className="flex items-center gap-2 mb-4">
                             <span className="h-[2px] w-5 bg-amber rounded-full" />
                             <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
                                 Premium Cashews · Since 2018
                             </span>
-                            <span className="h-[2px] w-5 bg-amber rounded-full md:hidden" />
                         </div>
 
-                        {/* H1 */}
                         <h1
                             className="text-white font-black leading-[1.0] tracking-tight mb-4"
-                            style={{ fontSize: 'clamp(2.8rem, 9.5vw, 5rem)' }}
+                            style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5rem)' }}
                         >
                             Crunchy
                             <span className="block text-amber">Cashews</span>
                         </h1>
 
-                        {/* Tagline — matches image 2 style */}
                         <p
                             className="text-white/80 font-medium leading-relaxed mb-5"
-                            style={{ fontSize: 'clamp(0.88rem, 2.2vw, 1rem)', maxWidth: '360px' }}
+                            style={{ fontSize: 'clamp(0.88rem, 1.2vw, 1rem)', maxWidth: '360px' }}
                         >
                             Hand-picked, roasted to perfection.<br />
-                            Delivered fresh from our factory in Siliguri
-                            to your door.
+                            Delivered fresh from our factory in Siliguri to your door.
                         </p>
 
-                        {/* Trust badges — 3 only, single row like image 2 */}
-                        <div className="flex items-center justify-center md:justify-start gap-5 mb-6">
+                        <div className="flex items-center gap-5 mb-6">
                             {[
                                 { icon: 'fa-shield-halved', text: 'FSSAI' },
                                 { icon: 'fa-truck-fast', text: 'Pan India' },
@@ -108,7 +254,6 @@ export default function HeroVideo() {
                             ))}
                         </div>
 
-                        {/* CTA buttons — auto width, no stretching */}
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/shop"
@@ -143,7 +288,6 @@ export default function HeroVideo() {
                                 <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                             </Link>
                         </div>
-
                     </div>
                 </div>
             </div>
