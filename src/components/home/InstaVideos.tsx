@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { API } from "@/constants/api";
 
 interface InstaVideo {
@@ -28,17 +29,31 @@ export default function InstaVideos() {
     if (videos.length === 0) return null;
 
     return (
-        <section className="py-12 md:py-16 bg-bg-cream overflow-hidden">
+        <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 md:px-6">
 
-                {/* Centered heading block */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-8 flex flex-col items-center">
                     <span className="text-primary font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block">
                         Latest Reels
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-black text-black tracking-tight">
-                        Insta Videos
-                    </h2>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
+                    >
+                        Crunchy on <span className="relative inline-block">
+                            <span className="relative z-10">Insta</span>
+                            <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: '100%' }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                            />
+                        </span>
+                    </motion.h2>
                 </div>
 
                 {/* Scrollable / grid row */}

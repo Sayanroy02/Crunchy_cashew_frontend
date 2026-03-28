@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { API } from '@/constants/api';
 
 interface Blog {
@@ -30,12 +31,29 @@ export default function BlogsPreview() {
     if (blogs.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-10 bg-bg-cream relative">
+        <section className="py-4 md:py-6 bg-bg-cream relative">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12">
                     <div className="max-w-2xl">
                         <span className="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Latest News & Insights</span>
-                        <h2 className="text-4xl md:text-5xl font-heading font-bold text-text-dark mb-4">Read Our Blogs</h2>
+                        <motion.h2
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.1 }}
+                          className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-4"
+                        >
+                          Read Our <span className="relative inline-block">
+                            <span className="relative z-10">Blogs</span>
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: '100%' }}
+                              viewport={{ once: true }}
+                              transition={{ delay: 0.5, duration: 0.8 }}
+                              className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                            />
+                          </span>
+                        </motion.h2>
                         <p className="text-gray-600 text-lg">Stay updated with the latest in cashew farming, recipes, and industry trends.</p>
                     </div>
                     <Link href="/blogs" className="hidden md:inline-block border-2 border-text-dark text-text-dark font-bold px-8 py-3 rounded-full hover:bg-text-dark hover:text-white transition-colors duration-300">

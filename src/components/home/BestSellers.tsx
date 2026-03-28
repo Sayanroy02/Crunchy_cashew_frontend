@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 
@@ -52,7 +53,7 @@ export default function BestSellers() {
     }, [products, activeTag]);
 
     return (
-        <section className="py-2 md:py-12 bg-bg">
+        <section className="pt-[48px] pb-4 md:pb-6 bg-bg">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
                 {/* Heading */}
@@ -60,9 +61,24 @@ export default function BestSellers() {
                     <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">
                         Handpicked For You
                     </span>
-                    <h2 className="text-3xl md:text-4xl font-black text-[#2c1a0e] mb-3">
-                        Our Best Sellers
-                    </h2>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
+                    >
+                        Our Best <span className="relative inline-block">
+                            <span className="relative z-10">Sellers</span>
+                            <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: '100%' }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                            />
+                        </span>
+                    </motion.h2>
                 </div>
 
                 {/* Tag Filter Pills */}

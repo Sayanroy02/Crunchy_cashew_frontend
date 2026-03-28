@@ -81,7 +81,7 @@ export default function PriceComparisonPreview() {
   const savings = avgMpPrice - product.price;
 
   return (
-    <section className="py-10 px-4 bg-bg-cream overflow-hidden">
+    <section className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden">
       <div className="max-w-7xl mx-auto space-y-16">
         {/* 1. HEADER */}
         <div className="text-center space-y-4">
@@ -186,15 +186,7 @@ export default function PriceComparisonPreview() {
         </div>
 
         {/* Mobile Layout (Image 2 style) */}
-        <div className="md:hidden space-y-10">
-          <div className="text-center space-y-3">
-            <h2 className="text-4xl font-black text-[#0A5246] tracking-tight leading-tight">
-              Direct Savings Preview
-            </h2>
-            <p className="text-black text-sm font-semibold italic leading-relaxed opacity-60">
-              Same product, same quality, significantly lower price.
-            </p>
-          </div>
+        <div className="md:hidden space-y-6">
 
           <div className="bg-[#F0F4F4]/60 rounded-[3rem] p-8 shadow-sm border border-slate-100 relative">
             <div className="absolute top-6 right-8 opacity-10">

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const grades = [
     {
@@ -30,12 +31,11 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
         <Link
             href="/bulk"
-            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto"
-            style={{ gap: '6px' }}
+            className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate"
         >
-            {/* Circular image */}
+            {/* Circular image — Higher Stacking */}
             <div
-                className="grade-circle rounded-full overflow-hidden"
+                className="grade-circle rounded-full flex items-center justify-center relative z-20"
                 style={{
                     width: '100%',
                     aspectRatio: '1 / 1',
@@ -45,17 +45,17 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
                 <img
                     src={grade.img}
                     alt={grade.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover scale-[1.05]"
                     onError={(e: any) => {
                         e.target.src = '/images/crunchy-cashews-product.png';
                     }}
                 />
             </div>
 
-            {/* Label — fixed size, tight margin */}
+            {/* Label — Lower Stacking but Above Background */}
             <span
-                className="text-center font-bold text-[#2D6A4F]"
-                style={{ fontSize: '1.3rem', lineHeight: '1.2', marginTop: '2px' }}
+                className="text-center font-bold text-[#2D6A4F] relative z-10 -mt-2 md:-mt-10"
+                style={{ fontSize: '1.3rem', lineHeight: '1.2' }}
             >
                 {grade.name}
             </span>
@@ -65,7 +65,7 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
 
 export default function BulkOrderCard() {
     return (
-        <section className="py-6 bg-bg-cream">
+        <section className="py-4 md:py-6 bg-bg-cream">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
@@ -73,13 +73,25 @@ export default function BulkOrderCard() {
                     <span className="text-[#2D6A4F] font-bold tracking-widest uppercase text-xs mb-2 block">
                         Wholesale & B2B
                     </span>
-                    <h2
-                        className="text-3xl md:text-5xl font-bold text-gray-900 mb-3"
-                        style={{ fontFamily: 'Georgia, serif' }}
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.1 }}
+                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
                     >
-                        Bulk Orders & Gradings
-                    </h2>
-                    <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base">
+                        Bulk Orders & <span className="relative inline-block">
+                            <span className="relative z-10">Gradings</span>
+                            <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: '100%' }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                            />
+                        </span>
+                    </motion.h2>
+                    <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base mt-2">
                         Explore our premium cashew grades available for wholesale. Competitive pricing,
                         custom packaging, and reliable global shipping.
                     </p>

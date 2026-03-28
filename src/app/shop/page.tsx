@@ -77,68 +77,8 @@ export default function ShopPage() {
     };
 
     return (
-        <div className="bg-bg min-h-screen pb-24">
-            {/* Header */}
-            <section className="text-white pt-20 pb-16 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%)' }}>
-                {/* Dot grid overlay */}
-                <div
-                    className="absolute inset-0 opacity-[0.07] pointer-events-none"
-                    style={{
-                        backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
-                        backgroundSize: '24px 24px',
-                    }}
-                />
-                {/* Left decorative image */}
-                {/* <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none"
-                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
-                    <img src="/images/Right-Hero-Section.png" alt="" className="w-full h-full object-contain object-bottom" style={{ transform: 'scaleX(-1)', opacity: 0.85 }} />
-                </div> */}
-                {/* Right decorative image */}
-                {/* <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none"
-                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
-                    <img src="/images/Right-Hero-Section.png" alt="" className="w-full h-full object-contain object-bottom" style={{ opacity: 0.85 }} />
-                </div> */}
-                <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <span className="inline-flex items-center gap-2 bg-white/10 border border-white/10 text-white/70 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-                        <i className="fa-solid fa-store" /> Premium Cashews
-                    </span>
-                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight">
-                        Our Premium Shop
-                    </h1>
-                    <p className="text-gray-300 max-w-2xl mx-auto text-lg mb-10">
-                        Browse our selection of the finest cashews. Guaranteed freshness and quality in every bite.
-                    </p>
-
-                    {/* Search Bar */}
-                    <div className="max-w-2xl mx-auto flex items-center gap-3">
-                        <div className="relative flex-1">
-                            <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
-                            <input
-                                type="text"
-                                placeholder="Search cashews by name or category..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-2xl px-5 py-4 pl-14 focus:outline-none focus:bg-white/20 transition-all text-sm"
-                            />
-                            {searchTerm && (
-                                <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors">
-                                    <i className="fa-solid fa-xmark" />
-                                </button>
-                            )}
-                        </div>
-                        {/* Mobile Filter Trigger */}
-                        <button
-                            onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden flex items-center gap-2 bg-yellow text-black font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-yellow transition-colors"
-                        >
-                            <i className="fa-solid fa-sliders" /> Filters
-                            {hasFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
+        <div className="bg-bg min-h-screen pb-24 pt-12">
+            <div className="max-w-7xl mx-auto px-4 md:px-6">
                 <div className="flex gap-8">
 
                     {/* ── SIDEBAR ── */}
@@ -186,6 +126,33 @@ export default function ShopPage() {
 
                     {/* ── PRODUCT GRID ── */}
                     <div className="flex-1 min-w-0">
+                        {/* Search Bar */}
+                        <div className="mb-6 flex items-center gap-3">
+                            <div className="relative flex-1 shadow-sm rounded-2xl">
+                                <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+                                <input
+                                    type="text"
+                                    placeholder="Search cashews by name or category..."
+                                    value={searchTerm}
+                                    onChange={e => setSearchTerm(e.target.value)}
+                                    className="w-full bg-white border border-gray-200 text-gray-800 placeholder-gray-400 rounded-2xl px-5 py-4 pl-14 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-sm font-semibold"
+                                />
+                                {searchTerm && (
+                                    <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
+                                        <i className="fa-solid fa-circle-xmark text-lg" />
+                                    </button>
+                                )}
+                            </div>
+                            {/* Mobile Filter Trigger */}
+                            <button
+                                onClick={() => setSidebarOpen(true)}
+                                className="lg:hidden flex items-center gap-2 bg-white border border-gray-200 text-gray-800 font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-gray-50 transition-colors shadow-sm"
+                            >
+                                <i className="fa-solid fa-sliders" /> Filters
+                                {hasFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
+                            </button>
+                        </div>
+
                         {/* Results header */}
                         <div className="flex items-center justify-between mb-6">
                             <div>
@@ -304,35 +271,6 @@ function SidebarContent({
                 </button>
             )}
 
-            {/* Sort */}
-            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-arrow-up-wide-short text-primary" /> Sort By
-                </h3>
-                <div className="flex flex-col gap-2">
-                    {([
-                        { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
-                        { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
-                        { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
-                        { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
-                        { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
-                        { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
-                    ] as const).map(opt => (
-                        <button
-                            key={opt.value}
-                            onClick={() => setSortKey(opt.value)}
-                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
-                                ? 'bg-primary text-white shadow-sm'
-                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                                }`}
-                        >
-                            <i className={opt.icon} />
-                            {opt.label}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
             {/* Special Collections */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
                 <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -384,6 +322,35 @@ function SidebarContent({
                                 </div>
                             )}
                         </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Sort */}
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i className="fa-solid fa-arrow-up-wide-short text-primary" /> Sort By
+                </h3>
+                <div className="flex flex-col gap-2">
+                    {([
+                        { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
+                        { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
+                        { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
+                        { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
+                        { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
+                        { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
+                    ] as const).map(opt => (
+                        <button
+                            key={opt.value}
+                            onClick={() => setSortKey(opt.value)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
+                                ? 'bg-primary text-white shadow-sm'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                }`}
+                        >
+                            <i className={opt.icon} />
+                            {opt.label}
+                        </button>
                     ))}
                 </div>
             </div>

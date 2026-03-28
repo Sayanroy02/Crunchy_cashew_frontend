@@ -43,7 +43,12 @@ export default function Navbar() {
     /* ── Scroll listener ── */
     useEffect(() => {
         if (!isHeroPage) return;
-        const onScroll = () => setScrolled(window.scrollY > 60);
+        const onScroll = () => {
+            // Hero section height is clamp(600px, 100svh, 820px)
+            const heroHeight = Math.min(Math.max(600, window.innerHeight), 820);
+            // Trigger 80px before BestSellers completely covers the hero (approx navbar height)
+            setScrolled(window.scrollY > heroHeight - 80);
+        };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll(); // run once on mount
         return () => window.removeEventListener('scroll', onScroll);

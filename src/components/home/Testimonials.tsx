@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import { API } from '@/constants/api';
 
 interface Testimonial {
@@ -80,14 +81,31 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-5 md:py-10 bg-bg-cream overflow-hidden">
+        <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
                         <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
-                        <h2 className="text-3xl md:text-4xl font-black text-black">Testimonials</h2>
+                        <motion.h2
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: 0.1 }}
+                          className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight"
+                        >
+                          Customer <span className="relative inline-block lg:mt-2">
+                            <span className="relative z-10">Testimonials</span>
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: '100%' }}
+                              viewport={{ once: true }}
+                              transition={{ delay: 0.5, duration: 0.8 }}
+                              className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                            />
+                          </span>
+                        </motion.h2>
                     </div>
                     <div className="flex items-center gap-3">
                         <button onClick={() => scroll('left')}

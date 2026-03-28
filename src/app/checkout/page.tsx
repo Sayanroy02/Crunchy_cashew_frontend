@@ -38,8 +38,12 @@ export default function CheckoutPage() {
     const [checkingPin, setCheckingPin] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false); // used to gate checkout
 
+    const isNavigatingAway = React.useRef(false);
+
     // Redirect unauthenticated users + empty cart
     useEffect(() => {
+        if (isNavigatingAway.current) return;
+
         if (!isAuthenticated) {
             router.push('/login?redirect=/checkout');
             return;
@@ -143,8 +147,9 @@ export default function CheckoutPage() {
 
     // Called by CheckoutButton on success
     const handleOrderSuccess = (orderId: string) => {
+        isNavigatingAway.current = true;
         dispatch(clearCart());
-        router.push(`/profile?success=true&order_id=${orderId}`);
+        router.push(`/order-confirmation/${orderId}`);
     };
 
     // Called by CheckoutButton on error
