@@ -12,6 +12,7 @@ import BulkOrderCard from "@/components/home/BulkOrderCard";
 import AboutFactory from "@/components/home/AboutFactory";
 import InstaVideos from "@/components/home/InstaVideos";
 import WhyUsCRO from "@/components/home/WhyUsCRO";
+import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
 // import SectionDivider from "@/components/ui/SectionDivider";
 
 export default function Home() {
@@ -20,11 +21,12 @@ export default function Home() {
       <HeroVideo />
       <BestSellers />
       {/* <Affiliates /> */}
-      <DirectAdvantage />
+      <PriceComparisonPreview />
+      {/* <DirectAdvantage /> */}
       <BulkOrderCard />
       <AboutFactory />
       <InstaVideos />
-      {/* <PriceComparisonPreview /> */}
+
       {/* <OfferStripCarousel /> */}
 
       <Testimonials />
