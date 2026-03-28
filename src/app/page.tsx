@@ -20,13 +20,13 @@ export default function Home() {
       <HeroVideo />
       <BestSellers />
       {/* <Affiliates /> */}
-      <WhyUsCRO />
+      <DirectAdvantage />
       <BulkOrderCard />
       <AboutFactory />
       <InstaVideos />
       {/* <PriceComparisonPreview /> */}
       {/* <OfferStripCarousel /> */}
-      {/* <DirectAdvantage /> */}
+
       <Testimonials />
 
       {/* Contact Banner */}
