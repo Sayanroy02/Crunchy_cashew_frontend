@@ -22,15 +22,6 @@ export default function Home() {
       <BestSellers />
       {/* <Affiliates /> */}
       <PriceComparisonPreview />
-      {/* <DirectAdvantage /> */}
-      <BulkOrderCard />
-      <AboutFactory />
-      <InstaVideos />
-
-      {/* <OfferStripCarousel /> */}
-
-      <Testimonials />
-
       {/* Contact Banner */}
       <section className="py-20 bg-bg-cream">
         <div className="max-w-6xl mx-auto px-6">
@@ -112,6 +103,16 @@ export default function Home() {
         </div>
         <BlogsPreview />
       </section>
+      {/* <DirectAdvantage /> */}
+      <BulkOrderCard />
+      <AboutFactory />
+      <InstaVideos />
+
+      {/* <OfferStripCarousel /> */}
+
+      <Testimonials />
+
+
     </>
   );
 }
