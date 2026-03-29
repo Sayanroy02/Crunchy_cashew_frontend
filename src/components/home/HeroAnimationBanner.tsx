@@ -302,7 +302,7 @@ export default function HeroVideo() {
             </div>
 
             {/* ── Parachute decorations (desktop only, pointer-events-none) ── */}
-            <div
+            {/* <div
                 className="pointer-events-none absolute top-[6%] right-[6%] hidden md:block"
                 style={{ animation: 'parachuteDrift 9s ease-in-out infinite' }}
             >
@@ -328,7 +328,7 @@ export default function HeroVideo() {
                     className="w-[clamp(50px,5.5vw,100px)] h-auto object-contain opacity-65 drop-shadow-md hover:scale-110 hover:rotate-3 transition-transform duration-500"
                     priority={false}
                 />
-            </div>
+            </div> */}
 
             <style>{`
                 @keyframes scrollPulse {
