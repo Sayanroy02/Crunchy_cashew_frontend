@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { API } from '@/constants/api';
+import Image from 'next/image';
 import BlogForm from './BlogForm';
 
 export default function CustomerBlogs() {
@@ -36,7 +37,7 @@ export default function CustomerBlogs() {
 
     const getStatusStyle = (status: string) => {
         switch (status) {
-            case 'published': return 'bg-green-100 text-green-700 border-green-200';
+            case 'published': return 'bg-primary/20 text-black border-primary/20';
             case 'rejected': return 'bg-red-100 text-red-700 border-red-200';
             default: return 'bg-yellow-100 text-yellow-700 border-yellow-200';
         }
@@ -117,9 +118,12 @@ export default function CustomerBlogs() {
 
                                 {/* Thumbnail */}
                                 {blog.image_url ? (
-                                    <img
+                                    <Image
                                         src={blog.image_url}
                                         alt={blog.title}
+                                        width={96}
+                                        height={96}
+                                        sizes="(max-width: 640px) 80px, 96px"
                                         className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl object-cover shrink-0"
                                     />
                                 ) : (
@@ -167,7 +171,7 @@ export default function CustomerBlogs() {
                                         {/* Edit button */}
                                         <button
                                             onClick={() => { setEditingBlog(blog); setShowForm(true); }}
-                                            className="text-[9px] sm:text-[10px] font-black text-primary uppercase tracking-widest bg-green-50 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-primary hover:text-white active:scale-95 transition-all shrink-0"
+                                            className="text-[9px] sm:text-[10px] font-black text-primary uppercase tracking-widest bg-primary/10 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-primary hover:text-white active:scale-95 transition-all shrink-0"
                                         >
                                             <i className="fa-solid fa-pen text-[8px] mr-1" />
                                             Edit
@@ -178,10 +182,10 @@ export default function CustomerBlogs() {
 
                             {/* Mobile-only status label strip (shows full text on small screens) */}
                             <div className={`sm:hidden px-3 pb-2.5 flex items-center gap-1.5`}>
-                                <i className={`fa-solid ${getStatusIcon(blog.status)} text-[9px] ${blog.status === 'published' ? 'text-green-600' :
+                                <i className={`fa-solid ${getStatusIcon(blog.status)} text-[9px] ${blog.status === 'published' ? 'text-primary' :
                                         blog.status === 'rejected' ? 'text-red-500' : 'text-yellow-600'
                                     }`} />
-                                <span className={`text-[9px] font-black uppercase tracking-widest ${blog.status === 'published' ? 'text-green-600' :
+                                <span className={`text-[9px] font-black uppercase tracking-widest ${blog.status === 'published' ? 'text-primary' :
                                         blog.status === 'rejected' ? 'text-red-500' : 'text-yellow-600'
                                     }`}>
                                     {blog.status === 'published' ? 'Published — Live on site' :

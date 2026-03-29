@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, Factory, Globe, User, ArrowRight } from 'lucide-react';
+import { COLORS } from '@/constants/styles';
 
 export default function DirectAdvantage() {
   return (
@@ -10,7 +11,12 @@ export default function DirectAdvantage() {
       <div className="max-w-5xl mx-auto space-y-10">
 
         <div className="text-center space-y-2">
-          <h3 className="text-2xl md:text-3xl font-black text-[#0A5246] tracking-tight">The Direct Advantage</h3>
+          <h3 
+            className="text-2xl md:text-3xl font-black tracking-tight"
+            style={{ color: COLORS.heading }}
+          >
+            The Direct Advantage
+          </h3>
           <p className="text-slate-500 font-medium text-sm md:text-base italic">Why our premium cashews cost less than marketplaces.</p>
         </div>
 
@@ -20,50 +26,63 @@ export default function DirectAdvantage() {
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-[#99EA78]/10 rounded-3xl p-6 md:p-8 border-2 border-[#99EA78]/30 flex flex-col justify-between space-y-8"
+            className="rounded-3xl p-6 md:p-8 border-2 flex flex-col justify-between space-y-8"
+            style={{ backgroundColor: `${COLORS.primary}1A`, borderColor: `${COLORS.primary}4D` }}
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#0A5246] flex items-center justify-center text-[#f6d70f]">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: COLORS.primary, color: COLORS.highlight }}
+              >
                 <Check size={20} strokeWidth={3} />
               </div>
               <div>
-                <h4 className="text-lg font-black text-[#0A5246]">Factory Direct</h4>
-                <p className="text-[9px] font-bold text-[#0A5246]/60 uppercase tracking-widest">No Middlemen. No Extra Charges.</p>
+                <h4 className="text-lg font-black" style={{ color: COLORS.primary }}>Factory Direct</h4>
+                <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: `${COLORS.primary}99` }}>No Middlemen. No Extra Charges.</p>
               </div>
             </div>
 
             <div className="flex items-center justify-between px-2">
               <div className="flex flex-col items-center gap-2">
-                <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center text-[#0A5246]">
+                <div 
+                    className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center"
+                    style={{ color: COLORS.primary }}
+                >
                   <Factory size={28} />
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-[#0A5246]">Factory</span>
+                <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: COLORS.primary }}>Factory</span>
               </div>
 
               <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-                <ArrowRight size={18} className="text-[#99EA78]" />
+                <ArrowRight size={18} style={{ color: COLORS.primary }} />
               </motion.div>
 
               <div className="flex flex-col items-center gap-2">
-                <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center text-[#0A5246]">
+                <div 
+                    className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center"
+                    style={{ color: COLORS.primary }}
+                >
                   <Globe size={28} />
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-[#0A5246]">Website</span>
+                <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: COLORS.primary }}>Website</span>
               </div>
 
               <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.2 }}>
-                <ArrowRight size={18} className="text-[#99EA78]" />
+                <ArrowRight size={18} style={{ color: COLORS.primary }} />
               </motion.div>
 
               <div className="flex flex-col items-center gap-2">
-                <div className="w-14 h-14 rounded-2xl bg-[#0A5246] shadow-md flex items-center justify-center text-white ring-2 ring-[#99EA78]/30">
+                <div 
+                    className="w-14 h-14 rounded-2xl shadow-md flex items-center justify-center text-white"
+                    style={{ backgroundColor: COLORS.primary, boxShadow: `0 0 0 2px ${COLORS.primary}4D` }}
+                >
                   <User size={28} />
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-[#0A5246]">You</span>
+                <span className="text-[8px] font-black uppercase tracking-widest" style={{ color: COLORS.primary }}>You</span>
               </div>
             </div>
 
-            <div className="p-3 bg-[#0A5246] rounded-xl text-center">
+            <div className="p-3 rounded-xl text-center" style={{ backgroundColor: COLORS.primary }}>
               <p className="text-white text-[10px] font-bold uppercase tracking-widest">Best Price Guaranteed</p>
             </div>
           </motion.div>

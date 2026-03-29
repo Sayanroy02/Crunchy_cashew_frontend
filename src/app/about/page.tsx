@@ -62,17 +62,17 @@ const PROCESS_STEPS = [
 
 const TEAM = [
     {
-        name: 'Suresh Jindal', initial: 'SJ', color: '#1B4332',
+        name: 'Suresh Jindal', initial: 'SJ', color: '#000000',
         role: 'Mentor & Investor',
         bio: 'With his rich experience of more than 40 years, Suresh has been an involved mentor, investor and a profound leader for the company. He is a fitness freak and always aims for perfection in every task that he does.',
     },
     {
-        name: 'Naveen Jindal', initial: 'NJ', color: '#2D6A4F',
+        name: 'Naveen Jindal', initial: 'NJ', color: '#F6B000',
         role: 'Head of Procurement & Sales',
         bio: 'Naveen is the head of the procurement and sales department. He has a vast experience of 10+ years of procurement. He did his graduation and masters from Bangalore. He is an active sportsperson who has played state level cricket.',
     },
     {
-        name: 'Nitesh Jindal', initial: 'NT', color: '#40916C',
+        name: 'Nitesh Jindal', initial: 'NT', color: '#000000',
         role: 'Finance & Technology',
         bio: 'Nitesh brings a modern perspective to the team with his 2+ years of experience in a cashew manufacturing company in South India. He handles finances and explores technology adoptions for the company.',
     },
@@ -200,8 +200,8 @@ function BookProcess() {
             {/* Header */}
             <div className="flex items-end justify-between mb-5">
                 <div>
-                    <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary">Our Process</h2>
-                    <p className="text-gray-400 text-sm mt-0.5">From farm-gate in Africa to your table — 7 steps of care</p>
+                    <h2 className="text-2xl md:text-3xl font-heading font-black text-black">Our Process</h2>
+                    <p className="text-black/40 text-sm mt-0.5">From farm-gate in Africa to your table — 7 steps of care</p>
                 </div>
                 <span className="text-xs font-bold text-gray-300 tracking-widest uppercase">
                     {page + 1} / {total}
@@ -220,7 +220,8 @@ function BookProcess() {
                     <div className="flex gap-1.5">
                         {PROCESS_STEPS.map((_, i) => (
                             <button key={i} onClick={() => { setDir(i > page ? 'next' : 'prev'); setAnimKey(k => k + 1); setPage(i); }}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${i === page ? 'bg-primary w-5' : 'bg-amber-300/50 w-1.5 hover:bg-amber-400/70'}`} />
+                                className={`h-1.5 rounded-full transition-all duration-300 ${i === page ? 'w-5' : 'bg-amber-300/50 w-1.5 hover:bg-amber-400/70'}`}
+                                style={i === page ? { backgroundColor: '#F6B000' } : {}} />
                         ))}
                     </div>
                     <div className="ml-auto flex items-center gap-1.5">
@@ -253,7 +254,7 @@ function BookProcess() {
 
                         {/* Step badge */}
                         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black shadow-lg">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-black text-xs font-black shadow-lg" style={{ backgroundColor: '#F6B000' }}>
                                 {step.id}
                             </div>
                             <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/90 drop-shadow-sm bg-black/20 px-2 py-0.5 rounded-full">
@@ -315,8 +316,9 @@ function BookProcess() {
                                 {PROCESS_STEPS.map((_, i) => (
                                     <button key={i}
                                         onClick={() => { setDir(i > page ? 'next' : 'prev'); setAnimKey(k => k + 1); setPage(i); }}
-                                        className={`rounded-full transition-all duration-300 ${i === page ? 'bg-primary w-5 h-1.5' : 'bg-amber-300/50 w-1.5 h-1.5 hover:bg-amber-500/50'
+                                        className={`rounded-full transition-all duration-300 ${i === page ? 'w-5 h-1.5' : 'bg-amber-300/50 w-1.5 h-1.5 hover:bg-amber-500/50'
                                             }`}
+                                        style={i === page ? { backgroundColor: '#F6B000' } : {}}
                                     />
                                 ))}
                             </div>
@@ -326,7 +328,7 @@ function BookProcess() {
                                 disabled={page === total - 1}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all border ${page === total - 1
                                     ? 'opacity-25 cursor-not-allowed border-gray-200 text-gray-300'
-                                    : 'border-primary text-primary hover:bg-primary hover:text-white active:scale-95'
+                                    : 'border-black text-black hover:bg-black hover:text-white active:scale-95'
                                     }`}
                             >
                                 <span className="hidden sm:inline">Next</span>
@@ -372,8 +374,8 @@ function MobileProcess() {
 
     return (
         <div className="about-animate">
-            <h2 className="text-2xl font-heading font-bold text-primary mb-1">Our Process</h2>
-            <p className="text-gray-400 text-sm mb-6">7 steps from farm-gate to your table</p>
+            <h2 className="text-2xl font-heading font-black text-black mb-1">Our Process</h2>
+            <p className="text-black/40 text-sm mb-6">7 steps from farm-gate to your table</p>
 
             <div className="space-y-5">
                 {PROCESS_STEPS.map((step, idx) => (
@@ -396,7 +398,7 @@ function MobileProcess() {
                             <div className="absolute inset-0 mix-blend-multiply opacity-15"
                                 style={{ background: 'linear-gradient(180deg, #c8a06e 0%, transparent 70%)' }} />
                             <div className="absolute top-3 left-3 flex items-center gap-2">
-                                <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black shadow">
+                                <div className="w-7 h-7 rounded-full flex items-center justify-center text-black text-xs font-black shadow" style={{ backgroundColor: '#F6B000' }}>
                                     {step.id}
                                 </div>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/90 bg-black/20 px-2 py-0.5 rounded-full">
@@ -429,7 +431,8 @@ function MobileProcess() {
 
             <a href="/documents/Guide-Book-on-Crunchy-Cashew-Processing-Process.pdf"
                 target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-6 bg-primary text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-green-800 transition-colors text-sm">
+                className="inline-flex items-center gap-2 mt-6 font-semibold px-5 py-2.5 rounded-lg transition-all shadow-md text-sm active:scale-95"
+                style={{ backgroundColor: '#000000', color: '#F6B000' }}>
                 <i className="fa-solid fa-file-pdf" /> Download Full Process Guide
             </a>
         </div>
@@ -483,11 +486,11 @@ export default function AboutPage() {
 
         if (activeTab === 'story') return (
             <div className="about-animate">
-                <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-5">About Crunchy Cashews</h2>
+                <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-5">About Crunchy Cashews</h2>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
                     <span className="font-semibold text-gray-800">We are India's modern cashew manufacturing company</span> that
                     has been ethically sourcing raw cashews from the best cashew-producing African countries — majorly{' '}
-                    <span className="font-semibold text-primary">Tanzania, Ghana, and Benin</span>.
+                    <span className="font-semibold" style={{ color: '#F6B000' }}>Tanzania, Ghana, and Benin</span>.
                 </p>
                 <p className="text-gray-600 text-sm leading-relaxed mb-4">
                     With our extended experience and our{' '}
@@ -513,8 +516,8 @@ export default function AboutPage() {
                         { value: '100%', label: 'Quality assured' },
                     ].map(s => (
                         <div key={s.label} className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
-                            <p className="font-black text-xl text-primary">{s.value}</p>
-                            <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
+                            <p className="font-black text-xl" style={{ color: '#F6B000' }}>{s.value}</p>
+                            <p className="text-xs text-black/40 mt-0.5">{s.label}</p>
                         </div>
                     ))}
                 </div>
@@ -523,16 +526,16 @@ export default function AboutPage() {
 
         if (activeTab === 'team') return (
             <div className="about-animate">
-                <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-6">Our Team</h2>
+                <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-6">Our Team</h2>
                 <div className="space-y-4">
                     {TEAM.map(m => (
                         <div key={m.name}
-                            className="flex gap-4 items-start p-5 border border-gray-100 rounded-xl hover:border-primary/20 hover:shadow-sm transition-all bg-gray-50/40">
+                            className="flex gap-4 items-start p-5 border border-gray-100 rounded-xl hover:border-black/10 hover:shadow-md transition-all bg-gray-50/40">
                             <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0"
-                                style={{ background: m.color }}>{m.initial}</div>
+                                style={{ background: m.color, color: m.color === '#F6B000' ? '#000000' : '#ffffff' }}>{m.initial}</div>
                             <div>
                                 <p className="font-bold text-gray-800">{m.name}</p>
-                                <p className="text-primary text-xs font-semibold uppercase tracking-wider mb-2">{m.role}</p>
+                                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#F6B000' }}>{m.role}</p>
                                 <p className="text-gray-500 text-sm leading-relaxed">{m.bio}</p>
                             </div>
                         </div>
@@ -553,11 +556,11 @@ export default function AboutPage() {
         if (activeTab === 'visit') return (
             <div className="about-animate">
                 <div className="mb-6">
-                    <span className="inline-block bg-amber-100 text-amber-700 font-bold uppercase tracking-widest text-xs px-3 py-1 rounded-full mb-3">
+                    <span className="inline-block font-bold uppercase tracking-widest text-xs px-3 py-1 rounded-full mb-3" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
                         Exclusive Tour
                     </span>
-                    <h2 className="text-2xl md:text-3xl font-heading font-bold text-primary mb-2">See the Magic Happen</h2>
-                    <p className="text-gray-500 text-sm leading-relaxed max-w-lg">
+                    <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-2">See the Magic Happen</h2>
+                    <p className="text-black/50 text-sm leading-relaxed max-w-lg">
                         We invite bulk buyers, B2B partners, and food industry professionals to visit our Siliguri processing
                         facility and witness our state-of-the-art roasting lines firsthand.
                     </p>
@@ -565,10 +568,10 @@ export default function AboutPage() {
                 <div className="bg-gray-50 rounded-xl p-5 md:p-6 border border-gray-100">
                     <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-5">Request a Factory Visit</h3>
                     {submitStatus === 'success' ? (
-                        <div className="bg-green-50 text-green-800 p-6 rounded-xl border border-green-200 text-center">
-                            <i className="fa-solid fa-calendar-check text-3xl mb-3 text-green-500 block" />
+                        <div className="bg-primary/10 text-black p-6 rounded-xl border border-primary/20 text-center">
+                            <i className="fa-solid fa-calendar-check text-3xl mb-3 text-primary block" />
                             <p className="font-bold text-lg mb-1">Request Received!</p>
-                            <p className="text-sm text-green-600">Our tour coordinator will contact you shortly to confirm.</p>
+                            <p className="text-sm text-black/60">Our tour coordinator will contact you shortly to confirm.</p>
                         </div>
                     ) : (
                         <form onSubmit={handleVisitSubmit} className="space-y-4">
@@ -602,7 +605,8 @@ export default function AboutPage() {
                             </div>
                             {submitStatus === 'error' && <p className="text-red-500 text-xs font-medium">Failed to submit. Please try again.</p>}
                             <button type="submit" disabled={submitStatus === 'loading'}
-                                className="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-green-800 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-60">
+                                className="w-full font-bold py-3 rounded-lg transition-all shadow-lg flex items-center justify-center gap-2 text-sm disabled:opacity-60 active:scale-95"
+                                style={{ backgroundColor: '#000000', color: '#F6B000' }}>
                                 {submitStatus === 'loading'
                                     ? <><i className="fa-solid fa-spinner animate-spin" /> Sending...</>
                                     : <><i className="fa-solid fa-paper-plane" /> Submit Request</>}
@@ -615,7 +619,7 @@ export default function AboutPage() {
     }
 
     return (
-        <div className="bg-[#f5f0eb] min-h-screen pb-16">
+        <div className="bg-bg min-h-screen pb-16">
 
             {/* VIDEO HERO */}
             <section className="relative h-[70vh] min-h-[480px] max-h-[700px] overflow-hidden">
@@ -629,7 +633,7 @@ export default function AboutPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 md:px-12 md:pb-14">
                     <div className="max-w-5xl mx-auto">
-                        <span className="inline-block text-amber-300 font-bold tracking-[0.22em] uppercase text-xs mb-3">About Us</span>
+                        <span className="inline-block font-bold tracking-[0.22em] uppercase text-xs mb-3" style={{ color: '#F6B000' }}>About Us</span>
                         <h1 className="text-4xl md:text-6xl font-heading font-black text-white leading-tight mb-3 drop-shadow-lg">
                             A Bunch to Talk<br />About Us
                         </h1>
@@ -647,7 +651,7 @@ export default function AboutPage() {
                         {TABS.map(tab => (
                             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                                 className={`flex-shrink-0 flex items-center gap-2 px-5 py-4 text-sm font-bold border-b-2 transition-all whitespace-nowrap ${activeTab === tab.id
-                                    ? 'border-primary text-primary'
+                                    ? 'border-black text-black'
                                     : 'border-transparent text-gray-400 hover:text-gray-700 hover:border-gray-200'
                                     }`}>
                                 <i className={`fa-solid ${tab.icon} text-sm`} />

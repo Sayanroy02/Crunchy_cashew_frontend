@@ -27,9 +27,9 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-    'Health Articles': 'bg-green-100 text-green-700',
-    'Recipes Blog': 'bg-amber-100 text-amber-700',
-    'Sustainability': 'bg-blue-100 text-blue-700',
+    'Health Articles': 'bg-black text-white',
+    'Recipes Blog': 'bg-[#F6B000] text-black',
+    'Sustainability': 'bg-black text-[#F6B000]',
     'Uncategorised': 'bg-gray-100 text-gray-600',
 };
 
@@ -84,7 +84,7 @@ export default function BlogsDirectory() {
     return (
         <div className="bg-bg min-h-screen pb-24">
             {/* Hero Header */}
-            <section className="text-white pt-16 pb-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%)' }}>
+            <section className="text-black pt-16 pb-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}>
                 {/* Dot grid overlay */}
                 <div
                     className="absolute inset-0 opacity-[0.07] pointer-events-none"
@@ -104,14 +104,14 @@ export default function BlogsDirectory() {
                     <img src="/images/Cashew-parachute-1-03-03.png" alt="" className="w-full h-full object-contain object-bottom" style={{ opacity: 0.85 }} />
                 </div>
                 <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
+                    <span className="inline-flex items-center gap-2 bg-black/5 border border-black/10 text-black/60 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-pen-nib" /> Our Journal
                     </span>
-                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight">
+                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight text-black">
                         Insights, Recipes &<br />
-                        <span className="text-yellow">Sustainability</span>
+                        <span style={{ color: '#F6B000' }}>Sustainability</span>
                     </h1>
-                    <p className="text-gray-300 max-w-2xl mx-auto text-lg mb-10">
+                    <p className="text-black/60 max-w-2xl mx-auto text-lg mb-10">
                         Expert health guides, cashew recipes, and our commitment to sustainable farming — all in one place.
                     </p>
 
@@ -119,20 +119,20 @@ export default function BlogsDirectory() {
                     <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3">
                         {/* Search Bar */}
                         <div className="relative flex-1">
-                            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/40" />
                             <input
                                 type="text"
                                 placeholder="Search articles..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full bg-white/10 border border-white/20 text-white placeholder-gray-400 rounded-2xl px-5 py-3.5 pl-11 focus:outline-none focus:bg-white/20 transition-all"
+                                className="w-full bg-white/50 border border-black/5 text-black placeholder-black/40 rounded-2xl px-5 py-3.5 pl-11 focus:outline-none focus:bg-white/80 transition-all border-b-2 border-b-black/10"
                             />
                         </div>
                         {/* Sort dropdown */}
                         <select
                             value={sortOrder}
                             onChange={e => setSortOrder(e.target.value as 'desc' | 'asc')}
-                            className="bg-white/10 border border-white/20 text-white rounded-2xl px-4 py-3.5 focus:outline-none focus:bg-white/20 transition-all cursor-pointer appearance-none min-w-[160px] text-sm font-semibold"
+                            className="bg-white/50 border border-black/5 text-black rounded-2xl px-4 py-3.5 focus:outline-none focus:bg-white/80 transition-all cursor-pointer appearance-none min-w-[160px] text-sm font-bold border-b-2 border-b-black/10"
                         >
                             <option value="desc" className="text-black">🕐 Newest First</option>
                             <option value="asc" className="text-black">🕐 Oldest First</option>
@@ -153,14 +153,14 @@ export default function BlogsDirectory() {
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
                                     className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold whitespace-nowrap border-b-2 transition-all ${isActive
-                                        ? 'border-primary text-primary'
+                                        ? 'border-black text-black'
                                         : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                         }`}
                                 >
                                     <i className={CATEGORY_ICONS[cat]} />
                                     {cat}
-                                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${isActive ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'
-                                        }`}>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${isActive ? 'text-black' : 'bg-gray-100 text-gray-500'
+                                        }`} style={isActive ? { backgroundColor: '#F6B000' } : {}}>
                                         {count}
                                     </span>
                                 </button>
@@ -236,7 +236,7 @@ export default function BlogsDirectory() {
                                     )}
                                     {/* Featured Badge */}
                                     {blog.featured && (
-                                        <span className="absolute top-4 right-4 bg-amber text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
+                                        <span className="absolute top-4 right-4 bg-black text-[#F6B000] text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
                                             <i className="fa-solid fa-star"></i> Featured
                                         </span>
                                     )}
@@ -254,14 +254,14 @@ export default function BlogsDirectory() {
                                             {blog.author}
                                         </p>
                                     )}
-                                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors" style={{} as any}>
                                         {blog.title}
                                     </h3>
                                     <p className="text-gray-500 line-clamp-3 mb-5 flex-grow leading-relaxed text-sm">
                                         {(blog.content || '').replace(/<[^>]*>?/gm, '')}
                                     </p>
-                                    <span className="text-primary font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all">
-                                        Read Article <i className="fa-solid fa-arrow-right-long" />
+                                    <span className="font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all" style={{ color: '#000000' }}>
+                                        Read Article <i className="fa-solid fa-arrow-right-long" style={{ color: '#F6B000' }} />
                                     </span>
                                 </div>
                             </Link>

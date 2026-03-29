@@ -129,7 +129,7 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
                             />
                             <label
                                 htmlFor="blog-image"
-                                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl p-8 cursor-pointer hover:border-primary hover:bg-green-50/30 transition-all group"
+                                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl p-8 cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group"
                             >
                                 {image ? (
                                     <div className="text-center">

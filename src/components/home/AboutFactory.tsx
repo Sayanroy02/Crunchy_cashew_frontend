@@ -121,8 +121,8 @@ export default function AboutFactory() {
                         <div className="p-8">
                             {submitStatus === 'success' ? (
                                 <div className="text-center py-8">
-                                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <i className="fa-solid fa-check text-4xl text-green-600"></i>
+                                    <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <i className="fa-solid fa-check text-4xl text-black"></i>
                                     </div>
                                     <h4 className="text-2xl font-bold text-gray-900 mb-2">Reservation Requested!</h4>
                                     <p className="text-gray-600">Our team will contact you shortly to confirm your visit date and time.</p>

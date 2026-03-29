@@ -186,9 +186,9 @@ export default function CheckoutPage() {
     if (items.length === 0) return null;
 
     return (
-        <div className="bg-[#f4f6f9] min-h-screen py-16 px-4 md:px-8">
+        <div className="bg-bg min-h-screen py-16 px-4 md:px-8">
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl md:text-4xl font-heading font-black text-primary mb-10 pb-4 border-b-2 border-primary/10">
+                <h1 className="text-3xl md:text-4xl font-heading font-black text-black mb-10 pb-4 border-b-2" style={{ borderBottomColor: '#F6B000' }}>
                     Checkout
                 </h1>
 
@@ -204,19 +204,22 @@ export default function CheckoutPage() {
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                                     <input required type="text" name="name" value={formData.name} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         placeholder="John Doe" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                                     <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         placeholder="+91 9876543210" />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
                                     <input required type="email" name="email" value={formData.email} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800 bg-gray-50"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none font-semibold text-gray-800 bg-gray-50 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         readOnly />
                                 </div>
                             </div>
@@ -225,13 +228,15 @@ export default function CheckoutPage() {
                                 <div className="flex justify-between items-center mb-2">
                                     <label className="block text-sm font-bold text-gray-700">Street Address</label>
                                     <button type="button" onClick={handleGetLocation}
-                                        className="text-[10px] bg-primary/10 text-primary font-bold px-3 py-1.5 rounded-full hover:bg-primary/20 transition-colors uppercase tracking-widest">
+                                        className="text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm active:scale-95 transition-all uppercase tracking-widest"
+                                        style={{ backgroundColor: '#F6B000', color: '#000000' }}>
                                         <i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate
                                     </button>
                                 </div>
                                 <textarea required name="address" value={formData.address} onChange={handleInputChange}
                                     rows={3}
-                                    className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 resize-none focus:border-black"
+                                    style={{'--tw-ring-color': '#F6B000'} as any}
                                     placeholder="123 Cashew Lane, Apt 4B"></textarea>
                             </div>
 
@@ -239,19 +244,22 @@ export default function CheckoutPage() {
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
                                     <input required type="text" name="city" value={formData.city} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         placeholder="Siliguri" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">State</label>
                                     <input required type="text" name="state" value={formData.state} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         placeholder="West Bengal" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">PIN Code</label>
                                     <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange}
-                                        className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-semibold text-gray-800"
+                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                         placeholder="734001" maxLength={6} />
                                 </div>
                             </div>
@@ -261,19 +269,19 @@ export default function CheckoutPage() {
                                 <i className="fa-solid fa-credit-card text-primary-light"></i> Payment Method
                             </h2>
                             <div className="flex flex-col gap-4">
-                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'bg-black/5' : 'border-gray-200 hover:border-gray-300'}`} style={formData.paymentMethod === 'COD' ? { borderColor: '#F6B000' } : {}}>
                                     <input type="radio" name="paymentMethod" value="COD"
                                         checked={formData.paymentMethod === 'COD'} onChange={handleInputChange}
-                                        className="w-5 h-5 text-primary focus:ring-primary" />
+                                        className="w-5 h-5 focus:ring-0" style={{ color: '#F6B000' }} />
                                     <div>
                                         <div className="font-bold text-gray-800">Cash on Delivery (COD)</div>
                                         <div className="text-sm text-gray-500">Pay when your order arrives.</div>
                                     </div>
                                 </label>
-                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'Razorpay' ? 'border-primary bg-primary/5' : 'border-gray-200 hover:border-gray-300'}`}>
+                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'Razorpay' ? 'bg-black/5' : 'border-gray-200 hover:border-gray-300'}`} style={formData.paymentMethod === 'Razorpay' ? { borderColor: '#F6B000' } : {}}>
                                     <input type="radio" name="paymentMethod" value="Razorpay"
                                         checked={formData.paymentMethod === 'Razorpay'} onChange={handleInputChange}
-                                        className="w-5 h-5 text-primary focus:ring-primary" />
+                                        className="w-5 h-5 focus:ring-0" style={{ color: '#F6B000' }} />
                                     <div className="flex-1">
                                         <div className="font-bold text-gray-800">Pay Online (Razorpay)</div>
                                         <div className="text-sm text-gray-500">Credit Card, Debit Card, UPI, NetBanking</div>
@@ -289,8 +297,8 @@ export default function CheckoutPage() {
 
                     {/* Right Side: Order Summary + Checkout Button */}
                     <div className="lg:w-1/3">
-                        <div className="bg-primary text-white rounded-3xl p-8 shadow-xl sticky top-28">
-                            <h2 className="text-xl font-heading font-bold mb-6 text-yellow border-b border-white/20 pb-4">
+                        <div className="rounded-3xl p-8 shadow-xl sticky top-28" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+                            <h2 className="text-xl font-heading font-black mb-6 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)', color: '#F6B000' }}>
                                 Order Summary
                             </h2>
 
@@ -324,9 +332,9 @@ export default function CheckoutPage() {
                                         {shippingFee === 0 ? 'FREE' : `₹${shippingFee.toFixed(2)}`}
                                     </span>
                                 </div>
-                                <div className="flex justify-between items-center text-xl mt-4 pt-4 border-t border-white/20">
-                                    <span className="font-bold text-yellow">Total</span>
-                                    <span className="font-bold text-white">₹{finalTotal.toFixed(2)}</span>
+                                <div className="flex justify-between items-center text-xl mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                                    <span className="font-black" style={{ color: '#F6B000' }}>Total</span>
+                                    <span className="font-black text-white">₹{finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
 
@@ -346,7 +354,8 @@ export default function CheckoutPage() {
                                         // Trigger HTML5 form validation by submitting the form
                                         (document.getElementById('form-submit-trigger') as HTMLButtonElement)?.click();
                                     }}
-                                    className="w-full bg-yellow text-primary font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70"
+                                    className="w-full font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70"
+                                    style={{ backgroundColor: '#F6B000', color: '#000000' }}
                                 >
                                     {checkingPin ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-lock" />}
                                     {checkingPin ? 'Checking location...' : 'Place Order'}

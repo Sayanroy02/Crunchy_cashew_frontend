@@ -13,28 +13,102 @@ import AboutFactory from "@/components/home/AboutFactory";
 import InstaVideos from "@/components/home/InstaVideos";
 import WhyUsCRO from "@/components/home/WhyUsCRO";
 import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
+import AnimatedFlyingImage from "@/components/home/AnimatedFlyingImage";
 // import SectionDivider from "@/components/ui/SectionDivider";
+
+// ── Inline keyframes (home-page only) ─────────────────────────────────────
+const homeDecoStyles = `
+  @keyframes fruitSway {
+    0%,100% { transform: translateY(0px) rotate(0deg); }
+    33%      { transform: translateY(-10px) rotate(1.5deg); }
+    66%      { transform: translateY(6px) rotate(-1deg); }
+  }
+  @keyframes fruitSwayR {
+    0%,100% { transform: translateY(0px) rotate(0deg); }
+    33%      { transform: translateY(-8px) rotate(-1.5deg); }
+    66%      { transform: translateY(5px) rotate(1deg); }
+  }
+  .fruit-hover img { transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1); }
+  .fruit-hover:hover img { transform: scale(1.12); }
+`;
+
+// ── Re-usable fruit deco pair ──────────────────────────────────────────────
+function FruitDeco({ delay = '0s' }: { delay?: string }) {
+  return (
+    <>
+      {/* Left fruit */}
+      <div
+        className="fruit-hover pointer-events-none absolute -left-2 top-1/2 -translate-y-1/2 z-10 hidden lg:block"
+        style={{ animation: `fruitSway 7s ease-in-out infinite`, animationDelay: delay }}
+      >
+        <Image
+          src="/images/Left-Fruit-2-1.png"
+          alt=""
+          width={180}
+          height={320}
+          className="w-[clamp(80px,8.5vw,150px)] h-auto object-contain opacity-85 drop-shadow-xl"
+          priority={false}
+        />
+      </div>
+
+      {/* Right fruit */}
+      <div
+        className="fruit-hover pointer-events-none absolute -right-2 top-1/2 -translate-y-1/2 z-10 hidden lg:block"
+        style={{ animation: `fruitSwayR 8s ease-in-out infinite`, animationDelay: delay }}
+      >
+        <Image
+          src="/images/Right-Fruit-2-2-1.png"
+          alt=""
+          width={180}
+          height={320}
+          className="w-[clamp(80px,8.5vw,150px)] h-auto object-contain opacity-85 drop-shadow-xl"
+          priority={false}
+        />
+      </div>
+    </>
+  );
+}
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
+      {/* ── Keyframes ── */}
+      <style dangerouslySetInnerHTML={{ __html: homeDecoStyles }} />
+
       {/* Fixed Hero Background */}
       <div className="fixed top-0 left-0 w-full pointer-events-auto z-0">
         <HeroVideo />
       </div>
 
-      {/* Content that scrolls OVER the hero.
-          Margin top matches the Hero height: clamp(600px, 100svh, 820px) */}
-      <div className="relative z-10 w-full mt-[clamp(600px,100svh,820px)] bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px] overflow-hidden">
+      {/* ── Scrollable content ── */}
+      <div
+        className="relative z-10 w-full mt-[clamp(600px,100svh,820px)] bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px]"
+      >
+        {/* BestSellers — no fruit deco */}
         <BestSellers />
-        {/* <Affiliates /> */}
-        <PriceComparisonPreview />
-        {/* <DirectAdvantage /> */}
-        <BulkOrderCard />
+
+        {/* PriceComparison — WITH fruit deco */}
+        <div className="relative" style={{ overflow: 'visible' }}>
+          <FruitDeco delay="0s" />
+          <PriceComparisonPreview />
+        </div>
+
+        <AnimatedFlyingImage />
+
+        {/* BulkOrder — WITH fruit deco */}
+        <div className="relative" style={{ overflow: 'visible' }}>
+          <FruitDeco delay="0.5s" />
+          <BulkOrderCard />
+        </div>
+
         <InstaVideos />
         <AboutFactory />
-        {/* <OfferStripCarousel /> */}
-        <Testimonials />
+
+        {/* Testimonials — WITH fruit deco */}
+        <div className="relative" style={{ overflow: 'visible' }}>
+          <FruitDeco delay="1s" />
+          <Testimonials />
+        </div>
 
         {/* Contact Banner */}
         <section className="py-4 md:py-6 bg-bg-cream">
@@ -53,7 +127,7 @@ export default function Home() {
               </div>
 
               {/* Main Card */}
-              <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl bg-primary">
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl bg-black">
 
                 {/* Dot grid pattern overlay */}
                 <div
@@ -65,31 +139,25 @@ export default function Home() {
                   }}
                 />
 
-                {/* Gold circle accent - top right */}
+                {/* Gold circles */}
                 <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full pointer-events-none bg-[#FDC700]/10 border border-[#FDC700]/20" />
-
-                {/* Small gold circle - bottom left */}
                 <div className="absolute -bottom-8 -left-8 w-36 h-36 rounded-full pointer-events-none bg-[#FDC700]/10 border border-[#FDC700]/20" />
 
-                {/* Left: Text content */}
+                {/* Left: Text */}
                 <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left gap-4 flex-1">
-
                   <span className="text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-[#FDC700]/20 text-[#FDC700] border border-[#FDC700]/40">
                     Factory Direct
                   </span>
-
                   <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
                     Need a{" "}
                     <span className="text-[#FDC700]">Custom Order?</span>
                   </h2>
-
                   <p className="text-sm md:text-base max-w-sm leading-relaxed text-white/70">
                     We handle large-scale shipments and retail packaging. Get in
                     touch with our factory today.
                   </p>
-
-
-                  <a href="/contact"
+                  <a
+                    href="/contact"
                     className="group inline-flex items-center gap-3 font-bold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 text-sm mt-2 bg-[#FDC700] text-[#0a0a0a]"
                     style={{ boxShadow: "0 4px 24px #FDC70055" }}
                   >
@@ -111,12 +179,12 @@ export default function Home() {
                     style={{ marginBottom: "-40px" }}
                   />
                 </div>
-
               </div>
             </div>
           </div>
-          <BlogsPreview />
         </section>
+
+        <BlogsPreview />
       </div>
     </main>
   );

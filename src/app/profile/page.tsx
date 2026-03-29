@@ -270,8 +270,8 @@ function ProfileContent() {
             {showSuccessModal && successOrderId && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
                     <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl text-center">
-                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <i className="fa-solid fa-circle-check text-4xl text-green-500" />
+                        <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-5">
+                            <i className="fa-solid fa-circle-check text-4xl text-primary" />
                         </div>
                         <h2 className="text-2xl font-black text-gray-900 mb-2">Order Placed! 🎉</h2>
                         <code className="block text-xs bg-gray-100 text-primary font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
@@ -279,7 +279,7 @@ function ProfileContent() {
                         </code>
                         <div className="flex flex-col gap-3">
                             <Link href={`/track?order=${successOrderId}`}
-                                className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-green-800 transition flex items-center justify-center gap-2">
+                                className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-black transition flex items-center justify-center gap-2">
                                 <i className="fa-solid fa-truck-fast" /> Track Your Order
                             </Link>
                             <button onClick={() => setShowSuccessModal(false)}
@@ -302,7 +302,7 @@ function ProfileContent() {
 
                         {/* Profile Info Card — NO camera icon */}
                         <div className="p-6 border-b border-gray-100 flex items-center gap-4">
-                            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-2xl font-black text-primary">
+                            <div className="w-16 h-16 bg-[#F6B000] rounded-full flex items-center justify-center text-2xl font-black text-black">
                                 {initials}
                             </div>
                             <div className="overflow-hidden">
@@ -315,7 +315,7 @@ function ProfileContent() {
                         <div className="flex flex-col p-3 gap-1">
                             {SIDEBAR_TABS.map(tab => (
                                 <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOrderFilter('All'); }}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-primary text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
+                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
                                     <i className={`fa-solid ${tab.icon} w-5 text-center ${currentDesktopTab === tab.key ? 'text-white' : 'text-gray-400'}`}></i>
                                     {tab.label}
                                 </button>
@@ -337,7 +337,7 @@ function ProfileContent() {
                                 <h2 className="text-xl font-black text-gray-800">Personal Information</h2>
                                 {!isEditing && (
                                     <button onClick={() => setIsEditing(true)}
-                                        className="text-sm text-primary font-bold flex items-center gap-2 hover:bg-green-50 px-4 py-2 rounded-xl transition-colors">
+                                        className="text-sm font-bold flex items-center gap-2 px-4 py-2 rounded-xl transition-colors" style={{ color: '#000000', backgroundColor: '#F6B000' }}>
                                         <i className="fa-solid fa-pen-to-square" /> Change Information
                                     </button>
                                 )}
@@ -345,7 +345,7 @@ function ProfileContent() {
 
                             <div className="flex gap-10">
                                 {/* Profile Picture — NO camera overlay */}
-                                <div className="w-32 h-32 bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white shadow-lg border-4 border-white ring-1 ring-gray-100 flex-shrink-0">
+                                <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-black text-black shadow-lg border-4 border-white ring-1 ring-gray-100 flex-shrink-0" style={{ backgroundColor: '#F6B000' }}>
                                     {initials}
                                 </div>
 
@@ -385,7 +385,8 @@ function ProfileContent() {
                                                     <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
                                                     <input type="text" value={editForm.phone}
                                                         onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
-                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors font-semibold"
+                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                                         placeholder="10-digit mobile number" />
                                                 </div>
                                                 <div className="col-span-2">
@@ -398,13 +399,15 @@ function ProfileContent() {
                                                     </div>
                                                     <textarea rows={4} value={editForm.address}
                                                         onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
-                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm transition-colors resize-none font-semibold"
+                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black"
+                                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                                         placeholder="Enter flat/house no, street, area, city, pincode" />
                                                 </div>
                                             </div>
                                             <div className="flex gap-4">
                                                 <button type="submit"
-                                                    className="px-8 py-3 rounded-xl font-bold text-white bg-primary shadow-lg shadow-primary/20 hover:-translate-y-0.5 transition-transform text-sm">
+                                                    className="px-8 py-3 rounded-xl font-bold transition-all text-sm active:scale-95"
+                                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}>
                                                     Save Complete Info
                                                 </button>
                                                 <button type="button" onClick={() => setIsEditing(false)}
@@ -466,8 +469,8 @@ function ProfileContent() {
                     <div className="animate-in fade-in duration-300 bg-[#f8f9fa] min-h-screen">
 
                         {/* Wavy Header */}
-                        <div className="relative text-white pt-8 pb-[140px] shadow-sm overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary to-green-600"></div>
+                        <div className="relative text-black pt-8 pb-[140px] shadow-sm overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#FFF9E7] to-[#FFFE71]"></div>
                             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
 
                             <div className="relative z-10 flex justify-between items-center px-6">
@@ -489,7 +492,7 @@ function ProfileContent() {
 
                         {/* Avatar — NO camera icon */}
                         <div className="flex flex-col items-center -mt-[90px] relative z-20 px-6">
-                            <div className="w-[100px] h-[100px] bg-amber rounded-full flex items-center justify-center text-4xl font-black text-white border-4 border-[#f8f9fa] shadow-xl shadow-gray-200">
+                            <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center text-4xl font-black text-black border-4 border-[#f8f9fa] shadow-xl shadow-gray-200" style={{ backgroundColor: '#F6B000' }}>
                                 {initials}
                             </div>
                             <h2 className="text-2xl font-black text-gray-800 mt-3">{profile?.username}</h2>
@@ -577,7 +580,7 @@ function ProfileContent() {
                             <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky top-[65px] z-20 -mx-1">
                                 {['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'].map(f => (
                                     <button key={f} onClick={() => setMobileOrderFilter(f)}
-                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-primary text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'}`}>
                                         {f}
                                     </button>
                                 ))}
@@ -604,7 +607,7 @@ function ProfileContent() {
                                                     </div>
                                                 </div>
                                                 <button onClick={() => setIsEditing(true)}
-                                                    className="text-primary bg-green-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                                                    className="text-primary bg-primary/10 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
                                                     <i className="fa-solid fa-pen text-xs" />
                                                 </button>
                                             </div>
@@ -632,13 +635,14 @@ function ProfileContent() {
                                                     onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
                                                     className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary resize-none" />
                                                 <button type="button" onClick={handleGetLocation}
-                                                    className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-green-50/50 border border-green-100 px-4 py-2 rounded-full inline-flex items-center gap-1.5">
+                                                    className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/5 border border-primary/10 px-4 py-2 rounded-full inline-flex items-center gap-1.5">
                                                     <i className="fa-solid fa-location-crosshairs"></i> Auto Locate
                                                 </button>
                                             </div>
                                             <div className="flex gap-3 pt-2">
                                                 <button type="submit"
-                                                    className="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20">
+                                                    className="flex-1 py-3.5 rounded-xl font-bold text-sm shadow-md active:scale-95"
+                                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}>
                                                     Save
                                                 </button>
                                                 <button type="button" onClick={() => setIsEditing(false)}
@@ -721,7 +725,8 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
             <h3 className="text-lg font-black text-gray-800 mb-1">No Orders Yet</h3>
             <p className="text-gray-400 text-sm mb-6">You haven't placed any orders.</p>
             <Link href="/shop"
-                className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+                className="font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg active:scale-95 transition-transform"
+                style={{ backgroundColor: '#000000', color: '#F6B000' }}>
                 Explore Store
             </Link>
         </div>
@@ -763,7 +768,7 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
                             </div>
                             <div className="flex items-center justify-between text-xs font-semibold">
                                 <span className="text-gray-500">Items: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
-                                <span className="font-black text-sm" style={{ color: COLORS.primary }}>
+                                <span className="font-black text-sm" style={{ color: '#000000' }}>
                                     ₹{order.total_amount?.toLocaleString('en-IN')}
                                 </span>
                             </div>
@@ -842,15 +847,15 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                         <h4 className="font-black text-sm text-gray-800 line-clamp-1">
                                             {enq.subject || enq.enquiry_type || 'General Enquiry'}
                                         </h4>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-green-100 text-green-700' :
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-primary/20 text-black' :
                                                 enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
                                             }`}>{enq.status || 'Pending'}</span>
                                     </div>
                                     <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
                                     {enq.admin_notes && (
-                                        <div className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3">
-                                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest mb-1">Admin Reply</p>
-                                            <p className="text-xs text-green-800 font-semibold">{enq.admin_notes}</p>
+                                        <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl p-3">
+                                            <p className="text-[10px] font-bold text-black/60 uppercase tracking-widest mb-1">Admin Reply</p>
+                                            <p className="text-xs text-black font-semibold">{enq.admin_notes}</p>
                                         </div>
                                     )}
                                 </div>
@@ -873,7 +878,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                         <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">
                                             {vis.date || vis.preferred_date || vis.desired_date || 'N/A'}
                                         </p>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-green-100 text-green-700' :
+                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-primary/20 text-black' :
                                                 vis.status === 'Rejected' ? 'bg-red-100 text-red-700' :
                                                     vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
                                             }`}>{vis.status || 'Pending'}</span>
@@ -883,9 +888,9 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                     </p>
                                     <p className="text-xs text-gray-500 italic mb-4">"{vis.purpose || vis.purpose_of_visit || 'Factory Visit'}"</p>
                                     {vis.admin_notes && (
-                                        <div className="mb-4 bg-green-50 border border-green-100 rounded-xl p-3">
-                                            <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest mb-1">Admin Remarks</p>
-                                            <p className="text-xs text-green-800 font-semibold">{vis.admin_notes}</p>
+                                        <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl p-3">
+                                            <p className="text-[10px] font-bold text-black/60 uppercase tracking-widest mb-1">Admin Remarks</p>
+                                            <p className="text-xs text-black font-semibold">{vis.admin_notes}</p>
                                         </div>
                                     )}
                                 </div>
@@ -905,10 +910,10 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
 
 function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleReviewSubmit, isMobile }: any) {
     if (reviewStatus === 'success') return (
-        <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center animate-in zoom-in duration-300">
-            <i className="fa-solid fa-circle-check text-4xl text-green-500 mb-3 block" />
-            <p className="font-black text-green-800 text-lg">Thank You!</p>
-            <p className="text-green-600 text-sm mt-1">Your review helps us improve.</p>
+        <div className="bg-primary/10 border border-primary/20 rounded-2xl p-8 text-center animate-in zoom-in duration-300">
+            <i className="fa-solid fa-circle-check text-4xl text-primary mb-3 block" />
+            <p className="font-black text-black text-lg">Thank You!</p>
+            <p className="text-black/60 text-sm mt-1">Your review helps us improve.</p>
         </div>
     );
     return (

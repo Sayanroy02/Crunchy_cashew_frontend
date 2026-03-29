@@ -125,10 +125,10 @@ export default function Navbar() {
                                 href={link.href}
                                 className={`relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors
                                     ${isActive(link.href)
-                                        ? isTransparent ? 'text-amber' : 'text-primary'
-                                        : isTransparent
+                                        ? (isTransparent ? 'text-amber' : 'text-primary')
+                                        : (isTransparent
                                             ? 'text-white/80 hover:text-white hover:bg-white/10'
-                                            : 'text-gray-600 hover:text-primary hover:bg-green-50'
+                                            : 'text-gray-600 hover:text-primary hover:bg-primary/10')
                                     }`}
                             >
                                 {link.label}
@@ -270,7 +270,7 @@ export default function Navbar() {
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold text-sm transition-colors
                                         ${isActive(item.href) && item.href !== '/'
-                                            ? 'bg-green-50 text-primary'
+                                            ? 'bg-primary/10 text-primary'
                                             : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
                                         }`}
                                 >

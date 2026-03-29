@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ExternalLink, Zap, ShieldCheck } from 'lucide-react';
+import { COLORS } from '@/constants/styles';
 
 interface Product {
   _id: string;
@@ -65,7 +66,7 @@ export default function ProductComparison({ product }: { product: Product }) {
   return (
     <div className="mt-16 space-y-12">
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-black text-[#0A5246] tracking-tight text-center">Price Comparison</h2>
+        <h2 className="text-3xl font-black tracking-tight text-center" style={{ color: COLORS.heading }}>Price Comparison</h2>
         <p className="text-slate-500 font-medium italic text-center">See how much you save by buying direct</p>
       </div>
 
@@ -83,18 +84,18 @@ export default function ProductComparison({ product }: { product: Product }) {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {platforms.map((p) => (
-                  <tr key={p.name} className={`${p.isBest ? 'bg-[#99EA78]/5' : 'hover:bg-slate-50/50'} transition-colors`}>
+                  <tr key={p.name} className={`${p.isBest ? 'bg-white shadow-[inset_0_0_0_1px_rgba(246,176,0,0.1)]' : 'hover:bg-slate-50/50'} transition-colors`}>
                     <td className="px-6 py-5 flex items-center gap-3">
                       <div className="w-10 h-10 relative bg-white rounded-lg p-1 border border-slate-100">
                         <Image src={p.logo} alt={p.name} fill className="object-contain p-1" />
                       </div>
                       <div>
-                        <span className={`font-bold text-sm ${p.isBest ? 'text-[#0A5246]' : 'text-slate-600'}`}>{p.name}</span>
-                        {p.isBest && <span className="block text-[8px] font-black text-[#0A5246] uppercase tracking-tighter">Best Price</span>}
+                        <span className={`font-bold text-sm`} style={{ color: p.isBest ? COLORS.primary : '#475569' }}>{p.name}</span>
+                        {p.isBest && <span className="block text-[8px] font-black uppercase tracking-tighter" style={{ color: COLORS.primary }}>Best Price</span>}
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
-                      <span className={`text-lg font-black ${p.isBest ? 'text-[#0A5246]' : 'text-slate-400 line-through'}`}>₹{p.price}</span>
+                      <span className={`text-lg font-black`} style={{ color: p.isBest ? COLORS.primary : '#94a3b8' }}>₹{p.price}</span>
                     </td>
                     <td className="px-6 py-5 text-right">
                       {p.link && p.link !== '#' ? (
@@ -102,7 +103,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                           View Store <ExternalLink size={12} />
                         </a>
                       ) : p.isBest ? (
-                        <span className="text-[10px] font-black text-[#99EA78] uppercase tracking-widest">Cheapest Here</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.button }}>Cheapest Here</span>
                       ) : (
                         <span className="text-[10px] font-bold text-slate-300 uppercase italic tracking-tighter">Link unavailable</span>
                       )}
@@ -116,12 +117,12 @@ export default function ProductComparison({ product }: { product: Product }) {
 
         {/* Savings Calculator */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="bg-[#0A5246] rounded-3xl p-8 text-white shadow-xl shadow-[#0A5246]/20 relative overflow-hidden">
+          <div className="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden" style={{ backgroundColor: COLORS.primary, boxShadow: `0 20px 25px -5px ${COLORS.primary}4D` }}>
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
 
             <div className="relative space-y-6">
-              <div className="flex items-center gap-2 text-[#99EA78]">
-                <Zap size={18} className="fill-[#99EA78]" />
+              <div className="flex items-center gap-2" style={{ color: COLORS.highlight }}>
+                <Zap size={18} fill={COLORS.highlight} />
                 <h3 className="text-sm font-black uppercase tracking-widest">Savings Calculator</h3>
               </div>
 
@@ -134,14 +135,14 @@ export default function ProductComparison({ product }: { product: Product }) {
                     <span className="text-3xl font-black block leading-none">{quantity}</span>
                     <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Packs</span>
                   </div>
-                  <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 rounded-xl bg-[#f6d70f] text-[#0A5246] flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-400/20">
+                  <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-lg" style={{ backgroundColor: COLORS.button, color: COLORS.buttonText }}>
                     <Plus size={18} />
                   </button>
                 </div>
               </div>
 
               <div className="pt-6 border-t border-white/10 text-center">
-                <p className="text-[#99EA78] font-black uppercase tracking-[0.2em] text-[9px] mb-1">Total Savings</p>
+                <p className="font-black uppercase tracking-[0.2em] text-[9px] mb-1" style={{ color: COLORS.highlight }}>Total Savings</p>
                 <div className="overflow-hidden h-14 flex items-center justify-center">
                   <AnimatePresence mode="wait">
                     <motion.span
@@ -161,12 +162,12 @@ export default function ProductComparison({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 flex items-center gap-4 shadow-sm group hover:border-[#99EA78]/50 transition-colors">
-            <div className="w-12 h-12 rounded-2xl bg-[#99EA78]/10 flex items-center justify-center text-[#0A5246]">
+          <div className="bg-white border rounded-3xl p-6 flex items-center gap-4 shadow-sm group transition-colors" style={{ borderColor: `${COLORS.primary}1A` }}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.button}1A`, color: COLORS.primary }}>
               <ShieldCheck size={24} />
             </div>
             <div>
-              <p className="text-xs font-black text-[#0A5246] uppercase tracking-widest">Factory Direct Price</p>
+              <p className="text-xs font-black uppercase tracking-widest" style={{ color: COLORS.primary }}>Factory Direct Price</p>
               <p className="text-[10px] text-slate-500 font-medium">No marketplace commissions.</p>
             </div>
           </div>

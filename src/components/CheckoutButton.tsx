@@ -123,7 +123,7 @@ export default function CheckoutButton({
           contact: orderPayload.customer.phone,
         },
         theme: {
-          color: COLORS.primary,
+          color: '#F6B000',
         },
 
         // ── On successful payment ──────────────────────────────────────────
@@ -191,7 +191,8 @@ export default function CheckoutButton({
       type="button"
       onClick={handleCheckout}
       disabled={disabled || loading}
-      className="w-full bg-yellow text-primary font-bold text-lg py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-yellow hover:shadow-[0_0_15px_rgba(246,215,15,0.4)] transition-all transform hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
+      className="w-full font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg"
+      style={{ backgroundColor: '#000000', color: '#F6B000' }}
     >
       {loading ? (
         <>

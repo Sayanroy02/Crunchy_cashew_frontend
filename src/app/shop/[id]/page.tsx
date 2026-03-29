@@ -20,7 +20,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <i className="fa-solid fa-cookie-bite text-6xl text-gray-400 mb-6"></i>
                 <h1 className="text-4xl font-heading font-black text-text-dark mb-4">Product Not Found</h1>
                 <p className="text-gray-500 mb-8">Oops! We couldn't find the cashew variety you're looking for.</p>
-                <a href="/shop" className="bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-green-800 transition-colors">
+                <a href="/shop" className="bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-black transition-colors">
                     Return to Shop
                 </a>
             </div>
@@ -63,11 +63,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     <div className="lg:w-[55%] p-8 md:p-12 flex flex-col justify-between">
                         <div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="text-xs font-bold tracking-widest text-primary uppercase bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                                <span className="text-xs font-bold tracking-widest text-primary uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
                                     {product.category}
                                 </span>
                                 {product.stock > 0 ? (
-                                    <span className="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">In Stock</span>
+                                    <span className="bg-primary/20 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">In Stock</span>
                                 ) : (
                                     <span className="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Out of Stock</span>
                                 )}

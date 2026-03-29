@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HeroVideo() {
@@ -300,10 +301,49 @@ export default function HeroVideo() {
                 />
             </div>
 
+            {/* ── Parachute decorations (desktop only, pointer-events-none) ── */}
+            <div
+                className="pointer-events-none absolute top-[6%] right-[6%] hidden md:block"
+                style={{ animation: 'parachuteDrift 9s ease-in-out infinite' }}
+            >
+                <Image
+                    src="/images/Cashew-parachute-1-03-03.png"
+                    alt=""
+                    width={160}
+                    height={200}
+                    className="w-[clamp(70px,8vw,140px)] h-auto object-contain opacity-75 drop-shadow-md hover:scale-110 hover:-rotate-3 transition-transform duration-500"
+                    priority={false}
+                />
+            </div>
+
+            <div
+                className="pointer-events-none absolute top-[40%] right-[18%] hidden md:block"
+                style={{ animation: 'parachuteDrift2 12s ease-in-out infinite', animationDelay: '2s' }}
+            >
+                <Image
+                    src="/images/Cashew-parachute-03.png"
+                    alt=""
+                    width={120}
+                    height={150}
+                    className="w-[clamp(50px,5.5vw,100px)] h-auto object-contain opacity-65 drop-shadow-md hover:scale-110 hover:rotate-3 transition-transform duration-500"
+                    priority={false}
+                />
+            </div>
+
             <style>{`
                 @keyframes scrollPulse {
                     0%, 100% { opacity: 0.3; transform: scaleY(0.6); transform-origin: top; }
                     50%       { opacity: 0.9; transform: scaleY(1);   transform-origin: top; }
+                }
+                @keyframes parachuteDrift {
+                    0%,100% { transform: translateY(0px) translateX(0px); }
+                    25%     { transform: translateY(-16px) translateX(5px); }
+                    75%     { transform: translateY(10px) translateX(-4px); }
+                }
+                @keyframes parachuteDrift2 {
+                    0%,100% { transform: translateY(0px) translateX(0px); }
+                    30%     { transform: translateY(-12px) translateX(-6px); }
+                    70%     { transform: translateY(14px) translateX(4px); }
                 }
             `}</style>
         </section>

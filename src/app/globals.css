@@ -2,18 +2,18 @@
 
 @theme {
   /* ── Brand Colors ── */
-  --color-primary: #0A5246;
-  --color-primary-light: #0B5143;
-  --color-yellow: #f6d70f;
+  --color-primary: #F6B000;
+  --color-primary-light: #FFD54F;
+  --color-yellow: #F6B000;
   --color-amber: #FBB21B;
-  --color-bg: #E1EDEB;
-  --color-bg-mobile: #f8f9fa;
+  --color-bg: #FFF9E7;
+  --color-bg-mobile: #FFF9E7;
   --color-danger: #ef4444;
 
   /* ── Semantic Colors ── */
-  --color-highlight: #FBB21B;
-  --color-bg-cream: #E1EDEB;
-  --color-text-dark: #1a1f1c;
+  --color-highlight: #F6B000;
+  --color-bg-cream: #FFF9E7;
+  --color-text-dark: #000000;
   --color-text-light: #ffffff;
 
   /* ── Typography ── */
@@ -23,17 +23,19 @@
 }
 
 :root {
-  --background: #fffdf5;
-  --foreground: #1a1f1c;
+  --background: #FFF9E7;
+  --foreground: #000000;
 }
 
 /* ── Base ── */
 body {
-  background-color: #f8f9fa;
+  background: linear-gradient(to bottom, #FFFE71, #FFF9E7);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-montserrat), 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
 }
 
 /* ── Animations ── */

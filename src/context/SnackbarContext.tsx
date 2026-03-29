@@ -41,7 +41,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
 // Internal Snackbar UI Component
 const Snackbar = ({ message, type }: { message: string, type: SnackbarType }) => {
     const bgColor = {
-        success: 'bg-green-600',
+        success: 'bg-primary',
         error: 'bg-red-600',
         info: 'bg-primary',
         warning: 'bg-yellow-600'

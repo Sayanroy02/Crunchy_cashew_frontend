@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 interface Testimonial {
     _id: string;
@@ -20,7 +21,8 @@ function StarRating({ rating = 5 }: { rating?: number }) {
             {[1, 2, 3, 4, 5].map(star => (
                 <i
                     key={star}
-                    className={`text-sm ${star <= rating ? 'fa-solid fa-star text-amber' : 'fa-regular fa-star text-gray-300'}`}
+                    className={`text-sm ${star <= rating ? 'fa-solid fa-star' : 'fa-regular fa-star text-gray-300'}`}
+                    style={star <= rating ? { color: COLORS.amber } : {}}
                 />
             ))}
         </div>
@@ -35,7 +37,10 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
                 <button key={star} type="button" onClick={() => onChange(star)}
                     onMouseEnter={() => setHover(star)} onMouseLeave={() => setHover(0)}
                     className="text-2xl transition-transform hover:scale-110">
-                    <i className={`${(hover || value) >= star ? 'fa-solid fa-star text-amber' : 'fa-regular fa-star text-gray-300'}`} />
+                    <i 
+                        className={`${(hover || value) >= star ? 'fa-solid fa-star' : 'fa-regular fa-star text-gray-300'}`} 
+                        style={(hover || value) >= star ? { color: COLORS.amber } : {}}
+                    />
                 </button>
             ))}
         </div>
@@ -87,13 +92,19 @@ export default function Testimonials() {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
                     <div>
-                        <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">What Our Customers Say</span>
+                        <span 
+                            className="font-bold tracking-[4px] uppercase text-xs mb-2 block"
+                            style={{ color: COLORS.primary }}
+                        >
+                            What Our Customers Say
+                        </span>
                         <motion.h2
                           initial={{ opacity: 0, y: 20 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ delay: 0.1 }}
-                          className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight"
+                          className="text-4xl md:text-5xl font-black tracking-tight"
+                          style={{ color: COLORS.heading }}
                         >
                           Customer <span className="relative inline-block lg:mt-2">
                             <span className="relative z-10">Testimonials</span>
@@ -102,7 +113,8 @@ export default function Testimonials() {
                               whileInView={{ width: '100%' }}
                               viewport={{ once: true }}
                               transition={{ delay: 0.5, duration: 0.8 }}
-                              className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                              className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                              style={{ backgroundColor: COLORS.highlight }}
                             />
                           </span>
                         </motion.h2>
@@ -118,7 +130,16 @@ export default function Testimonials() {
                         </button>
                         <button
                             onClick={() => setFormOpen(true)}
-                            className="border-2 border-primary text-primary hover:bg-primary hover:text-white px-5 py-2 rounded-full text-sm font-bold transition-all"
+                            className="border-2 px-5 py-2 rounded-full text-sm font-bold transition-all hover:text-white"
+                            style={{ borderColor: COLORS.primary, color: COLORS.primary }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = COLORS.primary;
+                                e.currentTarget.style.color = '#ffffff';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = 'transparent';
+                                e.currentTarget.style.color = COLORS.primary;
+                            }}
                         >
                             ✍ Share Your Experience
                         </button>
@@ -153,7 +174,10 @@ export default function Testimonials() {
                                     </div>
                                 ) : (
                                     <div className="p-5 pb-0 flex items-start justify-between">
-                                        <div className="w-10 h-10 rounded-xl bg-amber flex items-center justify-center text-black font-black text-lg">
+                                        <div 
+                                            className="w-10 h-10 rounded-xl flex items-center justify-center text-black font-black text-lg"
+                                            style={{ backgroundColor: COLORS.amber }}
+                                        >
                                             {t.name.charAt(0).toUpperCase()}
                                         </div>
                                         <i className="fa-solid fa-quote-right text-2xl text-black/10" />
@@ -184,94 +208,101 @@ export default function Testimonials() {
             </div>
 
             {/* Popup Modal Form */}
-            {formOpen && (
-                <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-                    style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)' }}
-                    onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
-                >
-                    <div
-                        className="relative w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl"
-                        style={{
-                            background: 'rgba(255,255,255,0.92)',
-                            backdropFilter: 'blur(20px)',
-                            WebkitBackdropFilter: 'blur(20px)',
-                            border: '1px solid rgba(255,255,255,0.9)',
-                        }}
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {/* Close button */}
-                        <button
-                            onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
-                            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/8 hover:bg-black/15 text-black/60 flex items-center justify-center transition-all"
-                        >
-                            <i className="fa-solid fa-xmark text-base" />
-                        </button>
+             {formOpen && (
+                 <div
+                     className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+                     style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)' }}
+                     onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
+                 >
+                     <div
+                         className="relative w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl"
+                         style={{
+                             background: 'rgba(255,255,255,0.92)',
+                             backdropFilter: 'blur(20px)',
+                             WebkitBackdropFilter: 'blur(20px)',
+                             border: '1px solid rgba(255,255,255,0.9)',
+                         }}
+                         onClick={e => e.stopPropagation()}
+                     >
+                         {/* Close button */}
+                         <button
+                             onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
+                             className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/8 hover:bg-black/15 text-black/60 flex items-center justify-center transition-all"
+                         >
+                             <i className="fa-solid fa-xmark text-base" />
+                         </button>
 
-                        <h3 className="text-xl font-black text-black mb-1">Share Your Experience</h3>
-                        <p className="text-black/40 text-sm mb-6">We'd love to hear what you think!</p>
+                         <h3 className="text-xl font-black text-black mb-1">Share Your Experience</h3>
+                         <p className="text-black/40 text-sm mb-6">We'd love to hear what you think!</p>
 
-                        {submitStatus === 'success' ? (
-                            <div className="text-center py-10">
-                                <i className="fa-solid fa-circle-check text-5xl text-green-500 mb-3 block" />
-                                <p className="font-bold text-lg text-black">Thank you!</p>
-                                <p className="text-black/50 text-sm mt-1">Your review is under review and will appear shortly.</p>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleFormSubmit} className="space-y-4">
-                                <div>
-                                    <label className="text-sm font-bold text-black/70 block mb-2">Your Rating</label>
-                                    <StarPicker value={formData.rating} onChange={v => setFormData(f => ({ ...f, rating: v }))} />
-                                </div>
+                         {submitStatus === 'success' ? (
+                             <div className="text-center py-10">
+                                 <i className="fa-solid fa-circle-check text-5xl text-primary mb-3 block" />
+                                 <p className="font-bold text-lg text-black">Thank you!</p>
+                                 <p className="text-black/50 text-sm mt-1">Your review is under review and will appear shortly.</p>
+                             </div>
+                         ) : (
+                             <form onSubmit={handleFormSubmit} className="space-y-4">
+                                 <div>
+                                     <label className="text-sm font-bold text-black/70 block mb-2">Your Rating</label>
+                                     <StarPicker value={formData.rating} onChange={v => setFormData(f => ({ ...f, rating: v }))} />
+                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    {(['name', 'city', 'state'] as const).map(field => (
-                                        <div key={field}>
-                                            <label className="text-sm font-bold text-black/70 block mb-1.5 capitalize">{field}</label>
-                                            <input
-                                                required
-                                                type="text"
-                                                value={formData[field]}
-                                                onChange={e => setFormData(f => ({ ...f, [field]: e.target.value }))}
-                                                className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:border-amber focus:bg-white transition-all"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
+                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                     {(['name', 'city', 'state'] as const).map(field => (
+                                         <div key={field}>
+                                             <label className="text-sm font-bold text-black/70 block mb-1.5 capitalize">{field}</label>
+                                             <input
+                                                 required
+                                                 type="text"
+                                                 value={formData[field]}
+                                                 onChange={e => setFormData(f => ({ ...f, [field]: e.target.value }))}
+                                                 className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:bg-white transition-all"
+                                                 onFocus={(e) => e.target.style.borderColor = COLORS.amber}
+                                                 onBlur={(e) => e.target.style.borderColor = 'rgba(0,0,0,0.1)'}
+                                             />
+                                         </div>
+                                     ))}
+                                 </div>
 
-                                <div>
-                                    <label className="text-sm font-bold text-black/70 block mb-1.5">Your Review</label>
-                                    <textarea
-                                        required
-                                        rows={4}
-                                        value={formData.description}
-                                        onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
-                                        placeholder="Tell us about your experience..."
-                                        className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:border-amber focus:bg-white transition-all resize-none"
-                                    />
-                                </div>
+                                 <div>
+                                     <label className="text-sm font-bold text-black/70 block mb-1.5">Your Review</label>
+                                     <textarea
+                                         required
+                                         rows={4}
+                                         value={formData.description}
+                                         onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
+                                         placeholder="Tell us about your experience..."
+                                         className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:bg-white transition-all resize-none"
+                                         onFocus={(e) => e.target.style.borderColor = COLORS.amber}
+                                         onBlur={(e) => e.target.style.borderColor = 'rgba(0,0,0,0.1)'}
+                                     />
+                                 </div>
 
-                                {submitStatus === 'error' && (
-                                    <p className="text-red-500 text-sm flex items-center gap-1.5">
-                                        <i className="fa-solid fa-circle-exclamation" /> Something went wrong. Please try again.
-                                    </p>
-                                )}
+                                 {submitStatus === 'error' && (
+                                     <p className="text-red-500 text-sm flex items-center gap-1.5">
+                                         <i className="fa-solid fa-circle-exclamation" /> Something went wrong. Please try again.
+                                     </p>
+                                 )}
 
-                                <button
-                                    type="submit"
-                                    disabled={submitStatus === 'loading'}
-                                    className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary/80 transition text-sm flex items-center justify-center gap-2 disabled:opacity-60 shadow-lg shadow-primary/20"
-                                >
-                                    {submitStatus === 'loading'
-                                        ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
-                                        : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
-                                    }
-                                </button>
-                            </form>
-                        )}
-                    </div>
-                </div>
-            )}
+                                 <button
+                                     type="submit"
+                                     disabled={submitStatus === 'loading'}
+                                     className="w-full text-white font-bold py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-60 shadow-lg"
+                                     style={{ backgroundColor: COLORS.primary, boxShadow: `0 10px 15px -3px ${COLORS.primary}40` }}
+                                     onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                                     onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                                 >
+                                     {submitStatus === 'loading'
+                                         ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
+                                         : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
+                                     }
+                                 </button>
+                             </form>
+                         )}
+                     </div>
+                 </div>
+             )}
         </section>
     );
 }

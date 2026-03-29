@@ -2,18 +2,33 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { COLORS } from '@/constants/styles';
 
 export default function Footer() {
     return (
-        <footer className="relative bg-[#0A1F1B] text-white overflow-hidden mt-0">
-
+        <footer 
+            className="relative text-white overflow-hidden mt-0"
+            style={{ backgroundColor: COLORS.footerBg }}
+        >
             {/* Decorative background blobs */}
-            <div className="absolute top-0 left-0 w-72 h-72 bg-[#0A5246] opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#0A5246] opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" />
-            <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-[#0B5143] opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+            <div 
+                className="absolute top-0 left-0 w-72 h-72 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" 
+                style={{ backgroundColor: COLORS.primary }}
+            />
+            <div 
+                className="absolute bottom-0 right-0 w-96 h-96 opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" 
+                style={{ backgroundColor: COLORS.primary }}
+            />
+            <div 
+                className="absolute top-1/2 left-1/2 w-64 h-64 opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" 
+                style={{ backgroundColor: COLORS.primaryLight }}
+            />
 
             {/* Top accent line */}
-            <div className="w-full h-1 bg-gradient-to-r from-[#0A5246] via-[#4CAF88] to-[#0A5246]" />
+            <div 
+                className="w-full h-1 bg-gradient-to-r" 
+                style={{ backgroundImage: `linear-gradient(to right, ${COLORS.primary}, ${COLORS.accent}, ${COLORS.primary})` }}
+            />
 
             {/* Main Footer Grid */}
             <div className="max-w-7xl mx-auto px-6 pt-12 pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -40,7 +55,17 @@ export default function Footer() {
                             <a
                                 key={i}
                                 href={s.href}
-                                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#0A5246] hover:text-white hover:border-[#0A5246] transition-all duration-200 hover:scale-110"
+                                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 transition-all duration-200 hover:scale-110"
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = COLORS.primary;
+                                    e.currentTarget.style.borderColor = COLORS.primary;
+                                    e.currentTarget.style.color = '#ffffff';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                                    e.currentTarget.style.color = 'rgb(156, 163, 175)';
+                                }}
                             >
                                 <i className={`${s.icon} text-xs`} />
                             </a>
@@ -50,7 +75,7 @@ export default function Footer() {
 
                 {/* Quick Links */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Navigate</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Navigate</h3>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { label: 'Home', href: '/' },
@@ -63,7 +88,10 @@ export default function Footer() {
                                     href={link.href}
                                     className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
                                 >
-                                    <span className="w-0 group-hover:w-3 h-[2px] bg-[#4CAF88] transition-all duration-300 rounded-full" />
+                                    <span 
+                                        className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full" 
+                                        style={{ backgroundColor: COLORS.accent }}
+                                    />
                                     {link.label}
                                 </Link>
                             </li>
@@ -73,7 +101,7 @@ export default function Footer() {
 
                 {/* Products */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Our Range</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Our Range</h3>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             'Classic Plain Cashews',
@@ -87,7 +115,10 @@ export default function Footer() {
                                     href="/shop"
                                     className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
                                 >
-                                    <span className="w-0 group-hover:w-3 h-[2px] bg-[#4CAF88] transition-all duration-300 rounded-full" />
+                                    <span 
+                                        className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
+                                        style={{ backgroundColor: COLORS.accent }}
+                                    />
                                     {item}
                                 </Link>
                             </li>
@@ -97,12 +128,15 @@ export default function Footer() {
 
                 {/* Contact */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold text-[#4CAF88] tracking-[3px] uppercase">Contact Us</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Contact Us</h3>
                     <ul className="flex flex-col gap-4">
                         <li>
                             <a href="tel:+919876543210" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
-                                    <i className="fa-solid fa-phone text-[#4CAF88] text-xs" />
+                                <div 
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
+                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                >
+                                    <i className="fa-solid fa-phone text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Call Us</p>
@@ -112,8 +146,11 @@ export default function Footer() {
                         </li>
                         <li>
                             <a href="mailto:info@crunchycashews.in" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
-                                    <i className="fa-solid fa-envelope text-[#4CAF88] text-xs" />
+                                <div 
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
+                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                >
+                                    <i className="fa-solid fa-envelope text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Email</p>
@@ -123,8 +160,11 @@ export default function Footer() {
                         </li>
                         <li>
                             <div className="flex items-start gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-[#0A5246]/60 border border-[#0A5246] flex items-center justify-center flex-none mt-0.5">
-                                    <i className="fa-solid fa-location-dot text-[#4CAF88] text-xs" />
+                                <div 
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
+                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                >
+                                    <i className="fa-solid fa-location-dot text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Location</p>
@@ -144,12 +184,12 @@ export default function Footer() {
                     </p>
                     <div className="flex items-center gap-1 text-gray-600 text-xs">
                         <span>Made with</span>
-                        <i className="fa-solid fa-heart text-[#4CAF88] text-xs mx-1" />
+                        <i className="fa-solid fa-heart text-xs mx-1" style={{ color: COLORS.accent }} />
                         <span>in Siliguri</span>
                     </div>
                     <div className="flex gap-5">
-                        <Link href="/terms" className="text-xs text-gray-600 hover:text-[#4CAF88] transition-colors">Terms</Link>
-                        <Link href="/privacy" className="text-xs text-gray-600 hover:text-[#4CAF88] transition-colors">Privacy</Link>
+                        <Link href="/terms" className="text-xs text-gray-600 transition-colors" style={{ color: COLORS.accent, opacity: 0.6 }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>Terms</Link>
+                        <Link href="/privacy" className="text-xs text-gray-600 transition-colors" style={{ color: COLORS.accent, opacity: 0.6 }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>Privacy</Link>
                     </div>
                 </div>
             </div>

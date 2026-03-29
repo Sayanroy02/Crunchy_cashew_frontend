@@ -23,7 +23,7 @@ export default function NotFound() {
 
             <div className="flex flex-wrap gap-3 justify-center">
                 <Link href="/"
-                    className="bg-primary text-white font-bold px-8 py-3.5 rounded-full hover:bg-green-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    className="bg-primary text-white font-bold px-8 py-3.5 rounded-full hover:bg-black transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                     <i className="fa-solid fa-house mr-2"></i>Back to Home
                 </Link>
                 <Link href="/shop"

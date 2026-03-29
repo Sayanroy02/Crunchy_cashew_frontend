@@ -1,6 +1,5 @@
-'use client';
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { COLORS } from '@/constants/styles';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const si = { fill: 'none', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -14,24 +13,24 @@ const IcoRight = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="non
 
 // ─── Shared atoms ─────────────────────────────────────────────────────────────
 const CardIcon = ({ children }: { children: React.ReactNode }) => (
-    <div className="w-10 h-10 rounded-[10px] bg-yellow/10 border border-yellow/40 flex items-center justify-center text-[#b89800] flex-shrink-0">{children}</div>
+    <div className="w-10 h-10 rounded-[10px] flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${COLORS.button}1A`, border: `1px solid ${COLORS.button}66`, color: COLORS.button }}>{children}</div>
 );
 const Badge = ({ label }: { label: string }) => (
-    <span className="inline-block text-[9px] font-bold uppercase tracking-wider text-primary bg-primary/7 border border-primary/14 px-2 py-0.5 rounded-full w-fit">{label}</span>
+    <span className="inline-block text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full w-fit" style={{ color: COLORS.black, backgroundColor: `${COLORS.primary}33`, border: `1px solid ${COLORS.primary}4D` }}>{label}</span>
 );
-const Divider = () => <div className="w-6 h-0.5 bg-yellow rounded-full" />;
+const Divider = () => <div className="w-6 h-0.5 rounded-full" style={{ backgroundColor: COLORS.button }} />;
 const Stat = ({ num, label }: { num: string; label: string }) => (
     <div className="flex items-baseline gap-1">
-        <span className="text-[20px] font-black text-primary leading-none">{num}</span>
-        <span className="text-[9.5px] font-semibold text-primary/50 uppercase tracking-wide">{label}</span>
+        <span className="text-[20px] font-black leading-none" style={{ color: COLORS.black }}>{num}</span>
+        <span className="text-[9.5px] font-semibold uppercase tracking-wide opacity-50" style={{ color: COLORS.black }}>{label}</span>
     </div>
 );
 const Hearts = () => (
     <div className="flex gap-1">
         {[true, true, true, false].map((f, i) => (
             <svg key={i} width="14" height="14" viewBox="0 0 24 24"
-                fill={f ? '#0A5246' : 'rgba(10,82,70,0.15)'}
-                stroke="#0A5246" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                fill={f ? COLORS.black : `${COLORS.black}26`}
+                stroke={COLORS.black} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
             </svg>
         ))}
@@ -41,48 +40,52 @@ const StepList = () => (
     <div className="flex flex-col gap-1.5">
         {['Steam & shell', 'Grade & sort', 'Roast & seal'].map(s => (
             <div key={s} className="flex items-center gap-1.5 text-[10.5px] font-semibold text-primary/80">
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow border border-[#b89800] flex-shrink-0" />{s}
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS.button, border: `1px solid ${COLORS.button}` }} />{s}
             </div>
         ))}
     </div>
 );
 const PBar = ({ label, pct }: { label: string; pct: number }) => (
-    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-primary/80">
+    <div className="flex items-center gap-1.5 text-[10px] font-semibold text-black/80">
         <span className="w-14 flex-shrink-0">{label}</span>
-        <div className="flex-1 h-[3px] bg-primary/10 rounded-full overflow-hidden">
-            <div className="h-full bg-primary rounded-full" style={{ width: `${pct}%` }} />
+        <div className="flex-1 h-[3px] bg-black/10 rounded-full overflow-hidden">
+            <div className="h-full bg-black rounded-full" style={{ width: `${pct}%` }} />
         </div>
-        <span className="w-6 text-right text-[9.5px] font-bold text-primary">{pct}%</span>
+        <span className="w-6 text-right text-[9.5px] font-bold text-black">{pct}%</span>
     </div>
 );
 const ChatMsg = ({ text, reverse = false }: { text: string; reverse?: boolean }) => (
     <div className={`flex items-end gap-1.5 ${reverse ? 'flex-row-reverse' : ''}`}>
-        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-[7px] font-black flex-shrink-0 ${reverse ? 'bg-gradient-to-br from-yellow to-amber' : 'bg-gradient-to-br from-primary to-[#1e7a65]'}`}>
-            {reverse ? <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg> : 'CC'}
+        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-[7px] font-black flex-shrink-0 ${reverse ? 'bg-primary' : 'bg-black'}`}>
+            {reverse ? <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg> : 'CC'}
         </div>
-        <div className={`px-2.5 py-1.5 rounded-[10px] text-[10px] font-semibold leading-snug max-w-[75%] ${reverse ? 'bg-primary text-white rounded-br-[2px]' : 'bg-white border border-primary/10 text-gray-800 rounded-bl-[2px]'}`}>
+        <div className={`px-2.5 py-1.5 rounded-[10px] text-[10px] font-semibold leading-snug max-w-[75%] ${reverse ? 'bg-black text-white rounded-br-[2px]' : 'bg-white border border-black/10 text-black rounded-bl-[2px]'}`}>
             {text}
         </div>
     </div>
 );
 
 // ─── Desktop card base ────────────────────────────────────────────────────────
-const dc = [
-    'relative overflow-hidden rounded-[18px] border border-primary/9',
-    'bg-gradient-to-br from-white via-[#f5faf8] to-[#ecf5f1]',
+const dc = (currentColors: typeof COLORS) => [
+    'relative overflow-hidden rounded-[18px] border',
+    'bg-gradient-to-br from-white via-white to-white', // Simplified to solid white base
     'p-5 flex flex-col gap-2.5',
-    'shadow-[0_2px_8px_rgba(10,82,70,0.06),0_6px_24px_rgba(10,82,70,0.08),0_0_32px_rgba(10,82,70,0.05)]',
-    'hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(10,82,70,0.10),0_14px_40px_rgba(10,82,70,0.13)]',
     'transition-all duration-200',
 ].join(' ');
 
+const cardStyle = (currentColors: typeof COLORS) => ({
+    borderColor: `${currentColors.primary}17`,
+    backgroundColor: 'white',
+    boxShadow: `0 2px 8px ${currentColors.primary}0F, 0 6px 24px ${currentColors.primary}14`,
+});
+
 // ─── Desktop cards (rich content) ────────────────────────────────────────────
 const DesktopFactory = () => (
-    <div className={dc}>
+    <div className={dc(COLORS)} style={cardStyle(COLORS)}>
         <div className="flex items-center gap-2.5"><CardIcon><IcoFactory /></CardIcon><Badge label="Zero transit waste" /></div>
-        <h3 className="text-[15px] font-heading font-black text-[#1a2e28] leading-snug">Straight from Our Factory</h3>
-        <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1">Packed and sealed at source — no warehousing detours, no quality compromise. What leaves our factory is exactly what reaches your door.</p>
-        <div className="bg-primary/5 border border-primary/9 rounded-xl p-2.5 flex flex-col gap-1.5">
+        <h3 className="text-[15px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>Straight from Our Factory</h3>
+        <p className="text-[11.5px] font-medium leading-relaxed flex-1" style={{ color: COLORS.black, opacity: 0.7 }}>Packed and sealed at source — no warehousing detours, no quality compromise. What leaves our factory is exactly what reaches your door.</p>
+        <div className="rounded-xl p-2.5 flex flex-col gap-1.5" style={{ backgroundColor: `${COLORS.primary}0D`, border: `1px solid ${COLORS.primary}17` }}>
             <ChatMsg text="Your order has been packed fresh today!" />
             <ChatMsg text="Ships directly from factory?" reverse />
             <ChatMsg text="Always. Zero stops in between." />
@@ -93,34 +96,34 @@ const DesktopFactory = () => (
     </div>
 );
 const DesktopWomen = () => (
-    <div className={dc}>
+    <div className={dc(COLORS)} style={cardStyle(COLORS)}>
         <div className="flex items-center gap-2.5"><CardIcon><IcoWomen /></CardIcon><Badge label="Women-led workforce" /></div>
-        <h3 className="text-[15px] font-heading font-black text-[#1a2e28] leading-snug">Empowering Women, Every Batch</h3>
-        <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1">70% of our processing team are women — skilled, trained, and fairly compensated. Every pack supports a livelihood and a family.</p>
+        <h3 className="text-[15px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>Empowering Women, Every Batch</h3>
+        <p className="text-[11.5px] font-medium leading-relaxed flex-1" style={{ color: COLORS.black, opacity: 0.7 }}>70% of our processing team are women — skilled, trained, and fairly compensated. Every pack supports a livelihood and a family.</p>
         <Hearts /><Stat num="70%" label="Women workers" />
     </div>
 );
 const DesktopMiddleman = () => (
-    <div className={dc}>
+    <div className={dc(COLORS)} style={cardStyle(COLORS)}>
         <div className="flex items-center gap-2.5"><CardIcon><IcoMiddleman /></CardIcon><Badge label="Best price promise" /></div>
-        <h3 className="text-[15px] font-heading font-black text-[#1a2e28] leading-snug">No Middleman. No Markup.</h3>
-        <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1">Cut out every distributor — fresher cashews, honest pricing, savings passed straight to you.</p>
+        <h3 className="text-[15px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>No Middleman. No Markup.</h3>
+        <p className="text-[11.5px] font-medium leading-relaxed flex-1" style={{ color: COLORS.black, opacity: 0.7 }}>Cut out every distributor — fresher cashews, honest pricing, savings passed straight to you.</p>
         <Divider /><Stat num="30%" label="Avg. savings vs retail" />
     </div>
 );
 const DesktopLayers = () => (
-    <div className={dc}>
+    <div className={dc(COLORS)} style={cardStyle(COLORS)}>
         <div className="flex items-center gap-2.5"><CardIcon><IcoLayers /></CardIcon><Badge label="Precision graded" /></div>
-        <h3 className="text-[15px] font-heading font-black text-[#1a2e28] leading-snug">7 Layers of Perfection</h3>
-        <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1">Shelling, steaming, peeling, grading, sorting, roasting, sealing — only the finest makes the cut.</p>
+        <h3 className="text-[15px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>7 Layers of Perfection</h3>
+        <p className="text-[11.5px] font-medium leading-relaxed flex-1" style={{ color: COLORS.black, opacity: 0.7 }}>Shelling, steaming, peeling, grading, sorting, roasting, sealing — only the finest makes the cut.</p>
         <StepList /><Stat num="7" label="Quality stages" />
     </div>
 );
 const DesktopCare = () => (
-    <div className={dc}>
+    <div className={dc(COLORS)} style={cardStyle(COLORS)}>
         <div className="flex items-center gap-2.5"><CardIcon><IcoShield /></CardIcon><Badge label="Certified hygienic" /></div>
-        <h3 className="text-[15px] font-heading font-black text-[#1a2e28] leading-snug">Handled with Motherly Care</h3>
-        <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1">Hospital-grade hygiene. Every cashew treated as if it's meant for someone you love.</p>
+        <h3 className="text-[15px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>Handled with Motherly Care</h3>
+        <p className="text-[11.5px] font-medium leading-relaxed flex-1" style={{ color: COLORS.black, opacity: 0.7 }}>Hospital-grade hygiene. Every cashew treated as if it's meant for someone you love.</p>
         <div className="flex flex-col gap-1.5">
             <PBar label="Hygiene" pct={98} /><PBar label="Freshness" pct={95} /><PBar label="Safety" pct={100} />
         </div>
@@ -130,12 +133,16 @@ const DesktopCare = () => (
 // ─── Mobile cards (trimmed, fixed equal height) ───────────────────────────────
 // Fixed height h-[220px] set on wrapper. Content: icon+badge, title, short body, stat only.
 const mc = [
-    'relative overflow-hidden rounded-[18px] border border-primary/9',
-    'bg-gradient-to-br from-white via-[#f5faf8] to-[#ecf5f1]',
+    'relative overflow-hidden rounded-[18px] border',
+    'bg-white',
     'p-[18px] flex flex-col gap-2',
-    'h-[220px]', // ← fixed equal height for all mobile cards
-    'shadow-[0_2px_8px_rgba(10,82,70,0.06),0_6px_24px_rgba(10,82,70,0.08)]',
+    'h-[220px]', 
 ].join(' ');
+
+const mcStyle = (currentColors: typeof COLORS) => ({
+    borderColor: `${currentColors.primary}17`,
+    boxShadow: `0 2px 8px ${currentColors.primary}0F, 0 6px 24px ${currentColors.primary}14`,
+});
 
 const MOBILE_CARDS = [
     { icon: <IcoFactory />, badge: 'Zero transit waste', title: 'Straight from Our Factory', body: 'Packed and sealed at source. Direct from our floor to your door — zero stops.', bottom: <Stat num="100%" label="Direct to you" /> },
@@ -185,13 +192,13 @@ function MobileCarousel() {
                     className="flex items-stretch gap-3 px-5 pb-2 overflow-x-auto [scroll-snap-type:x_mandatory] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
                     {MOBILE_CARDS.map((card, i) => (
-                        <div key={i} className={`flex-none w-[250px] [scroll-snap-align:start] ${mc}`}>
+                        <div key={i} className={`flex-none w-[250px] [scroll-snap-align:start] ${mc}`} style={mcStyle(COLORS)}>
                             <div className="flex items-center gap-2.5">
                                 <CardIcon>{card.icon}</CardIcon>
                                 <Badge label={card.badge} />
                             </div>
-                            <h3 className="text-[14px] font-heading font-black text-[#1a2e28] leading-snug">{card.title}</h3>
-                            <p className="text-[11.5px] text-[#4a6b62] font-medium leading-relaxed flex-1 overflow-hidden">{card.body}</p>
+                            <h3 className="text-[14px] font-heading font-black leading-snug" style={{ color: COLORS.heading }}>{card.title}</h3>
+                            <p className="text-[11.5px] font-medium leading-relaxed flex-1 overflow-hidden" style={{ color: COLORS.black, opacity: 0.7 }}>{card.body}</p>
                             <div className="mt-auto pt-1">{card.bottom}</div>
                         </div>
                     ))}
@@ -230,11 +237,11 @@ export default function WhyUsCRO() {
     return (
         <section className="bg-bg-cream py-10 md:py-8 overflow-hidden">
             <div className="text-center px-5 mb-8">
-                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary mb-2">Handpicked for you</p>
-                <h2 className="font-heading font-black text-[26px] md:text-[32px] text-[#1a2e28] leading-tight mb-2">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: COLORS.black }}>Handpicked for you</p>
+                <h2 className="font-heading font-black text-[26px] md:text-[32px] leading-tight mb-2" style={{ color: COLORS.heading }}>
                     Why Choose Us?
                 </h2>
-                <p className="text-[13px] text-[#4a6b62] font-medium max-w-sm mx-auto leading-relaxed">
+                <p className="text-[13px] font-medium max-w-sm mx-auto leading-relaxed" style={{ color: COLORS.black, opacity: 0.7 }}>
                     Experience the crunch. Premium, sustainably packaged, straight from our factory.
                 </p>
             </div>

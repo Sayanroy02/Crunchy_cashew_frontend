@@ -86,15 +86,15 @@ export default function PincodeSelector() {
                             <button
                                 onClick={check}
                                 disabled={input.length !== 6 || status === 'checking'}
-                                className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-green-800 transition disabled:opacity-50"
+                                className="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-black transition disabled:opacity-50"
                             >
                                 {status === 'checking' ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Check'}
                             </button>
                         </div>
 
                         {status === 'available' && (
-                            <div className="mt-3 bg-green-50 border border-green-200 rounded-xl px-3 py-2 flex items-center gap-2 text-sm text-green-700">
-                                <i className="fa-solid fa-circle-check text-green-500"></i>
+                            <div className="mt-3 bg-primary/10 border border-primary/20 rounded-xl px-3 py-2 flex items-center gap-2 text-sm text-black">
+                                <i className="fa-solid fa-circle-check text-primary"></i>
                                 <span>✅ Delivery available to <strong>{input}</strong></span>
                             </div>
                         )}

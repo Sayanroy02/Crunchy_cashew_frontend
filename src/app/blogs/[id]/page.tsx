@@ -66,7 +66,7 @@ export default function BlogDetailPage() {
                     <p className="text-gray-600 font-body mb-8 text-lg">
                         The blog post you're looking for doesn't exist or has been removed.
                     </p>
-                    <Link href="/blogs" className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-green-800 transition-colors">
+                    <Link href="/blogs" className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-black transition-colors">
                         Back to Blogs <i className="fa-solid fa-arrow-left ml-2"></i>
                     </Link>
                 </div>
@@ -133,7 +133,7 @@ export default function BlogDetailPage() {
                 <div className="bg-primary text-white rounded-3xl p-10 md:p-16 text-center shadow-xl relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -tr-32 -mr-32 pointer-events-none"></div>
                     <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 relative z-10">Taste the Quality Yourself</h2>
-                    <p className="text-green-50 mb-8 max-w-lg mx-auto relative z-10">Order our premium, freshly roasted cashews direct from the factory.</p>
+                    <p className="text-black/60 mb-8 max-w-lg mx-auto relative z-10 font-medium">Order our premium, freshly roasted cashews direct from the factory.</p>
                     <Link href="/shop" className="inline-block bg-highlight text-black font-bold uppercase tracking-wider px-8 py-4 rounded-full hover:scale-105 transition-transform duration-300 relative z-10 shadow-lg">
                         Shop Now <i className="fa-solid fa-cart-shopping ml-2"></i>
                     </Link>

@@ -65,7 +65,7 @@ export default function OrderConfirmationPage() {
   const date = order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
 
   return (
-    <div className="min-h-screen bg-[#f0f4f4] py-16 px-4 print:py-0 print:bg-white">
+    <div className="min-h-screen bg-bg py-16 px-4 print:py-0 print:bg-white text-black">
       {/* CSS specific for printing out the bill */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
@@ -79,11 +79,11 @@ export default function OrderConfirmationPage() {
         
         {/* Success Header Banner */}
         <div className="bg-white rounded-[2rem] p-10 shadow-sm border border-gray-100 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-[#99EA78]/20 text-[#0A5246] flex border border-[#99EA78]/30 flex-col items-center justify-center text-4xl mb-6 shadow-sm relative">
-            <span className="absolute inset-0 rounded-full border border-[#99EA78] animate-ping opacity-20"></span>
+          <div className="w-20 h-20 rounded-full flex flex-col items-center justify-center text-4xl mb-6 shadow-sm relative" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
+            <span className="absolute inset-0 rounded-full border border-[#F6B000] animate-ping opacity-20"></span>
             <i className="fa-solid fa-check"></i>
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3">
+          <h1 className="text-3xl md:text-5xl font-black text-black tracking-tight mb-3">
             Order Confirmed!
           </h1>
           <p className="text-gray-500 font-semibold max-w-lg mx-auto">
@@ -113,8 +113,8 @@ export default function OrderConfirmationPage() {
                 <span className="text-sm font-bold text-gray-500">Payment Status</span>
                 <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
                   paymentStatus === 'Paid' || paymentStatus === 'COD' 
-                  ? 'bg-green-100 text-green-700' 
-                  : 'bg-yellow-100 text-yellow-700'
+                  ? 'bg-black text-white' 
+                  : 'bg-[#F6B000] text-black'
                 }`}>
                   {paymentStatus}
                 </span>
@@ -154,7 +154,7 @@ export default function OrderConfirmationPage() {
             {(order.items || []).map((item: any, idx: number) => (
               <div key={idx} className="flex items-center justify-between pb-4 border-b border-gray-100 last:border-0">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#f0f4f4] text-[#0A5246] flex flex-shrink-0 items-center justify-center font-black text-sm">
+                  <div className="w-10 h-10 rounded-xl bg-bg text-black flex flex-shrink-0 items-center justify-center font-black text-sm border border-gray-100">
                     {idx + 1}
                   </div>
                   <div>
@@ -188,7 +188,7 @@ export default function OrderConfirmationPage() {
             </div>
             <div className="flex justify-between items-center pt-4 border-t border-gray-100">
               <span className="font-black text-gray-800 uppercase tracking-widest text-sm">Grand Total</span>
-              <span className="font-black text-2xl text-[#0A5246]">
+              <span className="font-black text-2xl" style={{ color: '#F6B000' }}>
                 ₹{order.total_amount?.toLocaleString('en-IN')}
               </span>
             </div>
@@ -199,14 +199,15 @@ export default function OrderConfirmationPage() {
         <div className="flex flex-col sm:flex-row gap-4 mt-6">
           <button 
             onClick={handlePrint}
-            className="flex-1 bg-white border-2 border-[#0A5246] text-[#0A5246] font-black py-4 rounded-xl hover:bg-[#0A5246]/5 hover:scale-[1.02] transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-sm"
+            className="flex-1 bg-white border-2 border-black text-black font-black py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-sm hover:bg-gray-50"
           >
             <i className="fa-solid fa-file-pdf"></i> Download Bill (PDF)
           </button>
           
           <Link 
             href="/shop" 
-            className="flex-1 bg-[#0A5246] text-white font-black py-4 rounded-xl hover:bg-[#084239] hover:shadow-lg hover:-translate-y-1 transition-all transform active:scale-95 flex items-center justify-center gap-3 shadow-md shadow-[#0A5246]/20"
+            className="flex-1 font-black py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg"
+            style={{ backgroundColor: '#000000', color: '#F6B000' }}
           >
             Continue Shopping <i className="fa-solid fa-arrow-right"></i>
           </Link>
@@ -225,13 +226,13 @@ export default function OrderConfirmationPage() {
       <div className="hidden print:block w-full max-w-4xl mx-auto bg-white text-black font-sans pb-10">
         
         {/* Header */}
-        <div className="flex justify-between items-start mb-8 border-b-2 border-slate-800 pb-6">
+        <div className="flex justify-between items-start mb-8 border-b-2 border-black pb-6">
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-[#0A5246] text-white rounded-lg flex items-center justify-center text-3xl font-black shadow-md">
+            <div className="w-16 h-16 rounded-lg flex items-center justify-center text-3xl font-black shadow-md" style={{ backgroundColor: '#000000', color: '#F6B000' }}>
               <i className="fa-solid fa-seedling"></i>
             </div>
             <div>
-              <h1 className="text-2xl font-black tracking-tight text-[#0A5246]">Crunchy Cashews</h1>
+              <h1 className="text-2xl font-black tracking-tight text-black">Crunchy Cashews</h1>
               <p className="text-xs text-slate-500 font-semibold mt-1">Direct from factory</p>
             </div>
           </div>
@@ -339,8 +340,8 @@ export default function OrderConfirmationPage() {
               </div>
             </div>
             
-            <div className="flex justify-between items-center bg-[#3A4D6E] text-white px-6 py-4 mt-6 rounded shadow-sm border border-[#27354d]">
-              <span className="font-bold text-lg">Total</span>
+            <div className="flex justify-between items-center px-6 py-4 mt-6 rounded shadow-sm" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
+              <span className="font-bold text-lg" style={{ color: '#F6B000' }}>Total</span>
               <span className="font-black text-xl">₹{order.total_amount?.toLocaleString('en-IN')}</span>
             </div>
           </div>

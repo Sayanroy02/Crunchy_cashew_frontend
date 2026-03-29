@@ -67,11 +67,10 @@ export default function PincodeWidget() {
     if (savedPincode && !result) {
         const isSaved = PINCODES_AVAILABLE.includes(savedPincode);
         return (
-            <div className={`flex items-center gap-2 text-sm rounded-xl border px-4 py-2.5 ${isSaved ? 'border-green-200 bg-green-50' : 'border-red-100 bg-red-50'}`}>
+            <div className={`flex items-center gap-2 text-sm rounded-xl border px-4 py-2.5 ${isSaved ? 'border-primary/20 bg-primary/10' : 'border-red-100 bg-red-50'}`}>
                 <i className={`fa-solid ${isSaved ? 'fa-location-dot text-primary' : 'fa-circle-xmark text-red-500'}`}></i>
                 <span className="font-medium text-gray-700">
                     Delivering to <span className="font-black">{savedPincode}</span>
-                    {isSaved ? ' ✅' : ' ❌'}
                 </span>
                 <button onClick={changePin} className="ml-auto text-xs text-blue-600 underline hover:text-blue-800">Change</button>
             </div>
@@ -95,14 +94,14 @@ export default function PincodeWidget() {
                 <button
                     type="submit"
                     disabled={loading || pincode.length < 6}
-                    className="bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 disabled:opacity-50 transition-colors whitespace-nowrap"
+                    className="bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-black disabled:opacity-50 transition-colors whitespace-nowrap"
                 >
                     {loading ? <i className="fa-solid fa-spinner animate-spin"></i> : 'Check'}
                 </button>
             </form>
 
             {result && (
-                <div className={`mt-2 text-sm px-3 py-2 rounded-lg ${result.available ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+                <div className={`mt-2 text-sm px-3 py-2 rounded-lg ${result.available ? 'bg-primary/10 text-black border border-primary/20' : 'bg-red-50 text-red-700 border border-red-200'}`}>
                     {result.message}
                 </div>
             )}

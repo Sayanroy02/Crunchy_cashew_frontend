@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { API } from "@/constants/api";
+import { COLORS } from "@/constants/styles";
 
 interface InstaVideo {
     _id: string;
@@ -11,6 +12,70 @@ interface InstaVideo {
     video_url: string;
     thumbnail_url: string;
 }
+
+const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void }) => {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isInView, setIsInView] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.5 }
+        );
+        if (videoRef.current) observer.observe(videoRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (!videoRef.current) return;
+        if (isInView) {
+            videoRef.current.play().catch(() => {});
+        } else {
+            videoRef.current.pause();
+        }
+    }, [isInView]);
+
+    return (
+        <div
+            className="flex-shrink-0 w-[200px] md:w-auto h-[340px] md:h-[380px] relative rounded-2xl overflow-hidden snap-center group cursor-pointer bg-black"
+            style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}
+            onClick={onClick}
+        >
+            <video
+                ref={videoRef}
+                src={video.video_url}
+                poster={video.thumbnail_url}
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30">
+                    <i className="fa-solid fa-play text-lg ml-0.5"></i>
+                </div>
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
+                <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 drop-shadow">
+                    {video.title}
+                </h3>
+                {video.link && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(video.link, "_blank");
+                        }}
+                        className="bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider w-max transition-colors flex items-center gap-1.5"
+                    >
+                        <i className="fa-brands fa-instagram text-xs"></i>
+                        View on Insta
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+};
 
 export default function InstaVideos() {
     const [videos, setVideos] = useState<InstaVideo[]>([]);
@@ -31,9 +96,11 @@ export default function InstaVideos() {
     return (
         <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 md:px-6">
-
                 <div className="text-center mb-8 flex flex-col items-center">
-                    <span className="text-primary font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block">
+                    <span 
+                        className="font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block"
+                        style={{ color: COLORS.primary }}
+                    >
                         Latest Reels
                     </span>
                     <motion.h2
@@ -41,7 +108,8 @@ export default function InstaVideos() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
+                        className="text-4xl md:text-5xl font-black tracking-tight mb-3"
+                        style={{ color: COLORS.heading }}
                     >
                         Crunchy on <span className="relative inline-block">
                             <span className="relative z-10">Insta</span>
@@ -50,71 +118,26 @@ export default function InstaVideos() {
                                 whileInView={{ width: '100%' }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                                style={{ backgroundColor: COLORS.highlight }}
                             />
                         </span>
                     </motion.h2>
                 </div>
 
-                {/* Scrollable / grid row */}
                 <div
                     ref={scrollRef}
-                    className="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto pb-3 snap-x snap-mandatory"
-                    style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                    className="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto pb-3 snap-x snap-mandatory no-scrollbar"
                 >
                     {videos.map((video) => (
-                        <div
-                            key={video._id}
-                            className="flex-shrink-0 w-[200px] md:w-auto h-[340px] md:h-[380px] relative rounded-2xl overflow-hidden snap-center group cursor-pointer bg-black"
-                            style={{
-                                boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
-                            }}
-                            onClick={() => setSelectedVideo(video)}
-                        >
-                            <video
-                                src={video.video_url}
-                                poster={video.thumbnail_url}
-                                autoPlay
-                                muted
-                                loop
-                                playsInline
-                                className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform transition-transform duration-700"
-                            />
-
-                            {/* Gradient overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
-
-                            {/* Play icon on hover */}
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white border border-white/30">
-                                    <i className="fa-solid fa-play text-lg ml-0.5"></i>
-                                </div>
-                            </div>
-
-                            {/* Bottom info */}
-                            <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-2">
-                                <h3 className="text-white font-semibold text-sm leading-snug line-clamp-2 drop-shadow">
-                                    {video.title}
-                                </h3>
-
-                                {video.link && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            window.open(video.link, "_blank");
-                                        }}
-                                        className="bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider w-max transition-colors flex items-center gap-1.5"
-                                    >
-                                        <i className="fa-brands fa-instagram text-xs"></i>
-                                        View on Insta
-                                    </button>
-                                )}
-                            </div>
-                        </div>
+                        <VideoItem 
+                            key={video._id} 
+                            video={video} 
+                            onClick={() => setSelectedVideo(video)} 
+                        />
                     ))}
                 </div>
 
-                {/* Modal */}
                 {selectedVideo && (
                     <div
                         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
@@ -140,14 +163,12 @@ export default function InstaVideos() {
                                 className="w-full h-full object-contain bg-black"
                             />
 
-                            {/* Title overlay */}
                             <div className="absolute top-0 inset-x-0 p-4 bg-gradient-to-b from-black/75 to-transparent pointer-events-none">
                                 <h3 className="text-white font-semibold text-sm drop-shadow">
                                     {selectedVideo.title}
                                 </h3>
                             </div>
 
-                            {/* Instagram link */}
                             {selectedVideo.link && (
                                 <a
                                     href={selectedVideo.link}

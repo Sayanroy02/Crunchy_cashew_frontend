@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import Link from 'next/link';
 import { API } from '@/constants/api';
+import Image from 'next/image';
 
 // ─── Scroll helper ────────────────────────────────────────────────────────────
 function scrollTo(ref: React.RefObject<HTMLElement | null>) {
@@ -18,7 +19,7 @@ const gradeCategories = [
         id: 'white-wholes',
         title: 'White Wholes',
         subtitle: 'Premium whole cashews — prized for visual appeal, size, and taste.',
-        accent: '#2D6A4F',
+        accent: '#000000',
         items: [
             {
                 code: 'WW 180',
@@ -58,7 +59,7 @@ const gradeCategories = [
         id: 'scorched-wholes',
         title: 'Scorched Wholes',
         subtitle: 'Ideal for roasting, coating, and processing — where appearance is secondary.',
-        accent: '#B5641C',
+        accent: '#F6B000',
         items: [
             {
                 code: 'SW 240',
@@ -90,7 +91,7 @@ const gradeCategories = [
         id: 'cashew-forms',
         title: 'Cashew Forms',
         subtitle: 'Splits and pieces — optimized for toppings, coatings, and culinary formulations.',
-        accent: '#5C7A29',
+        accent: '#000000',
         items: [
             {
                 code: 'White Splits',
@@ -148,21 +149,21 @@ const gradeCategories = [
 
 const ALL_GRADE_SUGGESTIONS = [
     // White Wholes
-    { label: 'WW 180', tag: 'Jumbo', color: '#2D6A4F', text: 'WW 180 (Jumbo) – ~160–180 nuts/lb, Ghana/Ivory Coast/Tanzania' },
-    { label: 'WW 240', tag: 'Large', color: '#2D6A4F', text: 'WW 240 (Large) – ~220–240 nuts/lb, Ghana/Ivory Coast/Tanzania' },
-    { label: 'WW 320', tag: 'Popular', color: '#2D6A4F', text: 'WW 320 (Most Popular) – ~300–320 nuts/lb, Multi-origin' },
-    { label: 'WW 400', tag: 'Value', color: '#2D6A4F', text: 'WW 400 (Value) – ~380–400 nuts/lb, Guinea Bissau/Senegal' },
+    { label: 'WW 180', tag: 'Jumbo', color: '#F6B000', text: 'WW 180 (Jumbo) – ~160–180 nuts/lb, Ghana/Ivory Coast/Tanzania' },
+    { label: 'WW 240', tag: 'Large', color: '#F6B000', text: 'WW 240 (Large) – ~220–240 nuts/lb, Ghana/Ivory Coast/Tanzania' },
+    { label: 'WW 320', tag: 'Popular', color: '#F6B000', text: 'WW 320 (Most Popular) – ~300–320 nuts/lb, Multi-origin' },
+    { label: 'WW 400', tag: 'Value', color: '#F6B000', text: 'WW 400 (Value) – ~380–400 nuts/lb, Guinea Bissau/Senegal' },
     // Scorched Wholes
-    { label: 'SW 240', tag: 'Scorched', color: '#B5641C', text: 'SW 240 (Scorched Large) – ~220–240 nuts/lb, for roasting/coating' },
-    { label: 'SW 320', tag: 'Scorched', color: '#B5641C', text: 'SW 320 (Scorched Popular) – ~300–320 nuts/lb, all food applications' },
-    { label: 'SW 400', tag: 'Scorched', color: '#B5641C', text: 'SW 400 (Processing) – ~380–400 nuts/lb, slicing/dicing/grinding' },
+    { label: 'SW 240', tag: 'Scorched', color: '#000000', text: 'SW 240 (Scorched Large) – ~220–240 nuts/lb, for roasting/coating' },
+    { label: 'SW 320', tag: 'Scorched', color: '#000000', text: 'SW 320 (Scorched Popular) – ~300–320 nuts/lb, all food applications' },
+    { label: 'SW 400', tag: 'Scorched', color: '#000000', text: 'SW 400 (Processing) – ~380–400 nuts/lb, slicing/dicing/grinding' },
     // Cashew Forms
-    { label: 'White Splits', tag: 'Form', color: '#5C7A29', text: 'White Splits – halved wholes, ~350–360 pcs/250g, topping/coating' },
-    { label: 'Large White Pieces', tag: 'Form', color: '#5C7A29', text: 'Large White Pieces – quartered, topping/garnishing' },
-    { label: 'Small White Pieces', tag: 'Form', color: '#5C7A29', text: 'Small White Pieces – 1/8th pieces, sauce/curry thickener' },
-    { label: 'Scorched Splits', tag: 'Form', color: '#5C7A29', text: 'Scorched Splits – processing/coating, visual appeal not critical' },
-    { label: 'Scorched Pieces', tag: 'Form', color: '#5C7A29', text: 'Scorched Pieces – further processing applications' },
-    { label: 'Small Scorched Pieces', tag: 'Form', color: '#5C7A29', text: 'Small Scorched Pieces – fine processing, appearance not critical' },
+    { label: 'White Splits', tag: 'Form', color: '#000000', text: 'White Splits – halved wholes, ~350–360 pcs/250g, topping/coating' },
+    { label: 'Large White Pieces', tag: 'Form', color: '#000000', text: 'Large White Pieces – quartered, topping/garnishing' },
+    { label: 'Small White Pieces', tag: 'Form', color: '#000000', text: 'Small White Pieces – 1/8th pieces, sauce/curry thickener' },
+    { label: 'Scorched Splits', tag: 'Form', color: '#000000', text: 'Scorched Splits – processing/coating, visual appeal not critical' },
+    { label: 'Scorched Pieces', tag: 'Form', color: '#000000', text: 'Scorched Pieces – further processing applications' },
+    { label: 'Small Scorched Pieces', tag: 'Form', color: '#000000', text: 'Small Scorched Pieces – fine processing, appearance not critical' },
 ];
 
 // ─── Smart Grade Input ────────────────────────────────────────────────────────
@@ -233,7 +234,8 @@ function GradeRequirementsInput({
                 onChange={handleTextChange}
                 onFocus={() => setFocused(true)}
                 placeholder="Type a grade (e.g. WW 320, Splits) or scroll suggestions below..."
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all resize-none"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none"
+                style={{'--tw-ring-color': '#F6B000'} as any}
             />
 
             {/* Suggestion chips — always visible below textarea when focused or empty */}
@@ -330,9 +332,12 @@ function GradeCard({
                 className="relative overflow-hidden"
                 style={{ background: '#F8F5F0', height: '180px' }}
             >
-                <img
+                <Image
                     src={item.image}
                     alt={item.code}
+                    width={400}
+                    height={180}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
                 />
                 <span
@@ -426,7 +431,7 @@ function OurGradesSection() {
                     transition: 'opacity 0.6s ease, transform 0.6s ease',
                 }}
             >
-                <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full bg-green-50 text-green-700 mb-4">
+                <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
                     Grades Catalogue
                 </span>
                 <h2
@@ -440,7 +445,7 @@ function OurGradesSection() {
                 </p>
                 <div className="flex items-center justify-center gap-3 mt-6">
                     <div className="h-px w-16 bg-gray-200" />
-                    <div className="w-2 h-2 rounded-full bg-green-700" />
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F6B000' }} />
                     <div className="h-px w-16 bg-gray-200" />
                 </div>
             </div>
@@ -540,7 +545,7 @@ export default function BulkOrderPage() {
             {/* ── Hero ── */}
             <section
                 className="relative overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #40916C 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}
             >
                 {/* Dot grid */}
                 <div
@@ -552,39 +557,45 @@ export default function BulkOrderPage() {
                 />
 
                 {/* Left cashew image */}
-                <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none"
+                <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none transition-opacity duration-1000"
                     style={{ width: 'clamp(160px, 22vw, 340px)', height: '115%' }}>
-                    <img
+                    <Image
                         src="/images/Right-Hero-Section.png"
                         alt=""
-                        className="w-full h-full object-contain object-bottom"
+                        fill
+                        priority
+                        className="object-contain object-bottom"
                         style={{ transform: 'scaleX(-1)', opacity: 0.95 }}
+                        sizes="(max-width: 768px) 160px, 340px"
                     />
                 </div>
 
                 {/* Right cashew image */}
-                <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none"
+                <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none transition-opacity duration-1000"
                     style={{ width: 'clamp(160px, 22vw, 340px)', height: '115%' }}>
-                    <img
+                    <Image
                         src="/images/Right-Hero-Section.png"
                         alt=""
-                        className="w-full h-full object-contain object-bottom"
+                        fill
+                        priority
+                        className="object-contain object-bottom"
                         style={{ opacity: 0.95 }}
+                        sizes="(max-width: 768px) 160px, 340px"
                     />
                 </div>
 
                 {/* Center content */}
-                <div className="relative z-10 py-14 md:py-16 px-6 text-center max-w-3xl mx-auto text-white">
+                <div className="relative z-10 py-14 md:py-16 px-6 text-center max-w-3xl mx-auto text-black">
                     {/* Star rating bar */}
                     <div className="flex items-center justify-center gap-2 mb-4">
                         <div className="flex gap-0.5">
                             {[...Array(5)].map((_, i) => (
-                                <svg key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 20 20">
+                                <svg key={i} className="w-4 h-4 text-black fill-black" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                 </svg>
                             ))}
                         </div>
-                        <span className="text-xs text-green-200 font-semibold tracking-wide">Trusted by 480+ businesses</span>
+                        <span className="text-xs text-black/60 font-semibold tracking-wide">Trusted by 480+ businesses</span>
                     </div>
 
                     <h1
@@ -593,7 +604,7 @@ export default function BulkOrderPage() {
                     >
                         Wholesale &amp;<br />Bulk Orders
                     </h1>
-                    <p className="text-green-100 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-2">
+                    <p className="text-black/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-2">
                         Factory-direct cashews. Uncompromised quality.<br className="hidden md:block" />
                         Competitive B2B margins. Reliable supply chains.
                     </p>
@@ -601,7 +612,7 @@ export default function BulkOrderPage() {
                     {/* Trust pills */}
                     <div className="flex flex-wrap items-center justify-center gap-3 mt-4 mb-8">
                         {['✓ 100% Natural', '✓ Direct from Factory', '✓ 24hr Quote'].map((t) => (
-                            <span key={t} className="text-xs bg-white/10 border border-white/20 text-green-100 px-3 py-1 rounded-full">
+                            <span key={t} className="text-xs bg-black/5 border border-black/10 text-black px-3 py-1 rounded-full">
                                 {t}
                             </span>
                         ))}
@@ -611,7 +622,8 @@ export default function BulkOrderPage() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <button
                             onClick={() => scrollTo(formRef)}
-                            className="group flex items-center gap-2 bg-[#D4A017] hover:bg-[#B8880F] text-white font-bold px-7 py-3.5 rounded-xl shadow-lg transition-all duration-200 text-sm hover:scale-105 active:scale-95"
+                            className="group flex items-center gap-2 font-bold px-7 py-3.5 rounded-xl shadow-lg transition-all duration-200 text-sm hover:scale-105 active:scale-95"
+                            style={{ backgroundColor: '#000000', color: '#F6B000' }}
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -620,7 +632,7 @@ export default function BulkOrderPage() {
                         </button>
                         <button
                             onClick={() => scrollTo(inquiryRef)}
-                            className="group flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold px-7 py-3.5 rounded-xl transition-all duration-200 text-sm hover:scale-105 active:scale-95"
+                            className="group flex items-center gap-2 bg-black/5 hover:bg-black/10 border border-black/10 text-black font-bold px-7 py-3.5 rounded-xl transition-all duration-200 text-sm hover:scale-105 active:scale-95"
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
@@ -645,7 +657,7 @@ export default function BulkOrderPage() {
             <div ref={formRef} className="max-w-7xl mx-auto px-6 pb-24" style={{ scrollMarginTop: '80px' }}>
                 {/* Form section label */}
                 <div className="text-center mb-12">
-                    <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full bg-green-50 text-green-700 mb-4">
+                    <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
                         Get a Quote
                     </span>
                     <h2
@@ -673,8 +685,10 @@ export default function BulkOrderPage() {
                         </p>
 
                         {submitStatus === 'success' ? (
-                            <div className="bg-green-50 text-green-800 p-8 rounded-2xl border border-green-200 text-center">
-                                <div className="text-5xl mb-4">✅</div>
+                            <div className="bg-primary/10 text-black p-8 rounded-2xl border border-primary/20 text-center">
+                                <div className="text-5xl mb-4 text-primary">
+                                    <i className="fa-solid fa-circle-check" />
+                                </div>
                                 <h3 className="font-bold text-2xl mb-2" style={{ fontFamily: 'Georgia, serif' }}>
                                     Inquiry Submitted!
                                 </h3>
@@ -683,7 +697,7 @@ export default function BulkOrderPage() {
                                 </p>
                                 <button
                                     onClick={() => setSubmitStatus('idle')}
-                                    className="mt-6 text-green-700 font-bold hover:underline text-sm"
+                                    className="mt-6 text-primary font-bold hover:underline text-sm"
                                 >
                                     Submit another request
                                 </button>
@@ -700,7 +714,8 @@ export default function BulkOrderPage() {
                                             type="text"
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{'--tw-ring-color': '#F6B000'} as any}
                                         />
                                     </div>
                                     <div>
@@ -712,7 +727,8 @@ export default function BulkOrderPage() {
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{'--tw-ring-color': '#F6B000'} as any}
                                         />
                                     </div>
                                 </div>
@@ -726,7 +742,8 @@ export default function BulkOrderPage() {
                                             type="tel"
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{'--tw-ring-color': '#F6B000'} as any}
                                         />
                                     </div>
                                     <div>
@@ -737,7 +754,8 @@ export default function BulkOrderPage() {
                                             type="text"
                                             value={formData.company}
                                             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all"
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{'--tw-ring-color': '#F6B000'} as any}
                                         />
                                     </div>
                                 </div>
@@ -749,7 +767,8 @@ export default function BulkOrderPage() {
                                         required
                                         value={formData.volume}
                                         onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                        style={{'--tw-ring-color': '#F6B000'} as any}
                                     >
                                         <option value="">Select an option</option>
                                         <option value="5-10">5 – 10 kg</option>
@@ -782,7 +801,8 @@ export default function BulkOrderPage() {
                                 <button
                                     type="submit"
                                     disabled={submitStatus === 'loading'}
-                                    className="w-full bg-[#1B4332] text-white font-bold text-base py-4 rounded-xl hover:bg-[#2D6A4F] transition-colors shadow-lg flex justify-center items-center gap-2"
+                                    className="w-full font-bold text-base py-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95"
+                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}
                                 >
                                     {submitStatus === 'loading' ? '⏳ Sending...' : '📩 Submit Wholesale Inquiry'}
                                 </button>
@@ -824,11 +844,11 @@ export default function BulkOrderPage() {
                                     placeholder="Enter your email"
                                     value={searchEmail}
                                     onChange={(e) => setSearchEmail(e.target.value)}
-                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-transparent transition-all shadow-sm"
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
                                 />
                                 <button
                                     type="submit"
-                                    className="w-full bg-[#1B4332] text-white font-bold py-4 rounded-xl hover:bg-[#2D6A4F] transition-colors shadow-md text-sm"
+                                    className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-primary hover:text-black transition-colors shadow-md text-sm"
                                 >
                                     Check Status
                                 </button>

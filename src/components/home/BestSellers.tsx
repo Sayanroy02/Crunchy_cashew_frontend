@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 type TagFilter = 'all' | 'best_seller' | 'newest' | 'gifting' | 'event';
 
@@ -58,7 +59,10 @@ export default function BestSellers() {
 
                 {/* Heading */}
                 <div className="text-center mb-5 md:mb-6">
-                    <span className="text-primary font-bold tracking-[4px] uppercase text-xs mb-2 block">
+                    <span 
+                        className="font-bold tracking-[4px] uppercase text-xs mb-2 block"
+                        style={{ color: COLORS.text }}
+                    >
                         Handpicked For You
                     </span>
                     <motion.h2
@@ -66,7 +70,8 @@ export default function BestSellers() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
+                        className="text-4xl md:text-5xl font-black tracking-tight mb-3"
+                        style={{ color: COLORS.heading }}
                     >
                         Our Best <span className="relative inline-block">
                             <span className="relative z-10">Sellers</span>
@@ -75,7 +80,8 @@ export default function BestSellers() {
                                 whileInView={{ width: '100%' }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                                style={{ backgroundColor: COLORS.highlight }}
                             />
                         </span>
                     </motion.h2>
@@ -91,10 +97,15 @@ export default function BestSellers() {
                                 flex-none inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold
                                 border-2 transition-all duration-200 whitespace-nowrap
                                 ${activeTag === tag.value
-                                    ? 'bg-primary border-primary text-white shadow-md scale-105'
-                                    : 'bg-white border-gray-200 text-gray-600 hover:border-primary hover:text-primary'
+                                    ? 'shadow-md scale-105'
+                                    : 'bg-white border-gray-200 text-gray-600'
                                 }
                             `}
+                            style={activeTag === tag.value ? {
+                                backgroundColor: COLORS.primary,
+                                borderColor: COLORS.primary,
+                                color: COLORS.black
+                            } : {}}
                         >
                             <i className={`${tag.icon} text-xs`} />
                             {tag.label}
@@ -157,7 +168,18 @@ export default function BestSellers() {
                 <div className="mt-7 text-center">
                     <Link
                         href="/shop"
-                        className="inline-flex items-center gap-2 border-2 border-primary text-primary font-bold px-8 py-3 rounded-full hover:bg-primary hover:text-white transition-all duration-300"
+                        className="inline-flex items-center gap-2 border-2 font-bold px-8 py-3 rounded-full transition-all duration-300 group"
+                        style={{ borderColor: COLORS.black, color: COLORS.black }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = COLORS.primary;
+                            e.currentTarget.style.borderColor = COLORS.primary;
+                            e.currentTarget.style.color = COLORS.black;
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.borderColor = COLORS.black;
+                            e.currentTarget.style.color = COLORS.black;
+                        }}
                     >
                         View All Products <i className="fa-solid fa-arrow-right" />
                     </Link>

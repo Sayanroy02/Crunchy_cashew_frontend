@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { COLORS } from '@/constants/styles';
 
 const grades = [
     {
@@ -54,8 +55,8 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
 
             {/* Label — Lower Stacking but Above Background */}
             <span
-                className="text-center font-bold text-[#2D6A4F] relative z-10 -mt-2 md:-mt-10"
-                style={{ fontSize: '1.3rem', lineHeight: '1.2' }}
+                className="text-center font-bold relative z-10 -mt-2 md:-mt-10"
+                style={{ fontSize: '1.3rem', lineHeight: '1.2', color: COLORS.black }}
             >
                 {grade.name}
             </span>
@@ -70,7 +71,10 @@ export default function BulkOrderCard() {
 
                 {/* Header */}
                 <div className="text-center mb-3">
-                    <span className="text-[#2D6A4F] font-bold tracking-widest uppercase text-xs mb-2 block">
+                    <span 
+                        className="font-bold tracking-widest uppercase text-xs mb-2 block"
+                        style={{ color: COLORS.black }}
+                    >
                         Wholesale & B2B
                     </span>
                     <motion.h2
@@ -78,7 +82,8 @@ export default function BulkOrderCard() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-black text-[#0A5246] tracking-tight mb-3"
+                        className="text-4xl md:text-5xl font-black tracking-tight mb-3"
+                        style={{ color: COLORS.heading }}
                     >
                         Bulk Orders & <span className="relative inline-block">
                             <span className="relative z-10">Gradings</span>
@@ -87,11 +92,12 @@ export default function BulkOrderCard() {
                                 whileInView={{ width: '100%' }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 bg-[#f6d70f] -z-0 opacity-80"
+                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                                style={{ backgroundColor: COLORS.highlight }}
                             />
                         </span>
                     </motion.h2>
-                    <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base mt-2">
+                    <p className="text-black/60 max-w-2xl mx-auto text-sm md:text-base mt-2">
                         Explore our premium cashew grades available for wholesale. Competitive pricing,
                         custom packaging, and reliable global shipping.
                     </p>
@@ -115,18 +121,21 @@ export default function BulkOrderCard() {
                 </div>
 
                 {/* CTA Banner */}
-                <div className="mt-2 bg-[#1E4D35] rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+                <div 
+                    className="mt-2 rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6"
+                    style={{ backgroundColor: COLORS.black }}
+                >
                     <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
                     <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
 
                     <div className="relative z-10 max-w-xl text-center md:text-left">
                         <h3
-                            className="text-2xl md:text-3xl font-bold text-white mb-2"
-                            style={{ fontFamily: 'Georgia, serif' }}
+                            className="text-2xl md:text-3xl font-bold mb-2"
+                            style={{ fontFamily: 'Georgia, serif', color: COLORS.primary }}
                         >
                             Ready to place a wholesale order?
                         </h3>
-                        <p className="text-white/70 text-sm md:text-base">
+                        <p className="text-white/60 text-sm md:text-base">
                             Get a custom quote instantly tailored to your business needs and expected volume.
                         </p>
                     </div>
@@ -134,13 +143,14 @@ export default function BulkOrderCard() {
                     <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                         <Link
                             href="/bulk"
-                            className="bg-[#FDC700] text-gray-900 font-bold px-8 py-4 rounded-xl hover:bg-yellow-300 transition-colors shadow-lg text-center whitespace-nowrap text-sm md:text-base"
+                            className="font-bold px-8 py-4 rounded-xl transition-all shadow-lg text-center whitespace-nowrap text-sm md:text-base hover:scale-105"
+                            style={{ backgroundColor: COLORS.primary, color: COLORS.black }}
                         >
                             Request Bulk Order →
                         </Link>
                         <Link
                             href="/bulk"
-                            className="bg-white/10 text-white font-bold px-8 py-4 rounded-xl border border-white/20 hover:bg-white/20 transition-colors text-center whitespace-nowrap text-sm md:text-base"
+                            className="text-white font-bold px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10 transition-colors text-center whitespace-nowrap text-sm md:text-base"
                         >
                             Know More
                         </Link>

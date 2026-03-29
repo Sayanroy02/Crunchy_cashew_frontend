@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 // Dynamically import Lottie — prevents SSR crash / loading hang
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
@@ -13,18 +14,18 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 
 /* ══════ SVG Icons ══════ */
 const IconLocation = () => (
-    <svg className="w-5 h-5 text-[#FBB21B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
 );
 const IconPhone = () => (
-    <svg className="w-5 h-5 text-[#FBB21B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
     </svg>
 );
 const IconEmail = () => (
-    <svg className="w-5 h-5 text-[#FBB21B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
 );
@@ -39,7 +40,7 @@ const IconCal = () => (
     </svg>
 );
 const IconCheck = () => (
-    <svg className="w-6 h-6 text-[#FBB21B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+    <svg className="w-6 h-6" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
 );
@@ -49,7 +50,7 @@ const IconWarn = () => (
     </svg>
 );
 const IconInfo = () => (
-    <svg className="w-4 h-4 text-[#0A5246]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-4 h-4" style={{ color: COLORS.primary }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
 );
@@ -74,12 +75,12 @@ interface FieldProps {
 
 function Field({ label, name, type = 'text', value, onChange, required, as, options, placeholder }: FieldProps) {
     const inputClass =
-        'w-full bg-[#f4f9f7] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none focus:border-[#0A5246] focus:ring-2 focus:ring-[#0A5246]/10 transition-all duration-200 placeholder:text-gray-300';
+        'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300';
 
     return (
-        <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-[#0A5246] tracking-widest uppercase ml-0.5">
-                {label}{required && <span className="text-[#FBB21B] ml-0.5">*</span>}
+        <div className="flex flex-col gap-1.5 focus-within:ring-2 focus-within:ring-opacity-10" style={{'--tw-ring-color': COLORS.primary} as any}>
+            <label className="text-[11px] font-bold tracking-widest uppercase ml-0.5" style={{ color: COLORS.black }}>
+                {label}{required && <span style={{ color: COLORS.primary }} className="ml-0.5">*</span>}
             </label>
 
             {as === 'textarea' ? (
@@ -107,6 +108,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
                     onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
                     placeholder={placeholder ?? (type === 'date' ? '' : `Enter ${label.toLowerCase()}`)}
                     className={inputClass}
+                    style={{'--tw-border-color': 'transparent'} as any}
                 />
             )}
         </div>
@@ -121,7 +123,7 @@ function InfoRow({ icon, title, lines }: { icon: React.ReactNode; title: string;
                 {icon}
             </div>
             <div>
-                <p className="text-[#FBB21B] text-[10px] font-bold tracking-widest uppercase mb-0.5">{title}</p>
+                <p style={{ color: COLORS.primary }} className="text-[10px] font-bold tracking-widest uppercase mb-0.5">{title}</p>
                 {lines.map((l, i) => <p key={i} className="text-white/70 text-sm leading-relaxed">{l}</p>)}
             </div>
         </div>
@@ -184,37 +186,32 @@ export default function ContactPage() {
 
     /* ── render ── */
     return (
-        <main className="min-h-screen bg-[#E1EDEB]">
+        <main className="min-h-screen" style={{ backgroundColor: COLORS.bg }}>
 
             {/* ══ HERO ══ */}
-            <section className="relative bg-[#0A5246] overflow-hidden pt-28 pb-24">
+            <section className="relative overflow-hidden pt-28 pb-24" style={{ backgroundColor: COLORS.bg }}>
                 {/* blobs */}
                 <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[#073d34] animate-blob" />
-                    <div className="absolute -top-10 right-0 w-72 h-72 rounded-full bg-[#FBB21B]/10 animate-blob animation-delay-2000" />
-                    <div className="absolute bottom-0 left-1/2 w-64 h-64 rounded-full bg-[#073d34] animate-blob animation-delay-4000" />
-                    <svg className="absolute inset-0 w-full h-full opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
-                        <defs><pattern id="dotpat" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="white" /></pattern></defs>
+                    <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10 animate-blob" style={{ backgroundColor: COLORS.primary }} />
+                    <div className="absolute -top-10 right-0 w-72 h-72 rounded-full animate-blob animation-delay-2000" style={{ backgroundColor: `${COLORS.primary}0D` }} />
+                    <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+                        <defs><pattern id="dotpat" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="black" /></pattern></defs>
                         <rect width="100%" height="100%" fill="url(#dotpat)" />
                     </svg>
                 </div>
 
-                {/* Lottie – desktop right */}
-                {lottieData && (
-                    <div aria-hidden className="hidden lg:block absolute right-0 bottom-0 w-80 h-80 opacity-20 pointer-events-none">
-                        <Lottie animationData={lottieData} loop />
-                    </div>
-                )}
-
                 <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10">
-                    <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 mb-6">
-                        <span className="w-2 h-2 rounded-full bg-[#FBB21B] animate-pulse" />
-                        <span className="text-[#FBB21B] text-[10px] font-bold tracking-widest uppercase">We'd love to hear from you</span>
+                    <div className="inline-flex items-center gap-2 bg-black/5 border border-black/10 rounded-full px-4 py-1.5 mb-6">
+                        <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: COLORS.primary }} />
+                        <span style={{ color: COLORS.black }} className="text-[10px] font-bold tracking-widest uppercase">We'd love to hear from you</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-5">
-                        Get in <span className="text-[#FBB21B]">Touch</span>
+                    <h1 className="text-5xl md:text-7xl font-black text-black leading-[1.05] tracking-tight mb-5">
+                        Get in <span className="relative inline-block px-2">
+                            <span className="relative z-10">Touch</span>
+                            <span className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 w-full -z-0 opacity-80" style={{ backgroundColor: COLORS.primary }} />
+                        </span>
                     </h1>
-                    <p className="text-white/55 text-base md:text-lg max-w-md leading-relaxed">
+                    <p className="text-black/60 text-base md:text-lg max-w-md leading-relaxed">
                         Bulk wholesale orders, general questions, or just curious about our cashews — we reply within 24 hours.
                     </p>
                 </div>
@@ -226,13 +223,13 @@ export default function ContactPage() {
 
                     {/* ── Sidebar ── */}
                     <aside className="bg-[#0d0d0d] lg:w-72 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
-                        <div aria-hidden className="absolute -bottom-12 -right-12 w-52 h-52 rounded-full bg-[#FBB21B]/10 pointer-events-none" />
+                        <div aria-hidden className="absolute -bottom-12 -right-12 w-52 h-52 rounded-full pointer-events-none" style={{ backgroundColor: `${COLORS.button}1A` }} />
                         <div aria-hidden className="absolute top-24 -left-8 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
 
                         {/* heading */}
                         <div className="relative z-10">
                             <h2 className="text-white text-xl font-black mb-2">Contact Info</h2>
-                            <div className="w-8 h-1 bg-[#FBB21B] rounded-full" />
+                            <div className="w-8 h-1 rounded-full" style={{ backgroundColor: COLORS.button }} />
                         </div>
 
                         {/* info rows */}
@@ -247,11 +244,15 @@ export default function ContactPage() {
 
                         {/* socials */}
                         <div className="relative z-10 border-t border-white/10 pt-6 mt-auto">
-                            <p className="text-[#FBB21B] text-[10px] font-bold tracking-widest uppercase mb-3">Follow Us</p>
+                            <p style={{ color: COLORS.button }} className="text-[10px] font-bold tracking-widest uppercase mb-3">Follow Us</p>
                             <div className="flex gap-3">
                                 {['fa-facebook-f', 'fa-instagram', 'fa-twitter', 'fa-whatsapp'].map(ic => (
                                     <a key={ic} href="#"
-                                        className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/60 hover:bg-[#FBB21B] hover:text-[#0A5246] hover:border-[#FBB21B] transition-all duration-200">
+                                        className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/60 transition-all duration-200"
+                                        style={{'--hover-bg': COLORS.button, '--hover-text': COLORS.primary, '--hover-border': COLORS.button} as any}
+                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.button; e.currentTarget.style.color = COLORS.primary; e.currentTarget.style.borderColor = COLORS.button; }}
+                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                                    >
                                         <i className={`fa-brands ${ic} text-sm`} />
                                     </a>
                                 ))}
@@ -281,10 +282,12 @@ export default function ContactPage() {
                                         : 'Book a guided tour of our roasting facility.'}
                                 </p>
                             </div>
-                            <div className="flex bg-[#f4f9f7] p-1 rounded-2xl border border-[#0A5246]/10 w-full sm:w-auto shrink-0">
+                            <div className="flex p-1 rounded-2xl border w-full sm:w-auto shrink-0" style={{ backgroundColor: `${COLORS.black}08`, borderColor: `${COLORS.black}1A` }}>
                                 {(['general', 'visit'] as Tab[]).map(tab => (
                                     <button key={tab} onClick={() => switchTab(tab)}
-                                        className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === tab ? 'bg-[#0A5246] text-white shadow' : 'text-gray-400 hover:text-[#0A5246]'}`}>
+                                        className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === tab ? 'shadow' : 'text-gray-400'}`}
+                                        style={activeTab === tab ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                                    >
                                         {tab === 'general' ? 'General' : 'Factory Visit'}
                                     </button>
                                 ))}
@@ -293,12 +296,12 @@ export default function ContactPage() {
 
                         {/* Status banners */}
                         {status === 'success' && (
-                            <div className="flex items-center gap-4 bg-[#f0f9f6] border border-[#0A5246]/20 rounded-2xl p-5 mb-6">
-                                <div className="w-11 h-11 rounded-2xl bg-[#0A5246] flex items-center justify-center shrink-0">
+                            <div className="flex items-center gap-4 border rounded-2xl p-5 mb-6" style={{ backgroundColor: `${COLORS.primary}1A`, borderColor: `${COLORS.primary}33` }}>
+                                <div className="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style={{ backgroundColor: COLORS.black }}>
                                     <IconCheck />
                                 </div>
                                 <div>
-                                    <p className="font-bold text-[#0A5246] text-sm">Sent successfully!</p>
+                                    <p className="font-bold text-sm" style={{ color: COLORS.black }}>Sent successfully!</p>
                                     <p className="text-gray-400 text-xs mt-0.5">Our team will get back to you soon.</p>
                                 </div>
                             </div>
@@ -331,9 +334,13 @@ export default function ContactPage() {
                                 <Field label="Your Message" name="message" value={form.message} onChange={onChange} required as="textarea" />
                                 <div className="pt-2">
                                     <button type="submit" disabled={status === 'loading'}
-                                        className="inline-flex items-center gap-3 bg-[#1a1f1c] hover:bg-[#0A5246] text-[#FBB21B] font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+                                        className="inline-flex items-center gap-3 font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                        style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
+                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.primary; e.currentTarget.style.color = COLORS.black; }}
+                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.black; e.currentTarget.style.color = COLORS.primary; }}
+                                    >
                                         {status === 'loading'
-                                            ? <span className="w-5 h-5 border-2 border-[#FBB21B] border-t-transparent rounded-full animate-spin" />
+                                            ? <span className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: COLORS.primary }} />
                                             : <><span>Send Message</span><IconSend /></>}
                                     </button>
                                 </div>
@@ -343,11 +350,11 @@ export default function ContactPage() {
                         {/* ── Visit Form ── */}
                         {activeTab === 'visit' && (
                             <form onSubmit={submitVisit} className="flex flex-col gap-4">
-                                <div className="flex items-start gap-3 bg-[#f4f9f7] border border-[#0A5246]/15 rounded-2xl p-4">
-                                    <div className="w-8 h-8 rounded-xl bg-[#FBB21B]/20 flex items-center justify-center shrink-0">
+                                <div className="flex items-start gap-3 border rounded-2xl p-4 shadow-sm" style={{ backgroundColor: `${COLORS.primary}08`, borderColor: `${COLORS.primary}1A` }}>
+                                    <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${COLORS.button}33` }}>
                                         <IconInfo />
                                     </div>
-                                    <p className="text-[#0A5246] text-sm leading-relaxed">
+                                    <p className="text-sm leading-relaxed" style={{ color: COLORS.primary }}>
                                         Visits are available <strong>Monday to Friday · 10am – 4pm.</strong> We'll confirm within 2 business days.
                                     </p>
                                 </div>
@@ -361,7 +368,11 @@ export default function ContactPage() {
                                 </div>
                                 <div className="pt-2">
                                     <button type="submit" disabled={status === 'loading'}
-                                        className="inline-flex items-center gap-3 bg-[#0A5246] hover:bg-[#073d34] text-white font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+                                        className="inline-flex items-center gap-3 font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                                        style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
+                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.primary; e.currentTarget.style.color = COLORS.black; }}
+                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.black; e.currentTarget.style.color = COLORS.primary; }}
+                                    >
                                         {status === 'loading'
                                             ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                             : <><span>Request Factory Visit</span><IconCal /></>}
@@ -380,8 +391,8 @@ export default function ContactPage() {
                         { value: '15+', label: 'Years in Business' },
                         { value: '100%', label: 'Premium Quality' },
                     ].map(s => (
-                        <div key={s.label} className="bg-white rounded-2xl p-5 text-center shadow-sm border border-[#0A5246]/5">
-                            <p className="text-2xl font-black text-[#0A5246]">{s.value}</p>
+                        <div key={s.label} className="bg-white rounded-2xl p-5 text-center shadow-sm border" style={{ borderColor: `${COLORS.primary}0D` }}>
+                            <p className="text-2xl font-black" style={{ color: COLORS.primary }}>{s.value}</p>
                             <p className="text-gray-400 text-[10px] font-bold tracking-widest uppercase mt-1">{s.label}</p>
                         </div>
                     ))}
