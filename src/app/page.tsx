@@ -3,6 +3,7 @@ import Image from "next/image";
 import BestSellers from "@/components/home/BestSellers";
 import Testimonials from "@/components/home/Testimonials";
 import BlogsPreview from "@/components/home/BlogsPreview";
+import BlogFeatureBanner from "@/components/home/BlogFeatureBanner";
 import Affiliates from "@/components/home/Affiliates";
 import HeroVideo from "@/components/home/HeroAnimationBanner";
 // import OfferStripCarousel from "@/components/home/HeroCarousel";
@@ -186,6 +187,7 @@ export default function Home() {
         </section>
 
         <BlogsPreview />
+        <BlogFeatureBanner />
       </div>
     </main>
   );
