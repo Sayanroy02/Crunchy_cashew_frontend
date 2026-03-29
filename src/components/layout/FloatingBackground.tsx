@@ -14,7 +14,7 @@ export default function FloatingBackground() {
     if (!mounted) return null;
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-[-40] overflow-hidden" style={{ background: '#FFF9E7' }}>
+        <div className="fixed inset-0 pointer-events-none z-[-40] overflow-hidden" style={{ background: '#FFECDE' }}>
             {orbs.map((orb) => (
                 <motion.div
                     key={orb.id}
@@ -45,4 +45,4 @@ export default function FloatingBackground() {
             ))}
         </div>
     );
-}
+}

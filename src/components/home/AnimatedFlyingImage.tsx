@@ -1,23 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 
 export default function AnimatedFlyingImage() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect(); // one-shot: no need to keep observing
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="relative w-full overflow-hidden py-2 md:py-8">
       <div className="max-w-7xl mx-auto px-4 flex justify-center">
-        <motion.div
-          initial={{ opacity: 0, x: -100, rotate: -5 }}
-          whileInView={{ opacity: 1, x: 0, rotate: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{
-            duration: 1.2, // Slightly longer for a smoother "settle"
-            ease: [0.16, 1, 0.3, 1],
-            delay: 0.1
-          }}
+        {/* CSS-driven reveal — no framer-motion runtime overhead */}
+        <div
+          ref={ref}
           className="relative w-full max-w-5xl"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateX(0px) rotate(0deg)' : 'translateX(-80px) rotate(-4deg)',
+            transition: 'opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.1s cubic-bezier(0.16,1,0.3,1)',
+          }}
         >
           {/* Desktop Image */}
           <div className="hidden md:block">
@@ -26,7 +43,7 @@ export default function AnimatedFlyingImage() {
               alt="Product Showcase Desktop"
               width={800}
               height={400}
-              className="w-full h-auto object-contain drop-shadow-2xl"
+              className="w-full h-auto object-contain"
               priority={false}
             />
           </div>
@@ -38,14 +55,12 @@ export default function AnimatedFlyingImage() {
               alt="Product Showcase Mobile"
               width={1080}
               height={1080}
-              className="w-full h-auto object-contain drop-shadow-xl"
+              className="w-full h-auto object-contain"
               priority={false}
             />
           </div>
-
-          {/* Subtle glow effect behind */}
-          <div className="absolute inset-0 bg-primary/10 blur-[100px] -z-10 rounded-full scale-90" />
-        </motion.div>
+          {/* Removed blur-[100px] glow — it was forcing GPU compositing over a huge transparent area for a near-invisible effect */}
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,36 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import BulkOrderFormInner from '@/app/bulk/page'; // We can reuse the forms or build a simple modal. Let's build a simple custom modal for "Factory Visit" booking based on contact.js visit route.
 import { API_BASE } from '@/constants/api';
+
 
 export default function AboutFactory() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', date: '', purpose: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Lazy-play: only start buffering + playing when the video is in the viewport
+    useEffect(() => {
+        const el = videoRef.current;
+        if (!el) return;
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    el.src = '/videos/cashew-video.webm';
+                    el.play().catch(() => {});
+                } else {
+                    el.pause();
+                }
+            },
+            { threshold: 0.25 }
+        );
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,11 +63,11 @@ export default function AboutFactory() {
                         <div className="relative w-full max-w-md">
                             <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/5] w-full bg-primary/10">
                                 <video
-                                    src="/videos/cashew-video.webm"
-                                    autoPlay
-                                    loop
+                                    ref={videoRef}
                                     muted
+                                    loop
                                     playsInline
+                                    preload="none"
                                     className="w-full h-full object-cover"
                                 />
                             </div>

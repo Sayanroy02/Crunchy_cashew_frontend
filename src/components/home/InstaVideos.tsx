@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
 import { API } from "@/constants/api";
 import { COLORS } from "@/constants/styles";
 
@@ -11,6 +10,42 @@ interface InstaVideo {
     link?: string;
     video_url: string;
     thumbnail_url: string;
+}
+
+function InstaHeading() {
+    const ref = useRef<HTMLHeadingElement>(null);
+    const [vis, setVis] = useState(false);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); ob.disconnect(); } }, { threshold: 0.3 });
+        ob.observe(el);
+        return () => ob.disconnect();
+    }, []);
+    return (
+        <h2
+            ref={ref}
+            className="text-4xl md:text-5xl font-black tracking-tight mb-3"
+            style={{
+                color: COLORS.heading,
+                opacity: vis ? 1 : 0,
+                transform: vis ? 'translateY(0)' : 'translateY(16px)',
+                transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
+            }}
+        >
+            Crunchy on <span className="relative inline-block">
+                <span className="relative z-10">Insta</span>
+                <span
+                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                    style={{
+                        backgroundColor: COLORS.highlight,
+                        width: vis ? '100%' : '0%',
+                        transition: 'width 0.8s 0.5s ease',
+                    }}
+                />
+            </span>
+        </h2>
+    );
 }
 
 const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void }) => {
@@ -48,6 +83,7 @@ const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void 
                 muted
                 loop
                 playsInline
+                preload="none"
                 className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent pointer-events-none" />
@@ -103,26 +139,7 @@ export default function InstaVideos() {
                     >
                         Latest Reels
                     </span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-black tracking-tight mb-3"
-                        style={{ color: COLORS.heading }}
-                    >
-                        Crunchy on <span className="relative inline-block">
-                            <span className="relative z-10">Insta</span>
-                            <motion.div
-                                initial={{ width: 0 }}
-                                whileInView={{ width: '100%' }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
-                                style={{ backgroundColor: COLORS.highlight }}
-                            />
-                        </span>
-                    </motion.h2>
+                    <InstaHeading />
                 </div>
 
                 <div

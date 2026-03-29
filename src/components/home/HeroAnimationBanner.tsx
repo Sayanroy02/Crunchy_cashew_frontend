@@ -50,7 +50,7 @@ export default function HeroVideo() {
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload="metadata"
                 className="absolute inset-0 w-full h-full object-cover hidden md:block"
                 style={{ objectPosition: '35% center' }}
             />
@@ -61,7 +61,7 @@ export default function HeroVideo() {
                 src="https://res.cloudinary.com/dvhgznmk5/video/upload/q_auto,f_auto,w_720/v1774631519/Social_Media_Video_Ads_KqlKM4R3_kgnpez.mp4"
                 muted
                 playsInline
-                preload="auto"
+                preload="none"
                 className="absolute inset-0 w-full h-full object-cover md:hidden"
                 style={{ objectPosition: 'center center' }}
             />

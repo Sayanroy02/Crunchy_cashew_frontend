@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 
@@ -44,6 +43,42 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
                 </button>
             ))}
         </div>
+    );
+}
+
+function TestimonialsHeading() {
+    const ref = useRef<HTMLHeadingElement>(null);
+    const [vis, setVis] = useState(false);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); ob.disconnect(); } }, { threshold: 0.3 });
+        ob.observe(el);
+        return () => ob.disconnect();
+    }, []);
+    return (
+        <h2
+            ref={ref}
+            className="text-4xl md:text-5xl font-black tracking-tight"
+            style={{
+                color: COLORS.heading,
+                opacity: vis ? 1 : 0,
+                transform: vis ? 'translateY(0)' : 'translateY(16px)',
+                transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
+            }}
+        >
+            Customer <span className="relative inline-block lg:mt-2">
+                <span className="relative z-10">Testimonials</span>
+                <span
+                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                    style={{
+                        backgroundColor: COLORS.highlight,
+                        width: vis ? '100%' : '0%',
+                        transition: 'width 0.8s 0.5s ease',
+                    }}
+                />
+            </span>
+        </h2>
     );
 }
 
@@ -98,26 +133,7 @@ export default function Testimonials() {
                         >
                             What Our Customers Say
                         </span>
-                        <motion.h2
-                          initial={{ opacity: 0, y: 20 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: 0.1 }}
-                          className="text-4xl md:text-5xl font-black tracking-tight"
-                          style={{ color: COLORS.heading }}
-                        >
-                          Customer <span className="relative inline-block lg:mt-2">
-                            <span className="relative z-10">Testimonials</span>
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: '100%' }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.5, duration: 0.8 }}
-                              className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
-                              style={{ backgroundColor: COLORS.highlight }}
-                            />
-                          </span>
-                        </motion.h2>
+                        <TestimonialsHeading />
                     </div>
                     <div className="flex items-center gap-3">
                         <button onClick={() => scroll('left')}
@@ -158,9 +174,9 @@ export default function Testimonials() {
                                 key={t._id}
                                 className="flex-shrink-0 w-72 md:w-80 snap-start flex flex-col rounded-3xl overflow-hidden border border-white/60"
                                 style={{
-                                    background: 'rgba(255,255,255,0.45)',
-                                    backdropFilter: 'blur(16px)',
-                                    WebkitBackdropFilter: 'blur(16px)',
+                                    background: 'rgba(255,255,255,0.7)',
+                                    backdropFilter: 'blur(8px)',
+                                    WebkitBackdropFilter: 'blur(8px)',
                                     boxShadow: '0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)',
                                 }}
                             >

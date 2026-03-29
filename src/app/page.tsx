@@ -75,14 +75,15 @@ export default function Home() {
       {/* ── Keyframes ── */}
       <style dangerouslySetInnerHTML={{ __html: homeDecoStyles }} />
 
-      {/* Fixed Hero Background */}
-      <div className="fixed top-0 left-0 w-full pointer-events-auto z-0">
+      {/* Fixed Hero Background — will-change promotes to own GPU layer so scroll compositing is cheaper */}
+      <div className="fixed top-0 left-0 w-full pointer-events-auto z-0" style={{ willChange: 'transform' }}>
         <HeroVideo />
       </div>
 
       {/* ── Scrollable content ── */}
       <div
         className="relative z-10 w-full mt-[clamp(600px,100svh,820px)] bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px]"
+        style={{ transform: 'translateZ(0)' }}
       >
         {/* BestSellers — no fruit deco */}
         <BestSellers />
