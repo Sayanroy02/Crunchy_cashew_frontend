@@ -1,17 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-
-const PINCODES_AVAILABLE = [
-    '734001', '734002', '734003', '734004', '734005',
-    '734006', '734007', '734008', '734009', '734010',
-    '700001', '700002', '700003', '700013', '700019',
-    '110001', '110002', '110003', '110004', '110005',
-    '400001', '400002', '400003', '400050', '400051',
-    '560001', '560002', '600001', '600002', '600020',
-    '500001', '500002', '500003', '380001', '380006',
-    '302001', '302002', '226001', '226010', '208001',
-];
+import React, { useState, useEffect } from 'react';
+import { API } from '@/constants/api';
 
 export default function PincodeWidget() {
     const [pincode, setPincode] = useState('');
@@ -22,27 +12,49 @@ export default function PincodeWidget() {
     const [result, setResult] = useState<null | { available: boolean; message: string }>(null);
     const [loading, setLoading] = useState(false);
 
-    const checkPincode = (code: string) => {
+    useEffect(() => {
+        if (savedPincode) {
+            checkPincode(savedPincode, true);
+        }
+    }, [savedPincode]);
+
+    const checkPincode = async (code: string, isInitial = false) => {
         if (code.length !== 6) {
-            setResult({ available: false, message: 'Please enter a valid 6-digit pincode.' });
+            if (!isInitial) setResult({ available: false, message: 'Please enter a valid 6-digit pincode.' });
             return;
         }
-        setLoading(true);
-        // Simulate a slight async check
-        setTimeout(() => {
-            const available = PINCODES_AVAILABLE.includes(code);
-            setResult({
-                available,
-                message: available
-                    ? `✅ Great news! We deliver to ${code}. Expected delivery: 5–7 business days.`
-                    : `❌ Sorry, we don't deliver to ${code} yet. We'll notify you when we do!`
+        if (!isInitial) setLoading(true);
+        try {
+            const res = await fetch(API.PINCODES_CHECK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ pincode: code })
             });
-            if (available) {
+
+            if (!res.ok) throw new Error('API Error');
+            const data = await res.json();
+            
+            if (!isInitial) {
+                setResult({
+                    available: data.available,
+                    message: data.available
+                        ? `✅ Great news! We deliver to ${code}. Expected delivery: 5–7 business days.`
+                        : `❌ Sorry, we don't deliver to ${code} yet. We'll notify you when we do!`
+                });
+            }
+
+            if (data.available) {
                 setSavedPincode(code);
                 localStorage.setItem('saved_pincode', code);
+            } else if (isInitial) {
+                setSavedPincode('');
+                localStorage.removeItem('saved_pincode');
             }
-            setLoading(false);
-        }, 700);
+        } catch (e) {
+            if (!isInitial) setResult({ available: false, message: '❌ Error checking delivery. Please try again later.' });
+        } finally {
+            if (!isInitial) setLoading(false);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,10 +77,9 @@ export default function PincodeWidget() {
 
     // If already saved, just show the saved status
     if (savedPincode && !result) {
-        const isSaved = PINCODES_AVAILABLE.includes(savedPincode);
         return (
-            <div className={`flex items-center gap-2 text-sm rounded-xl border px-4 py-2.5 ${isSaved ? 'border-primary/20 bg-primary/10' : 'border-red-100 bg-red-50'}`}>
-                <i className={`fa-solid ${isSaved ? 'fa-location-dot text-primary' : 'fa-circle-xmark text-red-500'}`}></i>
+            <div className={`flex items-center gap-2 text-sm rounded-xl border px-4 py-2.5 border-primary/20 bg-primary/10`}>
+                <i className={`fa-solid fa-location-dot text-primary`}></i>
                 <span className="font-medium text-gray-700">
                     Delivering to <span className="font-black">{savedPincode}</span>
                 </span>

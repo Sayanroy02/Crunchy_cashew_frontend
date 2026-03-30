@@ -9,19 +9,41 @@ function getToken() {
 
 export default function AdminPincodes() {
     const [pincodes, setPincodes] = useState<string[]>([]);
+    const [deliveryMode, setDeliveryMode] = useState<'all' | 'selected'>('selected');
     const [loading, setLoading] = useState(true);
     const [input, setInput] = useState('');
     const [adding, setAdding] = useState(false);
+    const [updatingMode, setUpdatingMode] = useState(false);
     const [error, setError] = useState('');
 
-    const fetchPincodes = async () => {
+    const fetchData = async () => {
         try {
-            const res = await fetch(API.PINCODES);
-            if (res.ok) setPincodes(await res.json());
+            const [pinRes, setRes] = await Promise.all([
+                fetch(API.PINCODES),
+                fetch(API.PINCODES_SETTINGS, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                })
+            ]);
+
+            if (pinRes.ok) {
+                const data = await pinRes.json();
+                // If API returns {pincodes, deliveryMode}, handle both
+                if (data.pincodes) {
+                    setPincodes(data.pincodes);
+                    setDeliveryMode(data.deliveryMode);
+                } else {
+                    setPincodes(data);
+                }
+            }
+
+            if (setRes.ok) {
+                const s = await setRes.json();
+                if (s.deliveryMode) setDeliveryMode(s.deliveryMode);
+            }
         } catch (e) { console.error(e); } finally { setLoading(false); }
     };
 
-    useEffect(() => { fetchPincodes(); }, []);
+    useEffect(() => { fetchData(); }, []);
 
     const handleAdd = async () => {
         setError('');
@@ -37,7 +59,7 @@ export default function AdminPincodes() {
                 headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                 body: JSON.stringify({ pincode: input.trim() })
             });
-            if (res.ok) { setInput(''); fetchPincodes(); }
+            if (res.ok) { setInput(''); fetchData(); }
             else { const d = await res.json(); setError(d.detail || 'Failed to add'); }
         } catch { setError('Connection error'); } finally { setAdding(false); }
     };
@@ -49,15 +71,80 @@ export default function AdminPincodes() {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            fetchPincodes();
+            fetchData();
         } catch (e) { console.error(e); }
+    };
+
+    const handleModeChange = async (mode: 'all' | 'selected') => {
+        setUpdatingMode(true);
+        const token = getToken();
+        try {
+            const res = await fetch(API.PINCODES_SETTINGS, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ deliveryMode: mode })
+            });
+            if (res.ok) setDeliveryMode(mode);
+            else alert('Failed to update delivery mode');
+        } catch { alert('Connection error'); } finally { setUpdatingMode(false); }
     };
 
     return (
         <div className="flex flex-col gap-6 max-w-2xl">
             <div>
                 <h1 className="text-2xl font-bold text-gray-800">Delivery Pincodes</h1>
-                <p className="text-sm text-gray-500 mt-1">Manage pincodes where home delivery is available. Customers will check availability from the navbar.</p>
+                <p className="text-sm text-gray-500 mt-1">Manage delivery availability. You can toggle between nationwide delivery or restricting to specific areas.</p>
+            </div>
+
+            {/* Delivery Mode Toggle */}
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
+                <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i className="fa-solid fa-truck-fast text-primary"></i>
+                    Delivery Strategy
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button
+                        onClick={() => handleModeChange('all')}
+                        disabled={updatingMode}
+                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left ${
+                            deliveryMode === 'all' 
+                            ? 'border-primary bg-primary/5 shadow-md' 
+                            : 'border-gray-100 hover:border-gray-200'
+                        }`}
+                    >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                            deliveryMode === 'all' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                            <i className="fa-solid fa-globe"></i>
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-800">All Pincodes</p>
+                            <p className="text-xs text-gray-500">Deliver to any location in India. No pincode check needed.</p>
+                        </div>
+                        {deliveryMode === 'all' && <i className="fa-solid fa-circle-check text-primary ml-auto"></i>}
+                    </button>
+
+                    <button
+                        onClick={() => handleModeChange('selected')}
+                        disabled={updatingMode}
+                        className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left ${
+                            deliveryMode === 'selected' 
+                            ? 'border-primary bg-primary/5 shadow-md' 
+                            : 'border-gray-100 hover:border-gray-200'
+                        }`}
+                    >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+                            deliveryMode === 'selected' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'
+                        }`}>
+                            <i className="fa-solid fa-list-check"></i>
+                        </div>
+                        <div>
+                            <p className="font-bold text-gray-800">Only Selected</p>
+                            <p className="text-xs text-gray-500">Restricted delivery to the pincodes listed below.</p>
+                        </div>
+                        {deliveryMode === 'selected' && <i className="fa-solid fa-circle-check text-primary ml-auto"></i>}
+                    </button>
+                </div>
             </div>
 
             {/* Add pincode */}

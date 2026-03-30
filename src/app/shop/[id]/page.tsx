@@ -31,9 +31,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     const allProducts = productsRes.ok ? await productsRes.json() : [];
     const relatedProducts = allProducts.filter((p: any) => (p._id || p.id) !== id).slice(0, 8);
 
-    const discountedPrice = product.discount
-        ? product.price - (product.price * product.discount) / 100
-        : null;
+    const hasDiscount = product.discount > 0;
+    const originalPrice = hasDiscount
+        ? product.price / (1 - product.discount / 100)
+        : product.price;
 
     return (
         <div className="bg-gray-50 min-h-screen">
@@ -79,11 +80,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                             <div className="flex items-baseline gap-3 mb-5">
                                 <span className="text-3xl md:text-4xl font-black text-gray-900">
-                                    ₹{discountedPrice ? discountedPrice.toFixed(2) : product.price.toFixed(2)}
+                                    ₹{product.price.toFixed(2)}
                                 </span>
-                                {discountedPrice && (
+                                {hasDiscount && (
                                     <>
-                                        <span className="text-lg text-gray-400 line-through">₹{product.price.toFixed(2)}</span>
+                                        <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(2)}</span>
                                         <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{product.discount}% OFF</span>
                                     </>
                                 )}
@@ -144,7 +145,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                             {relatedProducts.map((p: any) => {
                                 const pid = p._id || p.id;
-                                const discounted = p.discount ? p.price - (p.price * p.discount) / 100 : null;
+                                 const hasPDiscount = p.discount > 0;
+                                const originalPPrice = hasPDiscount ? p.price / (1 - p.discount / 100) : p.price;
                                 return (
                                     <Link key={pid} href={`/shop/${pid}`}
                                         className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group flex flex-col"
@@ -164,8 +166,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                         <div className="p-3 flex flex-col flex-1">
                                             <h3 className="font-bold text-sm text-gray-800 mb-1 line-clamp-2">{p.name}</h3>
                                             <div className="flex items-center gap-2 mt-auto">
-                                                <span className="font-black text-gray-900 text-sm">₹{discounted ? discounted.toFixed(0) : p.price}</span>
-                                                {discounted && <span className="text-xs text-gray-400 line-through">₹{p.price}</span>}
+                                                <span className="font-black text-gray-900 text-sm">₹{p.price.toFixed(0)}</span>
+                                                {hasPDiscount && <span className="text-xs text-gray-400 line-through">₹{originalPPrice.toFixed(0)}</span>}
                                             </div>
                                         </div>
                                     </Link>

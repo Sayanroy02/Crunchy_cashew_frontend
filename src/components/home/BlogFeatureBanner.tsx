@@ -16,7 +16,7 @@ export default function BlogFeatureBanner() {
 
   return (
     <section
-      className="py-4 pb-10 px-4 md:px-6 bg-bg-cream"
+      className="py-4 pb-10 px-4 md:px-6 "
       aria-label="Write a Blog Contest Banner"
     >
       <div className="max-w-7xl mx-auto">

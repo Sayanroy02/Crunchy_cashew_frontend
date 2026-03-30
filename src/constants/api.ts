@@ -42,6 +42,7 @@ export const API = {
   PINCODES_CHECK: `${API_BASE}/api/pincodes/check`,
   PINCODES_ADD: `${API_BASE}/api/pincodes/admin/add`,
   PINCODES_REMOVE: (p: string) => `${API_BASE}/api/pincodes/admin/remove/${p}`,
+  PINCODES_SETTINGS: `${API_BASE}/api/pincodes/admin/settings`,
 
   // ── Contact / Queries ─────────────────────────────────────────────────────
   CONTACT: `${API_BASE}/api/contact`,

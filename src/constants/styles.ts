@@ -14,7 +14,7 @@ export const COLORS = {
   // Semantic Variables
   button: '#F6B000',          // York Yellow CTA
   buttonText: '#000000',      // Solid Black text on York Yellow 
-  heading: '#000000',         // Pure Black Headings
+  heading: '#0A5246',         // Pure Black Headings
   text: '#000000',            // Pure Black Text
   card: '#ffffff',            // Card Color
   highlight: '#F6B000',       // Highlight Color (York Yellow)
