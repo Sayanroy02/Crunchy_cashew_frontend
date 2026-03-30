@@ -6,6 +6,7 @@ import { RootState } from '@/lib/store/store';
 import Link from 'next/link';
 import { API } from '@/constants/api';
 import Image from 'next/image';
+import { COLORS } from '@/constants/styles';
 
 // ─── Scroll helper ────────────────────────────────────────────────────────────
 function scrollTo(ref: React.RefObject<HTMLElement | null>) {
@@ -235,7 +236,7 @@ function GradeRequirementsInput({
                 onFocus={() => setFocused(true)}
                 placeholder="Type a grade (e.g. WW 320, Splits) or scroll suggestions below..."
                 className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none"
-                style={{'--tw-ring-color': '#F6B000'} as any}
+                style={{ '--tw-ring-color': '#F6B000' } as any}
             />
 
             {/* Suggestion chips — always visible below textarea when focused or empty */}
@@ -599,8 +600,8 @@ export default function BulkOrderPage() {
                     </div>
 
                     <h1
-                        className="text-4xl md:text-6xl font-bold leading-[1.1] mb-4"
-                        style={{ fontFamily: 'Georgia, serif' }}
+                        className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight"
+                        style={{ color: COLORS.heading }}
                     >
                         Wholesale &amp;<br />Bulk Orders
                     </h1>
@@ -715,7 +716,7 @@ export default function BulkOrderPage() {
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{'--tw-ring-color': '#F6B000'} as any}
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
                                         />
                                     </div>
                                     <div>
@@ -728,7 +729,7 @@ export default function BulkOrderPage() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{'--tw-ring-color': '#F6B000'} as any}
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
                                         />
                                     </div>
                                 </div>
@@ -743,7 +744,7 @@ export default function BulkOrderPage() {
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{'--tw-ring-color': '#F6B000'} as any}
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
                                         />
                                     </div>
                                     <div>
@@ -755,7 +756,7 @@ export default function BulkOrderPage() {
                                             value={formData.company}
                                             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{'--tw-ring-color': '#F6B000'} as any}
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
                                         />
                                     </div>
                                 </div>
@@ -768,7 +769,7 @@ export default function BulkOrderPage() {
                                         value={formData.volume}
                                         onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
                                         className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                     >
                                         <option value="">Select an option</option>
                                         <option value="5-10">5 – 10 kg</option>

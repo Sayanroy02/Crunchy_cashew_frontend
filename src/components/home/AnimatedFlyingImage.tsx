@@ -4,36 +4,54 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 export default function AnimatedFlyingImage() {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const el = ref.current;
+    const el = containerRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-          observer.disconnect(); // one-shot: no need to keep observing
+          observer.disconnect(); 
         }
       },
       { threshold: 0.15 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!visible) return;
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX - innerWidth / 2) / 25;
+      const y = (e.clientY - innerHeight / 2) / 25;
+      setMousePos({ x, y });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [visible]);
 
   return (
-    <div className="relative w-full overflow-hidden py-2 md:py-8">
+    <div className="relative w-full overflow-hidden py-4 md:py-10">
       <div className="max-w-7xl mx-auto px-4 flex justify-center">
-        {/* CSS-driven reveal — no framer-motion runtime overhead */}
+        {/* Container for the image with transition and parallax */}
         <div
-          ref={ref}
-          className="relative w-full max-w-5xl"
+          ref={containerRef}
+          className="relative w-full max-w-4xl" // Reduced from max-w-5xl (~15% smaller)
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? 'translateX(0px) rotate(0deg)' : 'translateX(-80px) rotate(-4deg)',
-            transition: 'opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.1s cubic-bezier(0.16,1,0.3,1)',
+            transform: visible 
+              ? `translate(${mousePos.x}px, ${mousePos.y}px) rotate(0deg)` 
+              : 'translateX(-80px) rotate(-4deg)',
+            transition: visible 
+              ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.1s ease-out' 
+              : 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >
           {/* Desktop Image */}
@@ -41,25 +59,24 @@ export default function AnimatedFlyingImage() {
             <Image
               src="/images/Artboard-1-1000-copy-p-1600.png"
               alt="Product Showcase Desktop"
-              width={800}
-              height={400}
-              className="w-full h-auto object-contain"
+              width={680} // Reduced by 15% from 800
+              height={340} // Reduced by 15% from 400
+              className="w-full h-auto object-contain drop-shadow-xl"
               priority={false}
             />
           </div>
 
-          {/* Mobile Image */}
+          {/* Mobile Image - simpler transition, no parallax to avoid jank */}
           <div className="block md:hidden">
             <Image
               src="/images/Artboard-1-1000-copy-p-1080.png"
               alt="Product Showcase Mobile"
-              width={1080}
-              height={1080}
-              className="w-full h-auto object-contain"
+              width={900} // Reduced by 15% from 1080
+              height={900}
+              className="w-full h-auto object-contain drop-shadow-xl"
               priority={false}
             />
           </div>
-          {/* Removed blur-[100px] glow — it was forcing GPU compositing over a huge transparent area for a near-invisible effect */}
         </div>
       </div>
     </div>

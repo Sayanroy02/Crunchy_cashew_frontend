@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 interface Blog {
     _id: string;
@@ -107,7 +108,7 @@ export default function BlogsDirectory() {
                     <span className="inline-flex items-center gap-2 bg-black/5 border border-black/10 text-black/60 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
                         <i className="fa-solid fa-pen-nib" /> Our Journal
                     </span>
-                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight text-black">
+                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight" style={{ color: COLORS.heading }}>
                         Insights, Recipes &<br />
                         <span style={{ color: '#F6B000' }}>Sustainability</span>
                     </h1>

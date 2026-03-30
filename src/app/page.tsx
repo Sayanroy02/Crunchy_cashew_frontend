@@ -15,67 +15,14 @@ import InstaVideos from "@/components/home/InstaVideos";
 import WhyUsCRO from "@/components/home/WhyUsCRO";
 import PriceComparisonPreview from "@/components/home/PriceComparisonPreview";
 import AnimatedFlyingImage from "@/components/home/AnimatedFlyingImage";
+import SectionDecoration from "@/components/ui/SectionDecoration";
+import { COLORS } from "@/constants/styles";
 // import SectionDivider from "@/components/ui/SectionDivider";
 
-// ── Inline keyframes (home-page only) ─────────────────────────────────────
-const homeDecoStyles = `
-  @keyframes fruitSway {
-    0%,100% { transform: translateY(0px) rotate(0deg); }
-    33%      { transform: translateY(-10px) rotate(1.5deg); }
-    66%      { transform: translateY(6px) rotate(-1deg); }
-  }
-  @keyframes fruitSwayR {
-    0%,100% { transform: translateY(0px) rotate(0deg); }
-    33%      { transform: translateY(-8px) rotate(-1.5deg); }
-    66%      { transform: translateY(5px) rotate(1deg); }
-  }
-  .fruit-hover img { transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1); }
-  .fruit-hover:hover img { transform: scale(1.12); }
-`;
-
-// ── Re-usable fruit deco pair ──────────────────────────────────────────────
-function FruitDeco({ delay = '0s' }: { delay?: string }) {
-  return (
-    <>
-      {/* Left fruit */}
-      <div
-        className="fruit-hover pointer-events-none absolute -left-2 top-1/2 -translate-y-1/2 z-10 hidden lg:block"
-        style={{ animation: `fruitSway 7s ease-in-out infinite`, animationDelay: delay }}
-      >
-        <Image
-          src="/images/Left-Fruit-2-1.png"
-          alt=""
-          width={180}
-          height={320}
-          className="w-[clamp(80px,8.5vw,150px)] h-auto object-contain opacity-85 drop-shadow-xl"
-          priority={false}
-        />
-      </div>
-
-      {/* Right fruit */}
-      <div
-        className="fruit-hover pointer-events-none absolute -right-2 top-1/2 -translate-y-1/2 z-10 hidden lg:block"
-        style={{ animation: `fruitSwayR 8s ease-in-out infinite`, animationDelay: delay }}
-      >
-        <Image
-          src="/images/Right-Fruit-2-2-1.png"
-          alt=""
-          width={180}
-          height={320}
-          className="w-[clamp(80px,8.5vw,150px)] h-auto object-contain opacity-85 drop-shadow-xl"
-          priority={false}
-        />
-      </div>
-    </>
-  );
-}
 
 export default function Home() {
   return (
     <main className="relative min-h-screen">
-      {/* ── Keyframes ── */}
-      <style dangerouslySetInnerHTML={{ __html: homeDecoStyles }} />
-
       {/* Fixed Hero Background — will-change promotes to own GPU layer so scroll compositing is cheaper */}
       <div className="fixed top-0 left-0 w-full pointer-events-auto z-0" style={{ willChange: 'transform' }}>
         <HeroVideo />
@@ -86,29 +33,32 @@ export default function Home() {
         className="relative z-10 w-full mt-[clamp(600px,100svh,820px)] bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px]"
         style={{ transform: 'translateZ(0)' }}
       >
-        {/* BestSellers — no fruit deco */}
-        <BestSellers />
+        {/* BestSellers */}
+        <div className="relative">
+          <SectionDecoration type="parachute" className="-top-4 right-[15%]" />
+          <BestSellers />
+        </div>
 
-        {/* PriceComparison — WITH fruit deco */}
+        {/* PriceComparison */}
         <div className="relative" style={{ overflow: 'visible' }}>
-          <FruitDeco delay="0s" />
+          <SectionDecoration type="fruit-left" className="top-8 left-0" />
           <PriceComparisonPreview />
         </div>
 
         <AnimatedFlyingImage />
 
-        {/* BulkOrder — WITH fruit deco */}
+        {/* BulkOrder */}
         <div className="relative" style={{ overflow: 'visible' }}>
-          <FruitDeco delay="0.5s" />
+          <SectionDecoration type="fruit-right" className="top-8 right-0" />
           <BulkOrderCard />
         </div>
 
         <InstaVideos />
         <AboutFactory />
 
-        {/* Testimonials — WITH fruit deco */}
+        {/* Testimonials */}
         <div className="relative" style={{ overflow: 'visible' }}>
-          <FruitDeco delay="1s" />
+          <SectionDecoration type="parachute" className="top-6 right-[18%]" />
           <Testimonials />
         </div>
 
@@ -129,7 +79,7 @@ export default function Home() {
               </div>
 
               {/* Main Card */}
-              <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl bg-black">
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-2xl overflow-hidden px-10 pt-16 pb-10 shadow-xl " style={{ backgroundColor: COLORS.heading }}>
 
                 {/* Dot grid pattern overlay */}
                 <div

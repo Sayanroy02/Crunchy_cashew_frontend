@@ -103,7 +103,7 @@ export default function PriceComparisonPreview() {
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
             className="text-4xl md:text-6xl font-black tracking-tight"
-            style={{ color: COLORS.black }}
+            style={{ color: COLORS.heading }}
           >
             Buy Direct. <span className="relative inline-block">
               <span className="relative z-10">Save More.</span>
@@ -146,11 +146,11 @@ export default function PriceComparisonPreview() {
                   : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
                   }`}
                 style={platform.isBest ? {
-                    boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`
+                  boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`
                 } : {}}
               >
                 {platform.isBest && (
-                  <div 
+                  <div
                     className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
                     style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
                   >
@@ -169,7 +169,7 @@ export default function PriceComparisonPreview() {
                 </div>
 
                 <div className="text-center space-y-4 w-full">
-                  <p 
+                  <p
                     className={`text-[10px] font-black uppercase tracking-[0.2em]`}
                     style={{ color: platform.isBest ? COLORS.primary : '#94a3b8' }}
                   >
@@ -191,7 +191,7 @@ export default function PriceComparisonPreview() {
                 </div>
 
                 {platform.isBest && (
-                  <div 
+                  <div
                     className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
                     style={{ color: COLORS.primary, backgroundColor: `${COLORS.primaryLight}33`, borderColor: `${COLORS.primaryLight}4D` }}
                   >
@@ -223,15 +223,15 @@ export default function PriceComparisonPreview() {
                     className="object-contain p-2"
                   />
                 </div>
-                <h3 
-                    className="text-2xl font-extrabold max-w-[240px] leading-tight px-2"
-                    style={{ color: COLORS.black }}
+                <h3
+                  className="text-2xl font-extrabold max-w-[240px] leading-tight px-2"
+                  style={{ color: COLORS.black }}
                 >
                   {product.name}
                 </h3>
-                <div 
-                    className="text-[10px] font-black px-8 py-2.5 rounded-full uppercase tracking-[0.2em] shadow-sm"
-                    style={{ backgroundColor: COLORS.primary, color: COLORS.black }}
+                <div
+                  className="text-[10px] font-black px-8 py-2.5 rounded-full uppercase tracking-[0.2em] shadow-sm"
+                  style={{ backgroundColor: COLORS.primary, color: COLORS.black }}
                 >
                   Best Price Found
                 </div>
@@ -255,7 +255,7 @@ export default function PriceComparisonPreview() {
                     >
                       <div className="flex items-center gap-4">
                         {p.isBest ? (
-                          <div 
+                          <div
                             className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                             style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
                           >
@@ -266,17 +266,17 @@ export default function PriceComparisonPreview() {
                             <Image src={p.logo} alt={p.name} fill sizes="40px" className="object-contain p-0.5" />
                           </div>
                         )}
-                        <span 
-                            className={`text-base font-black`}
-                            style={{ color: COLORS.black }}
+                        <span
+                          className={`text-base font-black`}
+                          style={{ color: COLORS.black }}
                         >
                           {p.isBest ? 'Our Website' : p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}
                         </span>
                       </div>
                       <div className="text-right">
-                        <div 
-                            className={`text-xl font-black`}
-                            style={{ color: COLORS.black }}
+                        <div
+                          className={`text-xl font-black`}
+                          style={{ color: COLORS.black }}
                         >
                           ₹{p.price}
                         </div>

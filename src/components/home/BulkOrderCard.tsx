@@ -17,9 +17,9 @@ const grades = [
         img: '/images/WW320-min.png',
     },
     {
-        id: 'sw320',
-        name: 'SW 320',
-        img: '/images/SW320-min.png',
+        id: 'WS',
+        name: 'White Splits',
+        img: '/images/SS-min.png',
     },
     {
         id: 'lwp',
@@ -71,7 +71,7 @@ export default function BulkOrderCard() {
 
                 {/* Header */}
                 <div className="text-center mb-3">
-                    <span 
+                    <span
                         className="font-bold tracking-widest uppercase text-xs mb-2 block"
                         style={{ color: COLORS.black }}
                     >
@@ -121,9 +121,9 @@ export default function BulkOrderCard() {
                 </div>
 
                 {/* CTA Banner */}
-                <div 
-                    className="mt-2 rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6"
-                    style={{ backgroundColor: COLORS.black }}
+                <div
+                    className="mt-10 rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6"
+                    style={{ backgroundColor: COLORS.heading }}
                 >
                     <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
                     <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />

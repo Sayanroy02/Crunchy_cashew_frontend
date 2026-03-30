@@ -64,7 +64,7 @@ const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void 
     useEffect(() => {
         if (!videoRef.current) return;
         if (isInView) {
-            videoRef.current.play().catch(() => {});
+            videoRef.current.play().catch(() => { });
         } else {
             videoRef.current.pause();
         }
@@ -118,7 +118,10 @@ export default function InstaVideos() {
     const [selectedVideo, setSelectedVideo] = useState<InstaVideo | null>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         fetch(API.INSTA_VIDEOS)
             .then((res) => res.json())
             .then((data) => {
@@ -127,15 +130,85 @@ export default function InstaVideos() {
             .catch((err) => console.error("Failed to fetch insta videos", err));
     }, []);
 
+    useEffect(() => {
+        if (selectedVideo) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [selectedVideo]);
+
     if (videos.length === 0) return null;
+
+    const VideoPopup = () => {
+        if (!selectedVideo || !mounted) return null;
+
+        const content = (
+            <div
+                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8"
+                onClick={() => setSelectedVideo(null)}
+                style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+            >
+                {/* Fixed Close Button - Pinned to Viewport Corner */}
+                <button
+                    onClick={() => setSelectedVideo(null)}
+                    className="fixed top-6 right-6 md:top-10 md:right-10 z-[10000] w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all border border-white/30 backdrop-blur-md shadow-2xl group"
+                >
+                    <i className="fa-solid fa-xmark text-2xl group-hover:rotate-90 transition-transform duration-300"></i>
+                </button>
+
+                <div
+                    className="relative w-full max-w-[400px] h-full max-h-[85vh] md:max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.9)] border border-white/10 flex flex-col"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="relative flex-1 bg-black">
+                        <video
+                            src={selectedVideo.video_url}
+                            poster={selectedVideo.thumbnail_url}
+                            controls
+                            autoPlay
+                            playsInline
+                            className="w-full h-full object-contain"
+                        />
+
+                        {/* Top Overlay */}
+                        <div className="absolute top-0 inset-x-0 p-6 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
+                            <h3 className="text-white font-bold text-base md:text-lg drop-shadow-lg tracking-wide">
+                                {selectedVideo.title}
+                            </h3>
+                        </div>
+
+                        {/* Instagram Link Button */}
+                        {selectedVideo.link && (
+                            <a
+                                href={selectedVideo.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="absolute bottom-8 right-6 bg-white/10 hover:bg-white/30 backdrop-blur-md text-white border border-white/25 w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95"
+                            >
+                                <i className="fa-brands fa-instagram text-2xl"></i>
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+
+        return typeof document !== 'undefined'
+            ? require('react-dom').createPortal(content, document.body)
+            : null;
+    };
 
     return (
         <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 md:px-6">
                 <div className="text-center mb-8 flex flex-col items-center">
-                    <span 
+                    <span
                         className="font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block"
-                        style={{ color: COLORS.primary }}
+                        style={{ color: COLORS.black }}
                     >
                         Latest Reels
                     </span>
@@ -147,58 +220,15 @@ export default function InstaVideos() {
                     className="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto pb-3 snap-x snap-mandatory no-scrollbar"
                 >
                     {videos.map((video) => (
-                        <VideoItem 
-                            key={video._id} 
-                            video={video} 
-                            onClick={() => setSelectedVideo(video)} 
+                        <VideoItem
+                            key={video._id}
+                            video={video}
+                            onClick={() => setSelectedVideo(video)}
                         />
                     ))}
                 </div>
 
-                {selectedVideo && (
-                    <div
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4"
-                        onClick={() => setSelectedVideo(null)}
-                    >
-                        <button
-                            onClick={() => setSelectedVideo(null)}
-                            className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all border border-white/10 backdrop-blur-sm"
-                        >
-                            <i className="fa-solid fa-xmark text-lg"></i>
-                        </button>
-
-                        <div
-                            className="relative w-full max-w-[380px] aspect-[9/16] bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <video
-                                src={selectedVideo.video_url}
-                                poster={selectedVideo.thumbnail_url}
-                                controls
-                                autoPlay
-                                playsInline
-                                className="w-full h-full object-contain bg-black"
-                            />
-
-                            <div className="absolute top-0 inset-x-0 p-4 bg-gradient-to-b from-black/75 to-transparent pointer-events-none">
-                                <h3 className="text-white font-semibold text-sm drop-shadow">
-                                    {selectedVideo.title}
-                                </h3>
-                            </div>
-
-                            {selectedVideo.link && (
-                                <a
-                                    href={selectedVideo.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="absolute bottom-[72px] right-3 bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg"
-                                >
-                                    <i className="fa-brands fa-instagram text-lg"></i>
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                )}
+                {selectedVideo && <VideoPopup />}
             </div>
         </section>
     );
