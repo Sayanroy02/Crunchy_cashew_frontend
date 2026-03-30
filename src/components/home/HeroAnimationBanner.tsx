@@ -46,7 +46,7 @@ export default function HeroVideo() {
             {/* ── Desktop Video ── */}
             <video
                 ref={desktopVideoRef}
-                src="https://res.cloudinary.com/dvhgznmk5/video/upload/q_auto,f_auto/v1774628557/cc-main-video_gk6uwc.mp4"
+                src="https://res.cloudinary.com/dvhgznmk5/video/upload/v1774895903/Social_Media_Video_Ads_wZBxL8gm_ewajua.mp4"
                 muted
                 loop
                 playsInline
@@ -78,7 +78,7 @@ export default function HeroVideo() {
                 style={{
                     background: `linear-gradient(
                         to right,
-                        rgba(10,4,0,0.90) 0%,
+                        rgba(10, 4, 0, 0.8) 0%,
                         rgba(10,4,0,0.65) 42%,
                         rgba(10,4,0,0.14) 68%,
                         rgba(10,4,0,0.00) 100%
