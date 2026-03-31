@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
+import { Colors } from 'chart.js';
 
 const grades = [
     {
@@ -122,35 +123,71 @@ export default function BulkOrderCard() {
 
                 {/* CTA Banner */}
                 <div
-                    className="mt-10 rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6"
-                    style={{ backgroundColor: COLORS.heading }}
+                    className="mt-10 rounded-3xl relative overflow-hidden shadow-xl flex flex-col md:flex-row items-center justify-between gap-6"
+                    style={{
+                        background: 'linear-gradient(135deg, #FFFBEA 0%, #FEF3C7 40%, #FDE68A 100%)',
+                        padding: '2.5rem 2.5rem',
+                    }}
                 >
-                    <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
-                    <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
+                    {/* Dotted matrix background */}
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            backgroundImage: 'radial-gradient(circle, #D97706 1px, transparent 1px)',
+                            backgroundSize: '20px 20px',
+                            opacity: 0.12,
+                        }}
+                    />
 
-                    <div className="relative z-10 max-w-xl text-center md:text-left">
+                    {/* Decorative blobs */}
+                    <div
+                        className="absolute -top-16 -right-16 w-56 h-56 rounded-full pointer-events-none"
+                        style={{ background: 'radial-gradient(circle, #FCD34D55 0%, transparent 70%)' }}
+                    />
+                    <div
+                        className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full pointer-events-none"
+                        style={{ background: 'radial-gradient(circle, #FDE68A55 0%, transparent 70%)' }}
+                    />
+
+                    {/* Badge */}
+                    <div className="absolute top-4 left-6 z-10">
+                        <span
+                            className="text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full"
+                            style={{ backgroundColor: COLORS.primary, color: COLORS.black, letterSpacing: '0.12em' }}
+                        >
+                            Factory Direct
+                        </span>
+                    </div>
+
+                    <div className="relative z-10 max-w-xl text-center md:text-left pt-6 md:pt-2">
                         <h3
                             className="text-2xl md:text-3xl font-bold mb-2"
-                            style={{ fontFamily: 'Georgia, serif', color: COLORS.primary }}
+                            style={{ color: COLORS.black }}
                         >
-                            Ready to place a wholesale order?
+                            Need a{' '}
+                            <span style={{ color: COLORS.primary }}>Custom Order?</span>
                         </h3>
-                        <p className="text-white/60 text-sm md:text-base">
-                            Get a custom quote instantly tailored to your business needs and expected volume.
+                        <p style={{ color: COLORS.black, fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.6 }}>
+                            We handle large-scale shipments and retail packaging.
+                            Get in touch with our factory today.
                         </p>
                     </div>
 
-                    <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <div className="relative z-10 flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                         <Link
                             href="/bulk"
-                            className="font-bold px-8 py-4 rounded-xl transition-all shadow-lg text-center whitespace-nowrap text-sm md:text-base hover:scale-105"
+                            className="font-bold px-8 py-4 rounded-2xl transition-all shadow-md text-center whitespace-nowrap text-sm hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2"
                             style={{ backgroundColor: COLORS.primary, color: COLORS.black }}
                         >
-                            Request Bulk Order →
+                            Contact Us
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                            </svg>
                         </Link>
                         <Link
                             href="/bulk"
-                            className="text-white font-bold px-8 py-4 rounded-xl border border-white/20 hover:bg-white/10 transition-colors text-center whitespace-nowrap text-sm md:text-base"
+                            className="font-bold px-8 py-4 rounded-2xl text-center whitespace-nowrap text-sm transition-colors hover:bg-amber-100"
+                            style={{ color: COLORS.black, border: '1.5px solid COLORS.black', backgroundColor: 'transparent' }}
                         >
                             Know More
                         </Link>

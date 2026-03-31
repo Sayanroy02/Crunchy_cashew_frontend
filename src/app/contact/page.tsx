@@ -78,7 +78,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
         'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300';
 
     return (
-        <div className="flex flex-col gap-1.5 focus-within:ring-2 focus-within:ring-opacity-10" style={{'--tw-ring-color': COLORS.primary} as any}>
+        <div className="flex flex-col gap-1.5 focus-within:ring-2 focus-within:ring-opacity-10" style={{ '--tw-ring-color': COLORS.primary } as any}>
             <label className="text-[11px] font-bold tracking-widest uppercase ml-0.5" style={{ color: COLORS.black }}>
                 {label}{required && <span style={{ color: COLORS.primary }} className="ml-0.5">*</span>}
             </label>
@@ -108,7 +108,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
                     onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
                     placeholder={placeholder ?? (type === 'date' ? '' : `Enter ${label.toLowerCase()}`)}
                     className={inputClass}
-                    style={{'--tw-border-color': 'transparent'} as any}
+                    style={{ '--tw-border-color': 'transparent' } as any}
                 />
             )}
         </div>
@@ -222,7 +222,7 @@ export default function ContactPage() {
                 <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
 
                     {/* ── Sidebar ── */}
-                    <aside className="bg-[#0d0d0d] lg:w-72 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
+                    <aside className="bg-[#0d0d0d] lg:w-80 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
                         <div aria-hidden className="absolute -bottom-12 -right-12 w-52 h-52 rounded-full pointer-events-none" style={{ backgroundColor: `${COLORS.button}1A` }} />
                         <div aria-hidden className="absolute top-24 -left-8 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
 
@@ -235,11 +235,11 @@ export default function ContactPage() {
                         {/* info rows */}
                         <div className="relative z-10 flex flex-col gap-6">
                             <InfoRow icon={<IconLocation />} title="Factory"
-                                lines={['123 Cashew Lane, Industrial Area,', 'Siliguri, West Bengal 734001']} />
+                                lines={['YU NUT PROCESSING INDUSTRY,Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015']} />
                             <InfoRow icon={<IconPhone />} title="Phone"
-                                lines={['+91 98765 43210', 'Mon – Fri · 9am – 6pm IST']} />
+                                lines={['+91 7847996343', 'Mon – Fri · 9am – 6pm IST']} />
                             <InfoRow icon={<IconEmail />} title="Email"
-                                lines={['info@crunchycashews.in']} />
+                                lines={['crunchycashews18@gmail.com']} />
                         </div>
 
                         {/* socials */}
@@ -247,9 +247,9 @@ export default function ContactPage() {
                             <p style={{ color: COLORS.button }} className="text-[10px] font-bold tracking-widest uppercase mb-3">Follow Us</p>
                             <div className="flex gap-3">
                                 {['fa-facebook-f', 'fa-instagram', 'fa-twitter', 'fa-whatsapp'].map(ic => (
-                                    <a key={ic} href="#"
+                                    <a key={ic} href="https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ=="
                                         className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/60 transition-all duration-200"
-                                        style={{'--hover-bg': COLORS.button, '--hover-text': COLORS.primary, '--hover-border': COLORS.button} as any}
+                                        style={{ '--hover-bg': COLORS.button, '--hover-text': COLORS.primary, '--hover-border': COLORS.button } as any}
                                         onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.button; e.currentTarget.style.color = COLORS.primary; e.currentTarget.style.borderColor = COLORS.button; }}
                                         onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
                                     >

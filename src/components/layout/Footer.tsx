@@ -6,27 +6,27 @@ import { COLORS } from '@/constants/styles';
 
 export default function Footer() {
     return (
-        <footer 
+        <footer
             className="relative text-white overflow-hidden mt-0"
             style={{ backgroundColor: COLORS.footerBg }}
         >
             {/* Decorative background blobs */}
-            <div 
-                className="absolute top-0 left-0 w-72 h-72 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" 
+            <div
+                className="absolute top-0 left-0 w-72 h-72 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"
                 style={{ backgroundColor: COLORS.primary }}
             />
-            <div 
-                className="absolute bottom-0 right-0 w-96 h-96 opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none" 
+            <div
+                className="absolute bottom-0 right-0 w-96 h-96 opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"
                 style={{ backgroundColor: COLORS.primary }}
             />
-            <div 
-                className="absolute top-1/2 left-1/2 w-64 h-64 opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" 
+            <div
+                className="absolute top-1/2 left-1/2 w-64 h-64 opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"
                 style={{ backgroundColor: COLORS.primaryLight }}
             />
 
             {/* Top accent line */}
-            <div 
-                className="w-full h-1 bg-gradient-to-r" 
+            <div
+                className="w-full h-1 bg-gradient-to-r"
                 style={{ backgroundImage: `linear-gradient(to right, ${COLORS.primary}, ${COLORS.accent}, ${COLORS.primary})` }}
             />
 
@@ -47,7 +47,7 @@ export default function Footer() {
                     {/* Social Links */}
                     <div className="flex gap-3">
                         {[
-                            { icon: 'fa-brands fa-instagram', href: '#' },
+                            { icon: 'fa-brands fa-instagram', href: 'https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ==' },
                             { icon: 'fa-brands fa-facebook-f', href: '#' },
                             { icon: 'fa-brands fa-whatsapp', href: '#' },
                             { icon: 'fa-brands fa-youtube', href: '#' },
@@ -88,8 +88,8 @@ export default function Footer() {
                                     href={link.href}
                                     className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
                                 >
-                                    <span 
-                                        className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full" 
+                                    <span
+                                        className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
                                         style={{ backgroundColor: COLORS.accent }}
                                     />
                                     {link.label}
@@ -115,7 +115,7 @@ export default function Footer() {
                                     href="/shop"
                                     className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
                                 >
-                                    <span 
+                                    <span
                                         className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
                                         style={{ backgroundColor: COLORS.accent }}
                                     />
@@ -132,7 +132,7 @@ export default function Footer() {
                     <ul className="flex flex-col gap-4">
                         <li>
                             <a href="tel:+919876543210" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div 
+                                <div
                                     className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
                                     style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
                                 >
@@ -140,13 +140,13 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Call Us</p>
-                                    <p className="text-sm text-gray-300 group-hover:text-white">+91 98765 43210</p>
+                                    <p className="text-sm text-gray-300 group-hover:text-white">+91 7847996343</p>
                                 </div>
                             </a>
                         </li>
                         <li>
-                            <a href="mailto:info@crunchycashews.in" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div 
+                            <a href="mailto:crunchycashews18@gmail.com" className="group flex items-start gap-3 hover:text-white transition-colors">
+                                <div
                                     className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
                                     style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
                                 >
@@ -154,13 +154,13 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Email</p>
-                                    <p className="text-sm text-gray-300 group-hover:text-white">info@crunchycashews.in</p>
+                                    <p className="text-sm text-gray-300 group-hover:text-white">crunchycashews18@gmail.com</p>
                                 </div>
                             </a>
                         </li>
                         <li>
                             <div className="flex items-start gap-3">
-                                <div 
+                                <div
                                     className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
                                     style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
                                 >
@@ -168,7 +168,8 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <p className="text-xs text-gray-500 mb-0.5">Location</p>
-                                    <p className="text-sm text-gray-300">Siliguri, West Bengal, India</p>
+                                    <p className="text-sm text-gray-300">YU NUT PROCESSING INDUSTRY,
+                                        Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015 </p>
                                 </div>
                             </div>
                         </li>
@@ -182,14 +183,42 @@ export default function Footer() {
                     <p className="text-xs text-gray-600">
                         &copy; {new Date().getFullYear()} <span className="text-gray-500">Crunchy Cashews.</span> All rights reserved.
                     </p>
-                    <div className="flex items-center gap-1 text-gray-600 text-xs">
-                        <span>Made with</span>
-                        <i className="fa-solid fa-heart text-xs mx-1" style={{ color: COLORS.accent }} />
-                        <span>in Siliguri</span>
+
+                    {/* Attribution — styled, not jarring */}
+                    <div className="flex items-center gap-1 text-xs" style={{ color: COLORS.accent, opacity: 0.5 }}>
+                        <span>Crafted with</span>
+                        <i className="fa-solid fa-heart text-[10px] mx-1" style={{ color: COLORS.accent }} />
+                        <span>by</span>
+
+                        <a href="https://gridds.in"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold ml-1 transition-opacity hover:opacity-100"
+                            style={{ color: COLORS.accent, opacity: 0.8 }}
+                        >
+                            GRIDDS
+                        </a>
                     </div>
+
                     <div className="flex gap-5">
-                        <Link href="/terms" className="text-xs text-gray-600 transition-colors" style={{ color: COLORS.accent, opacity: 0.6 }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>Terms</Link>
-                        <Link href="/privacy" className="text-xs text-gray-600 transition-colors" style={{ color: COLORS.accent, opacity: 0.6 }} onMouseEnter={e => e.currentTarget.style.opacity = '1'} onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}>Privacy</Link>
+                        <Link
+                            href="/terms"
+                            className="text-xs transition-colors"
+                            style={{ color: COLORS.accent, opacity: 0.6 }}
+                            onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                            onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
+                        >
+                            Terms
+                        </Link>
+                        <Link
+                            href="/privacy"
+                            className="text-xs transition-colors"
+                            style={{ color: COLORS.accent, opacity: 0.6 }}
+                            onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                            onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
+                        >
+                            Privacy
+                        </Link>
                     </div>
                 </div>
             </div>
