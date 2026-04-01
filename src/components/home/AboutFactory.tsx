@@ -1,15 +1,27 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { API_BASE } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 
 
+
+// ─── Portal — renders outside all stacking contexts ─────────────────────────
+function Portal({ children }: { children: React.ReactNode }) {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
+    if (!mounted) return null;
+    return createPortal(children, document.body);
+}
+
 export default function AboutFactory() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = useCallback(() => setIsModalOpen(true), []);
+    const closeModal = useCallback(() => setIsModalOpen(false), []);
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', date: '', purpose: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -33,6 +45,22 @@ export default function AboutFactory() {
         return () => observer.disconnect();
     }, []);
 
+
+    // Freeze body scroll when modal is open
+    useEffect(() => {
+        if (!isModalOpen) return;
+        const y = window.scrollY;
+        document.body.style.cssText = `overflow:hidden;position:fixed;top:-${y}px;left:0;right:0;width:100%;`;
+        return () => { document.body.style.cssText = ''; window.scrollTo(0, y); };
+    }, [isModalOpen]);
+
+    // Escape listener
+    useEffect(() => {
+        if (!isModalOpen) return;
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [isModalOpen, closeModal]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -165,15 +193,14 @@ export default function AboutFactory() {
                             <span className="relative z-10">Factory</span>
                             <motion.div
                                 initial={{ width: 0 }}
-                                whileInView={{ width: '100%' }}
+                                whileInView={{ width: '80%' }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                                className="absolute bottom-1 md:bottom-2 inset-x-1 h-3 md:h-4 -z-0 opacity-80"
                                 style={{
                                     backgroundColor: COLORS.highlight,
                                     borderRadius: '5px',
                                     height: '30%',
-                                    width: '100%',
                                     transition: 'width 0.8s 0.5s ease',
                                 }}
                             />
@@ -221,7 +248,7 @@ export default function AboutFactory() {
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-5">
                         <button
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={openModal}
                             className="w-full sm:w-auto bg-primary text-black font-bold px-10 py-4 rounded-2xl hover:bg-primary/80 transition-all shadow-2xl hover:-translate-y-1 active:translate-y-0"
                         >
                             Reserve a Tour
@@ -240,80 +267,131 @@ export default function AboutFactory() {
                 </div>
             </div>
 
-            {/* Reservation Modal Pop-up */}
-            {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all animate-in fade-in zoom-in duration-300">
-                        <div className="bg-primary p-6 text-center relative">
-                            <h3 className="text-2xl font-bold text-white mb-1" style={{ fontFamily: 'Georgia, serif' }}>Reserve a Factory Visit</h3>
-                            <p className="text-white/80 text-sm">Schedule a primary tour of our processing units.</p>
-                            <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-white/60 hover:text-white w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-                                <i className="fa-solid fa-times"></i>
-                            </button>
-                        </div>
+            {/* Reservation Modal Pop-up via Portal */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <Portal>
+                        <div
+                            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 lg:p-6"
+                            style={{ background: 'rgba(6,46,38,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                            onClick={closeModal}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.92, y: 24 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.92, y: 24 }}
+                                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                                onClick={e => e.stopPropagation()}
+                                className="relative w-full max-w-lg rounded-[32px] overflow-hidden hide-scrollbar"
+                                style={{
+                                    background: 'linear-gradient(160deg, #FFFEF5 0%, #FFFBEA 35%, #FEF9D7 70%, #FDF3B0 100%)',
+                                    boxShadow: '0 40px 100px rgba(0,0,0,0.18), 0 12px 40px rgba(246,176,0,0.2), 0 0 0 1.5px rgba(246,176,0,0.3)',
+                                    maxHeight: '90vh',
+                                    overflowY: 'auto'
+                                }}
+                            >
+                                <style>{`
+                                    .hide-scrollbar::-webkit-scrollbar { display: none; }
+                                    .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+                                `}</style>
+                                {/* Dot texture */}
+                                <div className="absolute inset-0 rounded-[32px] pointer-events-none opacity-[0.08]"
+                                    style={{ backgroundImage: 'radial-gradient(circle, #D97706 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
 
-                        <div className="p-8">
-                            {submitStatus === 'success' ? (
-                                <div className="text-center py-8">
-                                    <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <i className="fa-solid fa-check text-4xl text-black"></i>
-                                    </div>
-                                    <h4 className="text-2xl font-bold text-gray-900 mb-2">Reservation Requested!</h4>
-                                    <p className="text-gray-600">Our team will contact you shortly to confirm your visit date and time.</p>
+                                {/* Top accent stripe */}
+                                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-[32px] overflow-hidden flex">
+                                    <div className="flex-1" style={{ background: COLORS.heading }} />
+                                    <div className="flex-1" style={{ background: COLORS.primary }} />
+                                    <div className="flex-1" style={{ background: COLORS.heading }} />
                                 </div>
-                            ) : (
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Full Name *</label>
-                                            <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Company / Group</label>
-                                            <input type="text" value={formData.company} onChange={e => setFormData({ ...formData, company: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
-                                        </div>
-                                    </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Email *</label>
-                                            <input required type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Phone *</label>
-                                            <input required type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
-                                        </div>
-                                    </div>
+                                {/* Close button */}
+                                <button
+                                    onClick={closeModal}
+                                    className="absolute top-4 right-4 z-[60] w-9 h-9 rounded-full flex items-center justify-center text-black/30 hover:text-black hover:bg-black/5 transition-all hover:scale-110"
+                                >
+                                    <i className="fa-solid fa-xmark text-lg"></i>
+                                </button>
 
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Requested Date *</label>
-                                        <input required type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+                                <div className="relative z-10 text-center px-8 pt-10 pb-4">
+                                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.22em] px-3 py-1.5 rounded-full mb-3"
+                                        style={{ backgroundColor: COLORS.primary, color: '#000' }}>
+                                        📍 Plant Tour
                                     </div>
-
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Purpose of Visit</label>
-                                        <textarea value={formData.purpose} onChange={e => setFormData({ ...formData, purpose: e.target.value })} rows={3} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none"></textarea>
+                                    <h3 className="text-3xl font-black text-black leading-tight tracking-tight mb-2">Reserve a Factory Visit</h3>
+                                    <p className="text-black/45 text-sm leading-relaxed max-w-xs mx-auto">Schedule a primary tour of our processing units in Siliguri.</p>
+                                    <div className="flex items-center justify-center gap-3 mt-4">
+                                        <div className="h-px w-10 bg-amber-200" />
+                                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS.primary }} />
+                                        <div className="h-px w-10 bg-amber-200" />
                                     </div>
+                                </div>
 
-                                    {submitStatus === 'error' && (
-                                        <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center border border-red-100">
-                                            Something went wrong. Please try again.
+                                <div className="relative z-10 p-8 pt-4">
+                                    {submitStatus === 'success' ? (
+                                        <div className="text-center py-8">
+                                            <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <i className="fa-solid fa-check text-4xl text-black"></i>
+                                            </div>
+                                            <h4 className="text-2xl font-bold text-gray-900 mb-2">Reservation Requested!</h4>
+                                            <p className="text-gray-600">Our team will contact you shortly to confirm your visit date and time.</p>
                                         </div>
+                                    ) : (
+                                        <form onSubmit={handleSubmit} className="space-y-4">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Full Name *</label>
+                                                    <input required type="text" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm" style={{ '--tw-ring-color': COLORS.primary } as any} />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Company / Group</label>
+                                                    <input type="text" value={formData.company} onChange={e => setFormData({ ...formData, company: e.target.value })} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm" style={{ '--tw-ring-color': COLORS.primary } as any} />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Email *</label>
+                                                    <input required type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm" style={{ '--tw-ring-color': COLORS.primary } as any} />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Phone *</label>
+                                                    <input required type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm" style={{ '--tw-ring-color': COLORS.primary } as any} />
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Requested Date *</label>
+                                                <input required type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm" style={{ '--tw-ring-color': COLORS.primary } as any} />
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Purpose of Visit</label>
+                                                <textarea value={formData.purpose} onChange={e => setFormData({ ...formData, purpose: e.target.value })} rows={3} className="w-full bg-white border border-amber-200/80 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm resize-none" style={{ '--tw-ring-color': COLORS.primary } as any}></textarea>
+                                            </div>
+
+                                            {submitStatus === 'error' && (
+                                                <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center border border-red-100">
+                                                    Something went wrong. Please try again.
+                                                </div>
+                                            )}
+
+                                            <button
+                                                type="submit"
+                                                disabled={submitStatus === 'loading'}
+                                                className="w-full text-black font-black py-4 rounded-xl transition-all shadow-md mt-2 flex justify-center items-center gap-2 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                                                style={{ background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`, boxShadow: '0 8px 28px rgba(246,176,0,0.3)' }}
+                                            >
+                                                {submitStatus === 'loading' ? 'Submitting...' : 'Submit Request'}
+                                            </button>
+                                        </form>
                                     )}
-
-                                    <button
-                                        type="submit"
-                                        disabled={submitStatus === 'loading'}
-                                        className="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-primary-light transition-colors shadow-md mt-2"
-                                    >
-                                        {submitStatus === 'loading' ? 'Submitting...' : 'Submit Request'}
-                                    </button>
-                                </form>
-                            )}
+                                </div>
+                            </motion.div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </Portal>
+                )}
+            </AnimatePresence>
         </section>
     );
 }

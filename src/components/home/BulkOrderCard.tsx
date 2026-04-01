@@ -198,7 +198,7 @@ function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
                     exit={{ opacity: 0, scale: 0.92, y: 24 }}
                     transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     onClick={e => e.stopPropagation()}
-                    className="relative w-full max-w-xl rounded-[28px]"
+                    className="relative w-full max-w-xl rounded-[28px] hide-scrollbar"
                     style={{
                         background: 'linear-gradient(160deg, #FFFEF5 0%, #FFFBEA 35%, #FEF9D7 70%, #FDF3B0 100%)',
                         boxShadow: '0 40px 100px rgba(0,0,0,0.18), 0 12px 40px rgba(246,176,0,0.2), 0 0 0 1.5px rgba(246,176,0,0.3)',
@@ -206,6 +206,10 @@ function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
                         overflowY: 'auto',
                     }}
                 >
+                    <style>{`
+                        .hide-scrollbar::-webkit-scrollbar { display: none; }
+                        .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+                    `}</style>
                     {/* Dot texture */}
                     <div className="absolute inset-0 rounded-[28px] pointer-events-none overflow-hidden"
                         style={{ backgroundImage: 'radial-gradient(circle, #D9770610 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -221,7 +225,7 @@ function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
 
                     {/* Close button */}
                     <button onClick={onClose} aria-label="Close"
-                        className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-black/35 hover:text-black hover:bg-black/05 transition-all hover:scale-110">
+                        className="absolute top-4 right-4 z-[60] w-8 h-8 rounded-full flex items-center justify-center text-black/35 hover:text-black hover:bg-black/05 transition-all hover:scale-110">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <path d="M18 6L6 18M6 6l12 12" />
                         </svg>

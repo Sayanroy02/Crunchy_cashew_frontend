@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 
@@ -12,6 +14,14 @@ interface Testimonial {
     description: string;
     rating?: number;
     image_url?: string;
+}
+
+// ─── Portal — renders outside all stacking contexts ─────────────────────────
+function Portal({ children }: { children: React.ReactNode }) {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
+    if (!mounted) return null;
+    return createPortal(children, document.body);
 }
 
 function StarRating({ rating = 5 }: { rating?: number }) {
@@ -67,13 +77,13 @@ function TestimonialsHeading() {
                 transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
             }}
         >
-            Customer <span className="relative inline-block lg:mt-0">
+            Customer<span className="relative inline-block lg:mt-0 ml-2">
                 <span className="relative z-10">Testimonials</span>
                 <span
-                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                    className="absolute bottom-1 md:bottom-2 left-[10%] w-[95%] h-3 md:h-4 -z-0 opacity-80"
                     style={{
                         backgroundColor: COLORS.highlight,
-                        width: vis ? '100%' : '0%',
+                        width: vis ? 'auto' : '0%',
                         transition: 'width 0.8s 0.5s ease',
                         borderRadius: '5px',
                         height: '30%',
@@ -87,9 +97,27 @@ function TestimonialsHeading() {
 export default function Testimonials() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [formOpen, setFormOpen] = useState(false);
+    const openForm = useCallback(() => setFormOpen(true), []);
+    const closeForm = useCallback(() => { setFormOpen(false); setSubmitStatus('idle'); }, []);
     const [formData, setFormData] = useState({ name: '', city: '', state: '', description: '', rating: 5 });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Freeze body scroll when modal is open
+    useEffect(() => {
+        if (!formOpen) return;
+        const y = window.scrollY;
+        document.body.style.cssText = `overflow:hidden;position:fixed;top:-${y}px;left:0;right:0;width:100%;`;
+        return () => { document.body.style.cssText = ''; window.scrollTo(0, y); };
+    }, [formOpen]);
+
+    // Escape listener
+    useEffect(() => {
+        if (!formOpen) return;
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeForm(); };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [formOpen, closeForm]);
 
     useEffect(() => {
         fetch(API.TESTIMONIALS)
@@ -153,7 +181,7 @@ export default function Testimonials() {
                         </div>
 
                         <button
-                            onClick={() => setFormOpen(true)}
+                            onClick={openForm}
                             className="bg-black text-white px-8 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
                         >
                             <i className="fa-solid fa-pen-nib text-xs" />
@@ -229,102 +257,134 @@ export default function Testimonials() {
                 )}
             </div>
 
-            {/* Popup Modal Form */}
-            {formOpen && (
-                <div
-                    className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-                    style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(6px)' }}
-                    onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
-                >
-                    <div
-                        className="relative w-full max-w-lg rounded-3xl p-6 md:p-8 shadow-2xl"
-                        style={{
-                            background: 'rgba(255,255,255,0.92)',
-                            backdropFilter: 'blur(20px)',
-                            WebkitBackdropFilter: 'blur(20px)',
-                            border: '1px solid rgba(255,255,255,0.9)',
-                        }}
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {/* Close button */}
-                        <button
-                            onClick={() => { setFormOpen(false); setSubmitStatus('idle'); }}
-                            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/8 hover:bg-black/15 text-black/60 flex items-center justify-center transition-all"
+            {/* Popup Modal Form via Portal */}
+            <AnimatePresence>
+                {formOpen && (
+                    <Portal>
+                        <div
+                            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 lg:p-6"
+                            style={{ background: 'rgba(6,46,38,0.45)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
+                            onClick={closeForm}
                         >
-                            <i className="fa-solid fa-xmark text-base" />
-                        </button>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.92, y: 32 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.92, y: 32 }}
+                                transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                                onClick={e => e.stopPropagation()}
+                                className="relative w-full max-w-lg rounded-[32px] overflow-hidden hide-scrollbar"
+                                style={{
+                                    background: 'linear-gradient(160deg, #FFFEF5 0%, #FFFBEA 35%, #FEF9D7 70%, #FDF3B0 100%)',
+                                    boxShadow: '0 40px 100px rgba(0,0,0,0.18), 0 12px 40px rgba(246,176,0,0.2), 0 0 0 1.5px rgba(246,176,0,0.3)',
+                                    maxHeight: '90vh',
+                                    overflowY: 'auto'
+                                }}
+                            >
+                                <style>{`
+                                    .hide-scrollbar::-webkit-scrollbar { display: none; }
+                                    .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+                                `}</style>
+                                {/* Dot texture */}
+                                <div className="absolute inset-0 rounded-[32px] pointer-events-none opacity-[0.08]"
+                                    style={{ backgroundImage: 'radial-gradient(circle, #D97706 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
 
-                        <h3 className="text-xl font-black text-black mb-1">Share Your Experience</h3>
-                        <p className="text-black/40 text-sm mb-6">We'd love to hear what you think!</p>
-
-                        {submitStatus === 'success' ? (
-                            <div className="text-center py-10">
-                                <i className="fa-solid fa-circle-check text-5xl text-primary mb-3 block" />
-                                <p className="font-bold text-lg text-black">Thank you!</p>
-                                <p className="text-black/50 text-sm mt-1">Your review is under review and will appear shortly.</p>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleFormSubmit} className="space-y-4">
-                                <div>
-                                    <label className="text-sm font-bold text-black/70 block mb-2">Your Rating</label>
-                                    <StarPicker value={formData.rating} onChange={v => setFormData(f => ({ ...f, rating: v }))} />
+                                {/* Top accent stripe */}
+                                <div className="absolute top-0 left-0 right-0 h-1 rounded-t-[32px] overflow-hidden flex">
+                                    <div className="flex-1" style={{ background: COLORS.heading }} />
+                                    <div className="flex-1" style={{ background: COLORS.primary }} />
+                                    <div className="flex-1" style={{ background: COLORS.heading }} />
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                    {(['name', 'city', 'state'] as const).map(field => (
-                                        <div key={field}>
-                                            <label className="text-sm font-bold text-black/70 block mb-1.5 capitalize">{field}</label>
-                                            <input
-                                                required
-                                                type="text"
-                                                value={formData[field]}
-                                                onChange={e => setFormData(f => ({ ...f, [field]: e.target.value }))}
-                                                className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:bg-white transition-all"
-                                                onFocus={(e) => e.target.style.borderColor = COLORS.amber}
-                                                onBlur={(e) => e.target.style.borderColor = 'rgba(0,0,0,0.1)'}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div>
-                                    <label className="text-sm font-bold text-black/70 block mb-1.5">Your Review</label>
-                                    <textarea
-                                        required
-                                        rows={4}
-                                        value={formData.description}
-                                        onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
-                                        placeholder="Tell us about your experience..."
-                                        className="w-full bg-black/5 border border-black/10 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:bg-white transition-all resize-none"
-                                        onFocus={(e) => e.target.style.borderColor = COLORS.amber}
-                                        onBlur={(e) => e.target.style.borderColor = 'rgba(0,0,0,0.1)'}
-                                    />
-                                </div>
-
-                                {submitStatus === 'error' && (
-                                    <p className="text-red-500 text-sm flex items-center gap-1.5">
-                                        <i className="fa-solid fa-circle-exclamation" /> Something went wrong. Please try again.
-                                    </p>
-                                )}
-
+                                {/* Close button */}
                                 <button
-                                    type="submit"
-                                    disabled={submitStatus === 'loading'}
-                                    className="w-full text-white font-bold py-3 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-60 shadow-lg"
-                                    style={{ backgroundColor: COLORS.primary, boxShadow: `0 10px 15px -3px ${COLORS.primary}40` }}
-                                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                                    onClick={closeForm}
+                                    className="absolute top-4 right-4 z-[60] w-9 h-9 rounded-full flex items-center justify-center text-black/30 hover:text-black hover:bg-black/5 transition-all hover:scale-110"
                                 >
-                                    {submitStatus === 'loading'
-                                        ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
-                                        : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
-                                    }
+                                    <i className="fa-solid fa-xmark text-lg"></i>
                                 </button>
-                            </form>
-                        )}
-                    </div>
-                </div>
-            )}
+
+                                <div className="relative z-10 text-center px-8 pt-10 pb-4">
+                                    <div className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.22em] px-3 py-1.5 rounded-full mb-3"
+                                        style={{ backgroundColor: COLORS.primary, color: '#000' }}>
+                                        💬 Wall of Fame
+                                    </div>
+                                    <h3 className="text-3xl font-black text-black leading-tight tracking-tight mb-2">Share Your Experience</h3>
+                                    <p className="text-black/45 text-sm leading-relaxed max-w-xs mx-auto">We'd love to hear what you think! Your review helps us grow.</p>
+                                    <div className="flex items-center justify-center gap-3 mt-4">
+                                        <div className="h-px w-10 bg-amber-200" />
+                                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS.primary }} />
+                                        <div className="h-px w-10 bg-amber-200" />
+                                    </div>
+                                </div>
+
+                                <div className="relative z-10 p-8 pt-4">
+                                    {submitStatus === 'success' ? (
+                                        <div className="text-center py-10">
+                                            <i className="fa-solid fa-circle-check text-5xl text-primary mb-3 block" />
+                                            <h4 className="font-black text-2xl text-black mb-2">Thank you!</h4>
+                                            <p className="text-black/50 text-sm mt-1">Your review is under review and will appear shortly.</p>
+                                        </div>
+                                    ) : (
+                                        <form onSubmit={handleFormSubmit} className="space-y-5">
+                                            <div>
+                                                <label className="block text-[10px] font-black text-black/40 mb-2 uppercase tracking-widest">Your Rating</label>
+                                                <StarPicker value={formData.rating} onChange={v => setFormData(f => ({ ...f, rating: v }))} />
+                                            </div>
+
+                                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                                {(['name', 'city', 'state'] as const).map(field => (
+                                                    <div key={field}>
+                                                        <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">{field} *</label>
+                                                        <input
+                                                            required
+                                                            type="text"
+                                                            value={formData[field]}
+                                                            onChange={e => setFormData(f => ({ ...f, [field]: e.target.value }))}
+                                                            className="w-full bg-white border border-amber-200/80 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm"
+                                                            style={{ '--tw-ring-color': COLORS.primary } as any}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div>
+                                                <label className="block text-[10px] font-black text-black/40 mb-1.5 uppercase tracking-widest">Your Review *</label>
+                                                <textarea
+                                                    required
+                                                    rows={4}
+                                                    value={formData.description}
+                                                    onChange={e => setFormData(f => ({ ...f, description: e.target.value }))}
+                                                    placeholder="Tell us about your experience..."
+                                                    className="w-full bg-white border border-amber-200/80 rounded-xl px-3 py-2.5 text-sm text-black focus:outline-none focus:ring-2 focus:border-transparent transition-all shadow-sm resize-none"
+                                                    style={{ '--tw-ring-color': COLORS.primary } as any}
+                                                />
+                                            </div>
+
+                                            {submitStatus === 'error' && (
+                                                <p className="text-red-500 text-sm flex items-center gap-1.5 bg-red-50 p-3 rounded-xl border border-red-100 font-medium">
+                                                    <i className="fa-solid fa-circle-exclamation" /> Something went wrong. Please try again.
+                                                </p>
+                                            )}
+
+                                            <button
+                                                type="submit"
+                                                disabled={submitStatus === 'loading'}
+                                                className="w-full text-black font-black py-4 rounded-xl transition-all shadow-md mt-2 flex justify-center items-center gap-2 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60"
+                                                style={{ background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`, boxShadow: '0 8px 28px rgba(246,176,0,0.3)' }}
+                                            >
+                                                {submitStatus === 'loading'
+                                                    ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
+                                                    : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
+                                                }
+                                            </button>
+                                        </form>
+                                    )}
+                                </div>
+                            </motion.div>
+                        </div>
+                    </Portal>
+                )}
+            </AnimatePresence>
         </section>
     );
 }

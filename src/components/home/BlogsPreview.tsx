@@ -45,19 +45,18 @@ export default function BlogsPreview() {
                             className="text-4xl md:text-5xl font-black tracking-tight mb-6"
                             style={{ color: COLORS.heading }}
                         >
-                            Read Our <span className="relative inline-block">
-                                <span className="relative z-10">Blogs</span>
+                            Read Our<span className="relative inline-block ml-2 text-primary">
+                                <span className="relative z-10 text-heading" style={{ color: COLORS.heading }}>Blogs</span>
                                 <motion.div
                                     initial={{ width: 0 }}
-                                    whileInView={{ width: '100%' }}
+                                    whileInView={{ width: '80%' }}
                                     viewport={{ once: true }}
                                     transition={{ delay: 0.5, duration: 0.8 }}
-                                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                                    className="absolute bottom-1 md:bottom-2 left-[10%] h-3 md:h-4 -z-0 opacity-80"
                                     style={{
                                         backgroundColor: COLORS.highlight,
                                         borderRadius: '5px',
                                         height: '30%',
-                                        width: '100%',
                                         transition: 'width 0.8s 0.5s ease',
                                     }}
                                 />

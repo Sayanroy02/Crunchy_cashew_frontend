@@ -53,11 +53,11 @@ function SectionHeading({ text, highlight }: { text: string; highlight: string }
             {text} <span className="relative inline-block">
                 <span className="relative z-10">{highlight}</span>
                 <span
-                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
+                    className="absolute bottom-1 md:bottom-2 inset-x-1 h-3 md:h-4 -z-0 opacity-80"
                     style={{
                         backgroundColor: COLORS.highlight,
                         height: vis ? '30%' : '0%',
-                        width: vis ? '100%' : '0%',
+                        width: vis ? 'auto' : '0%',
                         borderRadius: '5px',
                         transition: 'width 0.8s 0.5s ease',
                     }}
