@@ -9,9 +9,7 @@ import { usePathname } from 'next/navigation';
 import PincodeSelector from '@/components/PincodeSelector';
 
 const ANNOUNCEMENTS = [
-    '🚚 Free Shipping on orders above ₹999',
-    '🎉 10% OFF your first order · Code: CRUNCHY10',
-    '⚡ Extra 5% OFF on orders above ₹1,599',
+    '🚚 Free Shipping on orders above ₹599',
     '🌟 Delivered in 5–7 Business Days Pan India',
 ];
 
