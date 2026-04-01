@@ -58,7 +58,7 @@ const SplashScreen = () => {
                     className="fixed inset-0 z-[9999] bg-white flex items-center justify-center overflow-hidden"
                 >
                     {/* Background overlay */}
-                    {/* <div className="absolute inset-0 bg-white z-[-1]" /> */}
+                    <div className="absolute inset-0 bg-white z-[-1]" />
 
                     <div className="relative w-full max-w-2xl px-4 flex items-center justify-center">
                         <video
@@ -66,7 +66,7 @@ const SplashScreen = () => {
                             muted
                             playsInline
                             onEnded={handleClose}
-                            className="w-full h-auto max-h-[70vh] object-contain drop-shadow-sm"
+                            className="w-full h-auto max-h-[70vh] object-contain"
                         >
                             <source src="/videos/min_1_1-transcode.webm" type="video/webm" />
                             Your browser does not support the video tag.
