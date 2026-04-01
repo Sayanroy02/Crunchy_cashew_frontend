@@ -293,13 +293,13 @@ export default function HeroVideo() {
                 </div>
             </div>
 
-            {/* ── Scroll hint — desktop only ── */}
+            {/* ── Scroll hint — desktop only ──
             <div className="hidden md:flex absolute bottom-7 left-1/2 -translate-x-1/2 flex-col items-center opacity-40 pointer-events-none">
                 <div
                     className="w-[1px] h-10 bg-white rounded-full"
                     style={{ animation: 'scrollPulse 2s ease-in-out infinite' }}
                 />
-            </div>
+            </div> */}
 
             {/* ── Parachute decorations (desktop only, pointer-events-none) ── */}
             {/* <div

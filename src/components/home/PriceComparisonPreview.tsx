@@ -126,7 +126,13 @@ export default function PriceComparisonPreview() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
-                style={{ backgroundColor: COLORS.primary }}
+                style={{
+                  backgroundColor: COLORS.primary,
+                  borderRadius: '5px',
+                  height: '30%',
+                  width: '100%',
+                  transition: 'width 0.8s 0.5s ease',
+                }}
               />
             </span>
           </motion.h2>

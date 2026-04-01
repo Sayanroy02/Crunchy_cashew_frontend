@@ -56,7 +56,9 @@ function SectionHeading({ text, highlight }: { text: string; highlight: string }
                     className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
                     style={{
                         backgroundColor: COLORS.highlight,
+                        height: vis ? '30%' : '0%',
                         width: vis ? '100%' : '0%',
+                        borderRadius: '5px',
                         transition: 'width 0.8s 0.5s ease',
                     }}
                 />
@@ -94,13 +96,13 @@ export default function BestSellers() {
 
                 {/* Heading */}
                 <div className="text-center mb-5 md:mb-6">
-                    <span 
+                    <span
                         className="font-bold tracking-[4px] uppercase text-xs mb-2 block"
                         style={{ color: COLORS.text }}
                     >
                         Handpicked For You
                     </span>
-                    <SectionHeading text="Our Best" highlight="Sellers" />
+                    <SectionHeading text="Our" highlight="Best Sellers" />
                 </div>
 
                 {/* Tag Filter Pills */}
@@ -111,7 +113,7 @@ export default function BestSellers() {
                             onClick={() => setActiveTag(tag.value)}
                             className={`
                                 flex-none inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold
-                                border-2 transition-all duration-200 whitespace-nowrap
+                                border-2 transition-all duration-200 whitespace-nowrap hover:bg-primary hover:text-black
                                 ${activeTag === tag.value
                                     ? 'shadow-md scale-105'
                                     : 'bg-white border-gray-200 text-gray-600'
@@ -137,7 +139,7 @@ export default function BestSellers() {
                             const container = document.getElementById('bestseller-scroll');
                             if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
                         }}
-                        className="absolute left-[-16px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
+                        className="absolute left-[-40px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
                     >
                         <i className="fa-solid fa-chevron-left text-xs"></i>
                     </button>
@@ -147,7 +149,7 @@ export default function BestSellers() {
                             const container = document.getElementById('bestseller-scroll');
                             if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
                         }}
-                        className="absolute right-[-16px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
+                        className="absolute right-[-40px] top-1/2 -translate-y-1/2 z-10 bg-white shadow-xl w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover/scroll:opacity-100 hidden lg:flex border border-gray-100"
                     >
                         <i className="fa-solid fa-chevron-right text-xs"></i>
                     </button>

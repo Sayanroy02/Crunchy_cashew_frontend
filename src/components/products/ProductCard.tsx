@@ -161,12 +161,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                             <p className="text-gray-400 text-sm line-through">₹{originalPrice.toFixed(0)}</p>
                         )}
                     </div>
-                    
+
                     <button
                         onClick={handleAddToCart}
                         disabled={product.stock <= 0}
                         className={`hidden sm:flex w-11 h-11 rounded-full items-center justify-center transition-all shadow-sm ${product.stock > 0
-                            ? 'bg-black text-white hover:bg-primary hover:text-black hover:shadow-md hover:scale-105'
+                            ? 'bg-heading text-black hover:bg-primary hover:text-black hover:shadow-md hover:scale-105'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                         aria-label="Add to cart"
@@ -178,7 +178,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         onClick={handleAddToCart}
                         disabled={product.stock <= 0}
                         className={`sm:hidden w-full py-2.5 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-sm ${product.stock > 0
-                            ? 'bg-black text-white active:bg-primary active:text-black'
+                            ? 'bg-heading text-white active:bg-primary active:text-black'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                             }`}
                         aria-label="Add to cart"

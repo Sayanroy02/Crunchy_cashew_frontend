@@ -15,7 +15,7 @@ export default function AnimatedFlyingImage() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-          observer.disconnect(); 
+          observer.disconnect();
         }
       },
       { threshold: 0.15 }
@@ -25,11 +25,14 @@ export default function AnimatedFlyingImage() {
     const handleMouseMove = (e: MouseEvent) => {
       if (!visible) return;
       const { innerWidth, innerHeight } = window;
-      const x = (e.clientX - innerWidth / 2) / 25;
-      const y = (e.clientY - innerHeight / 2) / 25;
+
+      // Reversed the subtraction here!
+      // Now: Center of Screen - Mouse Position
+      const x = (innerWidth / 2 - e.clientX) / 25;
+      const y = (innerHeight / 2 - e.clientY) / 25;
+
       setMousePos({ x, y });
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
       observer.disconnect();
@@ -46,11 +49,11 @@ export default function AnimatedFlyingImage() {
           className="relative w-full max-w-4xl" // Reduced from max-w-5xl (~15% smaller)
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible 
-              ? `translate(${mousePos.x}px, ${mousePos.y}px) rotate(0deg)` 
+            transform: visible
+              ? `translate(${mousePos.x}px, ${mousePos.y}px) rotate(0deg)`
               : 'translateX(-80px) rotate(-4deg)',
-            transition: visible 
-              ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.1s ease-out' 
+            transition: visible
+              ? 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.1s ease-out'
               : 'opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1), transform 1.1s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
         >

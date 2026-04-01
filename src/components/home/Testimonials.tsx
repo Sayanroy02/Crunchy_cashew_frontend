@@ -75,6 +75,8 @@ function TestimonialsHeading() {
                         backgroundColor: COLORS.highlight,
                         width: vis ? '100%' : '0%',
                         transition: 'width 0.8s 0.5s ease',
+                        borderRadius: '5px',
+                        height: '30%',
                     }}
                 />
             </span>
