@@ -49,7 +49,7 @@ const SplashScreen = () => {
                 <motion.div
                     key="splash-screen"
                     initial={{ opacity: 1 }}
-                    exit={{ 
+                    exit={{
                         opacity: 0,
                         filter: 'blur(10px)',
                         scale: 1.1
@@ -58,8 +58,8 @@ const SplashScreen = () => {
                     className="fixed inset-0 z-[9999] bg-white flex items-center justify-center overflow-hidden"
                 >
                     {/* Background overlay */}
-                    <div className="absolute inset-0 bg-white z-[-1]" />
-                    
+                    {/* <div className="absolute inset-0 bg-white z-[-1]" /> */}
+
                     <div className="relative w-full max-w-2xl px-4 flex items-center justify-center">
                         <video
                             autoPlay
@@ -86,13 +86,13 @@ const SplashScreen = () => {
                         <span className="text-sm">Skip</span>
                         <i className="fa-solid fa-chevron-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                     </motion.button>
-                    
+
                     {/* Bottom Indicator (Progress hint) */}
-                    <motion.div 
-                         initial={{ scaleX: 0 }}
-                         animate={{ scaleX: 1 }}
-                         transition={{ duration: 5, ease: "linear" }} // Approximation of video length if known, or just a hint
-                         className="absolute bottom-0 left-0 right-0 h-1 bg-[#FBB21B]/30 origin-left"
+                    <motion.div
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 5, ease: "linear" }} // Approximation of video length if known, or just a hint
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-[#FBB21B]/30 origin-left"
                     />
                 </motion.div>
             )}
