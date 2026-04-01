@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   },
 };
 
+import SplashScreen from "@/components/common/SplashScreen";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -62,6 +64,7 @@ export default function RootLayout({
       >
         <StoreProvider>
           <SnackbarProvider>
+            <SplashScreen />
             <FloatingBackground />
             <Navbar />
             <main className="min-h-screen">
