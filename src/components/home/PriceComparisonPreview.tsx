@@ -82,7 +82,20 @@ export default function PriceComparisonPreview() {
   const savings = avgMpPrice - product.price;
 
   return (
-    <section className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden">
+    <section className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden relative">
+
+      {/* ── Left corner fruit — desktop only, anchored to heading area ── */}
+      <div className="hidden md:block absolute left-0 top-0 w-28 lg:w-36 pointer-events-none select-none z-10">
+        <Image
+          src="/images/Fruit-3.png"
+          alt=""
+          width={144}
+          height={220}
+          className="object-contain object-top w-full h-auto -translate-x-8"
+          aria-hidden="true"
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto space-y-16">
         {/* 1. HEADER */}
         <div className="text-center space-y-4">

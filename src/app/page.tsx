@@ -39,27 +39,18 @@ export default function Home() {
 
 
         {/* PriceComparison */}
-        <div className="relative" style={{ overflow: 'visible' }}>
-          <SectionDecoration type="fruit-left" className="top-8 left-0" />
-          <PriceComparisonPreview />
-        </div>
+        <PriceComparisonPreview />
 
         <AnimatedFlyingImage />
 
         {/* BulkOrder */}
-        <div className="relative" style={{ overflow: 'visible' }}>
-          <SectionDecoration type="fruit-right" className="top-8 right-0" />
-          <BulkOrderCard />
-        </div>
+        <BulkOrderCard />
 
         <InstaVideos />
         <AboutFactory />
 
         {/* Testimonials */}
-        <div className="relative" style={{ overflow: 'visible' }}>
-          <SectionDecoration type="parachute" className="top-6 right-[18%]" />
-          <Testimonials />
-        </div>
+        <Testimonials />
 
         {/* Contact Banner */}
         <section className="py-4 md:py-6 bg-bg-cream">

@@ -203,7 +203,7 @@ export default function InstaVideos() {
     };
 
     return (
-        <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
+        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 md:px-6">
                 <div className="text-center mb-8 flex flex-col items-center">
                     <span

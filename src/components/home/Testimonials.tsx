@@ -59,7 +59,7 @@ function TestimonialsHeading() {
     return (
         <h2
             ref={ref}
-            className="text-4xl md:text-5xl font-black tracking-tight"
+            className="text-4xl md:text-5xl font-black tracking-tight text-center"
             style={{
                 color: COLORS.heading,
                 opacity: vis ? 1 : 0,
@@ -67,7 +67,7 @@ function TestimonialsHeading() {
                 transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
             }}
         >
-            Customer <span className="relative inline-block lg:mt-2">
+            Customer <span className="relative inline-block lg:mt-0">
                 <span className="relative z-10">Testimonials</span>
                 <span
                     className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
@@ -121,43 +121,41 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-4 md:py-6 bg-bg-cream overflow-hidden">
+        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-                    <div>
-                        <span
-                            className="font-bold tracking-[4px] uppercase text-xs mb-2 block"
-                            style={{ color: COLORS.black }}
-                        >
-                            What Our Customers Say
-                        </span>
-                        <TestimonialsHeading />
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => scroll('left')}
-                            className="w-10 h-10 rounded-full bg-black/10 hover:bg-black/20 text-black flex items-center justify-center transition-all">
-                            <i className="fa-solid fa-chevron-left text-sm" />
-                        </button>
-                        <button onClick={() => scroll('right')}
-                            className="w-10 h-10 rounded-full bg-black/10 hover:bg-black/20 text-black flex items-center justify-center transition-all">
-                            <i className="fa-solid fa-chevron-right text-sm" />
-                        </button>
+                {/* Header - Redesigned to be centered */}
+                <div className="flex flex-col items-center text-center mb-16">
+                    <span
+                        className="font-bold tracking-[4px] uppercase text-xs mb-3 block"
+                        style={{ color: COLORS.black }}
+                    >
+                        What Our Customers Say
+                    </span>
+                    <TestimonialsHeading />
+
+                    <div className="mt-8 flex flex-wrap justify-center items-center gap-6">
+                        <div className="flex items-center gap-3">
+                            <button onClick={() => scroll('left')}
+                                className="w-12 h-12 rounded-full border-2 bg-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
+                                style={{ borderColor: COLORS.primary }}
+                            >
+                                <i className="fa-solid fa-chevron-left text-sm" style={{ color: COLORS.primary }} />
+                            </button>
+                            <button onClick={() => scroll('right')}
+                                className="w-12 h-12 rounded-full border-2 bg-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
+                                style={{ borderColor: COLORS.primary }}
+                            >
+                                <i className="fa-solid fa-chevron-right text-sm" style={{ color: COLORS.primary }} />
+                            </button>
+                        </div>
+
                         <button
                             onClick={() => setFormOpen(true)}
-                            className="border-2 px-5 py-2 rounded-full text-sm font-bold transition-all hover:text-white"
-                            style={{ borderColor: COLORS.primary, color: COLORS.primary }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = COLORS.primary;
-                                e.currentTarget.style.color = '#ffffff';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = 'transparent';
-                                e.currentTarget.style.color = COLORS.primary;
-                            }}
+                            className="bg-black text-white px-8 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
                         >
-                            ✍ Share Your Experience
+                            <i className="fa-solid fa-pen-nib text-xs" />
+                            Share Your Experience
                         </button>
                     </div>
                 </div>
@@ -172,44 +170,50 @@ export default function Testimonials() {
                         {testimonials.map(t => (
                             <div
                                 key={t._id}
-                                className="flex-shrink-0 w-72 md:w-80 snap-start flex flex-col rounded-3xl overflow-hidden border border-white/60"
+                                className="flex-shrink-0 w-72 md:w-80 snap-start flex flex-col rounded-[32px] overflow-hidden border border-white/60 group"
                                 style={{
-                                    background: 'rgba(255,255,255,0.7)',
-                                    backdropFilter: 'blur(8px)',
-                                    WebkitBackdropFilter: 'blur(8px)',
-                                    boxShadow: '0 4px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8)',
+                                    background: 'rgba(255,255,255,0.85)',
+                                    backdropFilter: 'blur(12px)',
+                                    WebkitBackdropFilter: 'blur(12px)',
+                                    boxShadow: '0 10px 30px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
                                 }}
                             >
                                 {t.image_url ? (
-                                    <div className="relative aspect-[4/3] bg-gray-100 group overflow-hidden">
+                                    <div className="relative aspect-[4/3] bg-gray-100 overflow-hidden">
                                         <img
                                             src={t.image_url}
                                             alt={`Review by ${t.name}`}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </div>
                                 ) : (
-                                    <div className="p-5 pb-0 flex items-start justify-between">
+                                    <div className="p-6 pb-0 flex items-start justify-between">
                                         <div
-                                            className="w-10 h-10 rounded-xl flex items-center justify-center text-black font-black text-lg"
-                                            style={{ backgroundColor: COLORS.amber }}
+                                            className="w-12 h-12 rounded-2xl flex items-center justify-center text-black font-black text-xl shadow-inner"
+                                            style={{ backgroundColor: COLORS.primaryLight }}
                                         >
                                             {t.name.charAt(0).toUpperCase()}
                                         </div>
-                                        <i className="fa-solid fa-quote-right text-2xl text-black/10" />
+                                        <div className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center">
+                                            <i className="fa-solid fa-quote-right text-black/20" />
+                                        </div>
                                     </div>
                                 )}
 
-                                <div className="p-5 pt-4 flex-1 flex flex-col">
-                                    <StarRating rating={t.rating} />
-                                    <p className={`text-black/80 text-sm leading-relaxed mt-3 mb-4 ${t.image_url ? 'line-clamp-3' : 'line-clamp-4'}`}>
+                                <div className="p-6 pt-5 flex-1 flex flex-col">
+                                    <div className="mb-4">
+                                        <StarRating rating={t.rating} />
+                                    </div>
+                                    <p className={`text-black font-medium leading-relaxed italic ${t.image_url ? 'line-clamp-3' : 'line-clamp-4'}`}>
                                         "{t.description}"
                                     </p>
-                                    <div className="mt-auto pt-3 border-t border-black/10 flex items-center justify-between gap-2">
+                                    <div className="mt-auto pt-5 border-t border-black/5 flex items-center justify-between">
                                         <div>
-                                            <p className="text-black font-bold text-sm">{t.name}</p>
-                                            <p className="text-black/40 text-xs mt-0.5">{t.city}, {t.state}</p>
+                                            <p className="text-black font-black text-sm tracking-tight">{t.name}</p>
+                                            <p className="text-black/40 text-[10px] font-bold uppercase tracking-wider mt-0.5">{t.city}, {t.state}</p>
                                         </div>
+                                        {!t.image_url && <i className="fa-solid fa-circle-check text-primary text-xs opacity-40" />}
                                     </div>
                                 </div>
                             </div>

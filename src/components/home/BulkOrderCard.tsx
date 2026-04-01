@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
-import { Colors } from 'chart.js';
 
 const grades = [
     {
@@ -67,7 +67,20 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
 
 export default function BulkOrderCard() {
     return (
-        <section className="py-4 md:py-6 bg-bg-cream">
+        <section className="py-4 md:py-6 bg-bg-cream relative overflow-hidden">
+
+            {/* ── Right corner fruit (red cashew) — desktop only ── */}
+            <div className="hidden md:block absolute right-0 bottom-0 w-28 lg:w-36 pointer-events-none select-none z-10">
+                <Image
+                    src="/images/Right-Fruit-2-2-1.png"
+                    alt=""
+                    width={144}
+                    height={220}
+                    className="object-contain object-bottom w-full h-auto translate-x-8"
+                    aria-hidden="true"
+                />
+            </div>
+
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
