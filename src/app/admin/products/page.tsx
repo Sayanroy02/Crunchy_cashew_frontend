@@ -10,9 +10,9 @@ function getToken() {
 const defaultForm = {
     name: '',
     description: '',
-    price: 0,
-    stock: 0,
-    discount: 0,
+    variants: [
+        { size: '200g', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true }
+    ],
     category: 'Cashew',
     is_available: true,
     image_url: '',
@@ -58,13 +58,36 @@ export default function AdminProducts() {
     };
 
     const openEdit = (p: any) => {
-        setEditingId(p._id || p.id);
+        const id = p._id || p.id;
+        if (!id) {
+            setError('Could not identify product ID');
+            return;
+        }
+        setEditingId(id);
+        
+        // Ensure variants exist for editing, fallback to legacy schema if needed
+        const variants = p.variants && p.variants.length > 0 
+            ? p.variants.map((v: any) => ({
+                size: v.size || '',
+                price: Number(v.price) || 0,
+                original_price: Number(v.original_price) || 0,
+                discount: Number(v.discount) || 0,
+                stock: Number(v.stock) || 0,
+                is_available: v.is_available !== false
+            }))
+            : [{ 
+                size: 'Standard', 
+                price: p.price || 0, 
+                original_price: p.price ? Math.round(p.price / (1 - (p.discount || 0) / 100)) : 0,
+                discount: p.discount || 0, 
+                stock: p.stock || 0, 
+                is_available: p.is_available !== false 
+              }];
+
         setFormData({
             name: p.name || '',
             description: p.description || '',
-            price: p.price || 0,
-            stock: p.stock || 0,
-            discount: p.discount || 0,
+            variants: variants,
             category: p.category || 'Cashew',
             is_available: p.is_available !== false,
             image_url: p.image_url || '',
@@ -90,7 +113,11 @@ export default function AdminProducts() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) fetchProducts();
-        } catch (e) { console.error(e); }
+            else {
+                const err = await res.json();
+                alert(err.detail || 'Failed to delete');
+            }
+        } catch (e) { alert('Connection error'); }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -99,26 +126,38 @@ export default function AdminProducts() {
         setError('');
         const token = getToken();
         const fd = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-            if (key === 'tags' || key === 'event' || key === 'marketplace_prices' || key === 'image_urls') {
-                fd.append(key, JSON.stringify(value));
-            } else {
-                fd.append(key, value.toString());
-            }
-        });
+        
+        // Basic fields
+        fd.append('name', formData.name);
+        fd.append('description', formData.description);
+        fd.append('category', formData.category);
+        fd.append('is_available', formData.is_available.toString());
+        fd.append('isNew', formData.isNew.toString());
+        fd.append('isBestSeller', formData.isBestSeller.toString());
+        fd.append('isGift', formData.isGift.toString());
+        
+        // Complex fields
+        fd.append('tags', JSON.stringify(formData.tags));
+        fd.append('event', JSON.stringify(formData.event));
+        fd.append('marketplace_prices', JSON.stringify(formData.marketplace_prices));
+        fd.append('variants', JSON.stringify(formData.variants));
+        fd.append('image_urls', JSON.stringify(formData.image_urls));
+        
         files.forEach(f => fd.append('files', f));
 
-        const url = editingId
-            ? API.PRODUCT_DETAIL(editingId)
-            : API.PRODUCTS;
-        const method = editingId ? 'PUT' : 'POST';
+        const id = editingId;
+        const url = id ? API.PRODUCT_DETAIL(id) : API.PRODUCTS;
+        const method = id ? 'PUT' : 'POST';
 
         try {
+            console.log(`[SUBMIT] ${method} to ${url}`, formData);
             const res = await fetch(url, {
                 method,
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: fd
             });
+            
+            const data = await res.json();
             if (res.ok) {
                 setIsModalOpen(false);
                 setFormData({ ...defaultForm });
@@ -126,11 +165,12 @@ export default function AdminProducts() {
                 setEditingId(null);
                 fetchProducts();
             } else {
-                const err = await res.json();
-                setError(err.detail || 'Failed to save product');
+                console.error('[SUBMIT ERROR]', data);
+                setError(`${data.detail || 'Failed to save product'} (${res.status})`);
             }
-        } catch (e) {
-            setError('Connection error — is the backend running?');
+        } catch (e: any) {
+            console.error('[SUBMIT EXCEPTION]', e);
+            setError(`Connection error: ${e.message || 'Check if backend is running'}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -158,16 +198,69 @@ export default function AdminProducts() {
                 value={(formData as any)[key]}
                 onChange={e => setFormData({ ...formData, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
                 className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
+                placeholder={`Enter ${label.toLowerCase()}`}
             />
         </div>
     );
 
+    const handleAddVariant = () => {
+        setFormData(prev => ({
+            ...prev,
+            variants: [...prev.variants, { size: '', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true }]
+        }));
+    };
+
+    const handleRemoveVariant = (index: number) => {
+        if (formData.variants.length <= 1) return;
+        setFormData(prev => ({
+            ...prev,
+            variants: prev.variants.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleVariantChange = (index: number, field: string, value: any) => {
+        const newVariants = [...formData.variants];
+        const v = { ...newVariants[index] } as any;
+        v[field] = value;
+        
+        // 3-Way Auto-calculation Logic
+        if (field === 'price') {
+            // Price changed: Recalculate Discount %
+            if (v.original_price > 0) {
+                v.discount = Math.round(((v.original_price - v.price) / v.original_price) * 100);
+            }
+        } else if (field === 'original_price') {
+            // MRP changed: Recalculate Discount % (if Price set) or Price (if Discount set)
+            if (v.price > 0 && v.discount === 0) {
+                v.discount = Math.round(((v.original_price - v.price) / v.original_price) * 100);
+            } else if (v.discount > 0) {
+                v.price = Math.round(v.original_price * (1 - v.discount / 100));
+            }
+        } else if (field === 'discount') {
+            // Discount % changed: Recalculate Price
+            if (v.original_price > 0) {
+                v.price = Math.round(v.original_price * (1 - v.discount / 100));
+            }
+        }
+        
+        newVariants[index] = v;
+        setFormData(prev => ({ ...prev, variants: newVariants }));
+    };
+
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800">
-                    Manage Catalog <span className="text-sm font-normal text-gray-400 ml-2">({products.length} products)</span>
-                </h1>
+            <div className="flex justify-between items-start">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-800">
+                        Manage Catalog <span className="text-sm font-normal text-gray-400 ml-2">({products.length} products)</span>
+                    </h1>
+                    <div className="flex items-center gap-2 mt-1">
+                        <div className={`w-2 h-2 rounded-full animate-pulse ${products.length > 0 ? 'bg-green-500' : 'bg-amber-500'}`}></div>
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400">
+                            {products.length > 0 ? 'Backend Connected' : 'Checking Backend...'}
+                        </span>
+                    </div>
+                </div>
                 <button onClick={openAdd} className="bg-primary text-white px-4 py-2.5 rounded-xl hover:bg-green-800 transition font-bold shadow-sm flex items-center gap-2">
                     <i className="fa-solid fa-plus"></i> Add Product
                 </button>
@@ -184,32 +277,54 @@ export default function AdminProducts() {
                             <thead>
                                 <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 text-xs uppercase tracking-wider">
                                     <th className="p-4 font-semibold">Product</th>
-                                    <th className="p-4 font-semibold">Price</th>
-                                    <th className="p-4 font-semibold">Discount</th>
-                                    <th className="p-4 font-semibold">Stock</th>
+                                    <th className="p-4 font-semibold">Pricing</th>
+                                    <th className="p-4 font-semibold">Variants</th>
                                     <th className="p-4 font-semibold text-center">Status</th>
                                     <th className="p-4 font-semibold text-right">Actions</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 text-gray-700">
-                                {products.map((p) => (
-                                    <tr key={p._id || p.id} className="hover:bg-gray-50 transition-colors">
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                {p.image_url ? (
-                                                    <img src={p.image_url} alt={p.name} className="w-12 h-12 rounded-lg object-cover border border-gray-100 flex-shrink-0" />
-                                                ) : (
-                                                    <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-xl flex-shrink-0">🥜</div>
-                                                )}
-                                                <div>
-                                                    <p className="font-bold text-gray-800">{p.name}</p>
-                                                    <p className="text-xs text-gray-400">{p.category}</p>
+                                {products.map((p) => {
+                                    const variants = p.variants || [];
+                                    const minPrice = variants.length > 0 ? Math.min(...variants.map((v: any) => v.price)) : (p.price || 0);
+                                    const maxPrice = variants.length > 0 ? Math.max(...variants.map((v: any) => v.price)) : (p.price || 0);
+                                    const totalStock = variants.length > 0 ? variants.reduce((sum: number, v: any) => sum + (v.stock || 0), 0) : (p.stock || 0);
+                                    
+                                    return (
+                                        <tr key={p._id || p.id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="p-4">
+                                                <div className="flex items-center gap-3">
+                                                    {p.image_url ? (
+                                                        <img src={p.image_url} alt={p.name} className="w-12 h-12 rounded-lg object-cover border border-gray-100 flex-shrink-0" />
+                                                    ) : (
+                                                        <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-xl flex-shrink-0">🥜</div>
+                                                    )}
+                                                    <div>
+                                                        <p className="font-bold text-gray-800">{p.name}</p>
+                                                        <div className="flex flex-wrap gap-1 mt-1">
+                                                            {p.tags?.slice(0, 3).map((t: string) => (
+                                                                <span key={t} className="text-[9px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded uppercase font-bold">{t}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-4 font-semibold">₹{p.price}</td>
-                                        <td className="p-4 text-amber font-bold">{p.discount ? `${p.discount}%` : '—'}</td>
-                                        <td className="p-4">{p.stock} units</td>
+                                            </td>
+                                            <td className="p-4 font-semibold">
+                                                {minPrice === maxPrice ? `₹${minPrice}` : `₹${minPrice} - ₹${maxPrice}`}
+                                            </td>
+                                            <td className="p-4 text-xs font-medium">
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {variants.map((v: any, i: number) => (
+                                                            <span key={i} className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
+                                                                {v.size}
+                                                            </span>
+                                                        ))}
+                                                        {variants.length === 0 && <span className="text-gray-400 italic">No sizes</span>}
+                                                    </div>
+                                                    <span className="text-gray-400 mt-1">{totalStock} units total</span>
+                                                </div>
+                                            </td>
                                         <td className="p-4 text-center">
                                             <span className={`px-2.5 py-1 text-xs font-bold rounded-full ${p.is_available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}>
                                                 {p.is_available ? '● Active' : '● Inactive'}
@@ -226,7 +341,7 @@ export default function AdminProducts() {
                                             </div>
                                         </td>
                                     </tr>
-                                ))}
+                                ); })}
                                 {products.length === 0 && (
                                     <tr><td colSpan={6} className="p-12 text-center text-gray-400">No products found. Add your first product!</td></tr>
                                 )}
@@ -258,16 +373,58 @@ export default function AdminProducts() {
                                     <textarea required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
                                         className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary min-h-[90px] transition-colors resize-none" />
                                 </div>
-                                {field('Price (₹)', 'price', 'number')}
-                                {field('Stock Quantity', 'stock', 'number')}
-                                {field('Discount (%)', 'discount', 'number', false)}
-                                <div className="space-y-1">
-                                    <label className="text-sm font-semibold text-gray-700">Availability</label>
-                                    <select value={formData.is_available ? 'true' : 'false'} onChange={e => setFormData({ ...formData, is_available: e.target.value === 'true' })}
-                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary">
-                                        <option value="true">Active (visible in shop)</option>
-                                        <option value="false">Inactive (hidden)</option>
-                                    </select>
+
+                                {/* Variants Section */}
+                                <div className="md:col-span-2 p-5 bg-primary/5 rounded-2xl border-2 border-primary/20 space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <h3 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                                            <i className="fa-solid fa-layer-group text-primary"></i> Product Variants (Sizes/Weights)
+                                        </h3>
+                                        <button type="button" onClick={handleAddVariant} className="text-xs bg-primary text-white px-3 py-1.5 rounded-lg font-bold hover:bg-green-800 transition shadow-sm">
+                                            + Add size
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="space-y-3">
+                                        {formData.variants.map((v, idx) => (
+                                            <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm relative animate-slide-in">
+                                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Size</label>
+                                                        <input type="text" placeholder="e.g. 200g" value={v.size} onChange={e => handleVariantChange(idx, 'size', e.target.value)} required
+                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Price (₹)</label>
+                                                        <input type="number" value={v.price} onChange={e => handleVariantChange(idx, 'price', Number(e.target.value))} required
+                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MRP (₹)</label>
+                                                        <input type="number" value={v.original_price} onChange={e => handleVariantChange(idx, 'original_price', Number(e.target.value))} required
+                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Stock</label>
+                                                        <input type="number" value={v.stock} onChange={e => handleVariantChange(idx, 'stock', Number(e.target.value))} required
+                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>
+                                                        <div className="flex items-center gap-2">
+                                                            <input type="number" value={v.discount} onChange={e => handleVariantChange(idx, 'discount', Number(e.target.value))}
+                                                                className="w-full px-3 py-2 border border-blue-100 bg-white rounded-lg text-xs text-blue-600 font-bold outline-none focus:border-primary" />
+                                                            {formData.variants.length > 1 && (
+                                                                <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-1">
+                                                                    <i className="fa-solid fa-trash-can text-sm"></i>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 {/* Merchandising Tags Section */}
@@ -276,12 +433,57 @@ export default function AdminProducts() {
                                         <i className="fa-solid fa-tags text-primary"></i> Merchandising & Marketing Tags
                                     </h3>
 
-                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                    <div className="flex flex-col gap-3">
+                                        <div className="flex flex-wrap gap-2">
+                                            {formData.tags.map((tag, idx) => (
+                                                <span key={idx} className="bg-white border-2 border-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 group hover:border-red-200 hover:bg-red-50 transition-colors">
+                                                    {tag}
+                                                    <button type="button" onClick={() => setFormData({ ...formData, tags: formData.tags.filter((_, i) => i !== idx) })} className="text-gray-300 group-hover:text-red-400">
+                                                        <i className="fa-solid fa-circle-xmark"></i>
+                                                    </button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <input 
+                                                type="text" 
+                                                id="new-tag-input"
+                                                placeholder="Add custom tag (e.g. Roasted, Salted)" 
+                                                className="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl text-xs outline-none focus:border-primary"
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        const val = (e.target as HTMLInputElement).value.trim();
+                                                        if (val && !formData.tags.includes(val)) {
+                                                            setFormData({ ...formData, tags: [...formData.tags, val] });
+                                                            (e.target as HTMLInputElement).value = '';
+                                                        }
+                                                    }
+                                                }}
+                                            />
+                                            <button 
+                                                type="button"
+                                                onClick={() => {
+                                                    const input = document.getElementById('new-tag-input') as HTMLInputElement;
+                                                    const val = input.value.trim();
+                                                    if (val && !formData.tags.includes(val)) {
+                                                        setFormData({ ...formData, tags: [...formData.tags, val] });
+                                                        input.value = '';
+                                                    }
+                                                }}
+                                                className="bg-gray-800 text-white px-4 rounded-xl text-xs font-bold hover:bg-black transition"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                                         {[
-                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-green-100 text-green-700 border-green-200' },
-                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-amber-100 text-amber-700 border-amber-200' },
-                                            { id: 'isGift', label: 'Gifting Ready', icon: 'fa-gift', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-red-100 text-red-700 border-red-200' }
+                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-green-100 text-green-700 border-green-200', tag: 'new' },
+                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-amber-100 text-amber-700 border-amber-200', tag: 'bestseller' },
+                                            { id: 'isGift', label: 'Gifting Ready', icon: 'fa-gift', color: 'bg-purple-100 text-purple-700 border-purple-200', tag: 'gifting' },
+                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-red-100 text-red-700 border-red-200', tag: 'event' }
                                         ].map(tag => (
                                             <label key={tag.id} className={`flex items-center gap-2 p-2 border rounded-xl cursor-pointer transition-all hover:shadow-sm ${tag.id === 'isEvent' ? (formData.event?.type ? tag.color : 'bg-white border-gray-200') : ((formData as any)[tag.id] ? tag.color : 'bg-white border-gray-200')}`}>
                                                 <input
@@ -291,14 +493,14 @@ export default function AdminProducts() {
                                                     onChange={e => {
                                                         if (tag.id === 'isEvent') {
                                                             setFormData({ ...formData, event: e.target.checked ? { type: 'holi', label: 'Holi Special' } : { type: '', label: '' } });
+                                                            if (e.target.checked && !formData.tags.includes('event')) {
+                                                                setFormData(prev => ({ ...prev, tags: [...prev.tags, 'event'] }));
+                                                            }
                                                         } else {
-                                                            setFormData({ ...formData, [tag.id]: e.target.checked });
-                                                            // Also add/remove from tags array for indexing
-                                                            const tagValue = tag.id.replace('is', '').toLowerCase();
                                                             const newTags = e.target.checked
-                                                                ? [...formData.tags, tagValue]
-                                                                : formData.tags.filter(t => t !== tagValue);
-                                                            setFormData(prev => ({ ...prev, [tag.id]: e.target.checked, tags: Array.from(new Set(newTags)) }));
+                                                                ? (formData.tags.includes(tag.tag) ? formData.tags : [...formData.tags, tag.tag])
+                                                                : formData.tags.filter(t => t !== tag.tag);
+                                                            setFormData(prev => ({ ...prev, [tag.id]: e.target.checked, tags: newTags }));
                                                         }
                                                     }}
                                                 />

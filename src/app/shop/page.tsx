@@ -26,8 +26,7 @@ export default function ShopPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortKey, setSortKey] = useState<SortKey>('default');
     const [priceRange, setPriceRange] = useState<PriceRangeIndex>(0); // index into PRICE_RANGES
-    const [tagFilter, setTagFilter] = useState<TagFilter>('all');
-    const [eventFilter, setEventFilter] = useState<EventFilter>('all');
+    const [tagFilter, setTagFilter] = useState<string>('all');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
@@ -37,44 +36,53 @@ export default function ShopPage() {
             .catch(err => { console.error('Failed to fetch products:', err); setLoading(false); });
     }, []);
 
+    // Extract unique tags from all products
+    const availableTags = useMemo(() => {
+        const tags = new Set<string>();
+        products.forEach(p => {
+            if (p.tags) p.tags.forEach(t => tags.add(t));
+        });
+        return Array.from(tags).sort();
+    }, [products]);
+
     const filtered = useMemo(() => {
         const { min, max } = PRICE_RANGES[priceRange];
-        let result = products.filter(p => {
+        
+        let result = products.map(p => {
+            // Pre-calculate prices for sorting and filtering
+            const prices = p.variants?.map(v => v.price) || [(p as any).price || 0];
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const discount = p.variants?.[0]?.discount || (p as any).discount || 0;
+            return { ...p, _minPrice: minPrice, _maxPrice: maxPrice, _discount: discount };
+        }).filter(p => {
             const matchSearch = !searchTerm.trim() ||
                 p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (p.category || '').toLowerCase().includes(searchTerm.toLowerCase());
-            const matchPrice = p.price >= min && p.price <= max;
+            
+            // Match if any part of the product's price range overlaps with the filter
+            const matchPrice = p._minPrice <= max && p._maxPrice >= min;
 
-            let matchTag = true;
-            if (tagFilter === 'newest') matchTag = !!p.isNew;
-            else if (tagFilter === 'best_seller') matchTag = !!p.isBestSeller;
-            else if (tagFilter === 'gifting') matchTag = !!p.isGift;
-            else if (tagFilter === 'event') matchTag = !!p.event?.type;
+            const matchTag = tagFilter === 'all' || (p.tags && p.tags.includes(tagFilter));
 
-            let matchEvent = true;
-            if (tagFilter === 'event' && eventFilter !== 'all') {
-                matchEvent = p.event?.type === eventFilter;
-            }
-
-            return matchSearch && matchPrice && matchTag && matchEvent;
+            return matchSearch && matchPrice && matchTag;
         });
 
-        if (sortKey === 'price_asc') result = [...result].sort((a, b) => a.price - b.price);
-        else if (sortKey === 'price_desc') result = [...result].sort((a, b) => b.price - a.price);
-        else if (sortKey === 'discount') result = [...result].sort((a, b) => (b.discount || 0) - (a.discount || 0));
+        if (sortKey === 'price_asc') result = [...result].sort((a, b) => a._minPrice - b._minPrice);
+        else if (sortKey === 'price_desc') result = [...result].sort((a, b) => b._minPrice - a._minPrice);
+        else if (sortKey === 'discount') result = [...result].sort((a, b) => b._discount - a._discount);
         else if (sortKey === 'newest') result = [...result].sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
         else if (sortKey === 'popular') result = [...result].sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
 
         return result;
-    }, [products, searchTerm, sortKey, priceRange, tagFilter, eventFilter]);
+    }, [products, searchTerm, sortKey, priceRange, tagFilter]);
 
-    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all' || eventFilter !== 'all';
+    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all';
     const clearAll = () => {
         setSearchTerm('');
         setSortKey('default');
         setPriceRange(0);
         setTagFilter('all');
-        setEventFilter('all');
     };
 
     return (
@@ -89,7 +97,7 @@ export default function ShopPage() {
                             sortKey={sortKey} setSortKey={setSortKey}
                             priceRange={priceRange} setPriceRange={setPriceRange}
                             tagFilter={tagFilter} setTagFilter={setTagFilter}
-                            eventFilter={eventFilter} setEventFilter={setEventFilter}
+                            availableTags={availableTags}
                             hasFilters={hasFilters} clearAll={clearAll}
                             resultCount={filtered.length}
                         />
@@ -111,7 +119,7 @@ export default function ShopPage() {
                                         sortKey={sortKey} setSortKey={setSortKey}
                                         priceRange={priceRange} setPriceRange={setPriceRange}
                                         tagFilter={tagFilter} setTagFilter={setTagFilter}
-                                        eventFilter={eventFilter} setEventFilter={setEventFilter}
+                                        availableTags={availableTags}
                                         hasFilters={hasFilters} clearAll={clearAll}
                                         resultCount={filtered.length}
                                     />
@@ -251,14 +259,14 @@ function SidebarContent({
     sortKey, setSortKey,
     priceRange, setPriceRange,
     tagFilter, setTagFilter,
-    eventFilter, setEventFilter,
+    availableTags,
     hasFilters, clearAll,
     resultCount
 }: {
     sortKey: SortKey; setSortKey: (v: SortKey) => void;
     priceRange: PriceRangeIndex; setPriceRange: (v: PriceRangeIndex) => void;
-    tagFilter: TagFilter; setTagFilter: (v: TagFilter) => void;
-    eventFilter: EventFilter; setEventFilter: (v: EventFilter) => void;
+    tagFilter: string; setTagFilter: (v: string) => void;
+    availableTags: string[];
     hasFilters: boolean; clearAll: () => void;
     resultCount: number;
 }) {
@@ -274,58 +282,37 @@ function SidebarContent({
                 </button>
             )}
 
-            {/* Special Collections */}
+            {/* Special Collections / Dynamic Tags */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
                 <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
                     <i className="fa-solid fa-layer-group" style={{ color: COLORS.primary }} /> Collections
                 </h3>
                 <div className="flex flex-col gap-2">
-                    {([
-                        { value: 'all', label: 'All Products', icon: 'fa-solid fa-border-all' },
-                        { value: 'newest', label: 'Newest Arrivals', icon: 'fa-solid fa-sparkles' },
-                        { value: 'best_seller', label: 'Best Sellers', icon: 'fa-solid fa-trophy' },
-                        { value: 'gifting', label: 'Gifting Specials', icon: 'fa-solid fa-gift' },
-                        { value: 'event', label: 'Event Specials', icon: 'fa-solid fa-calendar-star' },
-                    ] as const).map(opt => (
-                        <div key={opt.value} className="flex flex-col gap-2">
-                            <button
-                                onClick={() => {
-                                    setTagFilter(opt.value);
-                                    if (opt.value !== 'event') setEventFilter('all');
-                                }}
-                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === opt.value
-                                    ? 'shadow-lg scale-[1.02]'
-                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                    }`}
-                                style={tagFilter === opt.value ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                            >
-                                <i className={`${opt.icon} text-xs`} />
-                                {opt.label}
-                            </button>
+                    <button
+                        onClick={() => setTagFilter('all')}
+                        className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === 'all'
+                            ? 'shadow-lg scale-[1.02]'
+                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                            }`}
+                        style={tagFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                    >
+                        <i className="fa-solid fa-border-all text-xs" />
+                        All Products
+                    </button>
 
-                            {/* Sub-filters for Event */}
-                            {opt.value === 'event' && tagFilter === 'event' && (
-                                <div className="flex flex-wrap gap-2 px-2 py-1 bg-red-50/50 rounded-xl border border-red-100 animate-slide-in">
-                                    {([
-                                        { value: 'all', label: 'All Events' },
-                                        { value: 'holi', label: 'Holi' },
-                                        { value: 'eid', label: 'Eid' },
-                                        { value: 'diwali', label: 'Diwali' },
-                                    ] as const).map(evt => (
-                                        <button
-                                            key={evt.value}
-                                            onClick={() => setEventFilter(evt.value)}
-                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${eventFilter === evt.value
-                                                ? 'bg-red-600 text-white shadow-sm'
-                                                : 'bg-white text-red-600 border border-red-100 hover:bg-red-50'
-                                                }`}
-                                        >
-                                            {evt.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                    {availableTags.map(tag => (
+                        <button
+                            key={tag}
+                            onClick={() => setTagFilter(tag)}
+                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === tag
+                                ? 'shadow-lg scale-[1.02]'
+                                : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                }`}
+                            style={tagFilter === tag ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                        >
+                            <i className="fa-solid fa-tag text-xs" />
+                            {tag}
+                        </button>
                     ))}
                 </div>
             </div>

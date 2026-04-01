@@ -6,17 +6,25 @@ import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '@/lib/store/features/cartSlice';
 import { useSnackbar } from '@/context/SnackbarContext';
+import { COLORS } from '@/constants/styles';
+
+export interface Variant {
+    size: string;
+    price: number;
+    original_price: number;
+    discount: number;
+    stock: number;
+    is_available: boolean;
+}
 
 export interface Product {
     id?: string;
     _id?: string;
     name: string;
     description?: string;
-    price: number;
-    discount: number;
+    variants: Variant[];
     image_url: string;
     category: string;
-    stock: number;
     tags?: string[];
     isNew?: boolean;
     isBestSeller?: boolean;
@@ -36,6 +44,22 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
     const dispatch = useDispatch();
     const { showSnackbar } = useSnackbar();
+
+    // Initialize with first available variant or a synthesized fallback for legacy data
+    const [selectedVariant, setSelectedVariant] = useState<Variant>(() => {
+        if (product.variants && product.variants.length > 0) {
+            return product.variants[0];
+        }
+        // Fallback for legacy products during transition
+        return {
+            size: 'Standard',
+            price: (product as any).price || 0,
+            original_price: (product as any).price || 0,
+            discount: (product as any).discount || 0,
+            stock: (product as any).stock || 0,
+            is_available: true
+        };
+    });
 
     const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -72,27 +96,28 @@ export default function ProductCard({ product }: ProductCardProps) {
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
+        if (!selectedVariant) return;
+
         dispatch(addToCart({
             product_id: product.id || product._id || '',
-            name: product.name,
-            price: product.price,
+            variant_size: selectedVariant.size,
+            name: `${product.name} (${selectedVariant.size})`,
+            price: selectedVariant.price,
             quantity: 1,
             image_url: product.image_url
         }));
-        showSnackbar('Added to cart', 'success');
+        showSnackbar(`${product.name} (${selectedVariant.size}) added to cart`, 'success');
     };
 
-    const hasDiscount = product.discount > 0;
-    const originalPrice = hasDiscount
-        ? product.price / (1 - product.discount / 100)
-        : product.price;
+    const hasDiscount = selectedVariant.discount > 0;
+    const originalPrice = selectedVariant.original_price || (selectedVariant.price / (1 - selectedVariant.discount / 100));
 
     return (
-        <Link
-            href={`/shop/${product.id || product._id}`}
-            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100"
-        >
-            <div className="relative w-full aspect-[4/3] bg-[#f8faf9] py-8 px-4 flex justify-center items-center overflow-hidden">
+        <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100 h-full">
+            <Link
+                href={`/shop/${product.id || product._id}`}
+                className="relative w-full aspect-[4/3] bg-[#f8faf9] py-8 px-4 flex justify-center items-center overflow-hidden"
+            >
                 <Image
                     src={product.image_url || '/images/products/placeholder.jpg'}
                     alt={product.name}
@@ -124,14 +149,14 @@ export default function ProductCard({ product }: ProductCardProps) {
                             {product.event.label}
                         </div>
                     )}
-                    {hasDiscount && product.stock > 0 && !product.isNew && !product.isBestSeller && (
+                    {hasDiscount && selectedVariant.stock > 0 && (
                         <div className="bg-primary text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
-                            {product.discount}% OFF
+                            {selectedVariant.discount}% OFF
                         </div>
                     )}
                 </div>
 
-                {product.stock <= 0 && (
+                {selectedVariant.stock <= 0 && (
                     <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px] flex items-center justify-center z-10">
                         <div className="bg-red-600 text-white text-xs font-black px-4 py-2 rounded-full shadow-xl transform -rotate-12 border-2 border-white">
                             OUT OF STOCK
@@ -146,47 +171,80 @@ export default function ProductCard({ product }: ProductCardProps) {
                 >
                     <i className={`${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`}></i>
                 </button>
-            </div>
+            </Link>
 
             <div className="p-5 flex flex-col flex-grow bg-white">
-                <div className="text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-1">{product.category}</div>
-                <h3 className="text-base font-heading font-bold text-black mb-2 line-clamp-2 leading-tight">
-                    {product.name}
-                </h3>
+                <Link href={`/shop/${product.id || product._id}`}>
+                    <div className="text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-1">{product.category}</div>
+                    <h3 className="text-base font-heading font-bold text-black mb-3 line-clamp-2 leading-tight hover:text-primary transition-colors">
+                        {product.name} <span className="ml-1 font-black" style={{ color: COLORS.heading }}>({selectedVariant.size})</span>
+                    </h3>
+                </Link>
 
-                <div className="mt-auto pt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
-                    <div className="flex items-baseline gap-2">
-                        <p className="text-black font-bold text-lg">₹{product.price.toFixed(0)}</p>
-                        {hasDiscount && (
-                            <p className="text-gray-400 text-sm line-through">₹{originalPrice.toFixed(0)}</p>
-                        )}
+                {/* Enhanced Variant Selector */}
+                {product.variants && product.variants.length > 0 && (
+                    <div className="mb-4 space-y-2">
+                        <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Select Size</span>
+                            <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded uppercase">
+                                {selectedVariant.size}
+                            </span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {product.variants.map((v, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        setSelectedVariant(v);
+                                    }}
+                                    className={`relative group px-2.5 py-1.5 rounded-lg border-2 transition-all duration-300 flex items-center justify-center min-w-[50px] ${
+                                        selectedVariant.size === v.size
+                                            ? 'border-[#00863D] bg-[#00863D] text-white shadow-md -translate-y-0.5'
+                                            : 'border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-300 hover:bg-white'
+                                    }`}
+                                >
+                                    <span className="text-[11px] font-black break-keep">{v.size}</span>
+                                    {selectedVariant.size === v.size && (
+                                        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full border-2 border-white" />
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="mt-auto pt-3 flex items-center justify-between border-t border-gray-50">
+                    <div className="flex flex-col">
+                        <div className="flex items-baseline gap-1.5">
+                            <span className="text-black font-black text-xl">₹{selectedVariant.price.toFixed(0)}</span>
+                            {hasDiscount && (
+                                <span className="text-gray-400 text-xs line-through font-medium">₹{originalPrice.toFixed(0)}</span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                            <div className={`w-1.5 h-1.5 rounded-full ${selectedVariant.stock > 0 ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                            <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">
+                                {selectedVariant.stock > 0 ? (selectedVariant.stock < 10 ? `Only ${selectedVariant.stock} left!` : 'In Stock') : 'Restocking'}
+                            </span>
+                        </div>
                     </div>
 
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={product.stock <= 0}
-                        className={`hidden sm:flex w-11 h-11 rounded-full items-center justify-center transition-all shadow-sm ${product.stock > 0
-                            ? 'bg-heading text-black hover:bg-primary hover:text-black hover:shadow-md hover:scale-105'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                            }`}
-                        aria-label="Add to cart"
-                    >
-                        <i className="fa-solid fa-cart-plus text-sm"></i>
-                    </button>
-
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={product.stock <= 0}
-                        className={`sm:hidden w-full py-2.5 rounded-lg flex items-center justify-center gap-2 font-bold text-sm transition-all shadow-sm ${product.stock > 0
-                            ? 'bg-heading text-white active:bg-primary active:text-black'
-                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                            }`}
-                        aria-label="Add to cart"
-                    >
-                        <i className="fa-solid fa-cart-plus"></i> {product.stock > 0 ? 'Add' : 'Out of Stock'}
-                    </button>
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={selectedVariant.stock <= 0}
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${selectedVariant.stock > 0
+                                ? 'bg-primary text-black hover:bg-black hover:text-white hover:shadow-lg hover:-translate-y-1 active:translate-y-0'
+                                : 'bg-gray-100 text-gray-300 cursor-not-allowed border border-gray-200'
+                                }`}
+                            style={selectedVariant.stock > 0 ? { backgroundColor: COLORS.primary } : {}}
+                            aria-label="Add to cart"
+                        >
+                            <i className={`fa-solid ${selectedVariant.stock > 0 ? 'fa-bag-shopping' : 'fa-hourglass-start'} text-sm`}></i>
+                        </button>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }

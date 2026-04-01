@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartItem {
     product_id: string;
+    variant_size: string;
     name: string;
     price: number;
     quantity: number;
@@ -26,7 +27,9 @@ export const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action: PayloadAction<CartItem>) => {
             const newItem = action.payload;
-            const existingItem = state.items.find(item => item.product_id === newItem.product_id);
+            const existingItem = state.items.find(
+                item => item.product_id === newItem.product_id && item.variant_size === newItem.variant_size
+            );
 
             if (!existingItem) {
                 state.items.push(newItem);
@@ -42,11 +45,15 @@ export const cartSlice = createSlice({
                 localStorage.setItem('cart', JSON.stringify(state.items));
             }
         },
-        removeFromCart: (state, action: PayloadAction<string>) => {
-            const id = action.payload;
-            const existingItem = state.items.find(item => item.product_id === id);
+        removeFromCart: (state, action: PayloadAction<{ id: string, size: string }>) => {
+            const { id, size } = action.payload;
+            const existingItem = state.items.find(
+                item => item.product_id === id && item.variant_size === size
+            );
             if (existingItem) {
-                state.items = state.items.filter(item => item.product_id !== id);
+                state.items = state.items.filter(
+                    item => !(item.product_id === id && item.variant_size === size)
+                );
                 state.totalQuantity -= existingItem.quantity;
                 state.totalAmount -= existingItem.price * existingItem.quantity;
             }
@@ -54,15 +61,19 @@ export const cartSlice = createSlice({
                 localStorage.setItem('cart', JSON.stringify(state.items));
             }
         },
-        updateQuantity: (state, action: PayloadAction<{ id: string, change: number }>) => {
-            const { id, change } = action.payload;
-            const existingItem = state.items.find(item => item.product_id === id);
+        updateQuantity: (state, action: PayloadAction<{ id: string, size: string, change: number }>) => {
+            const { id, size, change } = action.payload;
+            const existingItem = state.items.find(
+                item => item.product_id === id && item.variant_size === size
+            );
             if (existingItem) {
                 existingItem.quantity += change;
                 state.totalQuantity += change;
 
                 if (existingItem.quantity <= 0) {
-                    state.items = state.items.filter(item => item.product_id !== id);
+                    state.items = state.items.filter(
+                        item => !(item.product_id === id && item.variant_size === size)
+                    );
                     state.totalQuantity -= existingItem.quantity; // Adjust if it went negative
                 }
 

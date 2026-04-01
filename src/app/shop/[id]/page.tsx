@@ -1,10 +1,7 @@
 import React, { Suspense } from 'react';
-import AddToCartButton from './AddToCartButton';
-import ProductGallery from './ProductGallery';
 import Link from 'next/link';
-import PincodeWidget from '@/components/PincodeWidget';
 import { API } from '@/constants/api';
-import ProductComparison from '@/components/products/ProductComparison';
+import ProductDetailsClient from './ProductDetailsClient';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -31,11 +28,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     const allProducts = productsRes.ok ? await productsRes.json() : [];
     const relatedProducts = allProducts.filter((p: any) => (p._id || p.id) !== id).slice(0, 8);
 
-    const hasDiscount = product.discount > 0;
-    const originalPrice = hasDiscount
-        ? product.price / (1 - product.discount / 100)
-        : product.price;
-
     return (
         <div className="bg-gray-50 min-h-screen">
             {/* Breadcrumb */}
@@ -50,85 +42,8 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-                {/* Main Product */}
-                <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col lg:flex-row">
-                    {/* Image Gallery */}
-                    <div className="lg:w-[45%] bg-gray-50 border-r border-gray-100">
-                        <ProductGallery 
-                            images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
-                            name={product.name} 
-                        />
-                    </div>
-
-                    {/* Details */}
-                    <div className="lg:w-[55%] p-8 md:p-12 flex flex-col justify-between">
-                        <div>
-                            <div className="flex items-center gap-3 mb-3">
-                                <span className="text-xs font-bold tracking-widest text-primary uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                                    {product.category}
-                                </span>
-                                {product.stock > 0 ? (
-                                    <span className="bg-primary/20 text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">In Stock</span>
-                                ) : (
-                                    <span className="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Out of Stock</span>
-                                )}
-                            </div>
-
-                            <h1 className="text-3xl md:text-4xl font-heading font-black text-gray-900 mb-4 leading-tight">
-                                {product.name}
-                            </h1>
-
-                            <div className="flex items-baseline gap-3 mb-5">
-                                <span className="text-3xl md:text-4xl font-black text-gray-900">
-                                    ₹{product.price.toFixed(2)}
-                                </span>
-                                {hasDiscount && (
-                                    <>
-                                        <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(2)}</span>
-                                        <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{product.discount}% OFF</span>
-                                    </>
-                                )}
-                            </div>
-
-                            <p className="text-gray-600 text-base leading-relaxed mb-6">
-                                {product.description}
-                            </p>
-
-                            {/* Key Features */}
-                            <div className="grid grid-cols-2 gap-3 mb-8">
-                                {[
-                                    { icon: '🏭', label: 'Direct from factory' },
-                                    { icon: '🌱', label: '100% Natural' },
-                                    { icon: '📦', label: 'Hygienic packaging' },
-                                    { icon: '🚚', label: 'Free ship on ₹999+' },
-                                ].map(f => (
-                                    <div key={f.label} className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-3 py-2">
-                                        <span>{f.icon}</span>
-                                        {f.label}
-                                    </div>
-                                ))}
-                            </div>
-
-                            <AddToCartButton product={product} />
-
-                            {/* Pincode delivery check */}
-                            <div className="mt-5">
-                                <p className="text-sm font-semibold text-gray-700 mb-2">🚚 Check Delivery at Your Pincode</p>
-                                <PincodeWidget />
-                            </div>
-                        </div>
-
-                        {/* Trust Badges */}
-                        <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap gap-4 text-xs text-gray-500">
-                            <span className="flex items-center gap-1"><i className="fa-solid fa-shield-halved text-primary"></i> Secure Checkout</span>
-                            <span className="flex items-center gap-1"><i className="fa-solid fa-rotate-left text-primary"></i> Easy Returns</span>
-                            <span className="flex items-center gap-1"><i className="fa-brands fa-whatsapp text-primary"></i> WhatsApp Support</span>
-                        </div>
-                    </div>
-                </div>
-                
-                {/* Full Price Comparison & Savings Calculator */}
-                <ProductComparison product={product} />
+                {/* Client Side Product Details & Gallery */}
+                <ProductDetailsClient product={product} />
 
                 {/* Related Products */}
                 {relatedProducts.length > 0 && (
