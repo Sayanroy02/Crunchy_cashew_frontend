@@ -21,6 +21,9 @@ const defaultForm = {
     isNew: false,
     isBestSeller: false,
     isGift: false,
+    isValuePack: false,
+    isPremium: false,
+    isFlavors: false,
     event: { type: '', label: '' },
     marketplace_prices: {
         amazon: { price: 0, link: '' },
@@ -95,6 +98,9 @@ export default function AdminProducts() {
             isNew: !!p.isNew,
             isBestSeller: !!p.isBestSeller,
             isGift: !!p.isGift,
+            isValuePack: !!p.isValuePack,
+            isPremium: !!p.isPremium,
+            isFlavors: !!p.isFlavors,
             event: p.event || { type: '', label: '' },
             marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices,
             image_urls: p.image_urls || (p.image_url ? [p.image_url] : [])
@@ -135,6 +141,9 @@ export default function AdminProducts() {
         fd.append('isNew', formData.isNew.toString());
         fd.append('isBestSeller', formData.isBestSeller.toString());
         fd.append('isGift', formData.isGift.toString());
+        fd.append('isValuePack', formData.isValuePack.toString());
+        fd.append('isPremium', formData.isPremium.toString());
+        fd.append('isFlavors', formData.isFlavors.toString());
         
         // Complex fields
         fd.append('tags', JSON.stringify(formData.tags));
@@ -480,10 +489,13 @@ export default function AdminProducts() {
 
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                                         {[
-                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-green-100 text-green-700 border-green-200', tag: 'new' },
-                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-amber-100 text-amber-700 border-amber-200', tag: 'bestseller' },
-                                            { id: 'isGift', label: 'Gifting Ready', icon: 'fa-gift', color: 'bg-purple-100 text-purple-700 border-purple-200', tag: 'gifting' },
-                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-red-100 text-red-700 border-red-200', tag: 'event' }
+                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-[#00863D] text-white border-[#00863D]', tag: 'new' },
+                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-[#F6B000] text-black border-[#F6B000]', tag: 'bestseller' },
+                                            { id: 'isGift', label: 'Gifting', icon: 'fa-gift', color: 'bg-[#2563EB] text-white border-[#2563EB]', tag: 'gifting' },
+                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-[#EF4444] text-white border-[#EF4444]', tag: 'event' },
+                                            { id: 'isValuePack', label: 'Value Pack', icon: 'fa-box-open', color: 'bg-[#F97316] text-white border-[#F97316]', tag: 'valuepack' },
+                                            { id: 'isPremium', label: 'Premium', icon: 'fa-crown', color: 'bg-[#7C3AED] text-white border-[#7C3AED]', tag: 'premium' },
+                                            { id: 'isFlavors', label: 'Flavors', icon: 'fa-pepper-hot', color: 'bg-[#92400E] text-white border-[#92400E]', tag: 'flavors' }
                                         ].map(tag => (
                                             <label key={tag.id} className={`flex items-center gap-2 p-2 border rounded-xl cursor-pointer transition-all hover:shadow-sm ${tag.id === 'isEvent' ? (formData.event?.type ? tag.color : 'bg-white border-gray-200') : ((formData as any)[tag.id] ? tag.color : 'bg-white border-gray-200')}`}>
                                                 <input
@@ -546,11 +558,14 @@ export default function AdminProducts() {
                                     {/* Real-time Badge Preview */}
                                     <div className="flex flex-wrap gap-2 items-center pt-2">
                                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-2">Preview:</span>
-                                        {formData.isNew && <span className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">NEW</span>}
-                                        {formData.isBestSeller && <span className="bg-[#f5a623] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">BEST SELLER</span>}
-                                        {formData.isGift && <span className="bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">GIFT</span>}
-                                        {formData.event?.label && <span className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">{formData.event.label.toUpperCase()}</span>}
-                                        {!formData.isNew && !formData.isBestSeller && !formData.isGift && !formData.event?.type && <span className="text-[9px] text-gray-300 italic">No marketing badges selected</span>}
+                                        {formData.isNew && <span className="bg-[#00863D] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">NEW Arrival</span>}
+                                        {formData.isBestSeller && <span className="bg-[#F6B000] text-black text-[9px] font-black px-2 py-0.5 rounded shadow-sm">BEST SELLER</span>}
+                                        {formData.isGift && <span className="bg-[#2563EB] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">GIFTING</span>}
+                                        {formData.isValuePack && <span className="bg-[#F97316] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">VALUE PACK</span>}
+                                        {formData.isPremium && <span className="bg-[#7C3AED] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">PREMIUM</span>}
+                                        {formData.isFlavors && <span className="bg-[#92400E] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">FLAVORS</span>}
+                                        {formData.event?.label && <span className="bg-[#EF4444] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">{formData.event.label.toUpperCase()}</span>}
+                                        {!formData.isNew && !formData.isBestSeller && !formData.isGift && !formData.isValuePack && !formData.isPremium && !formData.isFlavors && !formData.event?.type && <span className="text-[9px] text-gray-300 italic">No marketing badges selected</span>}
                                     </div>
                                 </div>
 

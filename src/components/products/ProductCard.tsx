@@ -29,6 +29,9 @@ export interface Product {
     isNew?: boolean;
     isBestSeller?: boolean;
     isGift?: boolean;
+    isValuePack?: boolean;
+    isPremium?: boolean;
+    isFlavors?: boolean;
     event?: {
         type: string;
         label: string;
@@ -130,27 +133,42 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
                     {product.isNew && (
-                        <div className="bg-black text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                        <div className="bg-[#00863D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
                             NEW
                         </div>
                     )}
                     {product.isBestSeller && (
-                        <div className="bg-primary text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                        <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
                             BEST SELLER
                         </div>
                     )}
                     {product.isGift && (
-                        <div className="bg-black text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            GIFT
+                        <div className="bg-[#2563EB] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            GIFTING
+                        </div>
+                    )}
+                    {product.isValuePack && (
+                        <div className="bg-[#F97316] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            VALUE PACK
+                        </div>
+                    )}
+                    {product.isPremium && (
+                        <div className="bg-[#7C3AED] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            PREMIUM
+                        </div>
+                    )}
+                    {product.isFlavors && (
+                        <div className="bg-[#92400E] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            FLAVORS
                         </div>
                     )}
                     {product.event && product.event.label && (
-                        <div className="bg-red-600 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                        <div className="bg-[#EF4444] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
                             {product.event.label}
                         </div>
                     )}
                     {hasDiscount && selectedVariant.stock > 0 && (
-                        <div className="bg-primary text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
+                        <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
                             {selectedVariant.discount}% OFF
                         </div>
                     )}
