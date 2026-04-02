@@ -45,7 +45,7 @@ export default function AboutFactory() {
         return () => observer.disconnect();
     }, []);
 
-
+    const [vis, setVis] = useState(false);
     // Freeze body scroll when modal is open
     useEffect(() => {
         if (!isModalOpen) return;
@@ -196,12 +196,13 @@ export default function AboutFactory() {
                                 whileInView={{ width: '80%' }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 inset-x-1 h-3 md:h-4 -z-0 opacity-80"
+                                className="absolute bottom-1 md:bottom-2 left-[5%] w-[95%] h-3 md:h-4 -z-0 opacity-80"
                                 style={{
                                     backgroundColor: COLORS.highlight,
                                     borderRadius: '5px',
                                     height: '30%',
                                     transition: 'width 0.8s 0.5s ease',
+                                    width: vis ? '95%' : '0%',
                                 }}
                             />
                         </span>
@@ -210,7 +211,7 @@ export default function AboutFactory() {
 
                 {/* 3. Video below heading */}
                 <div className="relative w-full max-w-4xl mx-auto mb-10 group">
-                    <div className="rounded-[20px] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] relative aspect-video bg-primary/5">
+                    <div className="rounded-[20px] overflow-hidden shadow-[0_30px_60px_-15px_rgba(0,0,0,0.3)] relative aspect-video lg:aspect-[16/7] xl:aspect-[16/6] bg-primary/5">
                         <video
                             ref={videoRef}
                             muted

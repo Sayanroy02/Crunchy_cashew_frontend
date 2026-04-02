@@ -152,9 +152,9 @@ export default function Navbar() {
                     {/* RIGHT — icon actions */}
                     <div className="flex flex-1 items-center justify-end gap-1 px-6">
                         {/* Pincode */}
-                        <div className="flex flex-col items-center">
+                        {/* <div className="flex flex-col items-center">
                             <PincodeSelector />
-                        </div>
+                        </div> */}
 
                         {/* Profile */}
                         <Link

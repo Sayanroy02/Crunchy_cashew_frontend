@@ -80,10 +80,10 @@ function TestimonialsHeading() {
             Customer<span className="relative inline-block lg:mt-0 ml-2">
                 <span className="relative z-10">Testimonials</span>
                 <span
-                    className="absolute bottom-1 md:bottom-2 left-[10%] w-[95%] h-3 md:h-4 -z-0 opacity-80"
+                    className="absolute bottom-1 md:bottom-2 left-[5%] w-[95%] h-3 md:h-4 -z-0 opacity-80"
                     style={{
                         backgroundColor: COLORS.highlight,
-                        width: vis ? 'auto' : '0%',
+                        width: vis ? '92%' : '0%',
                         transition: 'width 0.8s 0.5s ease',
                         borderRadius: '5px',
                         height: '30%',

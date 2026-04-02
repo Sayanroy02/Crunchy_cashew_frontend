@@ -46,7 +46,7 @@ export default function HeroVideo() {
             {/* ── Desktop Video ── */}
             <video
                 ref={desktopVideoRef}
-                src="https://res.cloudinary.com/dvhgznmk5/video/upload/v1774895903/Social_Media_Video_Ads_wZBxL8gm_ewajua.mp4"
+                src="https://res.cloudinary.com/dvhgznmk5/video/upload/v1775123033/Video_Project_l2szyx.mp4"
                 muted
                 loop
                 playsInline
