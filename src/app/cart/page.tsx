@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
-import { removeFromCart, updateQuantity, clearCart, addToCart } from '@/lib/store/features/cartSlice';
+import { removeFromCart, updateQuantity, clearCart } from '@/lib/store/features/cartSlice';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 
@@ -75,7 +75,7 @@ export default function CartPage() {
 
                         <div className="flex flex-col gap-6">
                             {items.map(item => (
-                                <div key={item.product_id} className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary/30 transition-colors">
+                                <div key={`${item.product_id}-${item.variant_size}`} className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary/30 transition-colors">
                                     <div className="flex items-center gap-4 w-full sm:w-1/2 mb-4 sm:mb-0">
                                         <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
                                             <i className="fa-solid fa-box text-xl" style={{ color: '#F6B000' }}></i>
@@ -89,14 +89,14 @@ export default function CartPage() {
                                     <div className="flex items-center justify-between w-full sm:w-1/2 sm:justify-end gap-6">
                                         <div className="flex items-center bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
                                             <button
-                                                onClick={() => dispatch(updateQuantity({ id: item.product_id, change: -1 }))}
+                                                onClick={() => dispatch(updateQuantity({ id: item.product_id, size: item.variant_size, change: -1 }))}
                                                 className="px-3 py-1 text-gray-500 hover:bg-black hover:text-white transition-all"
                                             >
                                                 <i className="fa-solid fa-minus text-xs"></i>
                                             </button>
                                             <span className="px-4 font-bold text-black">{item.quantity}</span>
                                             <button
-                                                onClick={() => dispatch(updateQuantity({ id: item.product_id, change: 1 }))}
+                                                onClick={() => dispatch(updateQuantity({ id: item.product_id, size: item.variant_size, change: 1 }))}
                                                 className="px-3 py-1 text-gray-500 hover:bg-black hover:text-white transition-all"
                                             >
                                                 <i className="fa-solid fa-plus text-xs"></i>
@@ -108,7 +108,7 @@ export default function CartPage() {
                                         </div>
 
                                         <button
-                                            onClick={() => dispatch(removeFromCart(item.product_id))}
+                                            onClick={() => dispatch(removeFromCart({ id: item.product_id, size: item.variant_size }))}
                                             className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shrink-0"
                                         >
                                             <i className="fa-solid fa-xmark"></i>
