@@ -70,8 +70,8 @@ export default function PriceComparisonPreview() {
       label: 'MARKETPLACE MARKUP'
     },
     {
-      name: 'SWIGGY INSTAMART',
-      logo: '/images/partners/swiggy-instamart.png',
+      name: 'JIO MART',
+      logo: '/images/partners/jio-mart.jpg',
       price: mp.swiggy?.price || 520,
       label: 'MARKETPLACE MARKUP'
     },

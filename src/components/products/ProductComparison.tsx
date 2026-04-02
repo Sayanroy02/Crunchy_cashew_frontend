@@ -49,8 +49,8 @@ export default function ProductComparison({ product }: { product: Product }) {
       link: null
     },
     {
-      name: 'Instamart',
-      logo: '/images/partners/swiggy-instamart.png',
+      name: 'Jio Mart',
+      logo: '/images/partners/jio-mart.jpg',
       price: mp.swiggy?.price,
       link: null
     },
