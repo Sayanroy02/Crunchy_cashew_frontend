@@ -132,6 +132,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 />
 
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                    {product.event && product.event.label && (
+                        <div className="bg-[#EF4444] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
+                            {product.event.label}
+                        </div>
+                    )}
                     {product.isNew && (
                         <div className="bg-[#00863D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
                             NEW
@@ -162,11 +167,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                             FLAVORS
                         </div>
                     )}
-                    {product.event && product.event.label && (
-                        <div className="bg-[#EF4444] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            {product.event.label}
-                        </div>
-                    )}
                     {hasDiscount && selectedVariant.stock > 0 && (
                         <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
                             {selectedVariant.discount}% OFF
@@ -195,7 +195,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <Link href={`/shop/${product.id || product._id}`}>
                     <div className="text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-1">{product.category}</div>
                     <h3 className="text-base font-heading font-bold text-black mb-3 line-clamp-2 leading-tight hover:text-primary transition-colors">
-                        {product.name} <span className="ml-1 font-black" style={{ color: COLORS.heading }}>({selectedVariant.size})</span>
+                        {product.name.length > 20 ? `${product.name.slice(0, 20)}...` : product.name} <span className="ml-1 font-black shrink-0" style={{ color: COLORS.heading }}>({selectedVariant.size})</span>
                     </h3>
                 </Link>
 
@@ -233,7 +233,29 @@ export default function ProductCard({ product }: ProductCardProps) {
                     </div>
                 )}
 
-                <div className="mt-auto pt-3 flex items-center justify-between border-t border-gray-50">
+                {/* Thin Marketing Tags Row */}
+                <div className="mb-2 flex flex-wrap gap-1.5 min-h-[18px]">
+                    {product.isValuePack && (
+                        <span className="text-[9px] font-black bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Value Pack</span>
+                    )}
+                    {product.isPremium && (
+                        <span className="text-[9px] font-black bg-[#7C3AED]/10 text-[#7C3AED] border border-[#7C3AED]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Premium</span>
+                    )}
+                    {product.isFlavors && (
+                        <span className="text-[9px] font-black bg-[#92400E]/10 text-[#92400E] border border-[#92400E]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Flavors</span>
+                    )}
+                    {product.isBestSeller && (
+                        <span className="text-[9px] font-black bg-[#F6B000]/10 text-[#F6B000] border border-[#F6B000]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Best Seller</span>
+                    )}
+                    {product.isNew && (
+                        <span className="text-[9px] font-black bg-[#00863D]/10 text-[#00863D] border border-[#00863D]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">New Arrival</span>
+                    )}
+                    {product.isGift && (
+                        <span className="text-[9px] font-black bg-[#2563EB]/10 text-[#2563EB] border border-[#2563EB]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Gifting</span>
+                    )}
+                </div>
+
+                <div className="pt-2 flex items-center justify-between border-t border-gray-50">
                     <div className="flex flex-col">
                         <div className="flex items-baseline gap-1.5">
                             <span className="text-black font-black text-xl">₹{selectedVariant.price.toFixed(0)}</span>

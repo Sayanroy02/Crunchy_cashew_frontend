@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 const faqs = [
     {
@@ -42,9 +43,7 @@ export default function FAQAccordion() {
             <div className="max-w-3xl mx-auto px-4 md:px-8 relative z-10">
                 {/* Header */}
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl md:text-5xl font-heading font-black text-[#2c1a0e] uppercase tracking-wide">
-                        Frequently Asked Questions
-                    </h2>
+                    <SectionHeading text="Frequently Asked" highlight="Questions" />
                     <p className="text-[#2c1a0e]/60 mt-3 text-sm font-medium">Everything you need to know about Crunchy Cashews</p>
                 </div>
 

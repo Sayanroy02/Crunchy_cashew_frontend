@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API } from "@/constants/api";
 import { COLORS } from "@/constants/styles";
+import SectionHeading from "@/components/ui/SectionHeading";
 
 interface InstaVideo {
     _id: string;
@@ -12,43 +13,6 @@ interface InstaVideo {
     thumbnail_url: string;
 }
 
-function InstaHeading() {
-    const ref = useRef<HTMLHeadingElement>(null);
-    const [vis, setVis] = useState(false);
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); ob.disconnect(); } }, { threshold: 0.3 });
-        ob.observe(el);
-        return () => ob.disconnect();
-    }, []);
-    return (
-        <h2
-            ref={ref}
-            className="text-4xl md:text-5xl font-black tracking-tight mb-3"
-            style={{
-                color: COLORS.heading,
-                opacity: vis ? 1 : 0,
-                transform: vis ? 'translateY(0)' : 'translateY(16px)',
-                transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
-            }}
-        >
-            <span className="relative inline-block">
-                <span className="relative z-10">Follow</span>
-                <span
-                    className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
-                    style={{
-                        backgroundColor: COLORS.highlight,
-                        width: vis ? '100%' : '0%',
-                        transition: 'width 0.8s 0.5s ease',
-                        borderRadius: '5px',
-                        height: '30%',
-                    }}
-                />
-            </span> The Crunch
-        </h2>
-    );
-}
 
 const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -214,7 +178,7 @@ export default function InstaVideos() {
                     >
                         Join The Community
                     </span>
-                    <InstaHeading />
+                    <SectionHeading text="Follow" highlight="The Crunch" />
                 </div>
 
                 <div

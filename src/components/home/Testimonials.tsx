@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 interface Testimonial {
     _id: string;
@@ -56,43 +57,6 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
     );
 }
 
-function TestimonialsHeading() {
-    const ref = useRef<HTMLHeadingElement>(null);
-    const [vis, setVis] = useState(false);
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const ob = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); ob.disconnect(); } }, { threshold: 0.3 });
-        ob.observe(el);
-        return () => ob.disconnect();
-    }, []);
-    return (
-        <h2
-            ref={ref}
-            className="text-4xl md:text-5xl font-black tracking-tight text-center"
-            style={{
-                color: COLORS.heading,
-                opacity: vis ? 1 : 0,
-                transform: vis ? 'translateY(0)' : 'translateY(16px)',
-                transition: 'opacity 0.6s 0.1s ease, transform 0.6s 0.1s ease',
-            }}
-        >
-            Customer<span className="relative inline-block lg:mt-0 ml-2">
-                <span className="relative z-10">Testimonials</span>
-                <span
-                    className="absolute bottom-1 md:bottom-2 left-[5%] w-[95%] h-3 md:h-4 -z-0 opacity-80"
-                    style={{
-                        backgroundColor: COLORS.highlight,
-                        width: vis ? '92%' : '0%',
-                        transition: 'width 0.8s 0.5s ease',
-                        borderRadius: '5px',
-                        height: '30%',
-                    }}
-                />
-            </span>
-        </h2>
-    );
-}
 
 export default function Testimonials() {
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -154,18 +118,20 @@ export default function Testimonials() {
         <section className="py-10 md:py-12 bg-bg-cream overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
-                {/* Header - Redesigned to be centered */}
-                <div className="flex flex-col items-center text-center mb-16">
-                    <span
-                        className="font-bold tracking-[4px] uppercase text-xs mb-3 block"
-                        style={{ color: COLORS.black }}
-                    >
-                        What Our Customers Say
-                    </span>
-                    <TestimonialsHeading />
+                {/* Header - Redesigned to be "Heading Left, Buttons Right" and compact on mobile */}
+                <div className="flex flex-row md:items-end justify-between mb-10 items-center gap-4">
+                    <div className="text-left flex-1">
+                        <span
+                            className="font-bold tracking-[4px] uppercase text-[10px] md:text-xs mb-2 block"
+                            style={{ color: COLORS.black }}
+                        >
+                            What Our Customers Say
+                        </span>
+                        <SectionHeading text="Customer" highlight="Testimonials" className="mb-0" />
+                    </div>
 
-                    <div className="mt-8 flex flex-wrap justify-center items-center gap-6">
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="hidden md:flex items-center gap-3">
                             <button onClick={() => scroll('left')}
                                 className="w-12 h-12 rounded-full border-2 bg-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
                                 style={{ borderColor: COLORS.primary }}
@@ -182,10 +148,10 @@ export default function Testimonials() {
 
                         <button
                             onClick={openForm}
-                            className="bg-black text-white px-8 py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
+                            className="bg-black text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
                         >
-                            <i className="fa-solid fa-pen-nib text-xs" />
-                            Share Your Experience
+                            <i className="fa-solid fa-pen-nib text-sm md:text-xs" />
+                            <span className="hidden md:inline">Share Your Experience</span>
                         </button>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import SectionHeading from '@/components/ui/SectionHeading';
+import { COLORS } from '@/constants/styles';
 
 const platforms = [
     { name: 'Amazon', url: 'https://amazon.in', imgSrc: '/images/partners/amazon.jpg', containerBg: 'transparent', shadow: 'rgba(255,153,0,0.5)' },
@@ -51,7 +53,7 @@ export default function Affiliates() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
                     <div style={{ textAlign: 'center' }}>
                         <p style={{ margin: 0, fontSize: 11, fontWeight: 600, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'Montserrat,sans-serif' }}>We are also</p>
-                        <p style={{ margin: 0, fontSize: 20, fontWeight: 900, color: '#000', fontFamily: 'Montserrat,sans-serif', lineHeight: 1.2 }}>Available on</p>
+                        <SectionHeading text="Available" highlight="on" className="mb-0" />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
                         {platforms.map(p => (
@@ -246,9 +248,7 @@ export default function Affiliates() {
                     <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.14em', textTransform: 'uppercase', fontFamily: 'Montserrat,sans-serif' }}>
                         We are also
                     </p>
-                    <p style={{ margin: 0, fontSize: 26, fontWeight: 900, color: '#111', letterSpacing: '-0.02em', fontFamily: 'Montserrat,sans-serif', lineHeight: 1.1 }}>
-                        Available on
-                    </p>
+                    <SectionHeading text="Available" highlight="on" className="mb-0" />
                 </div>
 
                 {/* Logo row */}

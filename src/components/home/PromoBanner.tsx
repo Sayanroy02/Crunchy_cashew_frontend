@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import SectionHeading from '@/components/ui/SectionHeading';
+import { COLORS } from '@/constants/styles';
 
 export default function PromoBanner() {
     return (
@@ -20,9 +22,11 @@ export default function PromoBanner() {
                             <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-white/30 mb-4">
                                 <i className="fa-solid fa-gift mr-2"></i> Monthly Contest
                             </span>
-                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
-                                Share Your Story & <br /><span className="text-[#FDC700]">Win a Hamper!</span>
-                            </h2>
+                            <SectionHeading 
+                                text="Share Your Story &" 
+                                highlight="Win a Hamper!" 
+                                textColor="#ffffff" 
+                            />
                             <p className="text-white/90 text-sm md:text-base max-w-xl leading-relaxed">
                                 Made a delicious recipe using our cashews? Or have a unique Crunchy Cashews story to share?
                                 Submit your blog post today. If you get featured on our website, you win an exclusive premium

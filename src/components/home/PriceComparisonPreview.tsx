@@ -7,6 +7,7 @@ import { Zap, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 interface Product {
   _id: string;
@@ -110,32 +111,7 @@ export default function PriceComparisonPreview() {
             {/* The Price Difference */}
           </motion.div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black tracking-tight"
-            style={{ color: COLORS.heading }}
-          >
-            Buy Direct. <span className="relative inline-block">
-              <span className="relative z-10">Save More.</span>
-              <motion.div
-                initial={{ width: 0 }}
-                whileInView={{ width: '100%' }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 -z-0 opacity-80"
-                style={{
-                  backgroundColor: COLORS.primary,
-                  borderRadius: '5px',
-                  height: '30%',
-                  width: '100%',
-                  transition: 'width 0.8s 0.5s ease',
-                }}
-              />
-            </span>
-          </motion.h2>
+          <SectionHeading text="Buy Direct." highlight="Save More." />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}

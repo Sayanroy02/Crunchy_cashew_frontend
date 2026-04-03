@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
 import { API } from '@/constants/api';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -364,8 +365,8 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             transition={{ delay: 0.15, duration: 0.55 }}
             className="mt-10 relative rounded-[28px] overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, #062e26 0%, #0A5246 45%, #0d6b58 100%)',
-                boxShadow: '0 4px 24px rgba(6,46,38,0.45), 0 8px 24px rgba(0,0,0,0.2)',
+                background: 'linear-gradient(135deg, #003d1c 0%, #005c2a 45%, #00863D 100%)',
+                boxShadow: '0 4px 24px rgba(0,134,61,0.45), 0 8px 24px rgba(0,0,0,0.2)',
             }}
         >
             {/* Concentric rings — right side decorative */}
@@ -420,13 +421,36 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                 </div>
 
                 {/* Right: CTA buttons — horizontal */}
-                <div className="flex flex-row gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-end flex-wrap">
-                    {/* Primary — yellow solid */}
+                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-end">
+
+                    {/* Top — Download B2B Catalog — 3D glass */}
+                    <motion.a
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        href="/document/Cashew-Catalogue.pdf"
+                        download
+                        className="font-bold px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                        style={{
+                            background: 'linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 100%)',
+                            color: 'rgba(255,255,255,0.92)',
+                            border: '1.5px solid rgba(255,255,255,0.35)',
+                            boxShadow: '0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.12)',
+                            backdropFilter: 'blur(12px)',
+                            WebkitBackdropFilter: 'blur(12px)',
+                        }}
+                    >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3" />
+                        </svg>
+                        Download B2B Catalog
+                    </motion.a>
+
+                    {/* Bottom — Request Custom Quote — yellow solid */}
                     <motion.button
                         whileHover={{ scale: 1.04, y: -1 }}
                         whileTap={{ scale: 0.97 }}
                         onClick={onOpenPopup}
-                        className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center gap-2 whitespace-nowrap"
+                        className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                         style={{
                             background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
                             color: '#000',
@@ -442,20 +466,6 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                         </svg>
                     </motion.button>
 
-                    {/* Secondary — white outline */}
-                    <motion.a
-                        whileHover={{ scale: 1.03, y: -1 }}
-                        whileTap={{ scale: 0.97 }}
-                        href="/document/Cashew-Catalogue.pdf"
-                        download
-                        className="font-bold px-6 py-3.5 rounded-2xl text-sm flex items-center gap-2 whitespace-nowrap"
-                        style={{ background: 'transparent', color: 'rgba(255,255,255,0.88)', border: '1.5px solid rgba(255,255,255,0.28)' }}
-                    >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3" />
-                        </svg>
-                        Download B2B Catalog
-                    </motion.a>
                 </div>
             </div>
         </motion.div>
@@ -484,23 +494,7 @@ export default function BulkOrderCard() {
                     <span className="font-bold tracking-widest uppercase text-xs mb-2 block" style={{ color: COLORS.black }}>
                         Export-Quality B2B
                     </span>
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }} transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-5xl font-black tracking-tight mb-3"
-                        style={{ color: COLORS.heading }}
-                    >
-                        Global Supply &{' '}
-                        <span className="relative inline-block">
-                            <span className="relative z-10">Bulk Orders</span>
-                            <motion.div
-                                initial={{ width: 0 }} whileInView={{ width: '100%' }}
-                                viewport={{ once: true }} transition={{ delay: 0.5, duration: 0.8 }}
-                                className="absolute bottom-1 md:bottom-2 left-0 -z-0 opacity-80"
-                                style={{ backgroundColor: COLORS.highlight, borderRadius: '5px', height: '30%' }}
-                            />
-                        </span>
-                    </motion.h2>
+                    <SectionHeading text="Global Supply &" highlight="Bulk Orders" />
                     <p className="text-black/60 max-w-2xl mx-auto text-sm md:text-base mt-2">
                         Explore our premium cashew grades available for wholesale. Competitive pricing,
                         custom packaging, and reliable global shipping.

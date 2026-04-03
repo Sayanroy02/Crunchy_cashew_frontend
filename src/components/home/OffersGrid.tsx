@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, Factory, Globe, User, ArrowRight } from 'lucide-react';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 export default function DirectAdvantage() {
   return (
@@ -11,12 +12,7 @@ export default function DirectAdvantage() {
       <div className="max-w-5xl mx-auto space-y-10">
 
         <div className="text-center space-y-2">
-          <h3 
-            className="text-2xl md:text-3xl font-black tracking-tight"
-            style={{ color: COLORS.heading }}
-          >
-            The Direct Advantage
-          </h3>
+          <SectionHeading text="The Direct" highlight="Advantage" />
           <p className="text-slate-500 font-medium text-sm md:text-base italic">Why our premium cashews cost less than marketplaces.</p>
         </div>
 

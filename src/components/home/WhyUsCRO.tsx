@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const si = { fill: 'none', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -238,9 +239,7 @@ export default function WhyUsCRO() {
         <section className="bg-bg-cream py-10 md:py-8 overflow-hidden">
             <div className="text-center px-5 mb-8">
                 <p className="text-[11px] font-bold uppercase tracking-[0.18em] mb-2" style={{ color: COLORS.black }}>Handpicked for you</p>
-                <h2 className="font-heading font-black text-[26px] md:text-[32px] leading-tight mb-2" style={{ color: COLORS.heading }}>
-                    Why Choose Us?
-                </h2>
+                <SectionHeading text="Why" highlight="Choose Us?" />
                 <p className="text-[13px] font-medium max-w-sm mx-auto leading-relaxed" style={{ color: COLORS.black, opacity: 0.7 }}>
                     Experience the crunch. Premium, sustainably packaged, straight from our factory.
                 </p>
