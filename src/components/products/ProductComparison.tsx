@@ -50,7 +50,7 @@ export default function ProductComparison({ product }: { product: Product }) {
     },
     {
       name: 'Jio Mart',
-      logo: '/images/partners/jio-mart.jpg',
+      logo: '/images/partners/JioMart_logo.png',
       price: mp.swiggy?.price,
       link: null
     },

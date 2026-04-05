@@ -27,6 +27,7 @@ export default function ShopPage() {
     const [sortKey, setSortKey] = useState<SortKey>('default');
     const [priceRange, setPriceRange] = useState<PriceRangeIndex>(0); // index into PRICE_RANGES
     const [tagFilter, setTagFilter] = useState<string>('all');
+    const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
@@ -56,16 +57,20 @@ export default function ShopPage() {
             const discount = p.variants?.[0]?.discount || (p as any).discount || 0;
             return { ...p, _minPrice: minPrice, _maxPrice: maxPrice, _discount: discount };
         }).filter(p => {
-            const matchSearch = !searchTerm.trim() ||
-                p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (p.category || '').toLowerCase().includes(searchTerm.toLowerCase());
+            const searchTermLower = searchTerm.toLowerCase().trim();
+            const matchSearch = !searchTermLower ||
+                p.name.toLowerCase().includes(searchTermLower) ||
+                (p.category || '').toLowerCase().includes(searchTermLower) ||
+                (p.tags || []).some(t => t.toLowerCase().includes(searchTermLower));
             
             // Match if any part of the product's price range overlaps with the filter
             const matchPrice = p._minPrice <= max && p._maxPrice >= min;
 
             const matchTag = tagFilter === 'all' || (p.tags && p.tags.includes(tagFilter));
+            const matchCategory = categoryFilter === 'all' || 
+                (p.category || '').toLowerCase() === categoryFilter.toLowerCase();
 
-            return matchSearch && matchPrice && matchTag;
+            return matchSearch && matchPrice && matchTag && matchCategory;
         });
 
         if (sortKey === 'price_asc') result = [...result].sort((a, b) => a._minPrice - b._minPrice);
@@ -75,14 +80,15 @@ export default function ShopPage() {
         else if (sortKey === 'popular') result = [...result].sort((a, b) => (b.salesCount || 0) - (a.salesCount || 0));
 
         return result;
-    }, [products, searchTerm, sortKey, priceRange, tagFilter]);
+    }, [products, searchTerm, sortKey, priceRange, tagFilter, categoryFilter]);
 
-    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all';
+    const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all' || categoryFilter !== 'all';
     const clearAll = () => {
         setSearchTerm('');
         setSortKey('default');
         setPriceRange(0);
         setTagFilter('all');
+        setCategoryFilter('all');
     };
 
     return (
@@ -97,6 +103,7 @@ export default function ShopPage() {
                             sortKey={sortKey} setSortKey={setSortKey}
                             priceRange={priceRange} setPriceRange={setPriceRange}
                             tagFilter={tagFilter} setTagFilter={setTagFilter}
+                            categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
                             availableTags={availableTags}
                             hasFilters={hasFilters} clearAll={clearAll}
                             resultCount={filtered.length}
@@ -119,6 +126,7 @@ export default function ShopPage() {
                                         sortKey={sortKey} setSortKey={setSortKey}
                                         priceRange={priceRange} setPriceRange={setPriceRange}
                                         tagFilter={tagFilter} setTagFilter={setTagFilter}
+                                        categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
                                         availableTags={availableTags}
                                         hasFilters={hasFilters} clearAll={clearAll}
                                         resultCount={filtered.length}
@@ -185,10 +193,16 @@ export default function ShopPage() {
                                                 <button onClick={() => setSortKey('default')}><i className="fa-solid fa-xmark" /></button>
                                             </span>
                                         )}
-                                        {priceRange !== 0 && (
+                                        {categoryFilter !== 'all' && (
                                             <span className="inline-flex items-center gap-1.5 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                {PRICE_RANGES[priceRange].label}
-                                                <button onClick={() => setPriceRange(0)}><i className="fa-solid fa-xmark" /></button>
+                                                Category: {categoryFilter}
+                                                <button onClick={() => setCategoryFilter('all')}><i className="fa-solid fa-xmark" /></button>
+                                            </span>
+                                        )}
+                                        {tagFilter !== 'all' && (
+                                            <span className="inline-flex items-center gap-1.5 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                Tag: {tagFilter}
+                                                <button onClick={() => setTagFilter('all')}><i className="fa-solid fa-xmark" /></button>
                                             </span>
                                         )}
                                     </div>
@@ -259,6 +273,7 @@ function SidebarContent({
     sortKey, setSortKey,
     priceRange, setPriceRange,
     tagFilter, setTagFilter,
+    categoryFilter, setCategoryFilter,
     availableTags,
     hasFilters, clearAll,
     resultCount
@@ -266,10 +281,13 @@ function SidebarContent({
     sortKey: SortKey; setSortKey: (v: SortKey) => void;
     priceRange: PriceRangeIndex; setPriceRange: (v: PriceRangeIndex) => void;
     tagFilter: string; setTagFilter: (v: string) => void;
+    categoryFilter: string; setCategoryFilter: (v: string) => void;
     availableTags: string[];
     hasFilters: boolean; clearAll: () => void;
     resultCount: number;
 }) {
+    const categories = ['Value Packs', 'Premium', 'Flavors', 'Gifting'];
+
     return (
         <div className="flex flex-col gap-6">
             {/* Clear all */}
@@ -281,6 +299,41 @@ function SidebarContent({
                     <i className="fa-solid fa-rotate-left" /> Clear all filters
                 </button>
             )}
+
+            {/* Categories */}
+            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i className="fa-solid fa-shapes" style={{ color: COLORS.primary }} /> Categories
+                </h3>
+                <div className="flex flex-col gap-2">
+                    <button
+                        onClick={() => setCategoryFilter('all')}
+                        className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === 'all'
+                            ? 'shadow-lg scale-[1.02]'
+                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                            }`}
+                        style={categoryFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                    >
+                        <i className="fa-solid fa-border-all text-xs" />
+                        All Categories
+                    </button>
+
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setCategoryFilter(cat)}
+                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === cat
+                                ? 'shadow-lg scale-[1.02]'
+                                : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                }`}
+                            style={categoryFilter === cat ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                        >
+                            <i className="fa-solid fa-layer-group text-xs" />
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
 
             {/* Special Collections / Dynamic Tags */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">

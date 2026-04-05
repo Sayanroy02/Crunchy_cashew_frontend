@@ -7,14 +7,14 @@ import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
 
-type TagFilter = 'all' | 'best_seller' | 'newest' | 'gifting' | 'event';
+type CategoryFilter = 'all' | 'Value Packs' | 'Premium' | 'Flavors' | 'Gifting';
 
-const TAGS: { value: TagFilter; label: string; icon: string }[] = [
+const CATEGORIES: { value: CategoryFilter; label: string; icon: string }[] = [
     { value: 'all', label: 'All', icon: 'fa-solid fa-border-all' },
-    { value: 'best_seller', label: 'Best Sellers', icon: 'fa-solid fa-trophy' },
-    { value: 'newest', label: 'New Arrivals', icon: 'fa-solid fa-sparkles' },
-    { value: 'gifting', label: 'Gifting', icon: 'fa-solid fa-gift' },
-    { value: 'event', label: 'Event Special', icon: 'fa-solid fa-calendar-star' },
+    { value: 'Value Packs', label: 'Value Packs', icon: 'fa-solid fa-box-open' },
+    { value: 'Premium', label: 'Premium', icon: 'fa-solid fa-crown' },
+    { value: 'Flavors', label: 'Flavors', icon: 'fa-solid fa-pepper-hot' },
+    { value: 'Gifting', label: 'Gifting', icon: 'fa-solid fa-gift' },
 ];
 
 function SkeletonCard() {
@@ -34,7 +34,7 @@ function SkeletonCard() {
 export default function BestSellers() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
-    const [activeTag, setActiveTag] = useState<TagFilter>('all');
+    const [activeTag, setActiveTag] = useState<CategoryFilter>('all');
 
     useEffect(() => {
         fetch(API.PRODUCTS)
@@ -46,11 +46,7 @@ export default function BestSellers() {
     const filtered = useMemo(() => {
         return products.filter(p => {
             if (activeTag === 'all') return true;
-            if (activeTag === 'best_seller') return !!p.isBestSeller;
-            if (activeTag === 'newest') return !!p.isNew;
-            if (activeTag === 'gifting') return !!p.isGift;
-            if (activeTag === 'event') return !!p.event?.type;
-            return true;
+            return (p.category || '').toLowerCase() === activeTag.toLowerCase();
         });
     }, [products, activeTag]);
 
@@ -71,7 +67,7 @@ export default function BestSellers() {
 
                 {/* Tag Filter Pills */}
                 <div className="flex items-center gap-2 mb-5 overflow-x-auto scrollbar-hide px-1 md:justify-center md:flex-wrap">
-                    {TAGS.map(tag => (
+                    {CATEGORIES.map(tag => (
                         <button
                             key={tag.value}
                             onClick={() => setActiveTag(tag.value)}

@@ -340,7 +340,7 @@ function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
 
 function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
-        <Link href="/bulk" className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate">
+        <div className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate">
             <div className="grade-circle rounded-full flex items-center justify-center relative z-20"
                 style={{ width: '100%', aspectRatio: '1 / 1', transition: 'transform 0.3s ease' }}>
                 <img src={grade.img} alt={grade.name} className="w-full h-full object-cover scale-[1.05]"
@@ -350,7 +350,7 @@ function GradeCard({ grade }: { grade: typeof grades[0] }) {
                 style={{ fontSize: '1.3rem', lineHeight: '1.2', color: COLORS.black }}>
                 {grade.name}
             </span>
-        </Link>
+        </div>
     );
 }
 
@@ -365,8 +365,8 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             transition={{ delay: 0.15, duration: 0.55 }}
             className="mt-10 relative rounded-[28px] overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, #003d1c 0%, #005c2a 45%, #00863D 100%)',
-                boxShadow: '0 4px 24px rgba(0,134,61,0.45), 0 8px 24px rgba(0,0,0,0.2)',
+                background: 'linear-gradient(135deg, #047c3cff 0%, #02a84dff 45%, #00d861ff 100%)',
+                boxShadow: '0 4px 24px rgba(2, 201, 91, 0.45), 0 8px 24px rgba(0,0,0,0.2)',
             }}
         >
             {/* Concentric rings — right side decorative */}
@@ -383,9 +383,26 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                     style={{ background: 'radial-gradient(circle, rgba(13,107,88,0.6) 0%, transparent 70%)', transform: 'translate(30%, -50%)' }} />
             </div>
 
-            {/* Subtle dot texture */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.035]"
-                style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+            {/* Subtle dot texture + Pattern */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
+                style={{ 
+                    backgroundImage: `
+                        radial-gradient(circle, rgba(255,255,255,0.8) 1.2px, transparent 1.2px),
+                        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
+                        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03))
+                    `,
+                    backgroundSize: '22px 22px, 40px 40px, 40px 40px',
+                    backgroundPosition: '0 0, 0 0, 20px 20px'
+                }} />
+
+            {/* Hanging Cashew Tree Image */}
+            <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block">
+                <img 
+                    src="/images/Cashew-In-Tree.png" 
+                    alt="" 
+                    className="w-full h-full object-contain object-right transform rotate-[-5deg] scale-125"
+                />
+            </div>
 
             {/* Content */}
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-7 md:px-10 py-8 md:py-9">
@@ -403,7 +420,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                         supplier?
                     </h3>
 
-                    <p className="text-white/60 text-sm leading-relaxed max-w-md mb-4">
+                    <p className="text-white/80 text-sm leading-relaxed max-w-[620px] mb-4">
                         Cut out the middlemen. Get consistent grading, custom packaging, and volume pricing shipped straight from our Yu Nut Processing Industry facility in Siliguri.
                     </p>
 
@@ -482,10 +499,6 @@ export default function BulkOrderCard() {
     return (
         <section className="py-4 md:py-6 bg-bg-cream relative overflow-hidden">
 
-            <div className="hidden md:block absolute right-0 bottom-0 w-28 lg:w-36 pointer-events-none select-none z-10">
-                <Image src="/images/Right-Fruit-2-2-1.png" alt="" width={144} height={220}
-                    className="object-contain object-bottom w-full h-auto translate-x-8" aria-hidden="true" />
-            </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
@@ -496,8 +509,7 @@ export default function BulkOrderCard() {
                     </span>
                     <SectionHeading text="Global Supply &" highlight="Bulk Orders" />
                     <p className="text-black/60 max-w-2xl mx-auto text-sm md:text-base mt-2">
-                        Explore our premium cashew grades available for wholesale. Competitive pricing,
-                        custom packaging, and reliable global shipping.
+                        Partner with us for export-grade cashews. We ensure stringent quality control for every batch, with reliable shipping across borders and beyond.
                     </p>
                 </div>
 

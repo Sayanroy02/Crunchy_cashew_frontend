@@ -115,6 +115,19 @@ export default function ProductCard({ product }: ProductCardProps) {
     const hasDiscount = selectedVariant.discount > 0;
     const originalPrice = selectedVariant.original_price || (selectedVariant.price / (1 - selectedVariant.discount / 100));
 
+    // Smart Badges calculation
+    const tags = product.tags?.map(t => t.toLowerCase()) || [];
+    const isPremium = product.isPremium || tags.includes('premium');
+    const isFlavors = product.isFlavors || tags.some(t => ['flavors', 'flavor', 'flavour', 'flavours', 'pepper', 'masala', 'spices', 'spicy'].includes(t));
+    const isValuePack = product.isValuePack || tags.some(t => ['value pack', 'valuepack', 'bulk', 'wholesale'].includes(t));
+    const isGift = product.isGift || tags.some(t => ['gifting', 'gift', 'hamper', 'hampers'].includes(t));
+    const isNew = product.isNew || tags.some(t => ['new', 'new arrival', 'newest'].includes(t));
+    const isBestSeller = product.isBestSeller || tags.some(t => ['best seller', 'bestseller', 'popular', 'trending'].includes(t));
+    
+    // Custom tags that aren't already represented by a category badge
+    const categoryKeywords = ['premium', 'flavors', 'flavor', 'flavour', 'flavours', 'pepper', 'masala', 'spices', 'spicy', 'value pack', 'valuepack', 'bulk', 'wholesale', 'gifting', 'gift', 'hamper', 'hampers', 'new', 'new arrival', 'newest', 'best seller', 'bestseller', 'popular', 'trending', 'event'];
+    const customTags = product.tags?.filter(t => !categoryKeywords.includes(t.toLowerCase())) || [];
+
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100 h-full">
             <Link
@@ -132,41 +145,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                 />
 
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {product.event && product.event.label && (
-                        <div className="bg-[#EF4444] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            {product.event.label}
-                        </div>
-                    )}
-                    {product.isNew && (
-                        <div className="bg-[#00863D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            NEW
-                        </div>
-                    )}
-                    {product.isBestSeller && (
-                        <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            BEST SELLER
-                        </div>
-                    )}
-                    {product.isGift && (
-                        <div className="bg-[#2563EB] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            GIFTING
-                        </div>
-                    )}
-                    {product.isValuePack && (
-                        <div className="bg-[#F97316] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            VALUE PACK
-                        </div>
-                    )}
-                    {product.isPremium && (
-                        <div className="bg-[#7C3AED] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            PREMIUM
-                        </div>
-                    )}
-                    {product.isFlavors && (
-                        <div className="bg-[#92400E] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide uppercase">
-                            FLAVORS
-                        </div>
-                    )}
                     {hasDiscount && selectedVariant.stock > 0 && (
                         <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
                             {selectedVariant.discount}% OFF
@@ -235,24 +213,28 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 {/* Thin Marketing Tags Row */}
                 <div className="mb-2 flex flex-wrap gap-1.5 min-h-[18px]">
-                    {product.isValuePack && (
+                    {isValuePack && (
                         <span className="text-[9px] font-black bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Value Pack</span>
                     )}
-                    {product.isPremium && (
+                    {isPremium && (
                         <span className="text-[9px] font-black bg-[#7C3AED]/10 text-[#7C3AED] border border-[#7C3AED]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Premium</span>
                     )}
-                    {product.isFlavors && (
+                    {isFlavors && (
                         <span className="text-[9px] font-black bg-[#92400E]/10 text-[#92400E] border border-[#92400E]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Flavors</span>
                     )}
-                    {product.isBestSeller && (
+                    {isBestSeller && (
                         <span className="text-[9px] font-black bg-[#F6B000]/10 text-[#F6B000] border border-[#F6B000]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Best Seller</span>
                     )}
-                    {product.isNew && (
+                    {isNew && (
                         <span className="text-[9px] font-black bg-[#00863D]/10 text-[#00863D] border border-[#00863D]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">New Arrival</span>
                     )}
-                    {product.isGift && (
-                        <span className="text-[9px] font-black bg-[#2563EB]/10 text-[#2563EB] border border-[#2563EB]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Gifting</span>
+                    {isGift && (
+                        <span className="text-[9px] font-black bg-[#2563EB]/10 text-[#2563EB] border border-[#2563EB]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Gift Hamper</span>
                     )}
+                    {/* Render other custom tags */}
+                    {customTags.map((tag, idx) => (
+                        <span key={idx} className="text-[9px] font-black bg-gray-100 text-gray-500 border border-gray-200 px-2 py-0.5 rounded-md uppercase tracking-tighter">{tag}</span>
+                    ))}
                 </div>
 
                 <div className="pt-2 flex items-center justify-between border-t border-gray-50">

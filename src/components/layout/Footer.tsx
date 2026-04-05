@@ -186,17 +186,16 @@ export default function Footer() {
 
                     {/* Attribution — styled, not jarring */}
                     <div className="flex items-center gap-1 text-xs" style={{ color: COLORS.accent, opacity: 0.5 }}>
-                        <span>Crafted with</span>
-                        <i className="fa-solid fa-heart text-[10px] mx-1" style={{ color: COLORS.accent }} />
-                        <span>by</span>
+                        <span>Developed by</span>
 
-                        <a href="https://gridds.in"
+
+                        <a href="https://yunutprocessingindustry.com"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-semibold ml-1 transition-opacity hover:opacity-100"
                             style={{ color: COLORS.accent, opacity: 0.8 }}
                         >
-                            GRIDDS
+                            Yu Nut Processing Industry
                         </a>
                     </div>
 

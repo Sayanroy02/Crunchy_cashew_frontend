@@ -72,7 +72,7 @@ export default function PriceComparisonPreview() {
     },
     {
       name: 'JIO MART',
-      logo: '/images/partners/jio-mart.jpg',
+      logo: '/images/partners/JioMart_logo.png',
       price: mp.swiggy?.price || 520,
       label: 'MARKETPLACE MARKUP'
     },

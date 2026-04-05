@@ -13,7 +13,7 @@ const defaultForm = {
     variants: [
         { size: '200g', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true }
     ],
-    category: 'Cashew',
+    category: 'Value Packs',
     is_available: true,
     image_url: '',
     image_urls: [] as string[],
@@ -91,7 +91,7 @@ export default function AdminProducts() {
             name: p.name || '',
             description: p.description || '',
             variants: variants,
-            category: p.category || 'Cashew',
+            category: p.category || 'Value Packs',
             is_available: p.is_available !== false,
             image_url: p.image_url || '',
             tags: p.tags || [],
@@ -376,7 +376,19 @@ export default function AdminProducts() {
                             )}
                             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {field('Product Name', 'name')}
-                                {field('Category', 'category')}
+                                <div className="space-y-1">
+                                    <label className="text-sm font-semibold text-gray-700">Category</label>
+                                    <select
+                                        value={formData.category}
+                                        onChange={e => setFormData({ ...formData, category: e.target.value })}
+                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
+                                    >
+                                        <option value="Value Packs">Value Packs</option>
+                                        <option value="Premium">Premium</option>
+                                        <option value="Flavors">Flavors</option>
+                                        <option value="Gifting">Gifting</option>
+                                    </select>
+                                </div>
                                 <div className="space-y-1 md:col-span-2">
                                     <label className="text-sm font-semibold text-gray-700">Description</label>
                                     <textarea required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -491,7 +503,7 @@ export default function AdminProducts() {
                                         {[
                                             { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-[#00863D] text-white border-[#00863D]', tag: 'new' },
                                             { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-[#F6B000] text-black border-[#F6B000]', tag: 'bestseller' },
-                                            { id: 'isGift', label: 'Gifting', icon: 'fa-gift', color: 'bg-[#2563EB] text-white border-[#2563EB]', tag: 'gifting' },
+                                            { id: 'isGift', label: 'Gift Hamper', icon: 'fa-gift', color: 'bg-[#2563EB] text-white border-[#2563EB]', tag: 'gifting' },
                                             { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-[#EF4444] text-white border-[#EF4444]', tag: 'event' },
                                             { id: 'isValuePack', label: 'Value Pack', icon: 'fa-box-open', color: 'bg-[#F97316] text-white border-[#F97316]', tag: 'valuepack' },
                                             { id: 'isPremium', label: 'Premium', icon: 'fa-crown', color: 'bg-[#7C3AED] text-white border-[#7C3AED]', tag: 'premium' },
@@ -560,7 +572,7 @@ export default function AdminProducts() {
                                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mr-2">Preview:</span>
                                         {formData.isNew && <span className="bg-[#00863D] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">NEW Arrival</span>}
                                         {formData.isBestSeller && <span className="bg-[#F6B000] text-black text-[9px] font-black px-2 py-0.5 rounded shadow-sm">BEST SELLER</span>}
-                                        {formData.isGift && <span className="bg-[#2563EB] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">GIFTING</span>}
+                                        {formData.isGift && <span className="bg-[#2563EB] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">GIFT HAMPER</span>}
                                         {formData.isValuePack && <span className="bg-[#F97316] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">VALUE PACK</span>}
                                         {formData.isPremium && <span className="bg-[#7C3AED] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">PREMIUM</span>}
                                         {formData.isFlavors && <span className="bg-[#92400E] text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm">FLAVORS</span>}
