@@ -7,11 +7,27 @@ import Link from 'next/link';
 import { API } from '@/constants/api';
 import Image from 'next/image';
 import { COLORS } from '@/constants/styles';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+    Truck,
+    ChefHat,
+    ShoppingBag,
+    CheckCircle2,
+    Clock,
+    Factory,
+    Search,
+    ArrowRight,
+    Package,
+    Tag,
+    UtensilsCrossed
+} from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 // ─── Scroll helper ────────────────────────────────────────────────────────────
 function scrollTo(ref: React.RefObject<HTMLElement | null>) {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
 
 // ─── Grade Data ───────────────────────────────────────────────────────────────
 
@@ -19,6 +35,7 @@ const gradeCategories = [
     {
         id: 'white-wholes',
         title: 'White Wholes',
+        icon: <Package className="w-4 h-4" />,
         subtitle: 'Premium whole cashews — prized for visual appeal, size, and taste.',
         accent: '#000000',
         items: [
@@ -59,6 +76,7 @@ const gradeCategories = [
     {
         id: 'scorched-wholes',
         title: 'Scorched Wholes',
+        icon: <UtensilsCrossed className="w-4 h-4" />,
         subtitle: 'Ideal for roasting, coating, and processing — where appearance is secondary.',
         accent: '#F6B000',
         items: [
@@ -91,6 +109,7 @@ const gradeCategories = [
     {
         id: 'cashew-forms',
         title: 'Cashew Forms',
+        icon: <ShoppingBag className="w-4 h-4" />,
         subtitle: 'Splits and pieces — optimized for toppings, coatings, and culinary formulations.',
         accent: '#000000',
         items: [
@@ -305,155 +324,247 @@ function GradeCard({
     accent,
     index,
     visible,
+    onEnquire,
 }: {
     item: (typeof gradeCategories)[0]['items'][0];
     accent: string;
     index: number;
     visible: boolean;
+    onEnquire: (grade: string) => void;
 }) {
-    const [hovered, setHovered] = useState(false);
-
     return (
-        <a
-            href={item.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            style={{
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(32px)',
-                transition: `opacity 0.55s ease ${index * 0.08}s, transform 0.55s ease ${index * 0.08}s`,
-                textDecoration: 'none',
-            }}
-            className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300"
         >
-            {/* Image */}
-            <div
-                className="relative overflow-hidden"
-                style={{ background: '#F8F5F0', height: '180px' }}
-            >
-                <Image
-                    src={item.image}
-                    alt={item.code}
-                    width={400}
-                    height={180}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-                />
-                <span
-                    className="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full text-white"
-                    style={{ background: accent, letterSpacing: '0.04em' }}
-                >
+            {/* Tag */}
+            <div className="absolute top-3 left-3 z-10">
+                <span className="bg-[#F6B000] text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider text-black">
                     {item.tagline}
                 </span>
             </div>
 
-            {/* Content */}
-            <div className="flex flex-col flex-1 p-5">
-                <h4 className="font-bold text-gray-900 text-base mb-1" style={{ fontFamily: 'Georgia, serif' }}>
-                    {item.code}
-                </h4>
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-3">{item.description}</p>
-                <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">{item.origins}</span>
-                    <span
-                        className="text-xs font-bold px-3 py-1 rounded-full transition-colors duration-200"
-                        style={{
-                            background: hovered ? accent : '#F0F0F0',
-                            color: hovered ? '#fff' : '#444',
-                        }}
-                    >
-                        Buy Now →
-                    </span>
+            {/* Favorite Icon (Visual only as per ref) */}
+            <div className="absolute top-3 right-3 z-10">
+                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 text-gray-400">
+                    <Clock className="w-4 h-4" /> {/* Representing consistent supply */}
                 </div>
             </div>
-        </a>
+
+            {/* Image Container */}
+            <div className="relative aspect-square w-full bg-white p-2 overflow-hidden flex items-center justify-center">
+                <Image
+                    src={item.image}
+                    alt={item.code}
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                />
+            </div>
+
+            {/* Content Area */}
+            <div className="p-3 md:p-4 flex flex-col flex-grow bg-white border-t border-gray-50">
+                <div className="mb-2 md:mb-3">
+                    <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5 md:mb-1">
+                        {item.origins.split(' · ')[0]}
+                    </span>
+                    <h4 className="text-[13px] md:text-base font-black text-gray-900 leading-tight">
+                        {item.code}
+                    </h4>
+                </div>
+
+                <p className="text-[10px] md:text-[12px] text-gray-500 leading-relaxed mb-3 md:mb-4 flex-grow line-clamp-2 md:line-clamp-none">
+                    {item.description}
+                </p>
+
+                <div className="flex items-center justify-between mt-auto pt-2">
+                    <div className="flex flex-col">
+                        <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Stock</span>
+                        <span className="text-[10px] md:text-xs font-black text-green-600 flex items-center gap-1">
+                            <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-green-500" />
+                            Ready
+                        </span>
+                    </div>
+
+                    <button
+                        onClick={() => onEnquire(item.code)}
+                        className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-[#F6B000] text-black flex items-center justify-center shadow-lg shadow-[#F6B000]/20 hover:scale-110 active:scale-95 transition-all"
+                        title="Enquire Now"
+                    >
+                        <Package className="w-4 h-4 md:w-5 md:h-5" />
+                    </button>
+                </div>
+            </div>
+        </motion.div>
     );
 }
 
-// ─── Grade Section ────────────────────────────────────────────────────────────
+// ─── Businesses We Cater To ──────────────────────────────────────────────────
 
-function GradeSection({ category }: { category: (typeof gradeCategories)[0] }) {
-    const { ref, visible } = useIntersectionObserver();
+function BusinessesCateredSection() {
+    const categories = [
+        {
+            icon: <Truck className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'Wholesalers & Distributors',
+            points: [
+                "**Factory-Direct Pricing** for maximum profit margins.",
+                "High-volume capacity & **priority dispatch**.",
+                "Consistent availability of **all commercial grades**."
+            ],
+            color: '#F6B000',
+        },
+        {
+            icon: <ChefHat className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'Hotels & Restaurants (HoReCa)',
+            points: [
+                "**Consistent sizing** for high-volume kitchens.",
+                "Reliable **recurring deliveries** scheduled for your needs.",
+                "Flexible **commercial packaging** solutions."
+            ],
+            color: '#000000',
+        },
+        {
+            icon: <ShoppingBag className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'White Label & Private Brands',
+            points: [
+                "**Custom roasting** & flavor profile development.",
+                "**Retail-ready** packaging and labeling solutions.",
+                "Strict **quality assurance** & food safety standards."
+            ],
+            color: '#F6B000',
+        },
+    ];
 
     return (
-        <div ref={ref} className="mb-20">
-            {/* Category Header */}
-            <div
-                className="flex items-center gap-4 mb-8"
-                style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateX(0)' : 'translateX(-20px)',
-                    transition: 'opacity 0.5s ease, transform 0.5s ease',
-                }}
-            >
-                <div className="w-1 rounded-full h-12" style={{ background: category.accent }} />
-                <div>
-                    <h3
-                        className="text-2xl md:text-3xl font-bold text-gray-900"
-                        style={{ fontFamily: 'Georgia, serif' }}
-                    >
-                        {category.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm mt-0.5">{category.subtitle}</p>
-                </div>
+        <section className="max-w-7xl mx-auto px-6 py-16 md:py-16">
+            <div className="text-center mb-6 md:mb-8">
+                <SectionHeading
+                    text="Tailored Solutions for"
+                    highlight="Your Business Model"
+                    className="mb-2 !text-[22px] md:!text-4xl"
+                />
+                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full" />
             </div>
 
-            {/* Cards Grid */}
-            <div
-                className={`grid gap-5 ${category.items.length === 3
-                    ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-                    : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-                    }`}
-            >
-                {category.items.map((item, i) => (
-                    <GradeCard key={item.code} item={item} accent={category.accent} index={i} visible={visible} />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                {categories.map((cat, idx) => (
+                    <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1 }}
+                        className="group bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden"
+                    >
+                        <div
+                            className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110"
+                            style={{ backgroundColor: cat.color + '10', color: cat.color }}
+                        >
+                            {cat.icon}
+                        </div>
+                        <h3 className="text-lg font-bold mb-4 text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
+                            {cat.title}
+                        </h3>
+                        <ul className="space-y-3 text-left w-full">
+                            {cat.points.map((point, pIdx) => (
+                                <li key={pIdx} className="flex items-start gap-2 text-gray-500 text-[13px] leading-snug">
+                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
+                                    <p dangerouslySetInnerHTML={{ __html: point.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-gray-900">$1</span>') }} />
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* Subtle background decoration */}
+                        <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500">
+                            {React.cloneElement(cat.icon as React.ReactElement<any>, { className: 'w-24 h-24' })}
+                        </div>
+                    </motion.div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 }
 
-// ─── Grades Block ─────────────────────────────────────────────────────────────
+// ─── Tabbed Grades Section ────────────────────────────────────────────────────
 
-function OurGradesSection() {
+function OurGradesSection({ onEnquire }: { onEnquire: (grade: string) => void }) {
+    const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
 
+    const activeCategory = gradeCategories.find(c => c.id === activeTab) || gradeCategories[0];
+
     return (
-        <section className="max-w-7xl mx-auto px-6 py-20">
+        <section className="max-w-7xl mx-auto px-6 py-4 md:py-6">
             {/* Section Title */}
             <div
                 ref={ref}
-                className="text-center mb-16"
-                style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? 'translateY(0)' : 'translateY(24px)',
-                    transition: 'opacity 0.6s ease, transform 0.6s ease',
-                }}
+                className="text-center mb-6 md:mb-8"
             >
-                <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
-                    Grades Catalogue
-                </span>
-                <h2
-                    className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                >
-                    Our Grades
-                </h2>
-                <p className="text-gray-500 max-w-xl mx-auto text-base leading-relaxed">
-                    Each cashew grade is unique — affecting sensory properties and the application potential of your finished product.
+                <SectionHeading
+                    text="Our"
+                    highlight="Grades"
+                    className="mb-2 !text-[22px] md:!text-4xl"
+                />
+                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-4" />
+                <p className="text-gray-500 max-w-2xl mx-auto text-[13px] leading-relaxed italic">
+                    Premium factory-processed grades optimized for diverse B2B applications.
                 </p>
-                <div className="flex items-center justify-center gap-3 mt-6">
-                    <div className="h-px w-16 bg-gray-200" />
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F6B000' }} />
-                    <div className="h-px w-16 bg-gray-200" />
-                </div>
             </div>
 
-            {gradeCategories.map((cat) => (
-                <GradeSection key={cat.id} category={cat} />
-            ))}
+            {/* Tab Navigation - Pill Style */}
+            <div className="flex flex-nowrap overflow-x-auto justify-start md:justify-center gap-3 mb-8 pb-4 no-scrollbar -mx-6 px-6 md:mx-0">
+                {gradeCategories.map((cat) => (
+                    <button
+                        key={cat.id}
+                        onClick={() => setActiveTab(cat.id)}
+                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${activeTab === cat.id
+                            ? 'bg-[#F6B000] text-black border-[#F6B000]'
+                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
+                            }`}
+                    >
+                        <span className={`${activeTab === cat.id ? 'text-black' : 'text-gray-400 group-hover:text-[#F6B000]'}`}>
+                            {cat.icon}
+                        </span>
+                        {cat.title}
+                    </button>
+                ))}
+            </div>
+
+            {/* Tab Content */}
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={activeTab}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4 }}
+                >
+                    <div className="flex flex-col md:flex-row items-center gap-8 mb-12 bg-white/50 p-8 rounded-3xl border border-gray-50">
+                        <div className="w-1.5 h-16 rounded-full hidden md:block" style={{ background: activeCategory.accent }} />
+                        <div>
+                            <h3 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+                                {activeCategory.title}
+                            </h3>
+                            <p className="text-gray-500 text-lg">{activeCategory.subtitle}</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+                        {activeCategory.items.map((item, i) => (
+                            <GradeCard
+                                key={item.code}
+                                item={item}
+                                accent={activeCategory.accent}
+                                index={i}
+                                visible={true}
+                                onEnquire={onEnquire}
+                            />
+                        ))}
+                    </div>
+                </motion.div>
+            </AnimatePresence>
         </section>
     );
 }
@@ -482,6 +593,16 @@ export default function BulkOrderPage() {
         searched: boolean;
     }>({ found: false, searched: false });
     const [searchEmail, setSearchEmail] = useState('');
+
+    const scrollToForm = (grade?: string) => {
+        if (grade) {
+            setFormData(prev => ({
+                ...prev,
+                requirements: grade + ', ' + prev.requirements
+            }));
+        }
+        scrollTo(formRef);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -545,134 +666,162 @@ export default function BulkOrderPage() {
         <div className="bg-white min-h-screen">
             {/* ── Hero ── */}
             <section
-                className="relative overflow-hidden"
+                className="relative overflow-hidden pt-6 pb-6 md:pt-12 md:pb-10"
                 style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}
             >
-                {/* Dot grid */}
-                <div
-                    className="absolute inset-0 opacity-[0.07] pointer-events-none"
-                    style={{
-                        backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
-                        backgroundSize: '24px 24px',
-                    }}
-                />
+                {/* Background Blobs */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-64 -mt-64" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white opacity-[0.2] rounded-full blur-3xl -ml-48 -mb-48" />
 
-                {/* Left cashew image */}
-                <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none transition-opacity duration-1000"
-                    style={{ width: 'clamp(160px, 22vw, 340px)', height: '115%' }}>
-                    <Image
-                        src="/images/Right-Hero-Section.png"
-                        alt=""
-                        fill
-                        priority
-                        className="object-contain object-bottom"
-                        style={{ transform: 'scaleX(-1)', opacity: 0.95 }}
-                        sizes="(max-width: 768px) 160px, 340px"
-                    />
-                </div>
+                <div className="relative z-10 max-w-7xl mx-auto px-6">
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                        {/* Text Content */}
+                        <div className="w-full lg:w-3/5 text-center lg:text-left">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/20 px-3 py-1.5 rounded-full mb-3"
+                            >
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
+                                <span className="text-[9px] font-black tracking-wider text-[#F6B000] uppercase">Trusted by 40+ Businesses</span>
+                            </motion.div>
 
-                {/* Right cashew image */}
-                <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none transition-opacity duration-1000"
-                    style={{ width: 'clamp(160px, 22vw, 340px)', height: '115%' }}>
-                    <Image
-                        src="/images/Right-Hero-Section.png"
-                        alt=""
-                        fill
-                        priority
-                        className="object-contain object-bottom"
-                        style={{ opacity: 0.95 }}
-                        sizes="(max-width: 768px) 160px, 340px"
-                    />
-                </div>
+                            <motion.h1
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="text-[28px] md:text-5xl lg:text-6xl font-black text-black leading-tight mb-3"
+                            >
+                                Premium Cashews, <br />
+                                <span className="text-[#F6B000]">Direct From The Factory.</span>
+                            </motion.h1>
 
-                {/* Center content */}
-                <div className="relative z-10 py-14 md:py-16 px-6 text-center max-w-3xl mx-auto text-black">
-                    {/* Star rating bar */}
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                        <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                                <svg key={i} className="w-4 h-4 text-black fill-black" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                            ))}
+                            <motion.p
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="text-[15px] md:text-lg text-black/60 leading-snug mb-6 max-w-2xl mx-auto lg:mx-0"
+                            >
+                                Secure your high-volume supply with uncompromised quality, competitive B2B margins, and reliable logistics.
+                            </motion.p>
+
+                            {/* Sleek Horizontal Trust Badges */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="flex flex-wrap justify-center lg:justify-start items-center gap-x-4 gap-y-2 mb-8"
+                            >
+                                {[
+                                    { icon: <Factory className="w-3.5 h-3.5 text-[#F6B000]" />, text: 'Natural Processing' },
+                                    { icon: <Tag className="w-3.5 h-3.5 text-[#F6B000]" />, text: 'Direct Pricing' },
+                                    { icon: <Clock className="w-3.5 h-3.5 text-[#F6B000]" />, text: '24h Quote' }
+                                ].map((badge, i) => (
+                                    <React.Fragment key={i}>
+                                        <div className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold text-black/60">
+                                            {badge.icon}
+                                            {badge.text}
+                                        </div>
+                                        {i < 2 && <div className="hidden sm:block w-1 h-1 rounded-full bg-black/10" />}
+                                    </React.Fragment>
+                                ))}
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5"
+                            >
+                                <button
+                                    onClick={() => scrollTo(formRef)}
+                                    className="group w-full sm:w-auto h-14 flex items-center justify-center gap-3 bg-[#F6B000] text-black font-bold px-10 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                                >
+                                    Request Wholesale Quote
+                                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                                </button>
+                                <button
+                                    onClick={() => scrollTo(inquiryRef)}
+                                    className="group w-full sm:w-auto h-14 flex items-center justify-center gap-3 bg-white/50 backdrop-blur-md border border-black/10 text-black font-bold px-10 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-xl active:scale-95"
+                                >
+                                    Track Existing Inquiry
+                                    <Search className="w-5 h-5 opacity-50" />
+                                </button>
+                            </motion.div>
                         </div>
-                        <span className="text-xs text-black/60 font-semibold tracking-wide">Trusted by 480+ businesses</span>
-                    </div>
 
-                    <h1
-                        className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight"
-                        style={{ color: COLORS.heading }}
-                    >
-                        Wholesale &amp;<br />Bulk Orders
-                    </h1>
-                    <p className="text-black/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed mb-2">
-                        Factory-direct cashews. Uncompromised quality.<br className="hidden md:block" />
-                        Competitive B2B margins. Reliable supply chains.
-                    </p>
+                        {/* Image Column */}
+                        <div className="w-full lg:w-2/5 relative hidden lg:block">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.2, duration: 0.8 }}
+                                className="relative z-10"
+                            >
+                                <div className="absolute inset-0 bg-[#F6B000]/10 rounded-full blur-[100px] transform scale-150 rotate-12" />
+                                <Image
+                                    src="/images/Right-Hero-Section.png"
+                                    alt="Premium Cashews"
+                                    width={600}
+                                    height={600}
+                                    priority
+                                    className="relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+                                />
 
-                    {/* Trust pills */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 mt-4 mb-8">
-                        {['✓ 100% Natural', '✓ Direct from Factory', '✓ 24hr Quote'].map((t) => (
-                            <span key={t} className="text-xs bg-black/5 border border-black/10 text-black px-3 py-1 rounded-full">
-                                {t}
-                            </span>
-                        ))}
-                    </div>
+                                {/* Floating Badges */}
+                                <motion.div
+                                    animate={{ y: [0, -10, 0] }}
+                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20"
+                                >
+                                    <div className="w-10 h-10 bg-[#F6B000] rounded-lg flex items-center justify-center text-white font-bold">A+</div>
+                                    <div className="text-xs font-bold leading-tight">Export Quality<br /><span className="text-gray-400 font-medium">Global Standards</span></div>
+                                </motion.div>
 
-                    {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button
-                            onClick={() => scrollTo(formRef)}
-                            className="group flex items-center gap-2 font-bold px-7 py-3.5 rounded-xl shadow-lg transition-all duration-200 text-sm hover:scale-105 active:scale-95"
-                            style={{ backgroundColor: '#000000', color: '#F6B000' }}
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                            </svg>
-                            Place Bulk Order
-                        </button>
-                        <button
-                            onClick={() => scrollTo(inquiryRef)}
-                            className="group flex items-center gap-2 bg-black/5 hover:bg-black/10 border border-black/10 text-black font-bold px-7 py-3.5 rounded-xl transition-all duration-200 text-sm hover:scale-105 active:scale-95"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z" />
-                            </svg>
-                            Track My Inquiry
-                        </button>
+                                <motion.div
+                                    animate={{ y: [0, 10, 0] }}
+                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                                    className="absolute bottom-8 -left-8 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20"
+                                >
+                                    <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-[#F6B000]"><Package className="w-5 h-5" /></div>
+                                    <div className="text-xs font-bold leading-tight">Bulk Shipping<br /><span className="text-gray-400 font-medium">Pan India Delivery</span></div>
+                                </motion.div>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* ── Our Grades ── */}
-            <div className="bg-[#FAFAF8]">
-                <OurGradesSection />
+            {/* ── Businesses We Cater To ── */}
+            <div className="bg-white">
+                <BusinessesCateredSection />
             </div>
 
-            {/* ── Divider ── */}
-            <div className="relative h-16 bg-[#FAFAF8]">
-                <div className="absolute inset-x-0 bottom-0 h-16 bg-white" style={{ clipPath: 'ellipse(60% 100% at 50% 100%)' }} />
+            <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
+
+            {/* ── Our Grades ── */}
+            <div className="bg-white">
+                <OurGradesSection onEnquire={scrollToForm} />
             </div>
 
             {/* ── Bulk Order Form ── */}
-            <div ref={formRef} className="max-w-7xl mx-auto px-6 pb-24" style={{ scrollMarginTop: '80px' }}>
+            <div ref={formRef} className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '80px' }}>
                 {/* Form section label */}
-                <div className="text-center mb-12">
-                    <span className="inline-block text-xs font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
+                <div className="text-center mb-6 md:mb-8">
+                    <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
                         Get a Quote
                     </span>
-                    <h2
-                        className="text-3xl md:text-4xl font-bold text-gray-900"
-                        style={{ fontFamily: 'Georgia, serif' }}
-                    >
-                        Place a Bulk Inquiry
-                    </h2>
-                    <p className="text-gray-500 mt-2 text-sm">
-                        Our B2B team responds within 24 hours with a tailored quote.
+                    <SectionHeading
+                        text="Wholesale"
+                        highlight="Inquiries"
+                        className="mb-2 !text-[22px] md:!text-4xl"
+                    />
+                    <p className="text-gray-500 max-w-2xl mx-auto text-[13px] leading-relaxed italic">
+                        Our B2B team responds within 24 hours with a tailored quote and priority service.
                     </p>
                 </div>
 
-                <div className="bg-white rounded-3xl shadow-xl flex flex-col md:flex-row overflow-hidden border border-gray-100">
+                <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-gray-100 min-h-[600px]">
                     {/* Form */}
                     <div className="w-full md:w-3/5 p-8 md:p-12">
                         <h2
@@ -803,7 +952,7 @@ export default function BulkOrderPage() {
                                     type="submit"
                                     disabled={submitStatus === 'loading'}
                                     className="w-full font-bold text-base py-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95"
-                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}
+                                    style={{ backgroundColor: '#F6B000', color: '#000000' }}
                                 >
                                     {submitStatus === 'loading' ? '⏳ Sending...' : '📩 Submit Wholesale Inquiry'}
                                 </button>

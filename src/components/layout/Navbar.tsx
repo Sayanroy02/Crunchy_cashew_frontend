@@ -15,7 +15,7 @@ const ANNOUNCEMENTS = [
 
 const LEFT_LINKS = [
     { label: 'Shop', href: '/shop' },
-    { label: 'Bulk', href: '/bulk' },
+    { label: 'B2B', href: '/bulk' },
     { label: 'About', href: '/about' },
     { label: 'Blog', href: '/blogs' },
     { label: 'Contact', href: '/contact' },
@@ -258,7 +258,7 @@ export default function Navbar() {
                             {[
                                 { href: '/', label: 'Home', icon: 'fa-house' },
                                 { href: '/shop', label: 'Shop', icon: 'fa-store' },
-                                { href: '/bulk', label: 'Bulk', icon: 'fa-boxes-stacked' },
+                                { href: '/bulk', label: 'B2B', icon: 'fa-boxes-stacked' },
                                 { href: '/about', label: 'About', icon: 'fa-building' },
                                 { href: '/blogs', label: 'Blog', icon: 'fa-newspaper' },
                                 { href: '/contact', label: 'Contact', icon: 'fa-envelope' },

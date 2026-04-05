@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 
@@ -132,8 +133,9 @@ function InfoRow({ icon, title, lines }: { icon: React.ReactNode; title: string;
 
 /* ══════════════════════════════════
    MAIN COMPONENT
-══════════════════════════════════ */
-export default function ContactPage() {
+ ══════════════════════════════════ */
+function ContactContent() {
+    const searchParams = useSearchParams();
     const [lottieData, setLottieData] = useState<object | null>(null);
     const [activeTab, setActiveTab] = useState<Tab>('general');
     const [status, setStatus] = useState<Status>('idle');
@@ -141,6 +143,14 @@ export default function ContactPage() {
 
     const [form, setForm] = useState({ name: '', email: '', phone: '', enquiry_type: '', message: '' });
     const [visitForm, setVisitForm] = useState({ name: '', email: '', company: '', date: '' });
+
+    // Handle Search Params for Pre-filling
+    useEffect(() => {
+        const preFill = searchParams.get('enquiry');
+        if (preFill) {
+            setForm(p => ({ ...p, enquiry_type: preFill }));
+        }
+    }, [searchParams]);
 
     // Load lottie separately — never blocks page render
     useEffect(() => {
@@ -326,6 +336,7 @@ export default function ContactPage() {
                                         options={[
                                             { value: 'General Inquiry', label: 'General Inquiry' },
                                             { value: 'Bulk Order', label: 'Bulk Order Request' },
+                                            { value: 'White Labeling', label: 'White Labeling / Private Branding' },
                                             { value: 'Support', label: 'Order Support' },
                                             { value: 'Feedback', label: 'Feedback' },
                                         ]}
@@ -399,5 +410,13 @@ export default function ContactPage() {
                 </div>
             </section>
         </main>
+    );
+}
+
+export default function ContactPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-bg-cream flex items-center justify-center font-bold italic text-primary animate-pulse">Loading Contact Form...</div>}>
+            <ContactContent />
+        </Suspense>
     );
 }
