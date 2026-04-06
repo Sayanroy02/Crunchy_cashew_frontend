@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Zap, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { API } from '@/constants/api';
@@ -25,6 +25,22 @@ interface Product {
 export default function PriceComparisonPreview() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Parallax logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 50, damping: 20 });
+  const springY = useSpring(y, { stiffness: 50, damping: 20 });
+  const moveX = useTransform(springX, [-500, 500], [20, -20]);
+  const moveY = useTransform(springY, [-500, 500], [20, -20]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    x.set(e.clientX - (rect.left + rect.width / 2));
+    y.set(e.clientY - (rect.top + rect.height / 2));
+  };
 
   useEffect(() => {
     fetch(`${API.PRODUCTS}?limit=1`)
@@ -83,19 +99,35 @@ export default function PriceComparisonPreview() {
   const savings = avgMpPrice - product.price;
 
   return (
-    <section className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden relative">
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden relative"
+    >
 
       {/* ── Left corner fruit — desktop only, anchored to heading area ── */}
-      <div className="hidden md:block absolute left-0 top-0 w-28 lg:w-36 pointer-events-none select-none z-10">
+      <motion.div
+        style={{ x: moveX, y: moveY }}
+        animate={{
+          y: [0, -12, 0],
+          rotate: [0, 2, -2, 0]
+        }}
+        transition={{
+          y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+          rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+        }}
+        className="hidden md:block absolute left-0 top-0 w-28 lg:w-40 pointer-events-none select-none z-10"
+      >
         <Image
           src="/images/Fruit-3.png"
           alt=""
-          width={144}
-          height={220}
-          className="object-contain object-top w-full h-auto -translate-x-8"
+          width={160}
+          height={240}
+          className="object-contain object-top w-full h-auto -translate-x-8 brightness-110 drop-shadow-2xl"
           aria-hidden="true"
         />
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto space-y-16">
         {/* 1. HEADER */}

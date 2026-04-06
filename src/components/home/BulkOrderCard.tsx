@@ -502,8 +502,8 @@ export default function BulkOrderCard() {
     const springY = useSpring(y, { stiffness: 50, damping: 20 });
     
     // Move slightly in opposite direction
-    const moveX = useTransform(springX, [-500, 500], [15, -15]);
-    const moveY = useTransform(springY, [-500, 500], [15, -15]);
+    const moveX = useTransform(springX, [-500, 500], [20, -20]);
+    const moveY = useTransform(springY, [-500, 500], [20, -20]);
 
     const openPopup = useCallback(() => setIsPopupOpen(true), []);
     const closePopup = useCallback(() => setIsPopupOpen(false), []);
@@ -525,23 +525,23 @@ export default function BulkOrderCard() {
             {/* Decorative Fruits with Parallax */}
             <motion.div 
                 style={{ x: moveX, y: moveY }}
-                className="absolute top-[-2%] right-[-2%] w-[120px] md:w-[180px] h-auto pointer-events-none z-[11] hidden sm:block"
+                className="absolute top-[-5%] right-[-3%] w-[150px] md:w-[220px] h-auto pointer-events-none z-[11] hidden sm:block"
             >
                 <img 
                     src="/images/Right-Fruit-2-2-1.png" 
                     alt="" 
-                    className="w-full h-auto drop-shadow-2xl"
+                    className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
             </motion.div>
 
             <motion.div 
                 style={{ x: moveX, y: moveY }}
-                className="absolute top-[10%] left-[-2%] w-[100px] md:w-[140px] h-auto pointer-events-none z-[11] hidden sm:block"
+                className="absolute top-[8%] left-[-4%] w-[120px] md:w-[180px] h-auto pointer-events-none z-[11] hidden sm:block rotate-[-15deg]"
             >
                 <img 
                     src="/images/Fruit-3-1.png" 
                     alt="" 
-                    className="w-full h-auto drop-shadow-2xl"
+                    className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
             </motion.div>
 
