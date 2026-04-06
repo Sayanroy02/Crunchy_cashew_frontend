@@ -65,6 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Dashboard', path: '/admin', icon: 'fa-solid fa-chart-line' },
         { name: 'Products', path: '/admin/products', icon: 'fa-solid fa-box' },
         { name: 'Orders', path: '/admin/orders', icon: 'fa-solid fa-truck' },
+        { name: 'Payments', path: '/admin/payment', icon: 'fa-solid fa-credit-card' },
         { name: 'Users', path: '/admin/users', icon: 'fa-solid fa-users' },
         { name: 'Reviews', path: '/admin/reviews', icon: 'fa-solid fa-star' },
         { name: 'Banners', path: '/admin/banners', icon: 'fa-solid fa-images' },

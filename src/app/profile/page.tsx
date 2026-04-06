@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
-import { logout } from '@/lib/store/features/authSlice';
+import { login, logout } from '@/lib/store/features/authSlice';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ProductCard, { Product } from '@/components/products/ProductCard';
@@ -84,7 +84,7 @@ function ProfileContent() {
     const [mobileOrderFilter, setMobileOrderFilter] = useState<string>('All');
 
     const [isEditing, setIsEditing] = useState(false);
-    const [editForm, setEditForm] = useState({ phone: '', address: '' });
+    const [editForm, setEditForm] = useState({ username: '', phone: '', address: '' });
     const [locating, setLocating] = useState(false);
 
     const dispatch = useDispatch();
@@ -109,13 +109,18 @@ function ProfileContent() {
         if (!isAuthenticated) { router.push('/login'); return; }
         const fetchProfile = async () => {
             try {
+                const localToken = localStorage.getItem('access_token');
                 const res = await fetch(API.AUTH_ME, {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: { 'Authorization': `Bearer ${token || localToken}` }
                 });
                 if (!res.ok) throw new Error('Failed');
                 const data = await res.json();
                 setProfile(data);
-                setEditForm({ phone: data.phone || '', address: data.address || '' });
+                setEditForm({
+                    username: data.username || '',
+                    phone: data.phone || '',
+                    address: data.address || ''
+                });
                 setReviewForm(prev => ({ ...prev, name: data.username || '' }));
             } catch (err) { console.error(err); } finally { setLoading(false); }
         };
@@ -193,9 +198,13 @@ function ProfileContent() {
                 body: JSON.stringify(editForm)
             });
             if (res.ok) {
+                const data = await res.json();
+                if (data.access_token) {
+                    dispatch(login(data.access_token));
+                }
                 setIsEditing(false);
                 const meRes = await fetch(API.AUTH_ME, {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: { 'Authorization': `Bearer ${data.access_token || token}` }
                 });
                 setProfile(await meRes.json());
             }
@@ -382,11 +391,19 @@ function ProfileContent() {
                                         <form onSubmit={handleUpdateProfile} className="space-y-6">
                                             <div className="grid grid-cols-2 gap-y-6 gap-x-6">
                                                 <div>
+                                                    <label className="text-xs font-bold text-gray-800 mb-2 block">Display Name</label>
+                                                    <input type="text" value={editForm.username}
+                                                        onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))}
+                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
+                                                        placeholder="Your full name" />
+                                                </div>
+                                                <div>
                                                     <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
                                                     <input type="text" value={editForm.phone}
                                                         onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
                                                         className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
-                                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                                         placeholder="10-digit mobile number" />
                                                 </div>
                                                 <div className="col-span-2">
@@ -400,7 +417,7 @@ function ProfileContent() {
                                                     <textarea rows={4} value={editForm.address}
                                                         onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
                                                         className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black"
-                                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                                         placeholder="Enter flat/house no, street, area, city, pincode" />
                                                 </div>
                                             </div>
@@ -624,6 +641,11 @@ function ProfileContent() {
                                         <form onSubmit={handleUpdateProfile}
                                             className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div>
+                                                <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Full Name</label>
+                                                <input type="text" value={editForm.username}
+                                                    onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))}
+                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary mb-4" />
+
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Phone</label>
                                                 <input type="text" value={editForm.phone}
                                                     onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
@@ -848,7 +870,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                             {enq.subject || enq.enquiry_type || 'General Enquiry'}
                                         </h4>
                                         <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-primary/20 text-black' :
-                                                enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                                            enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
                                             }`}>{enq.status || 'Pending'}</span>
                                     </div>
                                     <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
@@ -879,8 +901,8 @@ function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
                                             {vis.date || vis.preferred_date || vis.desired_date || 'N/A'}
                                         </p>
                                         <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-primary/20 text-black' :
-                                                vis.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                                                    vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
+                                            vis.status === 'Rejected' ? 'bg-red-100 text-red-700' :
+                                                vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
                                             }`}>{vis.status || 'Pending'}</span>
                                     </div>
                                     <p className="text-xs text-gray-600 mb-1 font-semibold">

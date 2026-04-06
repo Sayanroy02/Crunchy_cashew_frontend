@@ -99,27 +99,25 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                {/* Products */}
+                {/* Policies */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Our Range</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Policies</h3>
                     <ul className="flex flex-col gap-2.5">
                         {[
-                            'Classic Plain Cashews',
-                            'Pepper Roasted',
-                            'Garlic Butter',
-                            'Gift Hampers',
-                            'Bulk / B2B Supply',
+                            { label: 'Privacy Policy', href: '/privacy' },
+                            { label: 'Refund Policy', href: '/refund-policy' },
+                            { label: 'Terms & Conditions', href: '/terms' },
                         ].map(item => (
-                            <li key={item}>
+                            <li key={item.href}>
                                 <Link
-                                    href="/shop"
+                                    href={item.href}
                                     className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
                                 >
                                     <span
                                         className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
                                         style={{ backgroundColor: COLORS.accent }}
                                     />
-                                    {item}
+                                    {item.label}
                                 </Link>
                             </li>
                         ))}

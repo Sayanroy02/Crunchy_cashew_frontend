@@ -117,14 +117,14 @@ export default function PriceComparisonPreview() {
           y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
           rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }
         }}
-        className="hidden md:block absolute left-0 top-0 w-28 lg:w-40 pointer-events-none select-none z-10"
+        className="hidden md:block absolute left-[-2%] top-[-2%] w-[140px] lg:w-[180px] pointer-events-none select-none z-10"
       >
         <Image
           src="/images/Fruit-3.png"
           alt=""
-          width={160}
-          height={240}
-          className="object-contain object-top w-full h-auto -translate-x-8 brightness-110 drop-shadow-2xl"
+          width={220}
+          height={300}
+          className="object-contain object-top w-full h-auto brightness-110 drop-shadow-2xl rotate-[-5deg]"
           aria-hidden="true"
         />
       </motion.div>

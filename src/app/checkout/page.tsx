@@ -36,7 +36,9 @@ export default function CheckoutPage() {
 
     const [pincodeValid, setPincodeValid] = useState<boolean | null>(null);
     const [checkingPin, setCheckingPin] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false); // used to gate checkout
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [paymentError, setPaymentError] = useState<string | null>(null);
+    const [saveDetails, setSaveDetails] = useState(true);
 
     const isNavigatingAway = React.useRef(false);
 
@@ -63,21 +65,27 @@ export default function CheckoutPage() {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    let parsedCity = '', parsedState = '', parsedPincode = '';
+                    // Improved pre-fill logic
+                    let parsedCity = data.city || '';
+                    let parsedState = data.state || '';
+                    let parsedPincode = data.pincode || '';
                     const cleanAddress = data.address || '';
-                    if (data.address && data.address.includes(',')) {
+                    
+                    // Fallback to parsing if individual fields aren't present but address is
+                    if (!parsedCity && data.address && data.address.includes(',')) {
                         const parts = data.address.split(',').map((p: string) => p.trim());
                         if (parts.length >= 3) {
-                            parsedPincode = parts[parts.length - 2].replace(/[^0-9]/g, '');
-                            parsedState = parts[parts.length - 3];
-                            parsedCity = parts[parts.length - 4] || '';
+                            parsedPincode = parts[parts.length - 1].replace(/[^0-9]/g, '') || parsedPincode;
+                            parsedState = parts[parts.length - 2] || parsedState;
+                            parsedCity = parts[parts.length - 3] || parsedCity;
                         }
                     }
+                    
                     setFormData(prev => ({
                         ...prev,
-                        name: data.full_name || data.username || '',
-                        phone: data.phone || '',
-                        email: data.email || '',
+                        name: data.full_name || data.username || prev.name,
+                        phone: data.phone || prev.phone,
+                        email: data.email || prev.email,
                         address: cleanAddress,
                         city: parsedCity,
                         state: parsedState,
@@ -141,13 +149,41 @@ export default function CheckoutPage() {
     // Called by form onSubmit — validates and sets formSubmitted flag
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setPaymentError(null);
         const ok = await checkPincode();
         if (ok) setFormSubmitted(true);
     };
 
+    const updateUserProfile = async () => {
+        if (!saveDetails) return;
+        try {
+            const token = reduxToken || localStorage.getItem('token');
+            if (!token) return;
+            
+            // Format address: "Street, City, State, Pincode"
+            const fullAddress = `${formData.address}, ${formData.city}, ${formData.state}, ${formData.pincode}`;
+            
+            await fetch(API.AUTH_PROFILE, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    full_name: formData.name,
+                    phone: formData.phone,
+                    address: fullAddress
+                })
+            });
+        } catch (e) {
+            console.error('Failed to update profile after order');
+        }
+    };
+
     // Called by CheckoutButton on success
-    const handleOrderSuccess = (orderId: string) => {
+    const handleOrderSuccess = async (orderId: string) => {
         isNavigatingAway.current = true;
+        await updateUserProfile();
         dispatch(clearCart());
         router.push(`/order-confirmation/${orderId}`);
     };
@@ -155,7 +191,8 @@ export default function CheckoutPage() {
     // Called by CheckoutButton on error
     const handleOrderError = (message: string) => {
         setFormSubmitted(false);
-        alert(`Payment failed: ${message}`);
+        setPaymentError(message);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const shippingThreshold = 600;
@@ -199,6 +236,16 @@ export default function CheckoutPage() {
                             <h2 className="text-xl font-bold font-heading mb-6 flex items-center gap-2">
                                 <i className="fa-solid fa-map-location-dot text-primary-light"></i> Shipping Details
                             </h2>
+
+                            {paymentError && (
+                                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg flex items-center gap-3 animate-shake">
+                                    <i className="fa-solid fa-circle-exclamation text-red-500 text-lg"></i>
+                                    <div>
+                                        <p className="text-red-800 font-bold text-sm">Payment Failed</p>
+                                        <p className="text-red-600 text-xs">{paymentError}. Please check your details or try another method.</p>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
@@ -259,9 +306,25 @@ export default function CheckoutPage() {
                                     <label className="block text-sm font-bold text-gray-700 mb-2">PIN Code</label>
                                     <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="734001" maxLength={6} />
                                 </div>
+                            </div>
+
+                            <div className="mb-8">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative flex items-center">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={saveDetails} 
+                                            onChange={(e) => setSaveDetails(e.target.checked)}
+                                            className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary-light transition-all cursor-pointer"
+                                        />
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-600 group-hover:text-black transition-colors">
+                                        Save these details for future orders
+                                    </span>
+                                </label>
                             </div>
 
                             {/* Payment Method */}
