@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
 import { API } from '@/constants/api';
 import SectionHeading from '@/components/ui/SectionHeading';
@@ -493,11 +493,57 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
 
 export default function BulkOrderCard() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const sectionRef = useRef<HTMLDivElement>(null);
+    
+    // Parallax logic
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+    const springX = useSpring(x, { stiffness: 50, damping: 20 });
+    const springY = useSpring(y, { stiffness: 50, damping: 20 });
+    
+    // Move slightly in opposite direction
+    const moveX = useTransform(springX, [-500, 500], [15, -15]);
+    const moveY = useTransform(springY, [-500, 500], [15, -15]);
+
     const openPopup = useCallback(() => setIsPopupOpen(true), []);
     const closePopup = useCallback(() => setIsPopupOpen(false), []);
 
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!sectionRef.current) return;
+        const rect = sectionRef.current.getBoundingClientRect();
+        x.set(e.clientX - (rect.left + rect.width / 2));
+        y.set(e.clientY - (rect.top + rect.height / 2));
+    };
+
     return (
-        <section className="py-4 md:py-6 bg-bg-cream relative overflow-hidden">
+        <section 
+            ref={sectionRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => { x.set(0); y.set(0); }}
+            className="py-4 md:py-6 bg-bg-cream relative overflow-hidden"
+        >
+            {/* Decorative Fruits with Parallax */}
+            <motion.div 
+                style={{ x: moveX, y: moveY }}
+                className="absolute top-[-2%] right-[-2%] w-[120px] md:w-[180px] h-auto pointer-events-none z-[11] hidden sm:block"
+            >
+                <img 
+                    src="/images/Right-Fruit-2-2-1.png" 
+                    alt="" 
+                    className="w-full h-auto drop-shadow-2xl"
+                />
+            </motion.div>
+
+            <motion.div 
+                style={{ x: moveX, y: moveY }}
+                className="absolute top-[10%] left-[-2%] w-[100px] md:w-[140px] h-auto pointer-events-none z-[11] hidden sm:block"
+            >
+                <img 
+                    src="/images/Fruit-3-1.png" 
+                    alt="" 
+                    className="w-full h-auto drop-shadow-2xl"
+                />
+            </motion.div>
 
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">

@@ -116,12 +116,12 @@ export default function HeroVideo() {
                 <h1
                     className="text-white font-black leading-[1.0] tracking-tight"
                     style={{
-                        fontSize: 'clamp(2.6rem, 12vw, 3.6rem)',
+                        fontSize: 'clamp(2.0rem, 4vw, 4rem)',
                         ...stagger(0.14, mobileContentVisible),
                     }}
                 >
-                    Crunchy
-                    <span className="block text-amber">Cashews</span>
+                    Factory Fresh
+                    <span className="block text-amber">Premium Cashews</span>
                 </h1>
             </div>
 
@@ -226,10 +226,10 @@ export default function HeroVideo() {
 
                         <h1
                             className="text-white font-black leading-[1.0] tracking-tight mb-4"
-                            style={{ fontSize: 'clamp(2.8rem, 5.5vw, 5rem)' }}
+                            style={{ fontSize: 'clamp(2.0rem, 4vw, 4rem)' }}
                         >
-                            Crunchy
-                            <span className="block text-amber">Cashews</span>
+                            Factory Fresh
+                            <span className="block text-amber">Premium Cashews</span>
                         </h1>
 
                         <p

@@ -3,6 +3,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API } from "@/constants/api";
 import { COLORS } from "@/constants/styles";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 interface InstaVideo {
@@ -147,6 +149,17 @@ export default function InstaVideos() {
                             </h3>
                         </div>
 
+                        {/* Shop Now Button (Centered) */}
+                        <div className="absolute bottom-16 left-1/2 -translate-x-1/2">
+                            <Link
+                                href="/shop"
+                                className="bg-white/15 hover:bg-white/25 backdrop-blur-lg text-white border border-white/30 px-8 py-3.5 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 whitespace-nowrap"
+                            >
+                                <i className="fa-solid fa-cart-shopping text-xs"></i>
+                                Shop Now
+                            </Link>
+                        </div>
+
                         {/* Instagram Link Button */}
                         {selectedVideo.link && (
                             <a
@@ -169,8 +182,30 @@ export default function InstaVideos() {
     };
 
     return (
-        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden relative">
+            {/* Flying Parachute Decoration */}
+            <motion.div
+                initial={{ y: 0, x: 0 }}
+                animate={{ 
+                    y: [0, -15, 0],
+                    x: [0, 8, 0],
+                    rotate: [0, 4, -4, 0]
+                }}
+                transition={{ 
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute left-[0%] top-[15%] w-[80px] md:w-[140px] h-auto pointer-events-none z-10 hidden lg:block"
+            >
+                <img 
+                    src="/images/Cashew-parachute-03.png" 
+                    alt="" 
+                    className="w-full h-auto drop-shadow-2xl opacity-90"
+                />
+            </motion.div>
+
+            <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
                 <div className="text-center mb-8 flex flex-col items-center">
                     <span
                         className="font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block"

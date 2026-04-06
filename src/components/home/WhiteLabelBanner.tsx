@@ -6,8 +6,9 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
 import { API } from '@/constants/api';
-import { 
-    Download, 
+import {
+    Download,
+    BookOpen,
     Send,
     CheckCircle2,
     X,
@@ -105,7 +106,7 @@ function WhiteLabelInquiryPopup({ onClose }: { onClose: () => void }) {
 
     return (
         <Portal>
-            <div 
+            <div
                 className="fixed inset-0 flex items-center justify-center p-4 z-[99999]"
                 style={{ backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
                 onClick={onClose}
@@ -245,7 +246,7 @@ export default function WhiteLabelBanner() {
 
                     {/* Subtle dot texture */}
                     <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
-                        style={{ 
+                        style={{
                             backgroundImage: `
                                 radial-gradient(circle, rgba(255,255,255,0.8) 1.2px, transparent 1.2px),
                                 linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03))
@@ -257,21 +258,21 @@ export default function WhiteLabelBanner() {
                     {/* Right side integrated image — YOUR_LOGO packaging mockup */}
                     <div className="absolute right-0 top-0 bottom-0 w-[42%] pointer-events-none z-10 hidden lg:flex items-end justify-end">
                         {/* Flying parachutes around the image */}
-                        <motion.img 
+                        <motion.img
                             src="/images/Cashew-parachute-03.png"
                             initial={{ y: 20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 0.15 }}
                             transition={{ duration: 1, delay: 0.2 }}
                             className="absolute right-[85%] top-[25%] w-12 h-auto rotate-[-15deg]"
                         />
-                        <motion.img 
+                        <motion.img
                             src="/images/Cashew-parachute-03.png"
                             initial={{ y: -20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 0.1 }}
                             transition={{ duration: 1, delay: 0.4 }}
                             className="absolute right-[70%] top-[65%] w-8 h-auto rotate-[10deg]"
                         />
-                        <motion.img 
+                        <motion.img
                             src="/images/Cashew-parachute-03.png"
                             initial={{ x: 20, opacity: 0 }}
                             whileInView={{ x: 0, opacity: 0.12 }}
@@ -279,9 +280,9 @@ export default function WhiteLabelBanner() {
                             className="absolute right-[15%] top-[15%] w-10 h-auto rotate-[-5deg]"
                         />
 
-                        <img 
-                            src="/images/YOUR_LOGO.png" 
-                            alt="Custom Branding Options" 
+                        <img
+                            src="/images/YOUR_LOGO.png"
+                            alt="Custom Branding Options"
                             className="w-full max-h-[90%] object-contain object-right-bottom transform scale-[0.95] origin-bottom-right translate-y-[2px]"
                         />
                     </div>
@@ -302,8 +303,8 @@ export default function WhiteLabelBanner() {
                             </h2>
 
                             <p className="text-white/80 text-[13.5px] md:text-sm leading-relaxed max-w-[560px] mb-7 font-medium">
-                                Turn our premium, factory-direct cashews into your exclusive product line. 
-                                We provide complete turnkey solutions—from custom grading and unique flavoring 
+                                Turn our premium, factory-direct cashews into your exclusive product line.
+                                We provide complete turnkey solutions—from custom grading and unique flavoring
                                 to retail-ready packaging and reliable logistics.
                             </p>
 
@@ -338,8 +339,7 @@ export default function WhiteLabelBanner() {
                                 <motion.a
                                     whileHover={{ scale: 1.03, y: -1 }}
                                     whileTap={{ scale: 0.98 }}
-                                    href="/document/Cashew-Catalogue.pdf"
-                                    download
+                                    href="/bulk"
                                     className="w-full sm:w-auto font-bold px-7 py-4 rounded-2xl text-[13px] flex items-center justify-center gap-2.5 backdrop-blur-md transition-all"
                                     style={{
                                         background: 'linear-gradient(160deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
@@ -347,8 +347,8 @@ export default function WhiteLabelBanner() {
                                         border: '1.5px solid rgba(255,255,255,0.2)',
                                     }}
                                 >
-                                    <Download className="w-4 h-4" />
-                                    Download Catalog
+                                    <BookOpen className="w-4 h-4" />
+                                    Know More
                                 </motion.a>
                             </div>
                         </div>
@@ -358,9 +358,9 @@ export default function WhiteLabelBanner() {
 
                         {/* Mobile Image — only show on small screens */}
                         <div className="lg:hidden w-full mt-4 pointer-events-none px-4 flex justify-end items-end">
-                            <img 
-                                src="/images/YOUR_LOGO.png" 
-                                alt="Branding Mockup" 
+                            <img
+                                src="/images/YOUR_LOGO.png"
+                                alt="Branding Mockup"
                                 className="w-full h-auto object-contain mx-auto max-w-[280px] translate-y-[8px]"
                             />
                         </div>
