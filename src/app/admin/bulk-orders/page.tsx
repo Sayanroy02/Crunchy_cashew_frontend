@@ -94,21 +94,27 @@ export default function AdminBulkOrders() {
                                 </span>
                             </div>
 
-                            <div className="bg-gray-50 rounded-xl p-3 text-xs text-gray-600 mb-3 space-y-1">
-                                <div className="flex gap-2">
-                                    <span className="font-semibold text-gray-700 w-28">Volume/Month:</span>
-                                    <span>{o.volume || '—'}</span>
+                            <div className="bg-gray-50 rounded-xl p-4 text-[11px] text-gray-600 mb-3 grid grid-cols-2 gap-y-2 gap-x-4">
+                                <div className="col-span-1">
+                                    <span className="block font-black text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Partnership</span>
+                                    <span className="text-gray-900 font-bold">{o.partnership_type || '—'}</span>
+                                </div>
+                                <div className="col-span-1">
+                                    <span className="block font-black text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">FSSAI / GSTIN</span>
+                                    <span className="text-gray-900 font-bold">{o.fssai_gstin || '—'}</span>
+                                </div>
+                                <div className="col-span-1">
+                                    <span className="block font-black text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Monthly Volume</span>
+                                    <span className="text-gray-900 font-bold">{o.volume || '—'}</span>
+                                </div>
+                                <div className="col-span-1">
+                                    <span className="block font-black text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Submitted On</span>
+                                    <span className="text-gray-900 font-bold">{o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN') : '—'}</span>
                                 </div>
                                 {o.requirements && (
-                                    <div className="flex gap-2">
-                                        <span className="font-semibold text-gray-700 w-28">Requirements:</span>
-                                        <span className="italic">{o.requirements}</span>
-                                    </div>
-                                )}
-                                {o.created_at && (
-                                    <div className="flex gap-2">
-                                        <span className="font-semibold text-gray-700 w-28">Submitted:</span>
-                                        <span>{new Date(o.created_at).toLocaleDateString('en-IN')}</span>
+                                    <div className="col-span-2 mt-1 pt-2 border-t border-gray-200">
+                                        <span className="block font-black text-[9px] uppercase tracking-wider text-gray-400 mb-0.5">Grades / Requirements</span>
+                                        <span className="text-gray-800 italic leading-relaxed">{o.requirements}</span>
                                     </div>
                                 )}
                             </div>

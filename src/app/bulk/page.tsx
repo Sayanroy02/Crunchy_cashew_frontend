@@ -22,6 +22,7 @@ import {
     UtensilsCrossed
 } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
+import WhiteLabelBanner from '@/components/home/WhiteLabelBanner';
 
 // ─── Scroll helper ────────────────────────────────────────────────────────────
 function scrollTo(ref: React.RefObject<HTMLElement | null>) {
@@ -325,19 +326,26 @@ function GradeCard({
     index,
     visible,
     onEnquire,
+    isSelected,
 }: {
     item: (typeof gradeCategories)[0]['items'][0];
     accent: string;
     index: number;
     visible: boolean;
     onEnquire: (grade: string) => void;
+    isSelected: boolean;
 }) {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300"
+            onClick={() => onEnquire(item.code)}
+            className={`group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border flex flex-col h-full cursor-pointer transition-all duration-300 ${
+                isSelected 
+                ? 'border-[#F6B000] shadow-xl ring-2 ring-[#F6B000]/20' 
+                : 'border-gray-100 hover:shadow-xl'
+            }`}
         >
             {/* Tag */}
             <div className="absolute top-3 left-3 z-10">
@@ -348,26 +356,28 @@ function GradeCard({
 
             {/* Favorite Icon (Visual only as per ref) */}
             <div className="absolute top-3 right-3 z-10">
-                <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-sm border border-gray-100 text-gray-400">
-                    <Clock className="w-4 h-4" /> {/* Representing consistent supply */}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm border transition-colors ${
+                    isSelected ? 'bg-[#F6B000] border-[#F6B000] text-black' : 'bg-white border-gray-100 text-gray-400'
+                }`}>
+                    {isSelected ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
                 </div>
             </div>
 
             {/* Image Container */}
-            <div className="relative aspect-square w-full bg-white p-2 overflow-hidden flex items-center justify-center">
+            <div className="relative aspect-[4/3] w-full bg-white p-1 overflow-hidden flex items-center justify-center">
                 <Image
                     src={item.image}
                     alt={item.code}
                     width={400}
                     height={400}
-                    className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+                    className="w-[85%] h-[85%] object-contain transition-transform duration-500 group-hover:scale-110"
                 />
             </div>
 
             {/* Content Area */}
             <div className="p-3 md:p-4 flex flex-col flex-grow bg-white border-t border-gray-50">
-                <div className="mb-2 md:mb-3">
-                    <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5 md:mb-1">
+                <div className="mb-1 md:mb-2">
+                    <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
                         {item.origins.split(' · ')[0]}
                     </span>
                     <h4 className="text-[13px] md:text-base font-black text-gray-900 leading-tight">
@@ -375,7 +385,7 @@ function GradeCard({
                     </h4>
                 </div>
 
-                <p className="text-[10px] md:text-[12px] text-gray-500 leading-relaxed mb-3 md:mb-4 flex-grow line-clamp-2 md:line-clamp-none">
+                <p className="text-[10px] md:text-[12px] text-gray-500 leading-tight mb-2 md:mb-3 flex-grow line-clamp-2 md:line-clamp-3">
                     {item.description}
                 </p>
 
@@ -388,13 +398,14 @@ function GradeCard({
                         </span>
                     </div>
 
-                    <button
-                        onClick={() => onEnquire(item.code)}
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-[#F6B000] text-black flex items-center justify-center shadow-lg shadow-[#F6B000]/20 hover:scale-110 active:scale-95 transition-all"
+                    <div
+                        className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg transition-all ${
+                            isSelected ? 'bg-black text-[#F6B000]' : 'bg-[#F6B000] text-black shadow-[#F6B000]/20'
+                        }`}
                         title="Enquire Now"
                     >
-                        <Package className="w-4 h-4 md:w-5 md:h-5" />
-                    </button>
+                        {isSelected ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" /> : <Package className="w-4 h-4 md:w-5 md:h-5" />}
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -406,12 +417,12 @@ function GradeCard({
 function BusinessesCateredSection() {
     const categories = [
         {
-            icon: <Truck className="w-8 h-8" strokeWidth={1.5} />,
-            title: 'Wholesalers & Distributors',
+            icon: <ShoppingBag className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'Retailers & Resellers',
             points: [
-                "**Factory-Direct Pricing** for maximum profit margins.",
-                "High-volume capacity & **priority dispatch**.",
-                "Consistent availability of **all commercial grades**."
+                "**Ready-to-Sell** premium cashew packaging.",
+                "High profit margins with **direct factory supplies**.",
+                "Consistent availability and **recurring stock**."
             ],
             color: '#F6B000',
         },
@@ -420,20 +431,30 @@ function BusinessesCateredSection() {
             title: 'Hotels & Restaurants (HoReCa)',
             points: [
                 "**Consistent sizing** for high-volume kitchens.",
-                "Reliable **recurring deliveries** scheduled for your needs.",
-                "Flexible **commercial packaging** solutions."
+                "Reliable **point-to-point delivery** schedules.",
+                "Bulk packaging for culinary optimization."
             ],
             color: '#000000',
         },
         {
-            icon: <ShoppingBag className="w-8 h-8" strokeWidth={1.5} />,
-            title: 'White Label & Private Brands',
+            icon: <UtensilsCrossed className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'Bakeries & Confectionery',
             points: [
-                "**Custom roasting** & flavor profile development.",
-                "**Retail-ready** packaging and labeling solutions.",
-                "Strict **quality assurance** & food safety standards."
+                "**Premium broken grades** for toppings and pastes.",
+                "Freshly roasted supplies for **industrial baking**.",
+                "FSSAI compliant, high-purity standards."
             ],
             color: '#F6B000',
+        },
+        {
+            icon: <Package className="w-8 h-8" strokeWidth={1.5} />,
+            title: 'Corporate & Events',
+            points: [
+                "**Premium Gifting** for corporate hospitality.",
+                "Customized event-scale orders and boxes.",
+                "Direct **pan-India logistics** support."
+            ],
+            color: '#000000',
         },
     ];
 
@@ -441,14 +462,14 @@ function BusinessesCateredSection() {
         <section className="max-w-7xl mx-auto px-6 py-16 md:py-16">
             <div className="text-center mb-6 md:mb-8">
                 <SectionHeading
-                    text="Tailored Solutions for"
-                    highlight="Your Business Model"
+                    text="Who We"
+                    highlight="Serve"
                     className="mb-2 !text-[22px] md:!text-4xl"
                 />
                 <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
                 {categories.map((cat, idx) => (
                     <motion.div
                         key={idx}
@@ -488,8 +509,14 @@ function BusinessesCateredSection() {
 }
 
 // ─── Tabbed Grades Section ────────────────────────────────────────────────────
-
-function OurGradesSection({ onEnquire }: { onEnquire: (grade: string) => void }) {
+ 
+function OurGradesSection({ 
+    onEnquire, 
+    onSelectCheck 
+}: { 
+    onEnquire: (grade: string) => void;
+    onSelectCheck: (grade: string) => boolean;
+}) {
     const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
 
@@ -560,6 +587,7 @@ function OurGradesSection({ onEnquire }: { onEnquire: (grade: string) => void })
                                 index={i}
                                 visible={true}
                                 onEnquire={onEnquire}
+                                isSelected={onSelectCheck(item.code)}
                             />
                         ))}
                     </div>
@@ -581,6 +609,8 @@ export default function BulkOrderPage() {
         email: '',
         phone: '',
         company: '',
+        partnershipType: '',
+        fssaiGstin: '',
         volume: '',
         requirements: '',
     });
@@ -593,6 +623,10 @@ export default function BulkOrderPage() {
         searched: boolean;
     }>({ found: false, searched: false });
     const [searchEmail, setSearchEmail] = useState('');
+
+    const onSelectCheck = (grade: string) => {
+        return formData.requirements.toLowerCase().includes(grade.toLowerCase());
+    };
 
     const scrollToForm = (grade?: string) => {
         if (grade) {
@@ -616,14 +650,16 @@ export default function BulkOrderPage() {
                     email: formData.email,
                     phone: formData.phone,
                     company: formData.company,
+                    partnership_type: formData.partnershipType,
+                    fssai_gstin: formData.fssaiGstin,
                     volume: formData.volume,
                     requirements: formData.requirements,
-                    message: `BULK ORDER INQUIRY\nCompany: ${formData.company}\nExpected Volume: ${formData.volume}\nRequirements: ${formData.requirements}`, // Kept for backwards compatibility if needed, though mostly obsolete
+                    message: `BULK ORDER INQUIRY\nCompany: ${formData.company}\nPartnership: ${formData.partnershipType}\nFSSAI/GSTIN: ${formData.fssaiGstin}\nVolume: ${formData.volume}\nRequirements: ${formData.requirements}`,
                 }),
             });
             if (res.ok) {
                 setSubmitStatus('success');
-                setFormData({ name: '', email: '', phone: '', company: '', volume: '', requirements: '' });
+                setFormData({ name: '', email: '', phone: '', company: '', partnershipType: '', fssaiGstin: '', volume: '', requirements: '' });
                 setTimeout(() => setSubmitStatus('idle'), 5000);
             } else {
                 setSubmitStatus('error');
@@ -801,7 +837,11 @@ export default function BulkOrderPage() {
 
             {/* ── Our Grades ── */}
             <div className="bg-white">
-                <OurGradesSection onEnquire={scrollToForm} />
+                <OurGradesSection onEnquire={scrollToForm} onSelectCheck={onSelectCheck} />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-6 mb-12">
+                <WhiteLabelBanner />
             </div>
 
             {/* ── Bulk Order Form ── */}
@@ -828,7 +868,7 @@ export default function BulkOrderPage() {
                             className="text-3xl font-bold text-gray-900 mb-2"
                             style={{ fontFamily: 'Georgia, serif' }}
                         >
-                            Request Wholesale Pricing
+                            Request Custom Wholesale Pricing
                         </h2>
                         <p className="text-gray-500 mb-8 text-sm">
                             Fill out the form below and our B2B team will provide a tailored quote within 24 hours.
@@ -904,6 +944,41 @@ export default function BulkOrderPage() {
                                             type="text"
                                             value={formData.company}
                                             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                            Partnership Type *
+                                        </label>
+                                        <select
+                                            required
+                                            value={formData.partnershipType}
+                                            onChange={(e) => setFormData({ ...formData, partnershipType: e.target.value })}
+                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                            style={{ '--tw-ring-color': '#F6B000' } as any}
+                                        >
+                                            <option value="">Select Category</option>
+                                            <option value="Retailer">Retailer / Reseller</option>
+                                            <option value="HoReCa">Hotel / Restaurant / Cafe</option>
+                                            <option value="Bakery">Bakery / Confectionery</option>
+                                            <option value="Corporate">Corporate / Events</option>
+                                            <option value="Distributor">Distributor / Wholesaler</option>
+                                            <option value="Other">Other Business</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                            FSSAI / GSTIN (Optional)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter ID if applicable"
+                                            value={formData.fssaiGstin}
+                                            onChange={(e) => setFormData({ ...formData, fssaiGstin: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                                             style={{ '--tw-ring-color': '#F6B000' } as any}
                                         />

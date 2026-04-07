@@ -15,7 +15,7 @@ export default function Invoice({ order, onClose }: InvoiceProps) {
     const isCancelled = order.status === 'Cancelled';
     const orderId = order._id || order.id;
     const trackingUrl = typeof window !== 'undefined' 
-        ? `${window.location.origin}/profile/orders/${orderId}`
+        ? `${window.location.origin}/track/${orderId}`
         : '';
 
     // Calculations

@@ -19,7 +19,8 @@ export default function UnregisteredVisitors() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) {
-                setStats(await res.json());
+                const data = await res.json();
+                setStats(data.sessions || data || []);
             } else {
                 setError('Failed to fetch visitor statistics');
             }

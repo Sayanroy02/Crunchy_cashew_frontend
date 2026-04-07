@@ -241,8 +241,13 @@ export default function AdminOrders() {
                                         <div 
                                             key={order._id}
                                             onClick={() => setSelectedOrderId(order._id)}
-                                            className={`relative flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-all border-2 ${isSelected ? 'bg-white border-black shadow-md z-10' : 'bg-white border-transparent hover:border-gray-200'}`}
+                                            className={`relative flex items-center gap-3 p-2.5 rounded-lg cursor-pointer transition-all border-2 ${isSelected ? 'bg-white border-black shadow-md z-10' : 'bg-white border-transparent hover:border-gray-200'} ${order.status === 'Cancelled' ? 'opacity-60 bg-gray-50' : ''}`}
                                         >
+                                            {/* Cancelled Line Strike-through */}
+                                            {order.status === 'Cancelled' && (
+                                                <div className="absolute inset-x-0 top-1/2 h-0.5 bg-rose-200/30 -rotate-2 pointer-events-none -mx-2"></div>
+                                            )}
+
                                             {/* Identity */}
                                             <div className="flex flex-col min-w-[70px]">
                                                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">ID</span>
@@ -290,8 +295,8 @@ export default function AdminOrders() {
                                                 <select
                                                     value={order.status || 'Pending'}
                                                     onChange={e => setConfirmUpdate({ id: order._id, status: e.target.value })}
-                                                    disabled={updating === order._id}
-                                                    className={`w-full text-[10px] font-bold py-1 px-2 rounded-md border outline-none cursor-pointer transition-all ${statusObj.bg} ${statusObj.text} ${statusObj.border} hover:opacity-80`}
+                                                    disabled={updating === order._id || order.status === 'Cancelled'}
+                                                    className={`w-full text-[10px] font-bold py-1 px-2 rounded-md border outline-none cursor-pointer transition-all ${statusObj.bg} ${statusObj.text} ${statusObj.border} hover:opacity-80 disabled:cursor-not-allowed`}
                                                 >
                                                     {['Pending', ...ORDER_STATUS_FLOW, 'Cancelled'].map(s => <option key={s} value={s} className="bg-white text-gray-900">{s}</option>)}
                                                 </select>
@@ -372,6 +377,22 @@ export default function AdminOrders() {
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* Refund Status for Online Payments */}
+                                {selectedOrder.refund_status && selectedOrder.refund_status !== 'none' && (
+                                    <div className="px-4 py-3 bg-rose-50 border border-rose-100 rounded-2xl">
+                                        <div className="flex justify-between items-center mb-1.5">
+                                            <span className="text-[10px] font-black text-rose-400 uppercase tracking-widest leading-none">Refund Status</span>
+                                            <span className="text-[9px] font-black bg-rose-600 text-white px-2 py-0.5 rounded-full leading-none shadow-sm">PAYMENT REFUNDED</span>
+                                        </div>
+                                        {selectedOrder.razorpay_refund_id && (
+                                            <div className="flex items-center gap-1.5 text-rose-300">
+                                                <i className="fa-solid fa-receipt text-[10px]"></i>
+                                                <p className="text-[10px] font-mono font-bold truncate">REF: {selectedOrder.razorpay_refund_id}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Summary */}
                                 <div className="bg-gray-900 rounded-xl p-4 text-white shadow-md">

@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { API } from '@/constants/api';
+import Invoice from '@/components/Invoice';
 
 export default function OrderConfirmationPage() {
   const params = useParams();
@@ -17,6 +19,11 @@ export default function OrderConfirmationPage() {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
@@ -65,6 +72,7 @@ export default function OrderConfirmationPage() {
   const date = order.created_at ? new Date(order.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—';
 
   return (
+    <>
     <div className="min-h-screen bg-bg py-16 px-4 print:py-0 print:bg-white text-black">
       {/* CSS specific for printing out the bill */}
       <style dangerouslySetInnerHTML={{__html: `
@@ -219,134 +227,32 @@ export default function OrderConfirmationPage() {
           </Link>
         </div>
       </div>
-
-      {/* ========================================================= */}
-      {/* PRINT ONLY: Formal Tabular Invoice Layout                   */}
-      {/* ========================================================= */}
-      <div className="hidden print:block w-full max-w-4xl mx-auto bg-white text-black font-sans pb-10">
-        
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8 border-b-2 border-black pb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-lg flex items-center justify-center text-3xl font-black shadow-md" style={{ backgroundColor: '#000000', color: '#F6B000' }}>
-              <i className="fa-solid fa-seedling"></i>
-            </div>
-            <div>
-              <h1 className="text-2xl font-black tracking-tight text-black">Crunchy Cashews</h1>
-              <p className="text-xs text-slate-500 font-semibold mt-1">Direct from factory</p>
-            </div>
-          </div>
-          <div className="bg-[#3A4D6E] text-white px-8 py-2 text-2xl font-black uppercase tracking-widest tracking-widest shadow-sm border border-slate-800">
-            INVOICE
-          </div>
-        </div>
-
-        <div className="flex justify-between items-start mb-10">
-          <div className="text-sm space-y-2 text-slate-700 font-medium">
-            <p><span className="font-bold w-32 inline-block">Invoice Number:</span> #{orderId.slice(-8).toUpperCase()}</p>
-            <p><span className="font-bold w-32 inline-block">Order Date:</span> {date}</p>
-            <p className="flex items-center">
-              <span className="font-bold w-32 inline-block">Order Status:</span> 
-              <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${order.status === 'Cancelled' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
-                {order.status || 'Processed'}
-              </span>
-            </p>
-          </div>
-        </div>
-
-        {/* Billing Info */}
-        <div className="flex justify-between gap-10 mb-10 text-sm">
-          <div className="flex-1 space-y-1.5">
-            <h2 className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">Bill From:</h2>
-            <p className="font-bold text-slate-700">Crunchy Cashews Mfg.</p>
-            <p className="text-slate-600">123 Industrial Area, Phase 1</p>
-            <p className="text-slate-600">Siliguri, West Bengal, 734001</p>
-            <p className="text-slate-600 pt-1"><span className="font-semibold text-slate-700">GSTIN:</span> 19ABCDE1234F1Z5</p>
-            <p className="text-slate-600"><span className="font-semibold text-slate-700">FSSAI Number:</span> 12345678901234</p>
-          </div>
-          
-          <div className="flex-1 space-y-1.5">
-            <h2 className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">Bill To:</h2>
-            <p className="font-bold text-slate-700">{order.customer?.name}</p>
-            <p className="text-slate-600 max-w-[250px] leading-relaxed">{order.customer?.address}</p>
-            <p className="text-slate-600 pt-1"><span className="font-semibold text-slate-700">Phone Number:</span> {order.customer?.phone}</p>
-          </div>
-        </div>
-
-        {/* Table */}
-        <table className="w-full text-sm text-left mb-8 border-collapse">
-          <thead>
-            <tr className="border-t-2 border-b-2 border-slate-300 bg-slate-50/50">
-              <th className="py-3 px-2 font-bold text-slate-800 w-1/2">Item</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Quantity</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Rate</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Tax</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-right">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(order.items || []).map((item: any, idx: number) => (
-              <tr key={idx} className="border-b border-slate-200">
-                <td className="py-4 px-2 text-slate-800 font-semibold">{item.name || item.product_name || 'Item'}</td>
-                <td className="py-4 px-2 text-slate-700 text-center text-xs">
-                  <span className="font-bold text-[#f08519] block text-sm">{item.quantity}</span>
-                  unit
-                </td>
-                <td className="py-4 px-2 text-slate-700 text-center text-xs">
-                  <span className="font-bold text-[#204060] block text-sm">₹{item.price}</span>
-                  per unit
-                </td>
-                <td className="py-4 px-2 text-slate-700 text-center">0.00</td>
-                <td className="py-4 px-2 text-slate-800 font-bold text-right">₹{(item.price * item.quantity).toLocaleString('en-IN')}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Totals & Footer Info */}
-        <div className="flex justify-between items-start mt-8">
-          <div className="w-1/2 text-xs text-slate-500 pt-2 space-y-1">
-            <p className="font-bold text-slate-700 mb-2">Terms & Conditions:</p>
-            <p>1. Returns accepted within 7 days of delivery.</p>
-            <p>2. Subject to Siliguri jurisdiction.</p>
-            <p>3. This is a computer-generated invoice.</p>
-          </div>
-          
-          <div className="w-[350px]">
-            <div className="space-y-3 text-sm border-b border-slate-200 pb-4 pr-2">
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Subtotal:</span>
-                <span className="font-bold text-slate-800">₹{((order.total_amount || 0) - (order.shipping_fee || 0)).toLocaleString('en-IN')}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Discount:</span>
-                <span className="font-bold text-slate-800">₹0.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Shipping:</span>
-                <span className="font-bold text-slate-800">{order.shipping_fee === 0 ? '₹0.00' : `₹${order.shipping_fee}`}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Tax:</span>
-                <span className="font-bold text-slate-800">₹0.00</span>
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <span className="font-bold text-slate-700 flex items-center gap-2">
-                  Paid: <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200 uppercase tracking-widest">{paymentStatus}</span>
-                </span>
-                <span className="font-bold text-slate-800">
-                  {paymentStatus === 'Paid' ? `₹${order.total_amount?.toLocaleString('en-IN')}` : '₹0.00'}
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex justify-between items-center px-6 py-4 mt-6 rounded shadow-sm" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
-              <span className="font-bold text-lg" style={{ color: '#F6B000' }}>Total</span>
-              <span className="font-black text-xl">₹{order.total_amount?.toLocaleString('en-IN')}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+
+    {/* Portal for Printing — Mounts to body for perfect isolation */}
+    {mounted && order && createPortal(
+        <div id="print-portal" className="hidden print:block fixed inset-0 z-[9999] bg-white w-full h-full">
+          <Invoice order={order} />
+        </div>,
+        document.body
+    )}
+
+    <style jsx global>{`
+      @media print {
+          /* Hide EVERYTHING in the body except the specific portal container */
+          body > *:not(#print-portal) {
+              display: none !important;
+          }
+          #print-portal {
+              display: block !important;
+              position: absolute !important;
+              left: 0 !important;
+              top: 0 !important;
+              width: 100% !important;
+              height: auto !important;
+          }
+      }
+    `}</style>
+    </>
   );
 }
