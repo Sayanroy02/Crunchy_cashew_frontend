@@ -63,6 +63,7 @@ export default function AdminOrders() {
     const [filter, setFilter] = useState<string>('All');
     const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
     const [confirmUpdate, setConfirmUpdate] = useState<{ id: string, status: string } | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -139,7 +140,31 @@ export default function AdminOrders() {
         (v, i, arr) => arr.indexOf(v) === i
     );
 
-    const filtered = filter === 'All' ? orders : orders.filter(o => o.status === filter);
+    const filtered = orders.filter(o => {
+        // Status Filter
+        if (filter !== 'All' && o.status !== filter) return false;
+        
+        // Search Filter
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        
+        const orderId = (o._id || '').toLowerCase();
+        const shortId = (o._id || '').slice(-6).toLowerCase();
+        const customerName = (o.customer?.name || o.customer?.full_name || '').toLowerCase();
+        const phone = (o.customer?.phone || '').toLowerCase();
+        const paymentMode = (o.payment_mode || '').toLowerCase();
+        const amount = (o.total_amount || 0).toString();
+        const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-GB') : '';
+
+        return orderId.includes(q) || 
+               shortId.includes(q) || 
+               customerName.includes(q) || 
+               phone.includes(q) || 
+               paymentMode.includes(q) || 
+               amount.includes(q) ||
+               date.includes(q);
+    });
+
     const selectedOrder = orders.find(o => o._id === selectedOrderId);
 
     if (loading && orders.length === 0) return (
@@ -155,10 +180,23 @@ export default function AdminOrders() {
     return (
         <div className="flex flex-col gap-4 h-full min-h-[calc(100vh-120px)] overflow-hidden">
             {/* Compact Header */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-                <h1 className="text-xl font-bold text-gray-900 tracking-tight">
-                    Orders <span className="text-xs font-semibold text-gray-400 ml-1">({orders.length})</span>
-                </h1>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                    <h1 className="text-xl font-bold text-gray-900 tracking-tight">
+                        Orders <span className="text-xs font-semibold text-gray-400 ml-1">({orders.length})</span>
+                    </h1>
+                    {/* Search Bar */}
+                    <div className="relative group min-w-[280px]">
+                        <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs transition-colors group-focus-within:text-primary"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search by ID, Name, Phone, Mode..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-white border border-gray-200 rounded-xl py-2 pl-10 pr-4 text-xs font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
+                        />
+                    </div>
+                </div>
                 <button onClick={fetchOrders} className="py-1.5 px-3 bg-white border border-gray-200 rounded-lg text-xs font-bold flex items-center gap-2 hover:border-gray-900 transition-all shadow-sm active:scale-95">
                     <i className="fa-solid fa-rotate-right" /> Refresh
                 </button>

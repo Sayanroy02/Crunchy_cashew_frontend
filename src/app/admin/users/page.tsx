@@ -10,6 +10,7 @@ function getToken() {
 export default function AdminUsers() {
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchUsers = async () => {
         try {
@@ -29,8 +30,20 @@ export default function AdminUsers() {
 
     return (
         <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h1 className="text-2xl font-bold text-gray-800">Registered Users</h1>
+                
+                {/* Search Bar */}
+                <div className="relative group min-w-[300px]">
+                    <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm transition-colors group-focus-within:text-primary"></i>
+                    <input 
+                        type="text" 
+                        placeholder="Search by User, Email, Phone..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all shadow-sm"
+                    />
+                </div>
             </div>
 
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -46,7 +59,15 @@ export default function AdminUsers() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 text-gray-700">
-                            {users.map((u) => (
+                            {users.filter(u => {
+                                if (!searchQuery) return true;
+                                const q = searchQuery.toLowerCase();
+                                const username = (u.username || '').toLowerCase();
+                                const email = (u.email || '').toLowerCase();
+                                const phone = (u.phone || '').toLowerCase();
+                                
+                                return username.includes(q) || email.includes(q) || phone.includes(q);
+                            }).map((u) => (
                                 <tr key={u._id} className="hover:bg-gray-50 transition-colors">
                                     <td className="p-4 font-bold">{u.username}</td>
                                     <td className="p-4">{u.email}</td>

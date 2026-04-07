@@ -19,6 +19,7 @@ export default function AdminPayment() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -55,17 +56,32 @@ export default function AdminPayment() {
     return (
         <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
             {/* Header Area */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight font-heading">Payments</h1>
                     <p className="text-gray-500 font-medium text-sm">Track all customer transactions and settlement status.</p>
                 </div>
-                <button 
-                  onClick={fetchOrders} 
-                  className="flex items-center gap-2 py-2.5 px-6 bg-white border-2 border-gray-100 rounded-2xl font-bold text-gray-600 hover:border-black hover:text-black transition-all shadow-sm active:scale-95"
-                >
-                    <i className="fa-solid fa-rotate-right"></i> Refresh
-                </button>
+                
+                <div className="flex flex-wrap items-center gap-4">
+                    {/* Search Bar */}
+                    <div className="relative group min-w-[320px]">
+                        <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-primary"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search by Name, Payment ID, Amount..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-white border-2 border-gray-100 rounded-2xl py-3 pl-12 pr-4 text-sm font-bold focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all shadow-sm"
+                        />
+                    </div>
+
+                    <button 
+                      onClick={fetchOrders} 
+                      className="flex items-center gap-2 py-3 px-6 bg-white border-2 border-gray-100 rounded-2xl font-bold text-gray-600 hover:border-black hover:text-black transition-all shadow-sm active:scale-95"
+                    >
+                        <i className="fa-solid fa-rotate-right"></i> Refresh
+                    </button>
+                </div>
             </div>
 
             {/* Error State */}
@@ -100,7 +116,16 @@ export default function AdminPayment() {
                                     </td>
                                 </tr>
                             ) : (
-                                orders.map((order) => {
+                                orders.filter(o => {
+                                    if (!searchQuery) return true;
+                                    const q = searchQuery.toLowerCase();
+                                    const name = (o.customer?.name || o.customer?.full_name || '').toLowerCase();
+                                    const pId = (o.razorpay_payment_id || o.razorpay_order_id || '').toLowerCase();
+                                    const amount = (o.total_amount || 0).toString();
+                                    const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-GB') : '';
+                                    
+                                    return name.includes(q) || pId.includes(q) || amount.includes(q) || date.includes(q);
+                                }).map((order) => {
                                     const dateObj = new Date(order.created_at || Date.now());
                                     const date = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
                                     const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
