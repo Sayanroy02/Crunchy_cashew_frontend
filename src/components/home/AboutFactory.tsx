@@ -95,9 +95,15 @@ export default function AboutFactory() {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">
-                <div className="flex flex-col-reverse lg:flex-row items-center gap-16">
-                    {/* Left Side: Video */}
-                    <div className="w-full lg:w-1/2 relative flex justify-center lg:justify-start">
+                <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+                    {/* 1. Mobile Heading — Only visible on mobile, at the very top (Order 1) */}
+                    <div className="w-full lg:hidden flex flex-col items-start order-1">
+                        <span className="text-black font-bold tracking-[4px] uppercase text-[10px] mb-2 block">Our Production Facility</span>
+                        <SectionHeading text="About Our" highlight="Factory" className="text-4xl mb-0" />
+                    </div>
+
+                    {/* 2. Video Section — Shown second on mobile, first on desktop (Order 2) */}
+                    <div className="w-full lg:w-1/2 relative flex justify-center lg:justify-start order-2">
                         <div className="relative w-full max-w-md">
                             <div className="rounded-[40px] overflow-hidden shadow-2xl relative aspect-[4/5] w-full bg-primary/10">
                                 <video
@@ -112,10 +118,13 @@ export default function AboutFactory() {
                         </div>
                     </div>
 
-                    {/* Right Side: Content */}
-                    <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
-                        <span className="text-black font-bold tracking-[4px] uppercase text-xs mb-3 block">Our Production Facility</span>
-                        <SectionHeading text="About Our" highlight="Factory" className="text-3xl md:text-5xl mb-6" />
+                    {/* 3. Content Section — Shown third on mobile, second on desktop (Order 3) */}
+                    <div className="w-full lg:w-1/2 flex flex-col items-start text-left order-3">
+                        {/* Desktop Heading — Only visible on large screens */}
+                        <div className="hidden lg:block">
+                            <span className="text-black font-bold tracking-[4px] uppercase text-xs mb-3 block">Our Production Facility</span>
+                            <SectionHeading text="About Our" highlight="Factory" className="text-5xl mb-6" />
+                        </div>
                         
                         <p className="text-gray-700 text-lg md:text-xl mb-6 leading-relaxed font-medium">
                             The process of harvesting, roasting, and grading premium cashews in equipped chambers with constant

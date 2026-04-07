@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
@@ -19,10 +20,13 @@ import {
   COLORS,
 } from '@/constants/styles';
 import OrderTracking from '@/components/OrderTracking';
+import Invoice from '@/components/Invoice';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
   const orderId = params?.id as string;
   const token = useSelector((state: RootState) => state.auth.token);
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -31,12 +35,37 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState('');
+  
+  // UI States
+  const [showInvoice, setShowInvoice] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ show: boolean; msg: string }>({ show: false, msg: '' });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) { router.push('/login'); return; }
     if (!orderId) return;
     fetchOrder();
   }, [isAuthenticated, orderId]);
+
+  useEffect(() => {
+    if (order && (searchParams?.get('view') === 'invoice' || searchParams?.get('download') === 'true')) {
+      setShowInvoice(true);
+      // Clean up URL
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [order, searchParams]);
+
+  const handleDownload = () => {
+    window.print();
+  };
 
   const fetchOrder = async () => {
     setLoading(true);
@@ -53,8 +82,17 @@ export default function OrderDetailPage() {
     }
   };
 
-  const handleCancel = async () => {
-    if (!confirm('Are you sure you want to cancel this order?')) return;
+  const handleCancelClick = () => {
+    if (order.status === 'Dispatched') {
+        setSnackbar({ show: true, msg: `Cannot cancel, order is already ${order.status}` });
+        setTimeout(() => setSnackbar({ show: false, msg: '' }), 4000);
+        return;
+    }
+    setShowCancelConfirm(true);
+  };
+
+  const confirmCancel = async () => {
+    setShowCancelConfirm(false);
     setCancelling(true);
     try {
       const res = await fetch(API.ORDER_CANCEL(orderId), {
@@ -63,11 +101,17 @@ export default function OrderDetailPage() {
       });
       if (res.ok) {
         setOrder((prev: any) => ({ ...prev, status: 'Cancelled' }));
+        setSnackbar({ show: true, msg: 'Order cancelled successfully' });
       } else {
         const err = await res.json().catch(() => ({}));
-        alert(err.detail || 'Could not cancel order.');
+        setSnackbar({ show: true, msg: err.detail || 'Could not cancel order.' });
       }
-    } catch { alert('Network error.'); } finally { setCancelling(false); }
+    } catch { 
+        setSnackbar({ show: true, msg: 'Network error.' });
+    } finally { 
+        setCancelling(false);
+        setTimeout(() => setSnackbar({ show: false, msg: '' }), 4000);
+    }
   };
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -89,7 +133,7 @@ export default function OrderDetailPage() {
 
   // Derived values
   const isCancelled = order.status === 'Cancelled';
-  const canCancel = CANCELLABLE_STATUSES.includes(order.status);
+  const canCancel = CANCELLABLE_STATUSES.includes(order.status) || order.status === 'Dispatched'; // Check logic inside handleCancelClick
   const statusClass = ORDER_STATUS_CLASSES[order.status] || 'bg-gray-50 text-gray-600 border-gray-200';
   const paymentStatus = order.payment_status || (order.payment_mode === 'COD' ? 'COD' : 'Pending');
   const paymentStatusClass = PAYMENT_STATUS_CLASSES[paymentStatus] || PAYMENT_STATUS_CLASSES.Pending;
@@ -98,17 +142,8 @@ export default function OrderDetailPage() {
     : '—';
 
   return (
-    <div className="min-h-screen bg-[#f4f6f9] py-10 px-4 print:py-0 print:bg-white">
-      {/* CSS specific for printing out the bill */}
-      <style dangerouslySetInnerHTML={{__html: `
-        @media print {
-          body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .no-print { display: none !important; }
-        }
-      `}} />
-
-      <div className="print:hidden max-w-3xl mx-auto">
-
+    <div className="min-h-screen bg-[#f4f6f9] py-10 px-4">
+      <div className="max-w-3xl mx-auto print:hidden">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link
@@ -129,7 +164,6 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="flex flex-col gap-5">
-
           {/* Order Tracking Stepper */}
           <OrderTracking currentStatus={order.status} isCancelled={isCancelled} />
 
@@ -186,7 +220,7 @@ export default function OrderDetailPage() {
           )}
 
           {/* Items */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-black">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">
               Items ({order.items?.length || 0})
             </p>
@@ -227,7 +261,7 @@ export default function OrderDetailPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-3 pb-8">
+          <div className="flex flex-col sm:flex-row gap-3 pb-20">
             <Link
               href="/profile?tab=orders"
               className="flex-1 text-center border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:border-primary transition-colors text-sm"
@@ -236,15 +270,15 @@ export default function OrderDetailPage() {
             </Link>
             
             <button 
-              onClick={() => window.print()}
-              className="flex-1 bg-white border-2 border-[#0A5246] text-[#0A5246] font-bold py-3 rounded-xl hover:bg-[#0A5246]/5 transition-colors text-sm flex items-center justify-center gap-2"
+              onClick={() => setShowInvoice(true)}
+              className="flex-1 bg-white border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary/5 transition-colors text-sm flex items-center justify-center gap-2"
             >
-              <i className="fa-solid fa-file-pdf"></i> Download Bill
+              <i className="fa-solid fa-file-invoice"></i> View & Download Bill
             </button>
             
-            {canCancel && (
+            {canCancel && !isCancelled && order.status !== 'Delivered' && (
               <button
-                onClick={handleCancel}
+                onClick={handleCancelClick}
                 disabled={cancelling}
                 className="flex-[1.5] bg-red-50 border-2 border-red-200 text-red-600 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors text-sm disabled:opacity-60"
               >
@@ -255,134 +289,113 @@ export default function OrderDetailPage() {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* PRINT ONLY: Formal Tabular Invoice Layout                   */}
-      {/* ========================================================= */}
-      <div className="hidden print:block w-full max-w-4xl mx-auto bg-white text-black font-sans pb-10">
-        
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8 border-b-2 border-slate-800 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-16 h-16 bg-[#0A5246] text-white rounded-lg flex items-center justify-center text-3xl font-black shadow-md">
-              <i className="fa-solid fa-seedling"></i>
+      {/* Invoice Modal */}
+      <AnimatePresence>
+        {showInvoice && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-start sm:justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto pt-10 pb-10 print:hidden">
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                    className="relative w-full max-w-xl bg-white rounded-[24px] shadow-2xl overflow-hidden"
+                >
+                    <div className="max-h-[70vh] overflow-y-auto">
+                        <Invoice order={order} />
+                    </div>
+                    
+                    {/* Modal Footer with Buttons */}
+                    <div className="p-4 bg-gray-50 border-t border-gray-100 flex gap-3">
+                        <button 
+                            onClick={() => setShowInvoice(false)}
+                            className="flex-1 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-gray-100 transition-all"
+                        >
+                            Close
+                        </button>
+                        <button 
+                            onClick={handleDownload}
+                            className="flex-[2] px-6 py-3 bg-black text-white font-black rounded-xl text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2"
+                        >
+                            <i className="fa-solid fa-download"></i> Download Bill (PDF)
+                        </button>
+                    </div>
+                </motion.div>
             </div>
-            <div>
-              <h1 className="text-2xl font-black tracking-tight text-[#0A5246]">Crunchy Cashews</h1>
-              <p className="text-xs text-slate-500 font-semibold mt-1">Direct from factory</p>
+        )}
+      </AnimatePresence>
+
+      {/* Portal for Printing — Mounts to body for perfect isolation */}
+      {mounted && order && createPortal(
+          <div id="print-portal" className="hidden print:block fixed inset-0 z-[9999] bg-white w-full h-full">
+            <Invoice order={order} />
+          </div>,
+          document.body
+      )}
+
+      <style jsx global>{`
+        @media print {
+            /* Hide EVERYTHING in the body except the specific portal container */
+            body > *:not(#print-portal) {
+                display: none !important;
+            }
+            #print-portal {
+                display: block !important;
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+      `}</style>
+
+      {/* Cancel Confirmation Modal */}
+      <AnimatePresence>
+        {showCancelConfirm && (
+            <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="bg-white rounded-[28px] p-8 max-w-sm w-full text-center shadow-2xl"
+                >
+                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500 text-2xl">
+                        <i className="fa-solid fa-circle-question"></i>
+                    </div>
+                    <h3 className="text-xl font-black text-gray-900 mb-2">Are you sure?</h3>
+                    <p className="text-gray-500 text-sm mb-8">Do you really want to cancel this order? This action cannot be undone.</p>
+                    <div className="flex gap-3">
+                        <button 
+                            onClick={() => setShowCancelConfirm(false)}
+                            className="flex-1 bg-gray-100 text-gray-700 font-bold py-3.5 rounded-2xl hover:bg-gray-200 transition-all"
+                        >
+                            No, keep it
+                        </button>
+                        <button 
+                            onClick={confirmCancel}
+                            className="flex-1 bg-red-600 text-white font-bold py-3.5 rounded-2xl hover:bg-red-700 transition-all shadow-lg shadow-red-200"
+                        >
+                            Yes, cancel
+                        </button>
+                    </div>
+                </motion.div>
             </div>
-          </div>
-          <div className="bg-[#3A4D6E] text-white px-8 py-2 text-2xl font-black uppercase tracking-widest tracking-widest shadow-sm border border-slate-800">
-            INVOICE
-          </div>
-        </div>
+        )}
+      </AnimatePresence>
 
-        <div className="flex justify-between items-start mb-10">
-          <div className="text-sm space-y-2 text-slate-700 font-medium">
-            <p><span className="font-bold w-32 inline-block">Invoice Number:</span> #{orderId.slice(-8).toUpperCase()}</p>
-            <p><span className="font-bold w-32 inline-block">Order Date:</span> {date}</p>
-            <p className="flex items-center">
-              <span className="font-bold w-32 inline-block">Order Status:</span> 
-              <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded border ${order.status === 'Cancelled' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
-                {order.status || 'Processed'}
-              </span>
-            </p>
-          </div>
-        </div>
-
-        {/* Billing Info */}
-        <div className="flex justify-between gap-10 mb-10 text-sm">
-          <div className="flex-1 space-y-1.5">
-            <h2 className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">Bill From:</h2>
-            <p className="font-bold text-slate-700">Crunchy Cashews Mfg.</p>
-            <p className="text-slate-600">123 Industrial Area, Phase 1</p>
-            <p className="text-slate-600">Siliguri, West Bengal, 734001</p>
-            <p className="text-slate-600 pt-1"><span className="font-semibold text-slate-700">GSTIN:</span> 19ABCDE1234F1Z5</p>
-            <p className="text-slate-600"><span className="font-semibold text-slate-700">FSSAI Number:</span> 12345678901234</p>
-          </div>
-          
-          <div className="flex-1 space-y-1.5">
-            <h2 className="font-bold text-slate-800 mb-2 border-b border-slate-200 pb-1">Bill To:</h2>
-            <p className="font-bold text-slate-700">{order.customer?.name}</p>
-            <p className="text-slate-600 max-w-[250px] leading-relaxed">{order.customer?.address}</p>
-            <p className="text-slate-600 pt-1"><span className="font-semibold text-slate-700">Phone Number:</span> {order.customer?.phone}</p>
-          </div>
-        </div>
-
-        {/* Table */}
-        <table className="w-full text-sm text-left mb-8 border-collapse">
-          <thead>
-            <tr className="border-t-2 border-b-2 border-slate-300 bg-slate-50/50">
-              <th className="py-3 px-2 font-bold text-slate-800 w-1/2">Item</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Quantity</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Rate</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-center">Tax</th>
-              <th className="py-3 px-2 font-bold text-slate-800 text-right">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(order.items || []).map((item: any, idx: number) => (
-              <tr key={idx} className="border-b border-slate-200">
-                <td className="py-4 px-2 text-slate-800 font-semibold">{item.name || item.product_name || 'Item'}</td>
-                <td className="py-4 px-2 text-slate-700 text-center text-xs">
-                  <span className="font-bold text-[#f08519] block text-sm">{item.quantity}</span>
-                  unit
-                </td>
-                <td className="py-4 px-2 text-slate-700 text-center text-xs">
-                  <span className="font-bold text-[#204060] block text-sm">₹{item.price}</span>
-                  per unit
-                </td>
-                <td className="py-4 px-2 text-slate-700 text-center">0.00</td>
-                <td className="py-4 px-2 text-slate-800 font-bold text-right">₹{(item.price * item.quantity).toLocaleString('en-IN')}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Totals & Footer Info */}
-        <div className="flex justify-between items-start mt-8">
-          <div className="w-1/2 text-xs text-slate-500 pt-2 space-y-1">
-            <p className="font-bold text-slate-700 mb-2">Terms & Conditions:</p>
-            <p>1. Returns accepted within 7 days of delivery.</p>
-            <p>2. Subject to Siliguri jurisdiction.</p>
-            <p>3. This is a computer-generated invoice.</p>
-          </div>
-          
-          <div className="w-[350px]">
-            <div className="space-y-3 text-sm border-b border-slate-200 pb-4 pr-2">
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Subtotal:</span>
-                <span className="font-bold text-slate-800">₹{((order.total_amount || 0) - (order.shipping_fee || 0)).toLocaleString('en-IN')}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Discount:</span>
-                <span className="font-bold text-slate-800">₹0.00</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Shipping:</span>
-                <span className="font-bold text-slate-800">{order.shipping_fee === 0 ? '₹0.00' : `₹${order.shipping_fee}`}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-bold text-slate-700">Tax:</span>
-                <span className="font-bold text-slate-800">₹0.00</span>
-              </div>
-              <div className="flex justify-between items-center mt-2">
-                <span className="font-bold text-slate-700 flex items-center gap-2">
-                  Paid: <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200 uppercase tracking-widest">{paymentStatus}</span>
-                </span>
-                <span className="font-bold text-slate-800">
-                  {paymentStatus === 'Paid' ? `₹${order.total_amount?.toLocaleString('en-IN')}` : '₹0.00'}
-                </span>
-              </div>
-            </div>
-            
-            <div className="flex justify-between items-center bg-[#3A4D6E] text-white px-6 py-4 mt-6 rounded shadow-sm border border-[#27354d]">
-              <span className="font-bold text-lg">Total</span>
-              <span className="font-black text-xl">₹{order.total_amount?.toLocaleString('en-IN')}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      {/* Snackbar / Toast */}
+      <AnimatePresence>
+        {snackbar.show && (
+            <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[120] bg-black text-white px-6 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 min-w-[300px]"
+            >
+                <i className={`fa-solid ${snackbar.msg.includes('Cannot') ? 'fa-circle-exclamation text-amber-400' : 'fa-circle-check text-green-400'}`}></i>
+                <span className="text-sm font-bold">{snackbar.msg}</span>
+            </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

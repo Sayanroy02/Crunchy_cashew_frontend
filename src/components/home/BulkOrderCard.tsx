@@ -365,38 +365,32 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             transition={{ delay: 0.15, duration: 0.55 }}
             className="mt-10 relative rounded-[28px] overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, #047c3cff 0%, #02a84dff 45%, #00d861ff 100%)',
-                boxShadow: '0 4px 24px rgba(2, 201, 91, 0.45), 0 8px 24px rgba(0,0,0,0.2)',
+                background: COLORS.heading,
+                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
         >
-            {/* Concentric rings — right side decorative */}
-            <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none overflow-hidden">
-                {[300, 230, 165, 105, 52].map((size, i) => (
-                    <div key={i} className="absolute top-1/2 right-0 rounded-full border"
-                        style={{
-                            width: size, height: size,
-                            transform: `translate(${size * 0.4}px, -50%)`,
-                            borderColor: `rgba(255,255,255,${0.04 + i * 0.025})`,
-                        }} />
-                ))}
-                <div className="absolute right-0 top-1/2 w-56 h-56 rounded-full"
-                    style={{ background: 'radial-gradient(circle, rgba(13,107,88,0.6) 0%, transparent 70%)', transform: 'translate(30%, -50%)' }} />
-            </div>
-
-            {/* Subtle dot texture + Pattern */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
+            {/* Top Right Decorative Pattern — Stylized Grid */}
+            <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-[0.08] translate-x-1/4 -translate-y-1/4 select-none"
                 style={{ 
-                    backgroundImage: `
-                        radial-gradient(circle, rgba(255,255,255,0.8) 1.2px, transparent 1.2px),
-                        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03)),
-                        linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03))
-                    `,
-                    backgroundSize: '22px 22px, 40px 40px, 40px 40px',
-                    backgroundPosition: '0 0, 0 0, 20px 20px'
+                    backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+                    backgroundSize: '20px 20px'
                 }} />
 
+            {/* Bottom Left Decorative Pattern — Concentric Circles */}
+            <div className="absolute bottom-0 left-0 w-80 h-80 pointer-events-none opacity-[0.06] -translate-x-1/3 translate-y-1/3 select-none">
+                {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="absolute inset-0 rounded-full border border-white"
+                        style={{ transform: `scale(${0.2 * i})` }} />
+                ))}
+            </div>
+
+            {/* Subtle Gradient Overlay for Depth */}
+            <div className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)' }} />
+
             {/* Hanging Cashew Tree Image */}
-            <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block">
+            <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block group-hover:scale-105 transition-transform duration-700">
                 <img 
                     src="/images/Cashew-In-Tree.png" 
                     alt="" 

@@ -1,13 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
 import { API } from '@/constants/api';
 import {
-    Download,
     BookOpen,
     Send,
     CheckCircle2,
@@ -22,32 +20,32 @@ import {
 
 const TRUST_BADGES = [
     {
-        text: 'In-House Processing',
+        title: 'In-House Processing',
+        subtitle: 'Customize product ranges',
         icon: (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
-                <line x1="12" y1="12" x2="12" y2="16" /><line x1="10" y1="14" x2="14" y2="14" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                <circle cx="12" cy="12" r="3" />
             </svg>
         ),
     },
     {
-        text: 'Custom Retail Packaging',
+        title: 'Custom Retail Packaging',
+        subtitle: 'Simplify to your brand',
         icon: (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                <path d="m3.3 7 8.7 5 8.7-5" />
+                <path d="M12 22V12" />
             </svg>
         ),
     },
     {
-        text: 'Export & Pan-India Ready',
+        title: 'Export & Pan-India Ready',
+        subtitle: 'Retail-ready and logistics',
         icon: (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
             </svg>
         ),
     },
@@ -119,7 +117,7 @@ function WhiteLabelInquiryPopup({ onClose }: { onClose: () => void }) {
                     onClick={e => e.stopPropagation()}
                 >
                     {/* Header bg */}
-                    <div className="absolute top-0 left-0 right-0 h-24 bg-emerald-900 overflow-hidden">
+                    <div className="absolute top-0 left-0 right-0 h-24 bg-[#00863D] overflow-hidden">
                         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                         <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-primary/20 blur-3xl" />
                     </div>
@@ -217,152 +215,150 @@ export default function WhiteLabelBanner() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     return (
-        <section className="py-8 md:py-10 bg-bg-cream">
+        <section className="py-6 md:py-8 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <motion.div
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: 0.1, duration: 0.5 }}
-                    className="relative rounded-[28px] overflow-hidden"
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="relative rounded-[32px] overflow-hidden"
                     style={{
-                        background: 'linear-gradient(135deg, #047c3cff 0%, #02a84dff 45%, #00d861ff 100%)',
-                        boxShadow: '0 4px 24px rgba(2, 201, 91, 0.45), 0 8px 24px rgba(0,0,0,0.1)',
+                        background: `linear-gradient(135deg, ${COLORS.heading} 0%, #006b31 100%)`,
+                        boxShadow: '0 20px 40px -10px rgba(0, 134, 61, 0.2)',
                     }}
                 >
-                    {/* Concentric rings — right side decorative */}
-                    <div className="absolute right-0 top-0 bottom-0 w-1/2 pointer-events-none overflow-hidden">
-                        {[300, 230, 165, 105, 52].map((size, i) => (
-                            <div key={i} className="absolute top-1/2 right-0 rounded-full border"
-                                style={{
-                                    width: size, height: size,
-                                    transform: `translate(${size * 0.4}px, -50%)`,
-                                    borderColor: `rgba(255,255,255,${0.04 + i * 0.025})`,
-                                }} />
-                        ))}
-                        <div className="absolute right-0 top-1/2 w-56 h-56 rounded-full"
-                            style={{ background: 'radial-gradient(circle, rgba(13,107,88,0.6) 0%, transparent 70%)', transform: 'translate(30%, -50%)' }} />
+                    {/* Decorative Elements */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        <div className="absolute -right-20 top-1/2 -translate-y-1/2 w-[500px] h-[500px]">
+                            {[500, 400, 300, 200, 100].map((size, i) => (
+                                <div
+                                    key={i}
+                                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.03]"
+                                    style={{ width: size, height: size }}
+                                />
+                            ))}
+                        </div>
+                        <div className="absolute top-1/4 right-[10%] w-48 h-48 bg-primary/10 rounded-full blur-[80px]" />
+                        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
                     </div>
 
-                    {/* Subtle dot texture */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.06]"
-                        style={{
-                            backgroundImage: `
-                                radial-gradient(circle, rgba(255,255,255,0.8) 1.2px, transparent 1.2px),
-                                linear-gradient(45deg, rgba(255,255,255,0.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.03) 75%, rgba(255,255,255,0.03))
-                            `,
-                            backgroundSize: '22px 22px, 40px 40px',
-                            backgroundPosition: '0 0, 0 0'
-                        }} />
-
-                    {/* Right side integrated image — YOUR_LOGO packaging mockup */}
-                    <div className="absolute right-0 top-0 bottom-0 w-[42%] pointer-events-none z-10 hidden lg:flex items-end justify-end">
-                        {/* Flying parachutes around the image */}
-                        <motion.img
-                            src="/images/Cashew-parachute-03.png"
-                            initial={{ y: 20, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 0.15 }}
-                            transition={{ duration: 1, delay: 0.2 }}
-                            className="absolute right-[85%] top-[25%] w-12 h-auto rotate-[-15deg]"
-                        />
-                        <motion.img
-                            src="/images/Cashew-parachute-03.png"
-                            initial={{ y: -20, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 0.1 }}
-                            transition={{ duration: 1, delay: 0.4 }}
-                            className="absolute right-[70%] top-[65%] w-8 h-auto rotate-[10deg]"
-                        />
-                        <motion.img
-                            src="/images/Cashew-parachute-03.png"
-                            initial={{ x: 20, opacity: 0 }}
-                            whileInView={{ x: 0, opacity: 0.12 }}
-                            transition={{ duration: 1, delay: 0.3 }}
-                            className="absolute right-[15%] top-[15%] w-10 h-auto rotate-[-5deg]"
-                        />
-
-                        <img
-                            src="/images/YOUR_LOGO.png"
-                            alt="Custom Branding Options"
-                            className="w-full max-h-[90%] object-contain object-right-bottom transform scale-[0.95] origin-bottom-right translate-y-[2px]"
-                        />
-                    </div>
-
-                    {/* Content */}
-                    <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6 px-7 md:px-12 py-8 md:py-10">
-
-                        {/* Left: Content */}
-                        <div className="flex-1 text-center lg:text-left">
-                            <div className="inline-flex items-center gap-2 mb-4">
-                                <span className="h-px w-5 bg-primary/60" />
-                                <span className="text-primary text-[10px] font-black uppercase tracking-[0.22em]">Launch Your Brand</span>
-                            </div>
-
-                            <h2 className="text-[1.8rem] md:text-[2.2rem] font-black text-white leading-[1.1] tracking-tight mb-4">
-                                Launch Your Own Private Label <br className="hidden md:block" />
-                                <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
-                            </h2>
-
-                            <p className="text-white/80 text-[13.5px] md:text-sm leading-relaxed max-w-[560px] mb-7 font-medium">
-                                Turn our premium, factory-direct cashews into your exclusive product line.
-                                We provide complete turnkey solutions—from custom grading and unique flavoring
-                                to retail-ready packaging and reliable logistics.
-                            </p>
-
-                            {/* Trust badges — compact */}
-                            <div className="flex flex-wrap gap-2.5 justify-center lg:justify-start mb-8">
-                                {TRUST_BADGES.map(b => (
-                                    <span key={b.text}
-                                        className="inline-flex items-center gap-2 text-[10.5px] font-bold px-3.5 py-1.5 rounded-full"
-                                        style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', border: '1px solid rgba(255,255,255,0.15)' }}>
-                                        <span className="text-primary">{b.icon}</span>
-                                        {b.text}
+                    <div className="relative z-10 px-6 py-6 md:px-12 md:py-8">
+                        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-10">
+                            
+                            {/* Left Side: Content */}
+                            <div className="flex-1 text-center lg:text-left">
+                                {/* Subtitle with lines */}
+                                <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
+                                    <div className="h-[1.5px] w-6 md:w-8 bg-primary/40 rounded-full" />
+                                    <span className="text-primary text-[10px] font-black uppercase tracking-[0.25em]">
+                                        Launch Your Brand
                                     </span>
-                                ))}
+                                    <div className="h-[1.5px] w-6 md:w-8 bg-primary/40 rounded-full" />
+                                </div>
+
+                                <motion.h2 
+                                    initial={{ opacity: 0, x: -10 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    className="text-[20px] font-black text-white leading-tight mb-2"
+                                >
+                                    Launch Your Own <br className="hidden md:block" />
+                                    Private Label <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
+                                </motion.h2>
+
+                                <p className="text-white/80 text-[16px] leading-snug max-w-[500px] mb-5 font-medium">
+                                    Turn our premium, factory-direct cashews into your exclusive product line.
+                                    We provide complete turnkey solutions—from custom grading and unique flavoring
+                                    to retail-ready packaging and reliable logistics.
+                                </p>
+
+                                {/* Desktop Buttons */}
+                                <div className="hidden lg:flex items-center gap-4">
+                                    <motion.button
+                                        whileHover={{ scale: 1.05, y: -1 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => setIsPopupOpen(true)}
+                                        className="h-11 px-7 rounded-xl bg-primary text-black font-black text-[13px] flex items-center gap-2.5 shadow-xl shadow-primary/20 transition-all"
+                                    >
+                                        Get Started on Your Brand
+                                        <Send className="w-3.5 h-3.5" />
+                                    </motion.button>
+                                    <motion.a
+                                        href="/bulk"
+                                        whileHover={{ scale: 1.05, y: -1 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all"
+                                    >
+                                        <BookOpen className="w-4 h-4" />
+                                        Know More
+                                    </motion.a>
+                                </div>
                             </div>
 
-                            {/* Buttons */}
-                            <div className="flex flex-col sm:flex-row items-center gap-4">
+                            {/* Right Side: Visual Mockup */}
+                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[220px] -mt-2 lg:mt-0">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    className="relative w-full h-full flex items-center justify-center lg:justify-end"
+                                >
+                                    <div className="relative w-full h-[180px] md:h-[220px] lg:w-[130%] lg:absolute lg:right-[-5%] lg:bottom-[-10%] drop-shadow-[0_15px_25px_rgba(0,0,0,0.4)]">
+                                        <img
+                                            src="/images/YOUR_LOGO.png"
+                                            alt="Custom Branding Packaging"
+                                            className="w-full h-full object-contain object-center lg:object-right-bottom"
+                                        />
+                                    </div>
+                                </motion.div>
+                            </div>
+
+                            {/* Mobile Buttons */}
+                            <div className="lg:hidden w-full flex flex-col gap-2 mt-1">
                                 <motion.button
-                                    whileHover={{ scale: 1.04, y: -2 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => setIsPopupOpen(true)}
-                                    className="group w-full sm:w-auto font-black px-8 py-4 rounded-2xl text-[13px] flex items-center justify-center gap-2.5 transition-all shadow-xl shadow-primary/30"
-                                    style={{
-                                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
-                                        color: '#000',
-                                    }}
+                                    className="w-full h-11 rounded-xl bg-primary text-black font-black text-[13px] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
                                 >
                                     Get Started on Your Brand
-                                    <Send className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                                    <Send className="w-3.5 h-3.5" />
                                 </motion.button>
-
                                 <motion.a
-                                    whileHover={{ scale: 1.03, y: -1 }}
-                                    whileTap={{ scale: 0.98 }}
                                     href="/bulk"
-                                    className="w-full sm:w-auto font-bold px-7 py-4 rounded-2xl text-[13px] flex items-center justify-center gap-2.5 backdrop-blur-md transition-all"
-                                    style={{
-                                        background: 'linear-gradient(160deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-                                        color: '#fff',
-                                        border: '1.5px solid rgba(255,255,255,0.2)',
-                                    }}
+                                    whileTap={{ scale: 0.98 }}
+                                    className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3"
                                 >
                                     <BookOpen className="w-4 h-4" />
                                     Know More
                                 </motion.a>
                             </div>
+
                         </div>
 
-                        {/* Visual spacer for image on desktop */}
-                        <div className="hidden lg:block w-[35%] shrink-0" aria-hidden />
-
-                        {/* Mobile Image — only show on small screens */}
-                        <div className="lg:hidden w-full mt-4 pointer-events-none px-4 flex justify-end items-end">
-                            <img
-                                src="/images/YOUR_LOGO.png"
-                                alt="Branding Mockup"
-                                className="w-full h-auto object-contain mx-auto max-w-[280px] translate-y-[8px]"
-                            />
+                        {/* Bottom: Trust Badges */}
+                        <div className="mt-6 md:mt-8">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-4">
+                                {TRUST_BADGES.map((badge, idx) => (
+                                    <motion.div 
+                                        key={idx}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: idx * 0.1 }}
+                                        className="flex flex-row items-center text-left gap-3 group"
+                                    >
+                                        <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-primary border border-white/10 shrink-0 transition-all duration-300">
+                                            <div className="scale-75">{badge.icon}</div>
+                                        </div>
+                                        <div className="space-y-0">
+                                            <h3 className="text-white font-black text-[14px] leading-tight">
+                                                {badge.title}
+                                            </h3>
+                                            <p className="text-white/40 font-bold text-[9px] uppercase tracking-wider">
+                                                {badge.subtitle}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </motion.div>

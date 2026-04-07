@@ -161,7 +161,13 @@ function ProfileContent() {
     };
 
     const cancelOrder = async (orderId: string) => {
-        if (!confirm('Cancel this order?')) return;
+        const order = orders.find(o => o._id === orderId);
+        if (order?.status === 'Dispatched') {
+            alert(`Cannot cancel, order is already ${order.status}`);
+            return;
+        }
+
+        if (!confirm('Are you sure you want to cancel this order?')) return;
         try {
             const res = await fetch(API.ORDER_CANCEL(orderId), {
                 method: 'PUT',
@@ -799,7 +805,11 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
                                     className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
                                     View Details
                                 </Link>
-                                {canCancel && (
+                                <Link href={`/profile/orders/${order._id}?download=true`}
+                                    className="text-xs font-bold text-primary border-2 border-primary/20 px-5 py-2 rounded-full hover:bg-primary/5 transition-colors">
+                                    Download Bill (PDF)
+                                </Link>
+                                {canCancel && order.status !== 'Cancelled' && (
                                     <button onClick={() => cancelOrder(order._id)}
                                         className="text-xs font-bold text-red-500 border-2 border-red-100 px-5 py-2 rounded-full hover:bg-red-50 transition-colors">
                                         Cancel

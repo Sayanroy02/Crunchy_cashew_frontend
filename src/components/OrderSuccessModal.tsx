@@ -24,9 +24,13 @@ function OrderSuccessContent() {
                     #{orderId.slice(-10).toUpperCase()}
                 </code>
                 <div className="flex flex-col gap-3">
-                    <Link href={`/track?order=${orderId}`}
+                    <Link href={`/profile/orders/${orderId}`}
                         className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-black transition flex items-center justify-center gap-2">
                         <i className="fa-solid fa-truck-fast" /> Track Your Order
+                    </Link>
+                    <Link href={`/profile/orders/${orderId}?download=true`}
+                        className="block border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary/5 transition flex items-center justify-center gap-2 text-sm">
+                        <i className="fa-solid fa-file-pdf"></i> Download Bill (PDF)
                     </Link>
                     <Link href="/shop"
                         className="block bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition text-sm">

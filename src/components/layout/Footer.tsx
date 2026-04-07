@@ -129,7 +129,7 @@ export default function Footer() {
                     <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Contact Us</h3>
                     <ul className="flex flex-col gap-4">
                         <li>
-                            <a href="tel:+919876543210" className="group flex items-start gap-3 hover:text-white transition-colors">
+                            <a href="tel:+917847996343" className="group flex items-start gap-3 hover:text-white transition-colors">
                                 <div
                                     className="w-8 h-8 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
                                     style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
