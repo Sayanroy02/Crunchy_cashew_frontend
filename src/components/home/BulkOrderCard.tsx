@@ -432,7 +432,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                 </div>
 
                 {/* Right: CTA buttons — horizontal */}
-                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-center md:-translate-x-16 md:translate-y-6 relative z-20">
+                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-center md:-translate-x-16 md:translate-y-2 relative z-20">
                     {/* Top — Download B2B Catalog — 3D glass */}
                     <motion.a
                         whileHover={{ scale: 1.03, y: -2 }}
