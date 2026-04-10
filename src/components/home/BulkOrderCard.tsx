@@ -372,7 +372,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
         >
             {/* Top Right Decorative Pattern — Stylized Grid */}
             <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-[0.08] translate-x-1/4 -translate-y-1/4 select-none"
-                style={{ 
+                style={{
                     backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
                     backgroundSize: '20px 20px'
                 }} />
@@ -391,9 +391,9 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
 
             {/* Hanging Cashew Tree Image */}
             <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block group-hover:scale-105 transition-transform duration-700">
-                <img 
-                    src="/images/Cashew-In-Tree.png" 
-                    alt="" 
+                <img
+                    src="/images/Cashew-In-Tree.png"
+                    alt=""
                     className="w-full h-full object-contain object-right transform rotate-[-5deg] scale-125"
                 />
             </div>
@@ -403,10 +403,10 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
 
                 {/* Left: Pitch */}
                 <div className="flex-1 text-center md:text-left">
-                    <div className="inline-flex items-center gap-2 mb-3">
-                        <span className="h-px w-5 bg-emerald-400/60" />
-                        <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.22em]">Factory Direct · Siliguri</span>
-                    </div>
+                    {/* <div className="inline-flex items-center gap-2 mb-3">
+                        <span className="h-px w-5 bg-emerald-400/60" /> */}
+                    {/* <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.22em]">Factory Direct · Siliguri</span> */}
+                    {/* </div> */}
 
                     <h3 className="text-[1.45rem] md:text-[1.75rem] font-black text-white leading-tight tracking-tight mb-2.5">
                         Looking for a reliable,{' '}
@@ -432,8 +432,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                 </div>
 
                 {/* Right: CTA buttons — horizontal */}
-                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-end">
-
+                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-center md:-translate-x-16 md:translate-y-6 relative z-20">
                     {/* Top — Download B2B Catalog — 3D glass */}
                     <motion.a
                         whileHover={{ scale: 1.03, y: -2 }}
@@ -488,13 +487,13 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
 export default function BulkOrderCard() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const sectionRef = useRef<HTMLDivElement>(null);
-    
+
     // Parallax logic
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const springX = useSpring(x, { stiffness: 50, damping: 20 });
     const springY = useSpring(y, { stiffness: 50, damping: 20 });
-    
+
     // Move slightly in opposite direction
     const moveX = useTransform(springX, [-500, 500], [20, -20]);
     const moveY = useTransform(springY, [-500, 500], [20, -20]);
@@ -510,31 +509,31 @@ export default function BulkOrderCard() {
     };
 
     return (
-        <section 
+        <section
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { x.set(0); y.set(0); }}
             className="py-4 md:py-6 bg-bg-cream relative overflow-hidden"
         >
             {/* Decorative Fruits with Parallax */}
-            <motion.div 
+            <motion.div
                 style={{ x: moveX, y: moveY }}
                 className="absolute top-[-5%] right-[-3%] w-[150px] md:w-[220px] h-auto pointer-events-none z-[11] hidden sm:block"
             >
-                <img 
-                    src="/images/Right-Fruit-2-2-1.png" 
-                    alt="" 
+                <img
+                    src="/images/Right-Fruit-2-2-1.png"
+                    alt=""
                     className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
             </motion.div>
 
-            <motion.div 
+            <motion.div
                 style={{ x: moveX, y: moveY }}
                 className="absolute top-[8%] left-[-4%] w-[120px] md:w-[180px] h-auto pointer-events-none z-[11] hidden sm:block rotate-[-15deg]"
             >
-                <img 
-                    src="/images/Fruit-3-1.png" 
-                    alt="" 
+                <img
+                    src="/images/Fruit-3-1.png"
+                    alt=""
                     className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
             </motion.div>
