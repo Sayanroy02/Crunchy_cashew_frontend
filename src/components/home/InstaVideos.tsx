@@ -187,21 +187,21 @@ export default function InstaVideos() {
             {/* Flying Parachute Decoration */}
             <motion.div
                 initial={{ y: 0, x: 0 }}
-                animate={{ 
-                    y: [0, -40, 0],
-                    x: [0, 20, 0],
-                    rotate: [0, 10, -10, 0]
+                animate={{
+                    y: [0, -10, 0],
+                    x: [0, 5, 0],
+                    rotate: [0, 5, -5, 0]
                 }}
-                transition={{ 
-                    duration: 5,
+                transition={{
+                    duration: 3,
                     repeat: Infinity,
                     ease: "easeInOut"
                 }}
-                className="absolute left-[2%] top-[15%] w-[140px] md:w-[240px] h-auto pointer-events-none z-10 hidden lg:block"
+                className="absolute -left-4 lg:left-[1%] xl:left-[3%] top-[8%] w-[120px] md:w-[140px] lg:w-[160px] h-auto pointer-events-none z-0 hidden lg:block"
             >
-                <img 
-                    src="/images/Cashew-parachute-03.png" 
-                    alt="" 
+                <img
+                    src="/images/Cashew-parachute-03.png"
+                    alt=""
                     className="w-full h-auto drop-shadow-2xl opacity-90"
                 />
             </motion.div>

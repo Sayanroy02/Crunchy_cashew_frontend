@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { API_BASE } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
@@ -24,6 +24,25 @@ export default function AboutFactory() {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', date: '', purpose: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const videoRef = useRef<HTMLVideoElement>(null);
+    const sectionRef = useRef<HTMLElement>(null);
+
+    // Parallax logic
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+    const springX = useSpring(x, { stiffness: 50, damping: 20 });
+    const springY = useSpring(y, { stiffness: 50, damping: 20 });
+
+    const leftMoveX = useTransform(springX, [-500, 500], [15, -15]);
+    const leftMoveY = useTransform(springY, [-500, 500], [15, -15]);
+    const rightMoveX = useTransform(springX, [-500, 500], [-10, 10]);
+    const rightMoveY = useTransform(springY, [-500, 500], [-10, 10]);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!sectionRef.current) return;
+        const rect = sectionRef.current.getBoundingClientRect();
+        x.set(e.clientX - (rect.left + rect.width / 2));
+        y.set(e.clientY - (rect.top + rect.height / 2));
+    };
 
     // Lazy-play: only start buffering + playing when the video is in the viewport
     useEffect(() => {
@@ -81,18 +100,24 @@ export default function AboutFactory() {
     };
 
     return (
-        <section className="py-20 md:py-36 bg-bg-cream relative z-20 overflow-hidden">
+        <section 
+            ref={sectionRef}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => { x.set(0); y.set(0); }}
+            className="py-20 md:py-36 bg-bg-cream relative z-20 overflow-hidden"
+        >
             {/* ── Left corner fruit ── */}
-            <div className="absolute left-0 bottom-0 w-28 md:w-40 lg:w-52 pointer-events-none select-none z-10">
-                <Image
+            <motion.div 
+                style={{ x: leftMoveX, y: leftMoveY }}
+                className="absolute left-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
+            >
+                <img
                     src="/images/Fruit-3.png"
                     alt=""
-                    width={200}
-                    height={200}
                     className="object-contain object-bottom w-full h-auto -translate-x-6 md:-translate-x-8"
                     aria-hidden="true"
                 />
-            </div>
+            </motion.div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
@@ -161,16 +186,17 @@ export default function AboutFactory() {
             </div>
 
             {/* ── Right corner fruit ── */}
-            <div className="absolute right-0 bottom-0 w-28 md:w-40 lg:w-52 pointer-events-none select-none z-10">
-                <Image
+            <motion.div 
+                style={{ x: rightMoveX, y: rightMoveY }}
+                className="absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
+            >
+                <img
                     src="/images/Right-Fruit-2-2-1.png"
                     alt=""
-                    width={200}
-                    height={200}
                     className="object-contain object-bottom w-full h-auto translate-x-6 md:translate-x-8"
                     aria-hidden="true"
                 />
-            </div>
+            </motion.div>
 
             {/* Reservation Modal Pop-up via Portal */}
             <AnimatePresence>

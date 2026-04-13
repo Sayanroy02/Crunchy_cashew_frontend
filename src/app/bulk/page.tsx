@@ -341,11 +341,10 @@ function GradeCard({
             animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             onClick={() => onEnquire(item.code)}
-            className={`group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border flex flex-col h-full cursor-pointer transition-all duration-300 ${
-                isSelected 
-                ? 'border-[#F6B000] shadow-xl ring-2 ring-[#F6B000]/20' 
-                : 'border-gray-100 hover:shadow-xl'
-            }`}
+            className={`group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border flex flex-col h-full cursor-pointer transition-all duration-300 ${isSelected
+                    ? 'border-[#F6B000] shadow-xl ring-2 ring-[#F6B000]/20'
+                    : 'border-gray-100 hover:shadow-xl'
+                }`}
         >
             {/* Tag */}
             <div className="absolute top-3 left-3 z-10">
@@ -356,9 +355,8 @@ function GradeCard({
 
             {/* Favorite Icon (Visual only as per ref) */}
             <div className="absolute top-3 right-3 z-10">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm border transition-colors ${
-                    isSelected ? 'bg-[#F6B000] border-[#F6B000] text-black' : 'bg-white border-gray-100 text-gray-400'
-                }`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm border transition-colors ${isSelected ? 'bg-[#F6B000] border-[#F6B000] text-black' : 'bg-white border-gray-100 text-gray-400'
+                    }`}>
                     {isSelected ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
                 </div>
             </div>
@@ -399,9 +397,8 @@ function GradeCard({
                     </div>
 
                     <div
-                        className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg transition-all ${
-                            isSelected ? 'bg-black text-[#F6B000]' : 'bg-[#F6B000] text-black shadow-[#F6B000]/20'
-                        }`}
+                        className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg transition-all ${isSelected ? 'bg-black text-[#F6B000]' : 'bg-[#F6B000] text-black shadow-[#F6B000]/20'
+                            }`}
                         title="Enquire Now"
                     >
                         {isSelected ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" /> : <Package className="w-4 h-4 md:w-5 md:h-5" />}
@@ -509,11 +506,11 @@ function BusinessesCateredSection() {
 }
 
 // ─── Tabbed Grades Section ────────────────────────────────────────────────────
- 
-function OurGradesSection({ 
-    onEnquire, 
-    onSelectCheck 
-}: { 
+
+function OurGradesSection({
+    onEnquire,
+    onSelectCheck
+}: {
     onEnquire: (grade: string) => void;
     onSelectCheck: (grade: string) => boolean;
 }) {
@@ -703,11 +700,11 @@ export default function BulkOrderPage() {
             {/* ── Hero ── */}
             <section
                 className="relative overflow-hidden pt-6 pb-6 md:pt-12 md:pb-10"
-                style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}
+                style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFE57E 100%)' }}
             >
-                {/* Background Blobs */}
+                {/* Background Blobs - Golden Accents */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-64 -mt-64" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white opacity-[0.2] rounded-full blur-3xl -ml-48 -mb-48" />
+                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white opacity-[0.4] rounded-full blur-3xl -ml-40 -mb-40" />
 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">

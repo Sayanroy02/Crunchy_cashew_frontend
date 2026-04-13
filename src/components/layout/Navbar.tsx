@@ -106,12 +106,15 @@ export default function Navbar() {
                 className={`
                     ${isHeroPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-50
                     transition-all duration-400 ease-out
-                    ${isTransparent
-                        ? 'bg-transparent border-transparent'
-                        : 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm'
-                    }
+                    ${!isTransparent ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm' : ''}
                 `}
             >
+                {/* 50% Height Horizontal Stripe (Lite Black 20%) */}
+                <div className={`
+                    absolute inset-x-0 top-0 h-[75%] -z-10 pointer-events-none transition-all duration-500
+                    ${isTransparent ? 'bg-black/20 backdrop-blur-md' : 'opacity-0'}
+                `} />
+
                 {/* Desktop */}
                 <div className="hidden md:flex items-stretch max-w-screen-xl mx-auto" style={{ minHeight: '72px' }}>
 
@@ -193,9 +196,6 @@ export default function Navbar() {
                                     </span>
                                 )}
                             </div>
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-primary'}`}>
-                                Cart
-                            </span>
                         </Link>
                     </div>
                 </div>
