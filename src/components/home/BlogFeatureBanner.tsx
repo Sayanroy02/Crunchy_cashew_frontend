@@ -3,6 +3,7 @@
 import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { COLORS } from '@/constants/styles';
 
 const topics = [
   { label: '🍳 Recipe', color: '#FDC700' },
@@ -25,9 +26,9 @@ export default function BlogFeatureBanner() {
           ref={bannerRef}
           className="relative flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 rounded-2xl overflow-hidden px-6 md:px-10 py-5 md:py-6"
           style={{
-            background: 'linear-gradient(110deg, #0f0f0f 0%, #1a1a0f 50%, #0f0f0f 100%)',
-            boxShadow: '0 8px 40px rgba(253,199,0,0.13), 0 2px 8px rgba(0,0,0,0.18)',
-            border: '1px solid rgba(253,199,0,0.18)',
+            background: `linear-gradient(135deg, ${COLORS.heading} 0%, #006b31 100%)`,
+            boxShadow: `0 8px 40px rgba(0, 134, 61, 0.2), 0 2px 8px rgba(0,0,0,0.18)`,
+            border: `1px solid rgba(255, 255, 255, 0.1)`,
           }}
         >
           {/* ── Background shimmer dots ── */}

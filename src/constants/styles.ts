@@ -20,7 +20,7 @@ export const COLORS = {
   highlight: '#F6B000',       // Highlight Color (York Yellow)
   accent: '#F6B000',          // Accent Color
   footerBg: '#000000',        // Pure Black for Footer
-  green: '#0A5246',           // Dark Bottle Green
+  green: '#072722ff',           // Dark Bottle Green
 } as const;
 
 /* Old Colors (Commented Out for Reference)

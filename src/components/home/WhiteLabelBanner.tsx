@@ -215,7 +215,7 @@ export default function WhiteLabelBanner() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     return (
-        <section className="py-6 md:py-8 bg-white overflow-hidden">
+        <section className={`py-6 md:py-8 bg-${COLORS.bg} overflow-hidden`}>
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -245,31 +245,28 @@ export default function WhiteLabelBanner() {
 
                     <div className="relative z-10 px-6 py-6 md:px-12 md:py-8">
                         <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-10">
-                            
+
                             {/* Left Side: Content */}
                             <div className="flex-1 text-center lg:text-left">
                                 {/* Subtitle with lines */}
                                 <div className="flex items-center justify-center lg:justify-start gap-3 mb-2">
                                     <div className="h-[1.5px] w-6 md:w-8 bg-primary/40 rounded-full" />
                                     <span className="text-primary text-[10px] font-black uppercase tracking-[0.25em]">
-                                        Launch Your Brand
+                                        WHITE LABEL SERVICES
                                     </span>
                                     <div className="h-[1.5px] w-6 md:w-8 bg-primary/40 rounded-full" />
                                 </div>
 
-                                <motion.h2 
+                                <motion.h2
                                     initial={{ opacity: 0, x: -10 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     className="text-[20px] font-black text-white leading-tight mb-2"
                                 >
-                                    Launch Your Own <br className="hidden md:block" />
-                                    Private Label <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
+                                    Launch Your Own <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
                                 </motion.h2>
 
                                 <p className="text-white/80 text-[16px] leading-snug max-w-[500px] mb-5 font-medium">
-                                    Turn our premium, factory-direct cashews into your exclusive product line.
-                                    We provide complete turnkey solutions—from custom grading and unique flavoring
-                                    to retail-ready packaging and reliable logistics.
+                                    Leverage our state-of-the-art processing facility to sell premium, factory-direct cashews under your own label. We handle the grading, roasting, and custom packaging so you can focus on selling. Ideal for retailers, corporate gifting, and new brands.
                                 </p>
 
                                 {/* Desktop Buttons */}
@@ -280,7 +277,7 @@ export default function WhiteLabelBanner() {
                                         onClick={() => setIsPopupOpen(true)}
                                         className="h-11 px-7 rounded-xl bg-primary text-black font-black text-[13px] flex items-center gap-2.5 shadow-xl shadow-primary/20 transition-all"
                                     >
-                                        Get Started on Your Brand
+                                        Partner With Us
                                         <Send className="w-3.5 h-3.5" />
                                     </motion.button>
                                     <motion.a
@@ -296,17 +293,17 @@ export default function WhiteLabelBanner() {
                             </div>
 
                             {/* Right Side: Visual Mockup */}
-                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[220px] -mt-2 lg:mt-0">
+                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[260px] -mt-2 lg:mt-0">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     className="relative w-full h-full flex items-center justify-center lg:justify-end"
                                 >
-                                    <div className="relative w-full h-[180px] md:h-[220px] lg:w-[130%] lg:absolute lg:right-[-5%] lg:bottom-[-10%] drop-shadow-[0_15px_25px_rgba(0,0,0,0.4)]">
+                                    <div className="relative w-full h-[220px] md:h-[260px] lg:h-[320px] lg:w-[150%] lg:absolute lg:right-[-8%] lg:bottom-[-15%] drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
                                         <img
                                             src="/images/YOUR_LOGO.png"
                                             alt="Custom Branding Packaging"
-                                            className="w-full h-full object-contain object-center lg:object-right-bottom"
+                                            className="w-full h-full object-contain object-center lg:object-right-bottom scale-[1.1] transform-gpu origin-bottom-right"
                                         />
                                     </div>
                                 </motion.div>
@@ -319,7 +316,7 @@ export default function WhiteLabelBanner() {
                                     onClick={() => setIsPopupOpen(true)}
                                     className="w-full h-11 rounded-xl bg-primary text-black font-black text-[13px] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
                                 >
-                                    Get Started on Your Brand
+                                    Partner With Us
                                     <Send className="w-3.5 h-3.5" />
                                 </motion.button>
                                 <motion.a
@@ -338,7 +335,7 @@ export default function WhiteLabelBanner() {
                         <div className="mt-6 md:mt-8">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-4">
                                 {TRUST_BADGES.map((badge, idx) => (
-                                    <motion.div 
+                                    <motion.div
                                         key={idx}
                                         initial={{ opacity: 0, y: 10 }}
                                         whileInView={{ opacity: 1, y: 0 }}

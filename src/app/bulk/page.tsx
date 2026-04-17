@@ -19,7 +19,9 @@ import {
     ArrowRight,
     Package,
     Tag,
-    UtensilsCrossed
+    UtensilsCrossed,
+    ChevronLeft,
+    ChevronRight
 } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import WhiteLabelBanner from '@/components/home/WhiteLabelBanner';
@@ -318,185 +320,176 @@ function useIntersectionObserver(threshold = 0.15) {
     return { ref, visible };
 }
 
-// ─── Grade Card ───────────────────────────────────────────────────────────────
-
 function GradeCard({
     item,
-    accent,
-    index,
-    visible,
     onEnquire,
     isSelected,
 }: {
     item: (typeof gradeCategories)[0]['items'][0];
-    accent: string;
-    index: number;
-    visible: boolean;
     onEnquire: (grade: string) => void;
     isSelected: boolean;
 }) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+        <div
             onClick={() => onEnquire(item.code)}
-            className={`group relative bg-[#F9F9F7] rounded-2xl overflow-hidden border flex flex-col h-full cursor-pointer transition-all duration-300 ${isSelected
-                    ? 'border-[#F6B000] shadow-xl ring-2 ring-[#F6B000]/20'
-                    : 'border-gray-100 hover:shadow-xl'
-                }`}
+            className="group relative w-full flex flex-col cursor-pointer transition-all duration-300"
+            style={{
+                borderRadius: '20px',
+                background: isSelected
+                    ? 'linear-gradient(145deg, rgba(246,176,0,0.12) 0%, rgba(255,255,255,0.95) 100%)'
+                    : 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(249,249,247,0.9) 100%)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: isSelected
+                    ? '1px solid rgba(246,176,0,0.6)'
+                    : '1px solid rgba(255,255,255,0.8)',
+                boxShadow: isSelected
+                    ? '0 8px 32px rgba(246,176,0,0.2), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)'
+                    : '0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
+            }}
         >
-            {/* Tag */}
-            <div className="absolute top-3 left-3 z-10">
-                <span className="bg-[#F6B000] text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider text-black">
-                    {item.tagline}
-                </span>
-            </div>
+            {/* Glossy top shine */}
+            <div
+                className="absolute top-0 left-0 right-0 h-1/2 rounded-t-[20px] pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%)' }}
+            />
 
-            {/* Favorite Icon (Visual only as per ref) */}
-            <div className="absolute top-3 right-3 z-10">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm border transition-colors ${isSelected ? 'bg-[#F6B000] border-[#F6B000] text-black' : 'bg-white border-gray-100 text-gray-400'
-                    }`}>
-                    {isSelected ? <CheckCircle2 className="w-4 h-4" /> : <Clock className="w-4 h-4" />}
+            {/* Image */}
+            <div className="relative w-full flex items-center justify-center pt-4 pb-1 px-4">
+                <div className="relative w-full aspect-square overflow-hidden">
+                    <Image
+                        src={item.image}
+                        alt={item.code}
+                        fill
+                        className="object-contain transition-transform duration-500 group-hover:scale-110"
+                        sizes="300px"
+                    />
                 </div>
-            </div>
-
-            {/* Image Container */}
-            <div className="relative aspect-[4/3] w-full bg-white p-1 overflow-hidden flex items-center justify-center">
-                <Image
-                    src={item.image}
-                    alt={item.code}
-                    width={400}
-                    height={400}
-                    className="w-[85%] h-[85%] object-contain transition-transform duration-500 group-hover:scale-110"
-                />
-            </div>
-
-            {/* Content Area */}
-            <div className="p-3 md:p-4 flex flex-col flex-grow bg-white border-t border-gray-50">
-                <div className="mb-1 md:mb-2">
-                    <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
-                        {item.origins.split(' · ')[0]}
-                    </span>
-                    <h4 className="text-[13px] md:text-base font-black text-gray-900 leading-tight">
-                        {item.code}
-                    </h4>
-                </div>
-
-                <p className="text-[10px] md:text-[12px] text-gray-500 leading-tight mb-2 md:mb-3 flex-grow line-clamp-2 md:line-clamp-3">
-                    {item.description}
-                </p>
-
-                <div className="flex items-center justify-between mt-auto pt-2">
-                    <div className="flex flex-col">
-                        <span className="text-[8px] md:text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Stock</span>
-                        <span className="text-[10px] md:text-xs font-black text-green-600 flex items-center gap-1">
-                            <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-green-500" />
-                            Ready
-                        </span>
+                {isSelected && (
+                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#F6B000] flex items-center justify-center shadow-md z-10">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-black" />
                     </div>
+                )}
+            </div>
 
-                    <div
-                        className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center shadow-lg transition-all ${isSelected ? 'bg-black text-[#F6B000]' : 'bg-[#F6B000] text-black shadow-[#F6B000]/20'
-                            }`}
-                        title="Enquire Now"
-                    >
-                        {isSelected ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" /> : <Package className="w-4 h-4 md:w-5 md:h-5" />}
-                    </div>
+            {/* Name + Button */}
+            <div className="px-4 pb-4 pt-2 flex items-center justify-between gap-2">
+                <h4 className="text-sm md:text-base font-black text-gray-900 leading-tight">{item.code}</h4>
+                <div
+                    className={`w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
+                        isSelected
+                            ? 'bg-black text-[#F6B000] shadow-lg shadow-black/20'
+                            : 'bg-[#F6B000] text-black shadow-lg shadow-[#F6B000]/30'
+                    }`}
+                    title="Enquire Now"
+                >
+                    <Package className="w-4 h-4" />
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 }
+
+
 
 // ─── Businesses We Cater To ──────────────────────────────────────────────────
 
 function BusinessesCateredSection() {
     const categories = [
         {
-            icon: <ShoppingBag className="w-8 h-8" strokeWidth={1.5} />,
             title: 'Retailers & Resellers',
-            points: [
-                "**Ready-to-Sell** premium cashew packaging.",
-                "High profit margins with **direct factory supplies**.",
-                "Consistent availability and **recurring stock**."
-            ],
-            color: '#F6B000',
+            subtitle: 'Direct factory supply for retail chains',
+            image: '/images/retailers.png',
+            tag: '🛒 Retail',
         },
         {
-            icon: <ChefHat className="w-8 h-8" strokeWidth={1.5} />,
             title: 'Hotels & Restaurants (HoReCa)',
-            points: [
-                "**Consistent sizing** for high-volume kitchens.",
-                "Reliable **point-to-point delivery** schedules.",
-                "Bulk packaging for culinary optimization."
-            ],
-            color: '#000000',
+            subtitle: 'Consistent bulk grades for professional kitchens',
+            image: '/images/Horeca.png',
+            tag: '🍽️ HoReCa',
         },
         {
-            icon: <UtensilsCrossed className="w-8 h-8" strokeWidth={1.5} />,
             title: 'Bakeries & Confectionery',
-            points: [
-                "**Premium broken grades** for toppings and pastes.",
-                "Freshly roasted supplies for **industrial baking**.",
-                "FSSAI compliant, high-purity standards."
-            ],
-            color: '#F6B000',
+            subtitle: 'Premium broken grades & roasted varieties',
+            image: '/images/bakery.png',
+            tag: '🎂 Bakery',
         },
         {
-            icon: <Package className="w-8 h-8" strokeWidth={1.5} />,
             title: 'Corporate & Events',
-            points: [
-                "**Premium Gifting** for corporate hospitality.",
-                "Customized event-scale orders and boxes.",
-                "Direct **pan-India logistics** support."
-            ],
-            color: '#000000',
+            subtitle: 'Tailored gift hampers & event-scale orders',
+            image: '/images/corporate_gifting.png',
+            tag: '🎁 Corporate',
         },
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-16 md:py-16">
-            <div className="text-center mb-6 md:mb-8">
+        <section className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+            <div className="text-center mb-10 md:mb-14">
                 <SectionHeading
                     text="Who We"
                     highlight="Serve"
-                    className="mb-2 !text-[22px] md:!text-4xl"
+                    className="mb-3 !text-[22px] md:!text-4xl"
                 />
-                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full" />
+                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-4" />
+                <p className="text-gray-500 text-sm max-w-xl mx-auto">
+                    Trusted by businesses across India — from neighbourhood stores to 5-star kitchens.
+                </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 {categories.map((cat, idx) => (
                     <motion.div
                         key={idx}
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="group bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col items-center text-center relative overflow-hidden"
+                        transition={{ delay: idx * 0.12, duration: 0.55 }}
+                        className="group relative rounded-[20px] overflow-hidden cursor-pointer"
+                        style={{ aspectRatio: '4/5', minHeight: '360px' }}
                     >
-                        <div
-                            className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110"
-                            style={{ backgroundColor: cat.color + '10', color: cat.color }}
-                        >
-                            {cat.icon}
-                        </div>
-                        <h3 className="text-lg font-bold mb-4 text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
-                            {cat.title}
-                        </h3>
-                        <ul className="space-y-3 text-left w-full">
-                            {cat.points.map((point, pIdx) => (
-                                <li key={pIdx} className="flex items-start gap-2 text-gray-500 text-[13px] leading-snug">
-                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
-                                    <p dangerouslySetInnerHTML={{ __html: point.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-gray-900">$1</span>') }} />
-                                </li>
-                            ))}
-                        </ul>
+                        {/* Full-bleed Image */}
+                        <Image
+                            src={cat.image}
+                            alt={cat.title}
+                            fill
+                            quality={100}
+                            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                            unoptimized
+                        />
 
-                        {/* Subtle background decoration */}
-                        <div className="absolute -right-4 -bottom-4 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500">
-                            {React.cloneElement(cat.icon as React.ReactElement<any>, { className: 'w-24 h-24' })}
+                        {/* Always-on dark gradient at bottom */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                        {/* Hover overlay for extra depth */}
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                        {/* Golden left border reveal on hover */}
+                        <div
+                            className="absolute left-0 top-0 w-1 h-full bg-[#F6B000] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
+                        />
+
+                        {/* Tag pill — top */}
+                        <div className="absolute top-4 left-4 z-10">
+                            <span
+                                className="text-[11px] font-black tracking-widest uppercase px-3 py-1 rounded-full backdrop-blur-md"
+                                style={{ backgroundColor: 'rgba(246,176,0,0.2)', color: '#F6B000', border: '1px solid rgba(246,176,0,0.4)' }}
+                            >
+                                {cat.tag}
+                            </span>
+                        </div>
+
+                        {/* Content — bottom overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 z-10 p-5 md:p-6">
+                            <h3 className="text-white font-black text-xl md:text-[22px] leading-tight mb-1 drop-shadow-sm">
+                                {cat.title}
+                            </h3>
+                            {/* Subtitle slides up on hover */}
+                            <p className="text-white/70 text-xs leading-relaxed max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-500 ease-out">
+                                {cat.subtitle}
+                            </p>
+                            {/* Golden underline */}
+                            <div className="w-8 h-[3px] bg-[#F6B000] rounded-full mt-3 group-hover:w-16 transition-all duration-500" />
                         </div>
                     </motion.div>
                 ))}
@@ -504,8 +497,6 @@ function BusinessesCateredSection() {
         </section>
     );
 }
-
-// ─── Tabbed Grades Section ────────────────────────────────────────────────────
 
 function OurGradesSection({
     onEnquire,
@@ -516,16 +507,41 @@ function OurGradesSection({
 }) {
     const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [cardWidth, setCardWidth] = useState(0);
+
+    // Responsive card width: 4 on desktop, 3 on tablet, 2 on mobile
+    useEffect(() => {
+        const updateWidth = () => {
+            if (!containerRef.current) return;
+            const w = containerRef.current.offsetWidth;
+            const gap = 16; // gap-4 = 16px
+            if (window.innerWidth >= 1024) {
+                setCardWidth((w - gap * 3) / 4); // 4 cards
+            } else if (window.innerWidth >= 768) {
+                setCardWidth((w - gap * 2) / 3); // 3 cards
+            } else {
+                setCardWidth((w - gap) / 2); // 2 cards
+            }
+        };
+        updateWidth();
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, []);
 
     const activeCategory = gradeCategories.find(c => c.id === activeTab) || gradeCategories[0];
+
+    const scroll = (dir: 'left' | 'right') => {
+        if (!scrollRef.current) return;
+        const amount = cardWidth + 16;
+        scrollRef.current.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
+    };
 
     return (
         <section className="max-w-7xl mx-auto px-6 py-4 md:py-6">
             {/* Section Title */}
-            <div
-                ref={ref}
-                className="text-center mb-6 md:mb-8"
-            >
+            <div ref={ref} className="text-center mb-6 md:mb-8">
                 <SectionHeading
                     text="Our"
                     highlight="Grades"
@@ -537,16 +553,17 @@ function OurGradesSection({
                 </p>
             </div>
 
-            {/* Tab Navigation - Pill Style */}
+            {/* Tab Navigation */}
             <div className="flex flex-nowrap overflow-x-auto justify-start md:justify-center gap-3 mb-8 pb-4 no-scrollbar -mx-6 px-6 md:mx-0">
                 {gradeCategories.map((cat) => (
                     <button
                         key={cat.id}
                         onClick={() => setActiveTab(cat.id)}
-                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${activeTab === cat.id
-                            ? 'bg-[#F6B000] text-black border-[#F6B000]'
-                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
-                            }`}
+                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${
+                            activeTab === cat.id
+                                ? 'bg-[#F6B000] text-black border-[#F6B000]'
+                                : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
+                        }`}
                     >
                         <span className={`${activeTab === cat.id ? 'text-black' : 'text-gray-400 group-hover:text-[#F6B000]'}`}>
                             {cat.icon}
@@ -556,7 +573,7 @@ function OurGradesSection({
                 ))}
             </div>
 
-            {/* Tab Content */}
+            {/* Tab Content — Horizontal Scroll */}
             <AnimatePresence mode="wait">
                 <motion.div
                     key={activeTab}
@@ -564,30 +581,48 @@ function OurGradesSection({
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.4 }}
+                    className="relative"
                 >
-                    <div className="flex flex-col md:flex-row items-center gap-8 mb-12 bg-white/50 p-8 rounded-3xl border border-gray-50">
-                        <div className="w-1.5 h-16 rounded-full hidden md:block" style={{ background: activeCategory.accent }} />
-                        <div>
-                            <h3 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Georgia, serif' }}>
-                                {activeCategory.title}
-                            </h3>
-                            <p className="text-gray-500 text-lg">{activeCategory.subtitle}</p>
+                    {/* Left Arrow */}
+                    <button
+                        onClick={() => scroll('left')}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 z-20 w-11 h-11 rounded-full bg-white border border-gray-200 shadow-lg flex items-center justify-center hover:bg-[#F6B000] hover:border-[#F6B000] transition-all duration-200 group"
+                        aria-label="Scroll left"
+                    >
+                        <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-black" />
+                    </button>
+
+                    {/* Scrollable Row */}
+                    <div ref={containerRef}>
+                        <div
+                            ref={scrollRef}
+                            className="flex gap-4 overflow-x-auto no-scrollbar pb-4"
+                            style={{ scrollSnapType: 'x mandatory' }}
+                        >
+                            {activeCategory.items.map((item) => (
+                                <div
+                                    key={item.code}
+                                    className="flex-shrink-0"
+                                    style={{ width: cardWidth > 0 ? cardWidth : undefined, scrollSnapAlign: 'start' }}
+                                >
+                                    <GradeCard
+                                        item={item}
+                                        onEnquire={onEnquire}
+                                        isSelected={onSelectCheck(item.code)}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-                        {activeCategory.items.map((item, i) => (
-                            <GradeCard
-                                key={item.code}
-                                item={item}
-                                accent={activeCategory.accent}
-                                index={i}
-                                visible={true}
-                                onEnquire={onEnquire}
-                                isSelected={onSelectCheck(item.code)}
-                            />
-                        ))}
-                    </div>
+                    {/* Right Arrow */}
+                    <button
+                        onClick={() => scroll('right')}
+                        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 z-20 w-11 h-11 rounded-full bg-white border border-gray-200 shadow-lg flex items-center justify-center hover:bg-[#F6B000] hover:border-[#F6B000] transition-all duration-200 group"
+                        aria-label="Scroll right"
+                    >
+                        <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-black" />
+                    </button>
                 </motion.div>
             </AnimatePresence>
         </section>

@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { API_BASE } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { BulkInquiryPopup } from '@/components/home/BulkOrderCard';
 
 // ─── Portal — renders outside all stacking contexts ─────────────────────────
 function Portal({ children }: { children: React.ReactNode }) {
@@ -21,6 +22,11 @@ export default function AboutFactory() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = useCallback(() => setIsModalOpen(true), []);
     const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+    // Quote popup state
+    const [isQuoteOpen, setIsQuoteOpen] = useState(false);
+    const openQuote = useCallback(() => setIsQuoteOpen(true), []);
+    const closeQuote = useCallback(() => setIsQuoteOpen(false), []);
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', date: '', purpose: '' });
     const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -100,14 +106,14 @@ export default function AboutFactory() {
     };
 
     return (
-        <section 
+        <section
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { x.set(0); y.set(0); }}
-            className="py-20 md:py-36 bg-bg-cream relative z-20 overflow-hidden"
+            className="py-10 md:py-20 bg-bg-cream relative z-20 overflow-hidden"
         >
             {/* ── Left corner fruit ── */}
-            <motion.div 
+            <motion.div
                 style={{ x: leftMoveX, y: leftMoveY }}
                 className="absolute left-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
@@ -120,15 +126,17 @@ export default function AboutFactory() {
             </motion.div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">
-                <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-                    {/* 1. Mobile Heading — Only visible on mobile, at the very top (Order 1) */}
-                    <div className="w-full lg:hidden flex flex-col items-start order-1">
-                        <span className="text-black font-bold tracking-[4px] uppercase text-[10px] mb-2 block">Our Production Facility</span>
-                        <SectionHeading text="About Our" highlight="Factory" className="text-4xl mb-0" />
-                    </div>
+                {/* 1. Global Heading — centered at top for desktop and mobile */}
+                <div className="text-center mb-10 md:mb-16 flex flex-col items-center">
+                    <span className="text-black font-bold tracking-[4px] uppercase text-[10px] md:text-xs mb-3 block">
+                        FACTORY DIRECT & TRANSPARENT
+                    </span>
+                    <SectionHeading text="See Where the" highlight="Crunch is Made" className="text-4xl md:text-5xl" />
+                </div>
 
-                    {/* 2. Video Section — Shown second on mobile, first on desktop (Order 2) */}
-                    <div className="w-full lg:w-1/2 relative flex justify-center lg:justify-start order-2">
+                <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+                    {/* 2. Video Section */}
+                    <div className="w-full lg:w-1/2 relative flex justify-center lg:justify-start">
                         <div className="relative w-full max-w-md">
                             <div className="rounded-[40px] overflow-hidden shadow-2xl relative aspect-[4/5] w-full bg-primary/10">
                                 <video
@@ -143,50 +151,42 @@ export default function AboutFactory() {
                         </div>
                     </div>
 
-                    {/* 3. Content Section — Shown third on mobile, second on desktop (Order 3) */}
-                    <div className="w-full lg:w-1/2 flex flex-col items-start text-left order-3">
-                        {/* Desktop Heading — Only visible on large screens */}
-                        <div className="hidden lg:block">
-                            <span className="text-black font-bold tracking-[4px] uppercase text-xs mb-3 block">Our Production Facility</span>
-                            <SectionHeading text="About Our" highlight="Factory" className="text-5xl mb-6" />
-                        </div>
-                        
+                    {/* 3. Content Section */}
+                    <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
                         <p className="text-gray-700 text-lg md:text-xl mb-6 leading-relaxed font-medium">
-                            The process of harvesting, roasting, and grading premium cashews in equipped chambers with constant
-                            quality control takes immense precision. We show curious visitors this kingdom of cashews during a
-                            guided tour of our specialized factory.
-                        </p>
-                        
-                        <p className="text-gray-600 mb-10 leading-relaxed">
-                            You will also have the opportunity to visit our processing units, where you can familiarize yourself
-                            with the interesting process of grading and sorting. And at the tasting session, you will feel the
-                            authentic crunch, and you will also bring home unique delicacies directly from the source.
+                            <span style={{ color: COLORS.heading }} className="font-bold">Quality isn't just a promise; it's a process.</span> We maintain strict control over every step, from raw cashew grading to state-of-the-art roasting and vacuum sealing. We believe in complete transparency. Whether you are a B2B partner looking to audit our standards or a curious customer, we invite you to schedule a visit to our Siliguri facility to see the precision firsthand.
                         </p>
 
-                        <div className="flex flex-wrap items-center gap-4 mb-10">
+                        <p className="text-gray-600 text-sm md:text-base mb-10 leading-relaxed max-w-2xl">
+                            As a leading manufacturer and exporter of premium cashews, we meticulously process high-demand grades like WW320, W180, and White Splits tailored specifically for retail, food service, and bulk industry needs. We take immense pride in maintaining a benchmark for hygiene, global food safety standards, and reliable Pan-India B2B wholesale supply.
+                        </p>
+
+                        <div className="flex flex-wrap items-center gap-4 mb-2">
                             <button
                                 onClick={openModal}
                                 className="bg-primary text-black font-bold px-8 py-4 rounded-2xl hover:bg-primary/80 transition-all shadow-lg hover:-translate-y-1 active:translate-y-0"
                             >
-                                Reserve
+                                Schedule a Visit
                             </button>
                             <Link
                                 href="/about"
-                                className="bg-white text-black font-bold px-8 py-4 rounded-2xl border-2 border-black hover:bg-gray-50 transition-all hover:-translate-y-1 active:translate-y-0"
+                                className="bg-transparent font-bold px-8 py-4 rounded-2xl border-2 hover:bg-black/5 transition-all hover:-translate-y-1 active:translate-y-0"
+                                style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                             >
-                                About Farm
+                                Our Story
                             </Link>
                         </div>
-                        
-                        <p className="text-sm text-gray-400 font-bold tracking-wide">
-                            Do You Have Questions About the Farm? <Link href="/contact" className="text-primary hover:underline font-bold">Contact Us</Link>
+
+                        <p className="text-sm text-gray-500 font-bold tracking-wide mt-5">
+                            Do You Have Questions About the Factory? <button onClick={openQuote} className="text-primary hover:underline font-bold transition-all focus:outline-none">Get a Quote</button>
                         </p>
                     </div>
                 </div>
             </div>
 
+
             {/* ── Right corner fruit ── */}
-            <motion.div 
+            <motion.div
                 style={{ x: rightMoveX, y: rightMoveY }}
                 className="absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
@@ -320,6 +320,9 @@ export default function AboutFactory() {
                     </Portal>
                 )}
             </AnimatePresence>
+
+            {/* Quote Pop-up */}
+            {isQuoteOpen && <BulkInquiryPopup onClose={closeQuote} />}
         </section>
     );
 }

@@ -22,10 +22,10 @@ export default function PromoBanner() {
                             <span className="inline-block px-4 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-white/30 mb-4">
                                 <i className="fa-solid fa-gift mr-2"></i> Monthly Contest
                             </span>
-                            <SectionHeading 
-                                text="Share Your Story &" 
-                                highlight="Win a Hamper!" 
-                                textColor="#ffffff" 
+                            <SectionHeading
+                                text="Share Your Story &"
+                                highlight="Win a Hamper!"
+                                textColor="#ffffff"
                             />
                             <p className="text-white/90 text-sm md:text-base max-w-xl leading-relaxed">
                                 Made a delicious recipe using our cashews? Or have a unique Crunchy Cashews story to share?

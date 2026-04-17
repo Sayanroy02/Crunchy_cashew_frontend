@@ -8,7 +8,9 @@ export default function Footer() {
     return (
         <footer
             className="relative text-white overflow-hidden mt-0"
-            style={{ backgroundColor: COLORS.footerBg }}
+            style={{ 
+                background: 'linear-gradient(135deg, #023618 0%, #00170a 100%)'
+            }}
         >
             {/* Decorative background blobs */}
             <div

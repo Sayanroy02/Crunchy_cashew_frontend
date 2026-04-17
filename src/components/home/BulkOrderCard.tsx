@@ -36,7 +36,7 @@ const ALL_GRADE_SUGGESTIONS = [
 
 const TRUST_BADGES = [
     {
-        text: 'In-House Processing',
+        text: 'Minimum Order Quantity',
         icon: (
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
@@ -143,7 +143,7 @@ function GradeRequirementsInput({ value, onChange }: { value: string; onChange: 
 
 // ─── Bulk Inquiry Popup ───────────────────────────────────────────────────────
 
-function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
+export function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', company: '', volume: '', requirements: '' });
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -366,7 +366,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             className="mt-10 relative rounded-[28px] overflow-hidden"
             style={{
                 background: COLORS.heading,
-                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.15)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
             }}
         >
@@ -542,7 +542,7 @@ export default function BulkOrderCard() {
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
-                <div className="text-center mb-3">
+                <div className="text-center relative z-20">
                     <span className="font-bold tracking-widest uppercase text-xs mb-2 block" style={{ color: COLORS.black }}>
                         Export-Quality B2B
                     </span>
@@ -553,12 +553,12 @@ export default function BulkOrderCard() {
                 </div>
 
                 {/* Grade Cards — mobile scroll */}
-                <div className="flex md:hidden overflow-x-auto pb-4 gap-4 snap-x snap-mandatory px-2 hide-scrollbar">
+                <div className="flex md:hidden overflow-x-auto pb-4 gap-4 snap-x snap-mandatory px-2 hide-scrollbar -mt-4">
                     {grades.map(g => <GradeCard key={g.id} grade={g} />)}
                 </div>
 
                 {/* Grade Cards — desktop grid */}
-                <div className="hidden md:grid grid-cols-4 gap-4 mb-2">
+                <div className="hidden md:grid grid-cols-4 gap-4 mb-2 -mt-6 md:-mt-10 relative z-10">
                     {grades.map(g => <GradeCard key={g.id} grade={g} />)}
                 </div>
 
