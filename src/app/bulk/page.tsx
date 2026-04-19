@@ -374,7 +374,11 @@ function GradeCard({
 
             {/* Name + Button */}
             <div className="px-4 pb-4 pt-2 flex items-center justify-between gap-2">
-                <h4 className="text-sm md:text-base font-black text-gray-900 leading-tight">{item.code}</h4>
+                <h4 
+                    className="text-sm md:text-base font-black text-gray-900 leading-tight transition-colors duration-300 group-hover:text-[#FBB21B]"
+                >
+                    {item.code}
+                </h4>
                 <div
                     className={`w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
                         isSelected

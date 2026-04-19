@@ -340,14 +340,14 @@ export function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
 
 function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
-        <div className="grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate">
+        <div className="group grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate">
             <div className="grade-circle rounded-full flex items-center justify-center relative z-20"
                 style={{ width: '100%', aspectRatio: '1 / 1', transition: 'transform 0.3s ease' }}>
                 <img src={grade.img} alt={grade.name} className="w-full h-full object-cover scale-[1.05]"
                     onError={(e: React.SyntheticEvent<HTMLImageElement>) => { e.currentTarget.src = '/images/crunchy-cashews-product.png'; }} />
             </div>
-            <span className="text-center font-bold relative z-10 -mt-2 md:-mt-10"
-                style={{ fontSize: '1.3rem', lineHeight: '1.2', color: COLORS.black }}>
+            <span className="text-center font-bold relative z-10 -mt-2 md:-mt-10 text-black transition-colors duration-300 group-hover:text-[#FBB21B]"
+                style={{ fontSize: '1.3rem', lineHeight: '1.2' }}>
                 {grade.name}
             </span>
         </div>
