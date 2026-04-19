@@ -4,18 +4,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import BlogCard from '@/components/ui/BlogCard';
+import type { BlogCardData } from '@/components/ui/BlogCard';
 
-interface Blog {
-    _id: string;
-    title: string;
-    image_url?: string;
-    content: string;
-    created_at: string;
-    author?: string;
-    category?: string;
-    tags?: string[];
-    featured?: boolean;
-}
+
 
 const CATEGORIES = ['All', 'Health Articles', 'Recipes Blog', 'Sustainability'] as const;
 type CategoryFilter = typeof CATEGORIES[number];
@@ -27,15 +19,8 @@ const CATEGORY_ICONS: Record<string, string> = {
     'Sustainability': 'fa-solid fa-leaf',
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-    'Health Articles': 'bg-black text-white',
-    'Recipes Blog': 'bg-[#F6B000] text-black',
-    'Sustainability': 'bg-black text-[#F6B000]',
-    'Uncategorised': 'bg-gray-100 text-gray-600',
-};
-
 export default function BlogsDirectory() {
-    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [blogs, setBlogs] = useState<BlogCardData[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
@@ -210,62 +195,7 @@ export default function BlogsDirectory() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {filteredBlogs.map(blog => (
-                            <Link
-                                href={`/blogs/${blog._id}`}
-                                key={blog._id}
-                                className="bg-white rounded-3xl overflow-hidden group hover:-translate-y-2 transition-all duration-300 shadow-md hover:shadow-xl flex flex-col border border-gray-100"
-                            >
-                                {/* Cover Image */}
-                                <div className="w-full h-56 relative overflow-hidden bg-gray-50 flex-shrink-0">
-                                    {blog.image_url ? (
-                                        <img
-                                            src={blog.image_url}
-                                            alt={blog.title}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <i className={`${CATEGORY_ICONS[blog.category || 'All']} text-5xl text-gray-200`} />
-                                        </div>
-                                    )}
-                                    {/* Category Badge */}
-                                    {blog.category && (
-                                        <span className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm ${CATEGORY_COLORS[blog.category] || CATEGORY_COLORS['Uncategorised']}`}>
-                                            <i className={`${CATEGORY_ICONS[blog.category] || 'fa-solid fa-tag'} mr-1.5`} />
-                                            {blog.category}
-                                        </span>
-                                    )}
-                                    {/* Featured Badge */}
-                                    {blog.featured && (
-                                        <span className="absolute top-4 right-4 bg-black text-[#F6B000] text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
-                                            <i className="fa-solid fa-star"></i> Featured
-                                        </span>
-                                    )}
-                                    {/* Date */}
-                                    <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                                        {new Date(blog.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="p-7 flex flex-col flex-grow">
-                                    {blog.author && (
-                                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                                            <i className="fa-solid fa-user-pen text-primary" />
-                                            {blog.author}
-                                        </p>
-                                    )}
-                                    <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors" style={{} as any}>
-                                        {blog.title}
-                                    </h3>
-                                    <p className="text-gray-500 line-clamp-3 mb-5 flex-grow leading-relaxed text-sm">
-                                        {(blog.content || '').replace(/<[^>]*>?/gm, '')}
-                                    </p>
-                                    <span className="font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all" style={{ color: '#000000' }}>
-                                        Read Article <i className="fa-solid fa-arrow-right-long" style={{ color: '#F6B000' }} />
-                                    </span>
-                                </div>
-                            </Link>
+                            <BlogCard key={blog._id} blog={blog} />
                         ))}
                     </div>
                 )}
