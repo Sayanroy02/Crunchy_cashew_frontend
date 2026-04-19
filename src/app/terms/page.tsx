@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { COLORS } from '@/constants/styles';
 
 export const metadata = { title: 'Terms & Conditions | Crunchy Cashews', description: 'Read the Terms & Conditions for Crunchy Cashews.' };
 
