@@ -374,17 +374,16 @@ function GradeCard({
 
             {/* Name + Button */}
             <div className="px-4 pb-4 pt-2 flex items-center justify-between gap-2">
-                <h4 
+                <h4
                     className="text-sm md:text-base font-black text-gray-900 leading-tight transition-colors duration-300 group-hover:text-[#FBB21B]"
                 >
                     {item.code}
                 </h4>
                 <div
-                    className={`w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                        isSelected
-                            ? 'bg-black text-[#F6B000] shadow-lg shadow-black/20'
-                            : 'bg-[#F6B000] text-black shadow-lg shadow-[#F6B000]/30'
-                    }`}
+                    className={`w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isSelected
+                        ? 'bg-black text-[#F6B000] shadow-lg shadow-black/20'
+                        : 'bg-[#F6B000] text-black shadow-lg shadow-[#F6B000]/30'
+                        }`}
                     title="Enquire Now"
                 >
                     <Package className="w-4 h-4" />
@@ -402,98 +401,69 @@ function BusinessesCateredSection() {
     const categories = [
         {
             title: 'Retailers & Resellers',
-            subtitle: 'Direct factory supply for retail chains',
             image: '/images/retailers.png',
-            tag: '🛒 Retail',
         },
         {
-            title: 'Hotels & Restaurants (HoReCa)',
-            subtitle: 'Consistent bulk grades for professional kitchens',
+            title: 'Hotels & Restaurants',
             image: '/images/Horeca.png',
-            tag: '🍽️ HoReCa',
         },
         {
             title: 'Bakeries & Confectionery',
-            subtitle: 'Premium broken grades & roasted varieties',
             image: '/images/bakery.png',
-            tag: '🎂 Bakery',
         },
         {
             title: 'Corporate & Events',
-            subtitle: 'Tailored gift hampers & event-scale orders',
             image: '/images/corporate_gifting.png',
-            tag: '🎁 Corporate',
         },
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-            <div className="text-center mb-10 md:mb-14">
+        <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+            <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
                     text="Who We"
                     highlight="Serve"
-                    className="mb-3 !text-[22px] md:!text-4xl"
+                    className="mb-3 !text-[24px] md:!text-4xl"
                 />
-                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-4" />
-                <p className="text-gray-500 text-sm max-w-xl mx-auto">
-                    Trusted by businesses across India — from neighbourhood stores to 5-star kitchens.
+                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-6" />
+                <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+                    Trusted by businesses across India — from neighborhood stores to global hospitality giants.
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 {categories.map((cat, idx) => (
                     <motion.div
                         key={idx}
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: idx * 0.12, duration: 0.55 }}
-                        className="group relative rounded-[20px] overflow-hidden cursor-pointer"
-                        style={{ aspectRatio: '4/5', minHeight: '360px' }}
+                        transition={{ delay: idx * 0.1, duration: 0.5 }}
+                        onClick={() => {
+                            const form = document.getElementById('bulk-inquiry-form');
+                            form?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="group flex flex-col items-center cursor-pointer"
                     >
-                        {/* Full-bleed Image */}
-                        <Image
-                            src={cat.image}
-                            alt={cat.title}
-                            fill
-                            quality={100}
-                            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-                            unoptimized
-                        />
+                        {/* Dark Image Card with text inside */}
+                        <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden bg-gray-900 shadow-lg group-hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.02]">
+                            <Image
+                                src={cat.image}
+                                alt={cat.title}
+                                fill
+                                className="object-cover object-center transition-all duration-700 group-hover:scale-105"
+                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px"
+                            />
 
-                        {/* Always-on dark gradient at bottom */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            {/* Minimal gradient only at very bottom for text */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/65 to-transparent" />
 
-                        {/* Hover overlay for extra depth */}
-                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                        {/* Golden left border reveal on hover */}
-                        <div
-                            className="absolute left-0 top-0 w-1 h-full bg-[#F6B000] scale-y-0 group-hover:scale-y-100 origin-bottom transition-transform duration-500"
-                        />
-
-                        {/* Tag pill — top */}
-                        <div className="absolute top-4 left-4 z-10">
-                            <span
-                                className="text-[11px] font-black tracking-widest uppercase px-3 py-1 rounded-full backdrop-blur-md"
-                                style={{ backgroundColor: 'rgba(246,176,0,0.2)', color: '#F6B000', border: '1px solid rgba(246,176,0,0.4)' }}
-                            >
-                                {cat.tag}
-                            </span>
-                        </div>
-
-                        {/* Content — bottom overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 z-10 p-5 md:p-6">
-                            <h3 className="text-white font-black text-xl md:text-[22px] leading-tight mb-1 drop-shadow-sm">
-                                {cat.title}
-                            </h3>
-                            {/* Subtitle slides up on hover */}
-                            <p className="text-white/70 text-xs leading-relaxed max-h-0 overflow-hidden group-hover:max-h-10 transition-all duration-500 ease-out">
-                                {cat.subtitle}
-                            </p>
-                            {/* Golden underline */}
-                            <div className="w-8 h-[3px] bg-[#F6B000] rounded-full mt-3 group-hover:w-16 transition-all duration-500" />
+                            {/* Title text at bottom */}
+                            <div className="absolute bottom-0 left-0 right-0 p-5">
+                                <h3 className="text-white font-medium text-base md:text-lg leading-snug group-hover:font-black group-hover:text-[#F6B000] transition-all duration-300">
+                                    {cat.title}
+                                </h3>
+                            </div>
                         </div>
                     </motion.div>
                 ))}
@@ -563,11 +533,10 @@ function OurGradesSection({
                     <button
                         key={cat.id}
                         onClick={() => setActiveTab(cat.id)}
-                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${
-                            activeTab === cat.id
-                                ? 'bg-[#F6B000] text-black border-[#F6B000]'
-                                : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
-                        }`}
+                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${activeTab === cat.id
+                            ? 'bg-[#F6B000] text-black border-[#F6B000]'
+                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
+                            }`}
                     >
                         <span className={`${activeTab === cat.id ? 'text-black' : 'text-gray-400 group-hover:text-[#F6B000]'}`}>
                             {cat.icon}
@@ -735,7 +704,7 @@ export default function BulkOrderPage() {
     };
 
     return (
-        <div className="bg-white min-h-screen">
+        <div className={`min-h-screen ${COLORS.bg}`}>
             {/* ── Hero ── */}
             <section
                 className="relative overflow-hidden pt-6 pb-6 md:pt-12 md:pb-10"
@@ -881,7 +850,7 @@ export default function BulkOrderPage() {
             </div>
 
             {/* ── Bulk Order Form ── */}
-            <div ref={formRef} className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '80px' }}>
+            <div ref={formRef} id="bulk-inquiry-form" className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '80px' }}>
                 {/* Form section label */}
                 <div className="text-center mb-6 md:mb-8">
                     <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: '#F6B000', color: '#000000' }}>

@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { clearCart } from '@/lib/store/features/cartSlice';
 import { API } from '@/constants/api';
 import CheckoutButton from '@/components/CheckoutButton';
+import { COLORS } from '@/constants/styles';
 
 export default function CheckoutPage() {
     const { items, totalAmount } = useSelector((state: RootState) => state.cart);
@@ -70,7 +71,7 @@ export default function CheckoutPage() {
                     let parsedState = data.state || '';
                     let parsedPincode = data.pincode || '';
                     const cleanAddress = data.address || '';
-                    
+
                     // Fallback to parsing if individual fields aren't present but address is
                     if (!parsedCity && data.address && data.address.includes(',')) {
                         const parts = data.address.split(',').map((p: string) => p.trim());
@@ -80,7 +81,7 @@ export default function CheckoutPage() {
                             parsedCity = parts[parts.length - 3] || parsedCity;
                         }
                     }
-                    
+
                     setFormData(prev => ({
                         ...prev,
                         name: data.full_name || data.username || prev.name,
@@ -159,10 +160,10 @@ export default function CheckoutPage() {
         try {
             const token = reduxToken || localStorage.getItem('token');
             if (!token) return;
-            
+
             // Format address: "Street, City, State, Pincode"
             const fullAddress = `${formData.address}, ${formData.city}, ${formData.state}, ${formData.pincode}`;
-            
+
             await fetch(API.AUTH_PROFILE, {
                 method: 'PATCH',
                 headers: {
@@ -224,7 +225,7 @@ export default function CheckoutPage() {
     if (items.length === 0) return null;
 
     return (
-        <div className="bg-bg min-h-screen py-16 px-4 md:px-8">
+        <div className={`min-h-screen py-16 px-4 md:px-8 ${COLORS.bg}`}>
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl md:text-4xl font-heading font-black text-black mb-10 pb-4 border-b-2" style={{ borderBottomColor: '#F6B000' }}>
                     Checkout
@@ -253,21 +254,21 @@ export default function CheckoutPage() {
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
                                     <input required type="text" name="name" value={formData.name} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="John Doe" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Phone Number</label>
                                     <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="+91 9876543210" />
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
                                     <input required type="email" name="email" value={formData.email} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none font-semibold text-gray-800 bg-gray-50 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         readOnly />
                                 </div>
                             </div>
@@ -284,7 +285,7 @@ export default function CheckoutPage() {
                                 <textarea required name="address" value={formData.address} onChange={handleInputChange}
                                     rows={3}
                                     className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 resize-none focus:border-black"
-                                    style={{'--tw-ring-color': '#F6B000'} as any}
+                                    style={{ '--tw-ring-color': '#F6B000' } as any}
                                     placeholder="123 Cashew Lane, Apt 4B"></textarea>
                             </div>
 
@@ -293,14 +294,14 @@ export default function CheckoutPage() {
                                     <label className="block text-sm font-bold text-gray-700 mb-2">City</label>
                                     <input required type="text" name="city" value={formData.city} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="Siliguri" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-bold text-gray-700 mb-2">State</label>
                                     <input required type="text" name="state" value={formData.state} onChange={handleInputChange}
                                         className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
-                                        style={{'--tw-ring-color': '#F6B000'} as any}
+                                        style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="West Bengal" />
                                 </div>
                                 <div>
@@ -315,9 +316,9 @@ export default function CheckoutPage() {
                             <div className="mb-8">
                                 <label className="flex items-center gap-3 cursor-pointer group">
                                     <div className="relative flex items-center">
-                                        <input 
-                                            type="checkbox" 
-                                            checked={saveDetails} 
+                                        <input
+                                            type="checkbox"
+                                            checked={saveDetails}
                                             onChange={(e) => setSaveDetails(e.target.checked)}
                                             className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary-light transition-all cursor-pointer"
                                         />

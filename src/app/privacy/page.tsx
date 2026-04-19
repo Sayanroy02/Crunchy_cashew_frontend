@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { COLORS } from '@/constants/styles';
 
 export const metadata = { title: 'Privacy Policy | Crunchy Cashews', description: 'Read our Privacy Policy to understand how we handle your data.' };
 
@@ -12,7 +13,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export default function PrivacyPage() {
     return (
-        <div className="min-h-screen bg-[#fffdf5]">
+        <div className={`min-h-screen ${COLORS.bg}`}>
             <div className="bg-primary py-14 px-6 text-center">
                 <p className="text-amber text-xs font-bold uppercase tracking-widest mb-2">Legal</p>
                 <h1 className="text-4xl md:text-5xl font-heading font-black text-white">Privacy Policy</h1>

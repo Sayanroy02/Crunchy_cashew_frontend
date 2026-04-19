@@ -7,6 +7,7 @@ import { RootState } from '@/lib/store/store';
 import { removeFromCart, updateQuantity, clearCart } from '@/lib/store/features/cartSlice';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 function RecommendedProducts() {
     const [products, setProducts] = React.useState<Product[]>([]);
@@ -56,7 +57,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="bg-bg min-h-screen py-16 px-4 md:px-8">
+        <div className={`min-h-screen py-16 px-4 md:px-8 ${COLORS.bg}`}>
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-4xl font-heading font-black text-black mb-10 border-b-2 pb-4 inline-block" style={{ borderBottomColor: '#F6B000' }}>Shopping Cart</h1>
 

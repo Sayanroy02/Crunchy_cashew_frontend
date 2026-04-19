@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // Dynamically import Lottie — prevents SSR crash / loading hang
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
@@ -144,6 +146,33 @@ function ContactContent() {
     const [form, setForm] = useState({ name: '', email: '', phone: '', enquiry_type: '', message: '' });
     const [visitForm, setVisitForm] = useState({ name: '', email: '', company: '', date: '' });
 
+    // ── Mouse Motion for Hanging Fruit ──
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    // Smooth movement
+    const smoothX = useSpring(mouseX, { damping: 20, stiffness: 100 });
+    const smoothY = useSpring(mouseY, { damping: 20, stiffness: 100 });
+
+    // Opposite motion: range [ -width/2, width/2 ] maps to [ 20, -20 ] pixels
+    const moveX = useTransform(smoothX, [-400, 400], [25, -25]);
+    const moveY = useTransform(smoothY, [-200, 200], [15, -15]);
+    // Slight sway rotation based on horizontal mouse pos
+    const rotateZ = useTransform(smoothX, [-400, 400], [-8, -2]); 
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        mouseX.set(x);
+        mouseY.set(y);
+    };
+
+    const handleMouseLeave = () => {
+        mouseX.set(0);
+        mouseY.set(0);
+    };
+
     // Handle Search Params for Pre-filling
     useEffect(() => {
         const preFill = searchParams.get('enquiry');
@@ -196,10 +225,14 @@ function ContactContent() {
 
     /* ── render ── */
     return (
-        <main className="min-h-screen" style={{ backgroundColor: COLORS.bg }}>
+        <main className={`min-h-screen ${COLORS.bg}`}>
 
             {/* ══ HERO ══ */}
-            <section className="relative overflow-hidden pt-28 pb-24" style={{ backgroundColor: COLORS.bg }}>
+            <section 
+                className="relative overflow-hidden pt-16 pb-16"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+            >
                 {/* blobs */}
                 <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
                     <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10 animate-blob" style={{ backgroundColor: COLORS.primary }} />
@@ -210,17 +243,28 @@ function ContactContent() {
                     </svg>
                 </div>
 
+                {/* Hanging Cashew Decoration — Desktop Only */}
+                <motion.div 
+                    className="hidden lg:block absolute top-[-30px] right-[5%] w-64 h-80 pointer-events-none z-20"
+                    style={{ x: moveX, y: moveY, rotate: rotateZ }}
+                >
+                    <img
+                        src="/images/Cashew-In-Tree.png"
+                        alt=""
+                        className="w-full h-full object-contain object-top drop-shadow-2xl"
+                    />
+                </motion.div>
+
                 <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10">
                     <div className="inline-flex items-center gap-2 bg-black/5 border border-black/10 rounded-full px-4 py-1.5 mb-6">
                         <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: COLORS.primary }} />
                         <span style={{ color: COLORS.black }} className="text-[10px] font-bold tracking-widest uppercase">We'd love to hear from you</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-black leading-[1.05] tracking-tight mb-5">
-                        Get in <span className="relative inline-block px-2">
-                            <span className="relative z-10">Touch</span>
-                            <span className="absolute bottom-1 md:bottom-2 left-0 h-3 md:h-4 w-full -z-0 opacity-80" style={{ backgroundColor: COLORS.primary }} />
-                        </span>
-                    </h1>
+                    <SectionHeading
+                        text="Get in"
+                        highlight="Touch"
+                        className="!text-5xl md:!text-7xl !text-left !mb-5"
+                    />
                     <p className="text-black/60 text-base md:text-lg max-w-md leading-relaxed">
                         Bulk wholesale orders, general questions, or just curious about our cashews — we reply within 24 hours.
                     </p>
@@ -232,7 +276,7 @@ function ContactContent() {
                 <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
 
                     {/* ── Sidebar ── */}
-                    <aside className="bg-[#0d0d0d] lg:w-80 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden">
+                    <aside className="lg:w-80 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden" style={{ backgroundColor: COLORS.heading }}>
                         <div aria-hidden className="absolute -bottom-12 -right-12 w-52 h-52 rounded-full pointer-events-none" style={{ backgroundColor: `${COLORS.button}1A` }} />
                         <div aria-hidden className="absolute top-24 -left-8 w-28 h-28 rounded-full bg-white/5 pointer-events-none" />
 

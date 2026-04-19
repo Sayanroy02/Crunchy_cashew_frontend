@@ -542,7 +542,7 @@ export default function BulkOrderCard() {
             <div className="max-w-7xl mx-auto px-4 md:px-8">
 
                 {/* Header */}
-                <div className="text-center relative z-20">
+                <div className="text-center relative z-15 mb-4">
                     <span className="font-bold tracking-widest uppercase text-xs mb-2 block" style={{ color: COLORS.black }}>
                         Export-Quality B2B
                     </span>

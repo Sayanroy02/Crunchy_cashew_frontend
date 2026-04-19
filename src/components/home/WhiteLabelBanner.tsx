@@ -215,7 +215,7 @@ export default function WhiteLabelBanner() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     return (
-        <section className={`py-6 md:py-8 bg-${COLORS.bg} overflow-hidden`}>
+        <section className={`py-6 md:py-8 overflow-hidden ${COLORS.bg}`}>
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

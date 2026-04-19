@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
+import { COLORS } from '@/constants/styles';
 
-export const metadata = { 
-    title: 'Refund Policy | Crunchy Cashews', 
-    description: 'Read our Refund Policy for information on cancellations, returns, and refunds.' 
+export const metadata = {
+    title: 'Refund Policy | Crunchy Cashews',
+    description: 'Read our Refund Policy for information on cancellations, returns, and refunds.'
 };
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
@@ -15,7 +16,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export default function RefundPolicyPage() {
     return (
-        <div className="min-h-screen bg-[#fffdf5]">
+        <div className={`min-h-screen ${COLORS.bg}`}>
             {/* Header */}
             <div className="bg-[#000000] py-16 px-6 text-center border-b-4" style={{ borderColor: '#F6B000' }}>
                 <p className="text-[#F6B000] text-xs font-black uppercase tracking-[0.2em] mb-3">Customer Care</p>

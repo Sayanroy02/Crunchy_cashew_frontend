@@ -8,27 +8,11 @@ export default function Footer() {
     return (
         <footer
             className="relative text-white overflow-hidden mt-0"
-            style={{ 
-                background: 'linear-gradient(135deg, #023618 0%, #00170a 100%)'
-            }}
+            style={{ backgroundColor: COLORS.heading }}
         >
-            {/* Decorative background blobs */}
-            <div
-                className="absolute top-0 left-0 w-72 h-72 opacity-20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ backgroundColor: COLORS.primary }}
-            />
-            <div
-                className="absolute bottom-0 right-0 w-96 h-96 opacity-15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"
-                style={{ backgroundColor: COLORS.primary }}
-            />
-            <div
-                className="absolute top-1/2 left-1/2 w-64 h-64 opacity-10 rounded-full blur-2xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-                style={{ backgroundColor: COLORS.primaryLight }}
-            />
-
             {/* Top accent line */}
             <div
-                className="w-full h-1 bg-gradient-to-r"
+                className="w-full h-1"
                 style={{ backgroundImage: `linear-gradient(to right, ${COLORS.primary}, ${COLORS.accent}, ${COLORS.primary})` }}
             />
 
@@ -42,7 +26,7 @@ export default function Footer() {
                             <img src="/images/cc-Logo-01-1.png" alt="Crunchy Cashews Logo" className="w-10 h-10 object-contain" />
                             <h2 className="text-xl font-black text-white tracking-tight">Crunchy Cashews</h2>
                         </div>
-                        <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                        <p className="text-white/80 text-sm leading-relaxed mb-4">
                             Premium cashew manufacturer & supplier based in Siliguri, India. Farm-fresh quality, delivered with care.
                         </p>
 
@@ -51,7 +35,7 @@ export default function Footer() {
                             <img src="/images/partners/FSSAI_logo.png" alt="FSSAI Logo" className="w-14 h-auto object-contain" />
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#F6B000]">License No.</span>
-                                <span className="text-[11px] text-gray-300 font-mono">12825999000962</span>
+                                <span className="text-[11px] text-white font-mono">12825999000962</span>
                             </div>
                         </div>
                     </div>
@@ -66,16 +50,16 @@ export default function Footer() {
                             <a
                                 key={i}
                                 href={s.href}
-                                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 transition-all duration-200 hover:scale-110"
+                                className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.backgroundColor = COLORS.primary;
                                     e.currentTarget.style.borderColor = COLORS.primary;
                                     e.currentTarget.style.color = '#ffffff';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'transparent';
-                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                                    e.currentTarget.style.color = 'rgb(156, 163, 175)';
+                                    e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+                                    e.currentTarget.style.color = '#ffffff';
                                 }}
                             >
                                 <i className={`${s.icon} text-xs`} />
@@ -86,7 +70,7 @@ export default function Footer() {
 
                 {/* Quick Links */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Navigate</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase text-white">Navigate</h3>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { label: 'Home', href: '/' },
@@ -113,7 +97,7 @@ export default function Footer() {
 
                 {/* B2B Services */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>B2B Services</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase text-white">B2B Services</h3>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { label: 'Wholesale', href: '/bulk' },
@@ -139,7 +123,7 @@ export default function Footer() {
 
                 {/* Contact */}
                 <div className="flex flex-col gap-4">
-                    <h3 className="text-sm font-bold tracking-[3px] uppercase" style={{ color: COLORS.accent }}>Contact Us</h3>
+                    <h3 className="text-sm font-bold tracking-[3px] uppercase text-white">Contact Us</h3>
                     <ul className="flex flex-col gap-3">
                         <li>
                             <a href="tel:+917847996343" className="group flex items-start gap-3 hover:text-white transition-colors">
@@ -150,8 +134,8 @@ export default function Footer() {
                                     <i className="fa-solid fa-phone text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-0.5">Call Us</p>
-                                    <p className="text-sm text-gray-300 group-hover:text-white">+91 7847996343</p>
+                                    <p className="text-xs text-white/60 mb-0.5">Call Us</p>
+                                    <p className="text-sm text-white group-hover:text-white">+91 7847996343</p>
                                 </div>
                             </a>
                         </li>
@@ -164,8 +148,8 @@ export default function Footer() {
                                     <i className="fa-solid fa-envelope text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-0.5">Email</p>
-                                    <p className="text-sm text-gray-300 group-hover:text-white">crunchycashews18@gmail.com</p>
+                                    <p className="text-xs text-white/60 mb-0.5">Email</p>
+                                    <p className="text-sm text-white group-hover:text-white">crunchycashews18@gmail.com</p>
                                 </div>
                             </a>
                         </li>
@@ -178,8 +162,8 @@ export default function Footer() {
                                     <i className="fa-solid fa-location-dot text-xs" style={{ color: COLORS.accent }} />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-500 mb-0.5">Location</p>
-                                    <p className="text-sm text-gray-300">YU NUT PROCESSING INDUSTRY,
+                                    <p className="text-xs text-white/60 mb-0.5">Location</p>
+                                    <p className="text-sm text-white">YU NUT PROCESSING INDUSTRY,
                                         Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015 </p>
                                 </div>
                             </div>
@@ -188,8 +172,8 @@ export default function Footer() {
 
                     {/* Payment Types (Moved under Contact) */}
                     <div className="flex flex-col gap-2 mt-0">
-                        <span className="text-[10px] font-bold uppercase tracking-[2.5px]" style={{ color: COLORS.accent, opacity: 0.8 }}>We also accept</span>
-                        <div className="flex items-center gap-5 text-gray-500">
+                        <span className="text-[10px] font-bold uppercase tracking-[2.5px] text-white">We also accept</span>
+                        <div className="flex items-center gap-5 text-white/70">
                             <i className="fa-brands fa-cc-visa text-2xl transition-all duration-300 hover:text-[#1A1F71] hover:scale-110 cursor-pointer" title="Visa" />
                             <i className="fa-brands fa-cc-mastercard text-2xl transition-all duration-300 hover:text-[#EB001B] hover:scale-110 cursor-pointer" title="Mastercard" />
                             <i className="fa-solid fa-building-columns text-xl transition-all duration-300 hover:text-[#F6B000] hover:scale-110 cursor-pointer" title="Net Banking" />
@@ -203,21 +187,20 @@ export default function Footer() {
             <div className="relative border-t border-white/10">
                 <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div className="flex flex-col items-center sm:items-start gap-2">
-                        <p className="text-xs text-gray-600">
-                            &copy; {new Date().getFullYear()} <span className="text-gray-500">Crunchy Cashews.</span> All rights reserved.
+                        <p className="text-xs text-white/60">
+                            &copy; {new Date().getFullYear()} <span className="text-white/80">Crunchy Cashews.</span> All rights reserved.
                         </p>
                     </div>
 
                     {/* Attribution — styled, not jarring */}
-                    <div className="flex items-center gap-1 text-xs" style={{ color: COLORS.accent, opacity: 0.5 }}>
+                    <div className="flex items-center gap-1 text-xs text-white/60">
                         <span>Developed by</span>
 
 
                         <a href="https://yunutprocessingindustry.com"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-semibold ml-1 transition-opacity hover:opacity-100"
-                            style={{ color: COLORS.accent, opacity: 0.8 }}
+                            className="font-semibold ml-1 text-white/80 transition-opacity hover:text-white"
                         >
                             Yu Nut Processing Industry
                         </a>
@@ -232,10 +215,7 @@ export default function Footer() {
                             <Link
                                 key={policy.href}
                                 href={policy.href}
-                                className="text-xs transition-colors shrink-0"
-                                style={{ color: COLORS.accent, opacity: 0.6 }}
-                                onMouseEnter={e => e.currentTarget.style.opacity = '1'}
-                                onMouseLeave={e => e.currentTarget.style.opacity = '0.6'}
+                                className="text-xs text-white/60 hover:text-white transition-colors shrink-0"
                             >
                                 {policy.label}
                             </Link>

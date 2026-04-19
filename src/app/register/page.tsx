@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -92,7 +93,7 @@ export default function RegisterPage() {
 
     return (
         <div
-            className="w-full bg-[#ede7d9] flex items-center justify-center p-4 sm:p-5 lg:p-8"
+            className={`w-full ${COLORS.bg} flex items-center justify-center p-4 sm:p-5 lg:p-8`}
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
             {/* Floating card */}

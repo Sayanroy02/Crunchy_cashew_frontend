@@ -48,7 +48,7 @@ export default function ShopPage() {
 
     const filtered = useMemo(() => {
         const { min, max } = PRICE_RANGES[priceRange];
-        
+
         let result = products.map(p => {
             // Pre-calculate prices for sorting and filtering
             const prices = p.variants?.map(v => v.price) || [(p as any).price || 0];
@@ -62,12 +62,12 @@ export default function ShopPage() {
                 p.name.toLowerCase().includes(searchTermLower) ||
                 (p.category || '').toLowerCase().includes(searchTermLower) ||
                 (p.tags || []).some(t => t.toLowerCase().includes(searchTermLower));
-            
+
             // Match if any part of the product's price range overlaps with the filter
             const matchPrice = p._minPrice <= max && p._maxPrice >= min;
 
             const matchTag = tagFilter === 'all' || (p.tags && p.tags.includes(tagFilter));
-            const matchCategory = categoryFilter === 'all' || 
+            const matchCategory = categoryFilter === 'all' ||
                 (p.category || '').toLowerCase() === categoryFilter.toLowerCase();
 
             return matchSearch && matchPrice && matchTag && matchCategory;
@@ -92,7 +92,7 @@ export default function ShopPage() {
     };
 
     return (
-        <div className="bg-bg min-h-screen pb-24 pt-12">
+        <div className={`min-h-screen pb-24 pt-12 ${COLORS.bg}`}>
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 <div className="flex gap-8">
 
@@ -153,7 +153,7 @@ export default function ShopPage() {
                                     value={searchTerm}
                                     onChange={e => setSearchTerm(e.target.value)}
                                     className="w-full bg-white border border-gray-200 text-black placeholder-gray-400 rounded-2xl px-5 py-4 pl-14 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-sm font-semibold"
-                                    style={{'--tw-ring-color': COLORS.primary} as any}
+                                    style={{ '--tw-ring-color': COLORS.primary } as any}
                                 />
                                 {searchTerm && (
                                     <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">

@@ -83,7 +83,7 @@ export default function BlogsDirectory() {
     }, [blogs, activeCategory, searchTerm, sortOrder]);
 
     return (
-        <div className="bg-bg min-h-screen pb-24">
+        <div className={`min-h-screen pb-24 ${COLORS.bg}`}>
             {/* Hero Header */}
             <section className="text-black pt-16 pb-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}>
                 {/* Dot grid overlay */}

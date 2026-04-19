@@ -68,7 +68,7 @@ const MOBILE_GRID = [
 export default function ProfilePage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center">
+            <div className={`min-h-screen py-8 px-4 flex justify-center ${COLORS.bg}`}>
                 <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
         }>

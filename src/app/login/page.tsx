@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import { API } from '@/constants/api';
+import { COLORS } from '@/constants/styles';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -70,7 +71,7 @@ export default function LoginPage() {
          * ─────────────────────────────────────────────────────────
          */
         <div
-            className="w-full bg-[#ede7d9] flex items-center justify-center p-4 sm:p-5 lg:p-8"
+            className={`w-full flex items-center justify-center p-4 sm:p-5 lg:p-8 ${COLORS.bg}`}
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
             {/* ── Floating card with margin on all sides ── */}

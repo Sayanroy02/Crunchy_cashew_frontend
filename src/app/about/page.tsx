@@ -34,10 +34,10 @@ const Icons = {
 };
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'story',   label: 'Our Story' },
-  { id: 'team',    label: 'Our Team' },
+  { id: 'story', label: 'Our Story' },
+  { id: 'team', label: 'Our Team' },
   { id: 'process', label: 'Our Process' },
-  { id: 'visit',   label: 'Visit Factory' },
+  { id: 'visit', label: 'Visit Factory' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -606,7 +606,7 @@ export default function AboutPage() {
   }
 
   return (
-    <div className="bg-bg min-h-screen pb-16">
+    <div className={`min-h-screen pb-16 ${COLORS.bg}`}>
 
       {/* VIDEO HERO */}
       <section className="relative h-[70vh] min-h-[480px] max-h-[700px] overflow-hidden">
@@ -661,7 +661,7 @@ export default function AboutPage() {
                   className={`relative flex items-center justify-center gap-2 py-3.5 transition-all duration-300 border-b-2 font-bold text-sm ${isActive
                     ? 'border-black text-black flex-[3]'
                     : 'border-transparent text-gray-400 flex-1'
-                  }`}
+                    }`}
                   style={{ minWidth: 0 }}
                 >
                   {/* Icon always visible */}
