@@ -46,7 +46,7 @@ export default function HeroVideo() {
             {/* ── Desktop Video ── */}
             <video
                 ref={desktopVideoRef}
-                src="https://res.cloudinary.com/da1acfqsn/video/upload/v1776614310/Crunchy_Cashew_Product_Animation_Updated_hdsyf8.mp4"
+                src="https://res.cloudinary.com/da1acfqsn/video/upload/v1776770965/Crunchy_Cashew_Product_Animation_Updated_V2_tskkbx.mp4"
                 muted
                 loop
                 playsInline
