@@ -332,7 +332,7 @@ export default function WhiteLabelBanner() {
                         </div>
 
                         {/* Bottom: Trust Badges */}
-                        <div className="mt-6 md:mt-8">
+                        {/* <div className="mt-6 md:mt-8">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-4">
                                 {TRUST_BADGES.map((badge, idx) => (
                                     <motion.div
@@ -356,7 +356,7 @@ export default function WhiteLabelBanner() {
                                     </motion.div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </motion.div>
             </div>

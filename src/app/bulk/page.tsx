@@ -418,7 +418,7 @@ function BusinessesCateredSection() {
     ];
 
     return (
-        <section className="max-w-6xl mx-auto px-6 py-16 md:py-24">
+        <section className="max-w-6xl mx-auto px-6 py-10 md:py-16">
             <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
                     text="Who We"
@@ -706,18 +706,18 @@ export default function BulkOrderPage() {
     return (
         <div className={`min-h-screen ${COLORS.bg}`}>
             {/* ── Hero ── */}
-            <section
+            {/* <section
                 className="relative overflow-hidden pt-6 pb-6 md:pt-12 md:pb-10"
                 style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFE57E 100%)' }}
-            >
-                {/* Background Blobs - Golden Accents */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-64 -mt-64" />
+            > */}
+            {/* Background Blobs - Golden Accents */}
+            {/* <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-64 -mt-64" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white opacity-[0.4] rounded-full blur-3xl -ml-40 -mb-40" />
 
                 <div className="relative z-10 max-w-7xl mx-auto px-6">
-                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                        {/* Text Content */}
-                        <div className="w-full lg:w-3/5 text-center lg:text-left">
+                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20"> */}
+            {/* Text Content */}
+            {/* <div className="w-full lg:w-3/5 text-center lg:text-left">
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -744,10 +744,10 @@ export default function BulkOrderPage() {
                                 className="text-[15px] md:text-lg text-black/60 leading-snug mb-6 max-w-2xl mx-auto lg:mx-0"
                             >
                                 Secure your high-volume supply with uncompromised quality, competitive B2B margins, and reliable logistics.
-                            </motion.p>
+                            </motion.p> */}
 
-                            {/* Sleek Horizontal Trust Badges */}
-                            <motion.div
+            {/* Sleek Horizontal Trust Badges */}
+            {/* <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3 }}
@@ -789,10 +789,10 @@ export default function BulkOrderPage() {
                                     <Search className="w-5 h-5 opacity-50" />
                                 </button>
                             </motion.div>
-                        </div>
+                        </div> */}
 
-                        {/* Image Column */}
-                        <div className="w-full lg:w-2/5 relative hidden lg:block">
+            {/* Image Column */}
+            {/* <div className="w-full lg:w-2/5 relative hidden lg:block">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -807,10 +807,10 @@ export default function BulkOrderPage() {
                                     height={600}
                                     priority
                                     className="relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
-                                />
+                                /> */}
 
-                                {/* Floating Badges */}
-                                <motion.div
+            {/* Floating Badges */}
+            {/* <motion.div
                                     animate={{ y: [0, -10, 0] }}
                                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                                     className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20"
@@ -831,17 +831,17 @@ export default function BulkOrderPage() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* ── Businesses We Cater To ── */}
-            <div className="bg-white">
+            <div className="COLORS.bg">
                 <BusinessesCateredSection />
             </div>
 
             <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
 
             {/* ── Our Grades ── */}
-            <div className="bg-white">
+            <div className="COLORS.bg">
                 <OurGradesSection onEnquire={scrollToForm} onSelectCheck={onSelectCheck} />
             </div>
 
