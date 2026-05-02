@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 type Tab = 'story' | 'team' | 'process' | 'visit';
 
@@ -35,7 +37,7 @@ const Icons = {
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'story', label: 'Our Story' },
-  { id: 'team', label: 'Our Team' },
+  { id: 'team', label: 'Founder\'s Note' },
   { id: 'process', label: 'Our Process' },
   { id: 'visit', label: 'Visit Factory' },
 ];
@@ -447,89 +449,172 @@ export default function AboutPage() {
     }
 
     if (activeTab === 'story') return (
-      <div className="about-animate space-y-8">
-        {/* Heading */}
-        <div>
-          <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-full mb-4">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-[10px] font-black tracking-[0.2em] text-amber-700 uppercase">Est. 2019 · Siliguri, WB</span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-2">About Crunchy Cashews</h2>
-          <div className="w-12 h-1 rounded-full" style={{ backgroundColor: COLORS.primary }} />
-        </div>
-
-        {/* Story paragraphs */}
-        <div className="space-y-4 text-gray-600 text-sm leading-relaxed">
-          <p>
-            <span className="font-semibold text-gray-800">We are India's modern cashew manufacturing company</span> that
-            has been ethically sourcing raw cashews from the best cashew-producing African countries — majorly{' '}
-            <span className="font-semibold" style={{ color: '#F6B000' }}>Tanzania, Ghana, and Benin</span>.
-          </p>
-          <p>
-            With our extended experience and our{' '}
-            <span className="font-semibold text-gray-800">commitment towards equal employment opportunities for women</span>,
-            we have built a highly advanced and efficient operation chain that reduces production costs and final prices.
-          </p>
-          <p>
-            We have a fully fledged{' '}
-            <span className="font-semibold text-gray-800">28,800 sq. ft. processing facility in Siliguri, West Bengal</span>{' '}
-            where we execute end-to-end production of our cashews.
-          </p>
-          <p>
-            Our production facilities hold various quality management and food safety certifications. We agree to the{' '}
-            <span className="font-semibold text-gray-800">Global Compact</span> on human rights, labour, environment and
-            anti-corruption. Our cashew nuts are known for their{' '}
-            <span className="font-semibold text-gray-800">superior quality, nutritional properties and rich taste.</span>
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { value: '28,800', label: 'Sq. ft. facility', icon: '🏭' },
-            { value: '3+', label: 'African origins', icon: '🌍' },
-            { value: '25+', label: 'Cashew grades', icon: '🏷️' },
-            { value: '100%', label: 'Quality assured', icon: '✅' },
-          ].map(s => (
-            <div key={s.label} className="group relative bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-2xl p-4 text-center hover:border-amber-200 hover:shadow-md transition-all">
-              <p className="text-xl mb-0.5">{s.icon}</p>
-              <p className="font-black text-2xl" style={{ color: '#F6B000' }}>{s.value}</p>
-              <p className="text-xs text-black/40 mt-0.5 font-medium">{s.label}</p>
+      <div className="about-animate space-y-16">
+        {/* 2. The Core Mission: Who You Are */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-full">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-[10px] font-black tracking-[0.2em] text-amber-700 uppercase">The Core Mission</span>
             </div>
-          ))}
+            <SectionHeading 
+              text="Modern Infrastructure," 
+              highlight="Rooted in Tradition." 
+              textColor="#000000"
+              className="text-3xl md:text-4xl"
+            />
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Located in the industrial hub of Siliguri, West Bengal, Yu Nut Processing Industry was built on a singular vision: to bridge the gap between premium global agriculture and domestic B2B demands. We operate a highly advanced, end-to-end processing facility dedicated to producing the finest cashew kernels. By combining rigorous food safety standards with scalable production methods, we ensure that every batch meets the precise specifications of our wholesale and retail partners.
+            </p>
+          </div>
+          <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] md:aspect-square relative group">
+            <img 
+              src="/images/Rectangle-112.jpg" 
+              alt="Yu Nut Processing Facility Exterior" 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
         </div>
 
-        {/* Divider */}
-        <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-gray-100" />
-          <span className="text-xs font-bold text-gray-300 uppercase tracking-widest">Our Facility</span>
-          <div className="h-px flex-1 bg-gray-100" />
+        {/* 3. Supply Chain & Sourcing: The Origin Story */}
+        <div className="bg-gray-50 rounded-[2.5rem] p-8 md:p-14 border border-gray-100">
+          <div className="max-w-3xl mx-auto text-center mb-12 flex flex-col items-center">
+            <span className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Global Supply Chain</span>
+            <SectionHeading 
+              text="Ethically Sourced from the" 
+              highlight="World’s Best." 
+              textColor="#000000"
+              className="text-2xl md:text-4xl"
+            />
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-4">
+              Great cashews start long before they reach our facility. We ethically source our raw materials directly from top cashew-producing regions in Africa, including Tanzania, Ghana, and Benin. By working closely with origin markets, we ensure high crop yields and maintain complete transparency and traceability from the African soil directly to our Siliguri plant.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: 'fa-earth-africa', title: 'African Origins', desc: 'Tanzania, Ghana & Benin' },
+              { icon: 'fa-hand-holding-heart', title: 'Ethical Trade', desc: 'Direct Farm-gate Sourcing' },
+              { icon: 'fa-route', title: 'Complete Traceability', desc: 'Soil to Factory Tracking' },
+            ].map(item => (
+              <div key={item.title} className="flex flex-col items-center text-center p-6 bg-white rounded-3xl shadow-sm border border-gray-50 hover:shadow-md transition-shadow">
+                <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mb-5 text-[#F6B000] text-2xl">
+                  <i className={`fa-solid ${item.icon}`} />
+                </div>
+                <h4 className="font-black text-gray-900 mb-2 uppercase tracking-tight text-sm">{item.title}</h4>
+                <p className="text-xs text-gray-500 font-medium">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Image grid */}
-        <AboutImageGrid />
+        {/* 4. Processing & Scale: Proof of Capability */}
+        <div className="space-y-12 py-4">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="max-w-2xl">
+              <SectionHeading 
+                text="Precision Manufacturing" 
+                highlight="at Scale." 
+                textColor="#000000"
+                className="text-3xl md:text-4xl"
+              />
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-4">
+                Our 28,800 sq. ft. facility is equipped to handle high-volume demands without compromising on grade or quality.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 bg-black text-[#F6B000] px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl h-fit">
+              <i className="fa-solid fa-industry text-base" /> 28,800 Sq. Ft.
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { 
+                icon: 'fa-microchip', 
+                title: 'Advanced Technology', 
+                desc: 'Utilizing state-of-the-art automated machinery for perfect yields.' 
+              },
+              { 
+                icon: 'fa-chart-line', 
+                title: 'Data-Driven Quality', 
+                desc: 'We utilize rigorous production reporting to maintain strict quality control.' 
+              },
+              { 
+                icon: 'fa-award', 
+                title: 'Grade Perfection', 
+                desc: 'Capable of producing over 25 precise cashew grades.' 
+              },
+            ].map(point => (
+              <div key={point.title} className="bg-white p-8 rounded-3xl border border-gray-100 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 group">
+                <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center text-black mb-6 group-hover:bg-amber-400 group-hover:rotate-6 transition-all">
+                  <i className={`fa-solid ${point.icon} text-xl`} />
+                </div>
+                <h3 className="font-black text-gray-900 mb-3 text-lg">{point.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{point.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Gallery Divider */}
+        <div className="pt-8 border-t border-gray-100">
+           <AboutImageGrid />
+        </div>
       </div>
     );
 
     if (activeTab === 'team') return (
       <div className="about-animate">
-        <div className="mb-6">
-          <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-1">Our Team</h2>
-          <div className="w-10 h-1 rounded-full" style={{ backgroundColor: COLORS.primary }} />
-        </div>
-        <div className="space-y-4">
-          {TEAM.map(m => (
-            <div key={m.name}
-              className="flex gap-4 items-start p-5 border border-gray-100 rounded-2xl hover:border-amber-200/80 hover:shadow-md transition-all bg-gray-50/40">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0"
-                style={{ background: m.color, color: m.color === '#F6B000' ? '#000000' : '#ffffff' }}>{m.initial}</div>
-              <div>
-                <p className="font-bold text-gray-800">{m.name}</p>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#F6B000' }}>{m.role}</p>
-                <p className="text-gray-500 text-sm leading-relaxed">{m.bio}</p>
-              </div>
+        <div className="block w-full">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100 mb-6 w-fit">
+                <span className="w-2 h-2 rounded-full bg-black"></span>
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">The Owner's Note</span>
             </div>
-          ))}
+            
+            <SectionHeading 
+                text="A Commitment to" 
+                highlight="Uncompromising Quality." 
+                textColor="#000000"
+                className="text-3xl md:text-4xl mb-8"
+            />
+            
+            <div className="text-gray-600 text-sm md:text-base leading-relaxed mb-10 relative block">
+                {/* Floated Image */}
+                <div className="float-none md:float-right w-full md:w-1/2 lg:w-[45%] md:ml-8 mb-6 mt-2 relative aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
+                    <img 
+                        src="/images/nitesh.png" 
+                        alt="Nitesh Jindal - Founder" 
+                        className="w-full h-full object-cover object-center"
+                    />
+                </div>
+
+                {/* Text Content */}
+                <p className="mb-5">
+                    "When I established Yu Nut Processing Industry in Siliguri, my goal wasn't just to enter the cashew market—it was to elevate it. I saw an opportunity to bring better technology, stricter quality controls, and a more ethical supply chain to the Indian B2B landscape.
+                </p>
+                <p className="mb-5">
+                    Today, from personally overseeing our raw material sourcing from Africa to implementing data-driven production standards on our factory floor, my focus remains the same: ensuring that every batch of Crunchy Cashews that leaves our facility represents the pinnacle of taste, nutrition, and reliability.
+                </p>
+                <p className="font-medium text-gray-800 mb-5">
+                    When you partner with us, you aren't just buying cashews; you are trusting my team's dedication to your business's success."
+                </p>
+                
+                <div className="clear-both"></div>
+            </div>
+
+            <div className="pt-8 border-t border-gray-100 max-w-lg">
+                <div className="mb-1" style={{ fontFamily: "'Brush Script MT', 'Great Vibes', cursive", fontSize: '2.5rem', color: '#111' }}>
+                    Nitesh Jindal
+                </div>
+                <p className="font-black text-gray-900 text-sm uppercase tracking-widest mb-1">
+                    Nitesh Jindal
+                </p>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F6B000' }}>
+                    Managing Director & Proprietor,
+                    <br/>Yu Nut Processing Industry
+                </p>
+            </div>
         </div>
       </div>
     );
@@ -546,7 +631,12 @@ export default function AboutPage() {
         <div className="mb-6">
           <span className="inline-block font-bold uppercase tracking-widest text-xs px-3 py-1 rounded-full mb-3"
             style={{ backgroundColor: '#F6B000', color: '#000000' }}>Exclusive Tour</span>
-          <h2 className="text-2xl md:text-3xl font-heading font-black text-black mb-2">See the Magic Happen</h2>
+          <SectionHeading 
+            text="See the" 
+            highlight="Magic Happen" 
+            textColor="#000000"
+            className="text-2xl md:text-3xl mb-4"
+          />
           <p className="text-black/50 text-sm leading-relaxed max-w-lg">
             We invite bulk buyers, B2B partners, and food industry professionals to visit our Siliguri processing
             facility and witness our state-of-the-art roasting lines firsthand.
@@ -609,30 +699,55 @@ export default function AboutPage() {
     <div className={`min-h-screen pb-16 ${COLORS.bg}`}>
 
       {/* VIDEO HERO */}
-      <section className="relative h-[70vh] min-h-[480px] max-h-[700px] overflow-hidden">
+      <section className="relative h-[80vh] min-h-[550px] max-h-[850px] overflow-hidden">
         <video autoPlay loop muted playsInline
           className="absolute inset-0 w-full h-full object-cover"
           poster="/images/Rectangle-112.jpg">
-          <source src="/videos/cashew-about.webm" type="video/webm" />
-          <source src="/videos/7020392_420_Air_3840x2160.mp4" type="video/mp4" />
+          <source src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777747446/VN20260503_001215_u2yinn.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/25 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 md:px-12 md:pb-14">
-          <div className="max-w-5xl mx-auto">
-            <span className="inline-block font-bold tracking-[0.22em] uppercase text-xs mb-3" style={{ color: '#F6B000' }}>About Us</span>
-            <h1 className="text-4xl md:text-6xl font-heading font-black text-white leading-tight mb-3 drop-shadow-lg">
-              A Bunch to Talk<br />About Us
-            </h1>
-            <p className="text-white/65 text-base md:text-lg max-w-xl">
-              The passion, people, and processes behind every perfectly roasted Crunchy Cashew.
-            </p>
+        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+        
+        <div className="absolute inset-0 flex items-center px-6 md:px-12">
+          <div className="max-w-5xl mx-auto w-full flex flex-col items-center md:items-start">
+            <div className="max-w-3xl text-center md:text-left flex flex-col items-center md:items-start">
+              <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-lg">
+                Industry Leaders
+              </span>
+              <h1 className="text-[24px] md:text-[36px] font-heading font-black text-white leading-[1.2] mb-6 drop-shadow-2xl">
+                Redefining Quality in<br />
+                <span style={{ color: '#F6B000' }}>Cashew Manufacturing.</span>
+              </h1>
+              <p className="text-white/90 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-md">
+                Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
+              </p>
+              
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                <Link 
+                  href="/bulk" 
+                  className="bg-[#F6B000] text-black font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:scale-105 transition-transform shadow-2xl flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-handshake" />
+                  Partner With Us
+                </Link>
+                <button 
+                  onClick={() => {
+                    setActiveTab('process');
+                    document.getElementById('about-tabs')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="bg-white/10 backdrop-blur-md border border-white/30 text-white font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:bg-white/20 transition-all shadow-xl flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-industry" />
+                  Explore Our Facility
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── STICKY TABS ── */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
+      <div id="about-tabs" className="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 md:px-6">
 
           {/* DESKTOP: normal horizontal tabs */}

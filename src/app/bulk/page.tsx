@@ -21,7 +21,11 @@ import {
     Tag,
     UtensilsCrossed,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    Target,
+    Leaf,
+    ShieldCheck,
+    CalendarDays
 } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import WhiteLabelBanner from '@/components/home/WhiteLabelBanner';
@@ -418,20 +422,20 @@ function BusinessesCateredSection() {
     ];
 
     return (
-        <section className="max-w-6xl mx-auto px-6 py-10 md:py-16">
+        <section className="max-w-7xl mx-auto px-6 py-10 md:py-16">
             <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
-                    text="Who We"
-                    highlight="Serve"
+                    text="Industries We"
+                    highlight="Supply"
                     className="mb-3 !text-[24px] md:!text-4xl"
                 />
                 <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-6" />
                 <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-                    Trusted by businesses across India — from neighborhood stores to global hospitality giants.
+                    Consistent quality and reliable volume for businesses of all sizes.
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                 {categories.map((cat, idx) => (
                     <motion.div
                         key={idx}
@@ -533,15 +537,18 @@ function OurGradesSection({
                     <button
                         key={cat.id}
                         onClick={() => setActiveTab(cat.id)}
-                        className={`group flex items-center gap-2 whitespace-nowrap px-6 py-3 rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${activeTab === cat.id
-                            ? 'bg-[#F6B000] text-black border-[#F6B000]'
-                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900'
+                        className={`group flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${
+                            activeTab === cat.id
+                            ? 'bg-[#F6B000] text-black border-[#F6B000] px-5 md:px-6 py-3'
+                            : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900 px-4 md:px-6 py-3'
                             }`}
                     >
                         <span className={`${activeTab === cat.id ? 'text-black' : 'text-gray-400 group-hover:text-[#F6B000]'}`}>
                             {cat.icon}
                         </span>
-                        {cat.title}
+                        <span className={`${activeTab === cat.id ? 'block' : 'hidden md:block'}`}>
+                            {cat.title}
+                        </span>
                     </button>
                 ))}
             </div>
@@ -602,7 +609,79 @@ function OurGradesSection({
     );
 }
 
+
+// ─── Why Partner With Us ──────────────────────────────────────────────────────
+function WhyPartnerWithUsSection() {
+    const pillars = [
+        {
+            icon: <Target className="w-8 h-8 text-[#138808]" />,
+            title: "Precision Optical Grading",
+            pain: "Inconsistent sizing and mixed batches ruining packaging lines.",
+            copy: "Utilizing advanced automated cutting machinery, we ensure strict uniformity across every batch. A WW 320 from us is exactly a WW 320, every single time."
+        },
+        {
+            icon: <Leaf className="w-8 h-8 text-[#138808]" />,
+            title: "Pristine Processing",
+            pain: "Bitter taste and residue.",
+            copy: "Our Siliguri facility utilizes specialized technical processes to completely remove CNSL oil deposits, guaranteeing a flawlessly clean profile and a farm-fresh crunch."
+        },
+        {
+            icon: <ShieldCheck className="w-8 h-8 text-[#138808]" />,
+            title: "Zero-Compromise Integrity",
+            pain: "High breakage rates and wasted product.",
+            copy: "From raw sourcing to final packing, our automated handling processes are optimized to protect the nut, delivering a maximum yield of perfectly intact wholes."
+        },
+        {
+            icon: <CalendarDays className="w-8 h-8 text-[#138808]" />,
+            title: "Uninterrupted Supply",
+            pain: "Festival season stockouts and unreliable vendors.",
+            copy: "By directly sourcing raw materials from Africa and leveraging our massive in-house processing capacity, we guarantee reliable volume and timely delivery, even during peak market demand."
+        }
+    ];
+
+    return (
+        <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+            <div className="text-center mb-16">
+                <SectionHeading
+                    text="Why Partner"
+                    highlight="With Us?"
+                    className="mb-4 !text-[28px] md:!text-4xl"
+                />
+                <p className="text-gray-600 text-sm md:text-lg max-w-3xl mx-auto leading-relaxed font-medium">
+                    We solve the most common B2B cashew supply chain headaches so you can focus on growing your brand.
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+                {pillars.map((pillar, idx) => (
+                    <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.1, duration: 0.5 }}
+                        className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col group"
+                    >
+                        <div className="w-16 h-16 rounded-2xl bg-[#138808]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                            {pillar.icon}
+                        </div>
+                        <h3 className="text-xl font-black text-gray-900 mb-3 leading-snug">{pillar.title}</h3>
+                        <div className="mb-4 pb-4 border-b border-gray-100">
+                            <span className="text-xs font-bold text-red-500 uppercase tracking-wider block mb-1">The Pain Solved</span>
+                            <p className="text-sm font-semibold text-gray-700 italic">"{pillar.pain}"</p>
+                        </div>
+                        <p className="text-sm text-gray-600 leading-relaxed flex-grow">
+                            {pillar.copy}
+                        </p>
+                    </motion.div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
+
 
 export default function BulkOrderPage() {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -706,142 +785,155 @@ export default function BulkOrderPage() {
     return (
         <div className={`min-h-screen ${COLORS.bg}`}>
             {/* ── Hero ── */}
-            {/* <section
-                className="relative overflow-hidden pt-6 pb-6 md:pt-12 md:pb-10"
-                style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFE57E 100%)' }}
-            > */}
-            {/* Background Blobs - Golden Accents */}
-            {/* <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-64 -mt-64" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white opacity-[0.4] rounded-full blur-3xl -ml-40 -mb-40" />
-
-                <div className="relative z-10 max-w-7xl mx-auto px-6">
-                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20"> */}
-            {/* Text Content */}
-            {/* <div className="w-full lg:w-3/5 text-center lg:text-left">
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/20 px-3 py-1.5 rounded-full mb-3"
-                            >
-                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
-                                <span className="text-[9px] font-black tracking-wider text-[#F6B000] uppercase">Trusted by 40+ Businesses</span>
-                            </motion.div>
-
-                            <motion.h1
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="text-[28px] md:text-5xl lg:text-6xl font-black text-black leading-tight mb-3"
-                            >
-                                Premium Cashews, <br />
-                                <span className="text-[#F6B000]">Direct From The Factory.</span>
-                            </motion.h1>
-
-                            <motion.p
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="text-[15px] md:text-lg text-black/60 leading-snug mb-6 max-w-2xl mx-auto lg:mx-0"
-                            >
-                                Secure your high-volume supply with uncompromised quality, competitive B2B margins, and reliable logistics.
-                            </motion.p> */}
-
-            {/* Sleek Horizontal Trust Badges */}
-            {/* <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.3 }}
-                                className="flex flex-wrap justify-center lg:justify-start items-center gap-x-4 gap-y-2 mb-8"
-                            >
-                                {[
-                                    { icon: <Factory className="w-3.5 h-3.5 text-[#F6B000]" />, text: 'Natural Processing' },
-                                    { icon: <Tag className="w-3.5 h-3.5 text-[#F6B000]" />, text: 'Direct Pricing' },
-                                    { icon: <Clock className="w-3.5 h-3.5 text-[#F6B000]" />, text: '24h Quote' }
-                                ].map((badge, i) => (
-                                    <React.Fragment key={i}>
-                                        <div className="flex items-center gap-1.5 text-[11px] md:text-xs font-bold text-black/60">
-                                            {badge.icon}
-                                            {badge.text}
-                                        </div>
-                                        {i < 2 && <div className="hidden sm:block w-1 h-1 rounded-full bg-black/10" />}
-                                    </React.Fragment>
-                                ))}
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                                className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5"
-                            >
-                                <button
-                                    onClick={() => scrollTo(formRef)}
-                                    className="group w-full sm:w-auto h-14 flex items-center justify-center gap-3 bg-[#F6B000] text-black font-bold px-10 rounded-2xl shadow-xl transition-all duration-300 hover:scale-105 active:scale-95"
-                                >
-                                    Request Wholesale Quote
-                                    <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                                </button>
-                                <button
-                                    onClick={() => scrollTo(inquiryRef)}
-                                    className="group w-full sm:w-auto h-14 flex items-center justify-center gap-3 bg-white/50 backdrop-blur-md border border-black/10 text-black font-bold px-10 rounded-2xl transition-all duration-300 hover:bg-white hover:shadow-xl active:scale-95"
-                                >
-                                    Track Existing Inquiry
-                                    <Search className="w-5 h-5 opacity-50" />
-                                </button>
-                            </motion.div>
-                        </div> */}
-
-            {/* Image Column */}
-            {/* <div className="w-full lg:w-2/5 relative hidden lg:block">
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.2, duration: 0.8 }}
-                                className="relative z-10"
-                            >
-                                <div className="absolute inset-0 bg-[#F6B000]/10 rounded-full blur-[100px] transform scale-150 rotate-12" />
-                                <Image
-                                    src="/images/Right-Hero-Section.png"
-                                    alt="Premium Cashews"
-                                    width={600}
-                                    height={600}
-                                    priority
-                                    className="relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
-                                /> */}
-
-            {/* Floating Badges */}
-            {/* <motion.div
-                                    animate={{ y: [0, -10, 0] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute -top-4 -right-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20"
-                                >
-                                    <div className="w-10 h-10 bg-[#F6B000] rounded-lg flex items-center justify-center text-white font-bold">A+</div>
-                                    <div className="text-xs font-bold leading-tight">Export Quality<br /><span className="text-gray-400 font-medium">Global Standards</span></div>
-                                </motion.div>
-
-                                <motion.div
-                                    animate={{ y: [0, 10, 0] }}
-                                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute bottom-8 -left-8 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3 z-20"
-                                >
-                                    <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-[#F6B000]"><Package className="w-5 h-5" /></div>
-                                    <div className="text-xs font-bold leading-tight">Bulk Shipping<br /><span className="text-gray-400 font-medium">Pan India Delivery</span></div>
-                                </motion.div>
-                            </motion.div>
-                        </div>
-                    </div>
+            <section className="relative w-full pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
+                {/* Background Image */}
+                <div className="absolute top-0 left-0 z-0 w-full h-[50%]">
+                    <img 
+                        src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777750353/ChatGPT_Image_May_3_2026_01_02_14_AM_jae8us.png" 
+                        alt="Hero Background" 
+                        className="w-full h-full object-cover opacity-90"
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
                 </div>
-            </section> */}
+
+                {/* Background Decor */}
+                <div className="absolute top-0 left-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-white opacity-60 rounded-full blur-3xl -ml-20 -mt-20 pointer-events-none z-0" />
+                <div className="absolute top-0 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none z-0" />
+
+                <div className="relative z-10 max-w-5xl mx-auto px-6 flex flex-col items-center text-center">
+                    {/* Headline */}
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-[24px] md:text-[36px] font-black text-black leading-[1.4] md:leading-[1.4] mb-4 max-w-4xl mx-auto"
+                    >
+                        Premium <span className="text-[#F6B000]">Factory-Direct</span> Cashews for <span className="bg-[linear-gradient(to_right,#FF9933_0%,#FFFFFF_40%,#000080_50%,#FFFFFF_60%,#138808_100%)] text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] [-webkit-text-stroke:0.5px_rgba(0,0,0,0.1)]">India's</span> Top Businesses.
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-[14px] md:text-[16px] text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto font-medium"
+                    >
+                        Processed in our state-of-the-art Siliguri facility. We combine premium raw material sourcing with advanced automated grading to deliver consistent, export-quality cashews at wholesale volume.
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 w-full sm:w-auto"
+                    >
+                        <button
+                            onClick={() => scrollTo(formRef)}
+                            className="group w-full sm:w-auto h-12 flex items-center justify-center gap-3 bg-[#F6B000] text-black font-bold px-8 rounded-xl shadow-[0_4px_14px_rgba(246,176,0,0.3)] transition-all duration-300 hover:scale-105 active:scale-95 text-sm"
+                        >
+                            Request Bulk Pricing
+                        </button>
+                        <button
+                            onClick={() => {
+                                const gradesSec = document.getElementById('our-grades-section');
+                                if (gradesSec) gradesSec.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="group w-full sm:w-auto h-12 flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-800 font-bold px-8 rounded-xl transition-all duration-300 hover:border-[#F6B000] hover:text-black active:scale-95 text-sm shadow-sm"
+                        >
+                            Explore Our Grades
+                        </button>
+                    </motion.div>
+
+                    {/* Trust badges */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.35 }}
+                        className="flex flex-wrap items-center justify-center gap-6 mb-10 text-[12px] md:text-sm font-bold text-gray-600"
+                    >
+                        <span className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-[#F6B000]/10 flex items-center justify-center">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
+                            </div>
+                            ISO Certified Facility
+                        </span>
+                        <span className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full bg-[#F6B000]/10 flex items-center justify-center">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
+                            </div>
+                            Pan-India Delivery
+                        </span>
+                    </motion.div>
+
+                    {/* Video Embed */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="w-full relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] bg-white border-[6px] md:border-8 border-white aspect-[4/3] sm:aspect-video md:aspect-[21/9]"
+                    >
+                        <video
+                            src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777747446/VN20260503_001215_u2yinn.mp4"
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            preload="auto"
+                            className="w-full h-full object-cover"
+                        />
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* ── Our Trusted Partners ── */}
+            <section className={`w-full py-10 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
+                <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
+                    <SectionHeading
+                        text="Trusted by India's"
+                        highlight="Leading Businesses"
+                        className="mb-3 !text-[24px] md:!text-4xl"
+                    />
+                </div>
+                
+                {/* Infinite Marquee */}
+                <div className={`flex overflow-hidden w-full ${COLORS.bg} select-none`}>
+                    <motion.div
+                        className="flex items-center gap-16 md:gap-24 whitespace-nowrap px-8"
+                        animate={{ x: ["0%", "-50%"] }}
+                        transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
+                    >
+                        {/* Repeat logos twice for seamless loop */}
+                        {[...Array(2)].map((_, idx) => (
+                            <div key={idx} className="flex items-center gap-16 md:gap-24 grayscale opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default">
+                                <i className="fa-brands fa-amazon text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-google text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-microsoft text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-airbnb text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-dhl text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-meta text-5xl md:text-6xl text-gray-600"></i>
+                                <i className="fa-brands fa-stripe text-5xl md:text-6xl text-gray-600"></i>
+                            </div>
+                        ))}
+                    </motion.div>
+                </div>
+            </section>
 
             {/* ── Businesses We Cater To ── */}
-            <div className="COLORS.bg">
+            <div className={COLORS.bg}>
                 <BusinessesCateredSection />
+            </div>
+
+
+                        <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
+
+            {/* ── Why Partner With Us ── */}
+            <div className={COLORS.bg}>
+                <WhyPartnerWithUsSection />
             </div>
 
             <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
 
             {/* ── Our Grades ── */}
-            <div className="COLORS.bg">
+            <div className={COLORS.bg}>
                 <OurGradesSection onEnquire={scrollToForm} onSelectCheck={onSelectCheck} />
             </div>
 

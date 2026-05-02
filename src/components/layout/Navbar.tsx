@@ -76,7 +76,7 @@ export default function Navbar() {
     const isTransparent = isHeroPage && !scrolled;
 
     return (
-        <>
+        <div className={`${isHeroPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-[100] transition-all duration-400 ease-out flex flex-col ${!isTransparent ? 'bg-white/95 backdrop-blur-md shadow-sm border-none' : ''}`}>
             {/* ─── Announcement Bar ─── */}
             {/* Hide when transparent so it doesn't float over the hero */}
             <div
@@ -102,13 +102,7 @@ export default function Navbar() {
             </div>
 
             {/* ─── Main Navbar ─── */}
-            <header
-                className={`
-                    ${isHeroPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-50
-                    transition-all duration-400 ease-out
-                    ${!isTransparent ? 'bg-white/95 backdrop-blur-md shadow-sm border-none' : ''}
-                `}
-            >
+            <header className="relative w-full">
                 {/* 50% Height Horizontal Stripe (Lite Black 20%) */}
                 {/* <div className={`
                     absolute inset-x-0 top-0 h-[75%] -z-10 pointer-events-none transition-all duration-500
@@ -314,6 +308,6 @@ export default function Navbar() {
                     </nav>
                 </div>
             )}
-        </>
+        </div>
     );
 }
