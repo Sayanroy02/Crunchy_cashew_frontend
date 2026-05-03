@@ -114,10 +114,10 @@ export default function Navbar() {
                                 href={link.href}
                                 className={`relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors
                                     ${isActive(link.href)
-                                        ? (isTransparent ? 'text-amber' : 'text-primary')
+                                        ? (isTransparent ? 'text-amber' : 'text-[#00863D]')
                                         : (isTransparent
                                             ? 'text-white/80 hover:text-white hover:bg-white/10'
-                                            : 'text-gray-600 hover:text-primary hover:bg-primary/10')
+                                            : 'text-gray-600 hover:text-[#00863D] hover:bg-[#00863D]/10')
                                     }`}
                             >
                                 {link.label}
@@ -150,10 +150,10 @@ export default function Navbar() {
                                 ${isTransparent ? 'hover:bg-white/10' : 'hover:bg-gray-50'}`}
                         >
                             <i className={`text-lg ${isAuthenticated
-                                ? isTransparent ? 'fa-solid fa-user text-white' : 'fa-solid fa-user text-primary'
-                                : isTransparent ? 'fa-regular fa-user text-white/80 group-hover:text-white' : 'fa-regular fa-user text-gray-500 group-hover:text-primary'
+                                ? isTransparent ? 'fa-solid fa-user text-white' : 'fa-solid fa-user text-[#00863D]'
+                                : isTransparent ? 'fa-regular fa-user text-white/80 group-hover:text-white' : 'fa-regular fa-user text-gray-500 group-hover:text-[#00863D]'
                                 }`} />
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-primary'}`}>
+                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`}>
                                 {isAuthenticated ? 'Profile' : 'Login'}
                             </span>
                         </Link>
@@ -164,8 +164,8 @@ export default function Navbar() {
                             className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group
                                 ${isTransparent ? 'hover:bg-white/10' : 'hover:bg-gray-50'}`}
                         >
-                            <i className={`fa-regular fa-heart text-lg ${isTransparent ? 'text-white/80 group-hover:text-white' : 'text-gray-500 group-hover:text-primary'}`} />
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-primary'}`}>
+                            <i className={`fa-regular fa-heart text-lg ${isTransparent ? 'text-white/80 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`} />
+                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`}>
                                 Wishlist
                             </span>
                         </Link>
