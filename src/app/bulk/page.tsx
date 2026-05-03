@@ -537,8 +537,7 @@ function OurGradesSection({
                     <button
                         key={cat.id}
                         onClick={() => setActiveTab(cat.id)}
-                        className={`group flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${
-                            activeTab === cat.id
+                        className={`group flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-bold transition-all duration-300 text-sm shadow-sm border ${activeTab === cat.id
                             ? 'bg-[#F6B000] text-black border-[#F6B000] px-5 md:px-6 py-3'
                             : 'bg-white text-gray-500 border-gray-100 hover:border-[#F6B000] hover:text-gray-900 px-4 md:px-6 py-3'
                             }`}
@@ -788,9 +787,9 @@ export default function BulkOrderPage() {
             <section className="relative w-full pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
                 {/* Background Image */}
                 <div className="absolute top-0 left-0 z-0 w-full h-[50%]">
-                    <img 
-                        src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777750353/ChatGPT_Image_May_3_2026_01_02_14_AM_jae8us.png" 
-                        alt="Hero Background" 
+                    <img
+                        src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777750353/ChatGPT_Image_May_3_2026_01_02_14_AM_jae8us.png"
+                        alt="Hero Background"
                         className="w-full h-full object-cover opacity-90"
                     />
                     <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
@@ -808,7 +807,20 @@ export default function BulkOrderPage() {
                         transition={{ delay: 0.1 }}
                         className="text-[24px] md:text-[36px] font-black text-black leading-[1.4] md:leading-[1.4] mb-4 max-w-4xl mx-auto"
                     >
-                        Premium <span className="text-[#F6B000]">Factory-Direct</span> Cashews for <span className="bg-[linear-gradient(to_right,#FF9933_0%,#FFFFFF_40%,#000080_50%,#FFFFFF_60%,#138808_100%)] text-transparent bg-clip-text drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] [-webkit-text-stroke:0.5px_rgba(0,0,0,0.1)]">India's</span> Top Businesses.
+                        Premium <span className="text-[#F6B000]">Factory-Direct</span> Cashews for
+                        {' '}
+                        <span
+                            className="text-transparent bg-clip-text font-bold"
+                            style={{
+                                backgroundImage: 'linear-gradient(to right, #FF9933 0%, #138808 100%)',
+                                WebkitTextStroke: '0.3px rgba(0,0,0,0.15)',
+                                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                            }}
+                        >
+                            India's
+                        </span>
+                        {' '}
+                        Top Businesses.
                     </motion.h1>
 
                     <motion.p
@@ -893,7 +905,7 @@ export default function BulkOrderPage() {
                         className="mb-3 !text-[24px] md:!text-4xl"
                     />
                 </div>
-                
+
                 {/* Infinite Marquee */}
                 <div className={`flex overflow-hidden w-full ${COLORS.bg} select-none`}>
                     <motion.div
@@ -923,7 +935,7 @@ export default function BulkOrderPage() {
             </div>
 
 
-                        <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
+            <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
 
             {/* ── Why Partner With Us ── */}
             <div className={COLORS.bg}>
