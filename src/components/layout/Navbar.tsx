@@ -79,7 +79,7 @@ export default function Navbar() {
 
             {/* ─── Announcement Bar ─── */}
             <div
-                className="bg-primary text-white text-xs py-2 text-center overflow-hidden select-none transition-all duration-300"
+                className="bg-[#00863D] text-white text-xs py-2 text-center overflow-hidden select-none transition-all duration-300"
                 style={{
                     opacity: isTransparent ? 0 : 1,
                     maxHeight: isTransparent ? '0px' : '40px',
