@@ -11,10 +11,10 @@ export default function Footer() {
             style={{ backgroundColor: COLORS.heading }}
         >
             {/* Top accent line */}
-            <div
+            {/* <div
                 className="w-full h-1"
-                style={{ backgroundImage: `linear-gradient(to right, ${COLORS.primary}, ${COLORS.accent}, ${COLORS.primary})` }}
-            />
+                style={{ backgroundImage: `linear-gradient(to right, ${COLORS.}, ${COLORS.accent}, ${COLORS.primary})` }}
+            /> */}
 
             {/* Main Footer Grid */}
             <div className="max-w-7xl mx-auto px-6 pt-12 pb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -34,8 +34,8 @@ export default function Footer() {
                         <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-2 rounded-2xl">
                             <img src="/images/partners/FSSAI_logo.png" alt="FSSAI Logo" className="w-14 h-auto object-contain" />
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-[#F6B000]">License No.</span>
-                                <span className="text-[11px] text-white font-mono">12825999000962</span>
+                                {/* <span className="text-[10px] font-black uppercase tracking-widest text-[#ffffff]">License No.</span> */}
+                                <span className="text-[16px] text-white font-mono">12825999000962</span>
                             </div>
                         </div>
                     </div>
@@ -82,7 +82,7 @@ export default function Footer() {
                             <li key={link.href}>
                                 <Link
                                     href={link.href}
-                                    className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                                    className="group flex items-center gap-2 text-white hover:text-white text-sm transition-colors duration-200"
                                 >
                                     <span
                                         className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
@@ -107,7 +107,7 @@ export default function Footer() {
                             <li key={item.label}>
                                 <Link
                                     href={item.href}
-                                    className="group flex items-center gap-2 text-gray-400 hover:text-white text-sm transition-colors duration-200"
+                                    className="group flex items-center gap-2 text-white hover:text-white text-sm transition-colors duration-200"
                                 >
                                     <span
                                         className="w-0 group-hover:w-3 h-[2px] transition-all duration-300 rounded-full"
@@ -129,9 +129,9 @@ export default function Footer() {
                             <a href="tel:+917847996343" className="group flex items-start gap-3 hover:text-white transition-colors">
                                 <div
                                     className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
                                 >
-                                    <i className="fa-solid fa-phone text-xs" style={{ color: COLORS.accent }} />
+                                    <i className="fa-solid fa-phone text-xs" style={{ color: 'ffffff' }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-white/60 mb-0.5">Call Us</p>
@@ -143,13 +143,13 @@ export default function Footer() {
                             <a href="mailto:crunchycashews18@gmail.com" className="group flex items-start gap-3 hover:text-white transition-colors">
                                 <div
                                     className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
                                 >
-                                    <i className="fa-solid fa-envelope text-xs" style={{ color: COLORS.accent }} />
+                                    <i className="fa-solid fa-envelope text-xs" style={{ color: '#ffffff' }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-white/60 mb-0.5">Email</p>
-                                    <p className="text-sm text-white group-hover:text-white">crunchycashews18@gmail.com</p>
+                                    <p className="text-sm text-white group-hover:text-white">Crunchycashews18@gmail.com</p>
                                 </div>
                             </a>
                         </li>
@@ -157,9 +157,9 @@ export default function Footer() {
                             <div className="flex items-start gap-3">
                                 <div
                                     className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.primary}99`, borderColor: COLORS.primary }}
+                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
                                 >
-                                    <i className="fa-solid fa-location-dot text-xs" style={{ color: COLORS.accent }} />
+                                    <i className="fa-solid fa-location-dot text-xs" style={{ color: '#ffffff' }} />
                                 </div>
                                 <div>
                                     <p className="text-xs text-white/60 mb-0.5">Location</p>
