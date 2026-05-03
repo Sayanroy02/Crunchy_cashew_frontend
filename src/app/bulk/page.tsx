@@ -613,45 +613,51 @@ function OurGradesSection({
 function WhyPartnerWithUsSection() {
     const pillars = [
         {
-            icon: <Target className="w-8 h-8 text-[#138808]" />,
+            icon: <Target className="w-7 h-7 text-[#138808]" />,
             title: "Precision Optical Grading",
             pain: "Inconsistent sizing and mixed batches ruining packaging lines.",
-            copy: "Utilizing advanced automated cutting machinery, we ensure strict uniformity across every batch. A WW 320 from us is exactly a WW 320, every single time."
+            copy: "Utilizing advanced automated cutting machinery, we ensure strict uniformity across every batch. A WW 320 from us is exactly a WW 320, every single time.",
+            accent: '#138808',
         },
         {
-            icon: <Leaf className="w-8 h-8 text-[#138808]" />,
+            icon: <Leaf className="w-7 h-7 text-[#F6B000]" />,
             title: "Pristine Processing",
             pain: "Bitter taste and residue.",
-            copy: "Our Siliguri facility utilizes specialized technical processes to completely remove CNSL oil deposits, guaranteeing a flawlessly clean profile and a farm-fresh crunch."
+            copy: "Our Siliguri facility utilizes specialized technical processes to completely remove CNSL oil deposits, guaranteeing a flawlessly clean profile and a farm-fresh crunch.",
+            accent: '#F6B000',
         },
         {
-            icon: <ShieldCheck className="w-8 h-8 text-[#138808]" />,
+            icon: <ShieldCheck className="w-7 h-7 text-[#138808]" />,
             title: "Zero-Compromise Integrity",
             pain: "High breakage rates and wasted product.",
-            copy: "From raw sourcing to final packing, our automated handling processes are optimized to protect the nut, delivering a maximum yield of perfectly intact wholes."
+            copy: "From raw sourcing to final packing, our automated handling processes are optimized to protect the nut, delivering a maximum yield of perfectly intact wholes.",
+            accent: '#138808',
         },
         {
-            icon: <CalendarDays className="w-8 h-8 text-[#138808]" />,
+            icon: <CalendarDays className="w-7 h-7 text-[#F6B000]" />,
             title: "Uninterrupted Supply",
             pain: "Festival season stockouts and unreliable vendors.",
-            copy: "By directly sourcing raw materials from Africa and leveraging our massive in-house processing capacity, we guarantee reliable volume and timely delivery, even during peak market demand."
+            copy: "By directly sourcing raw materials from Africa and leveraging our massive in-house processing capacity, we guarantee reliable volume and timely delivery, even during peak market demand.",
+            accent: '#F6B000',
         }
     ];
 
     return (
         <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+            {/* Heading */}
             <div className="text-center mb-16">
                 <SectionHeading
                     text="Why Partner"
                     highlight="With Us?"
                     className="mb-4 !text-[28px] md:!text-4xl"
                 />
-                <p className="text-gray-600 text-sm md:text-lg max-w-3xl mx-auto leading-relaxed font-medium">
-                    We solve the most common B2B cashew supply chain headaches so you can focus on growing your brand.
+                <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-medium">
+                    We solve the most common B2B cashew supply chain headaches
+                    so you can focus on growing your brand.
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {pillars.map((pillar, idx) => (
                     <motion.div
                         key={idx}
@@ -659,26 +665,57 @@ function WhyPartnerWithUsSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1, duration: 0.5 }}
-                        className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 flex flex-col group"
+                        className="relative bg-white rounded-[1.5rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.09)] transition-all duration-300 flex flex-col group overflow-hidden"
                     >
-                        <div className="w-16 h-16 rounded-2xl bg-[#138808]/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                            {pillar.icon}
+                        {/* Colored top accent bar */}
+                        <div
+                            className="h-1 w-full"
+                            style={{ backgroundColor: pillar.accent }}
+                        />
+
+                        <div className="p-7 flex flex-col flex-grow">
+                            {/* Icon */}
+                            <div
+                                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
+                                style={{ backgroundColor: `${pillar.accent}15` }}
+                            >
+                                {pillar.icon}
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-[17px] font-black text-gray-900 mb-4 leading-snug">
+                                {pillar.title}
+                            </h3>
+
+                            {/* Pain point — styled as a quote block */}
+                            <div
+                                className="flex gap-2.5 items-start mb-4 pb-4 border-b border-gray-100"
+                            >
+                                <div
+                                    className="mt-0.5 w-1 shrink-0 self-stretch rounded-full"
+                                    style={{ backgroundColor: pillar.accent }}
+                                />
+                                <div>
+                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
+                                        Pain Point
+                                    </span>
+                                    <p className="text-[13px] text-gray-600 italic leading-snug">
+                                        "{pillar.pain}"
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Solution copy */}
+                            <p className="text-[13px] text-gray-500 leading-relaxed flex-grow">
+                                {pillar.copy}
+                            </p>
                         </div>
-                        <h3 className="text-xl font-black text-gray-900 mb-3 leading-snug">{pillar.title}</h3>
-                        <div className="mb-4 pb-4 border-b border-gray-100">
-                            <span className="text-xs font-bold text-red-500 uppercase tracking-wider block mb-1">The Pain Solved</span>
-                            <p className="text-sm font-semibold text-gray-700 italic">"{pillar.pain}"</p>
-                        </div>
-                        <p className="text-sm text-gray-600 leading-relaxed flex-grow">
-                            {pillar.copy}
-                        </p>
                     </motion.div>
                 ))}
             </div>
         </section>
     );
 }
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 
@@ -785,103 +822,124 @@ export default function BulkOrderPage() {
         <div className={`min-h-screen ${COLORS.bg}`}>
             {/* ── Hero ── */}
             <section className="relative w-full pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
+
                 {/* Background Image */}
-                <div className="absolute top-0 left-0 z-0 w-full h-[50%]">
+                <div className="absolute top-0 left-0 z-0 w-full h-[60%]">
                     <img
                         src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777750353/ChatGPT_Image_May_3_2026_01_02_14_AM_jae8us.png"
                         alt="Hero Background"
-                        className="w-full h-full object-cover opacity-90"
+                        className="w-full h-full object-cover opacity-80"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
                 </div>
 
-                {/* Background Decor */}
+                {/* Background Decor blobs */}
                 <div className="absolute top-0 left-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-white opacity-60 rounded-full blur-3xl -ml-20 -mt-20 pointer-events-none z-0" />
                 <div className="absolute top-0 right-0 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#F6B000] opacity-[0.05] rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none z-0" />
 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 flex flex-col items-center text-center">
-                    {/* Headline */}
+
+                    {/* Eyebrow tag */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                        className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/30 text-[#c48a00] text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
+                    >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F6B000] animate-pulse" />
+                        B2B &amp; Wholesale Supply
+                    </motion.div>
+
+                    {/* Headline — fixed line break */}
                     <motion.h1
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-[24px] md:text-[36px] font-black text-black leading-[1.4] md:leading-[1.4] mb-4 max-w-4xl mx-auto"
+                        className="text-[26px] md:text-[42px] font-black text-black leading-[1.3] mb-4 max-w-3xl mx-auto"
                     >
-                        Premium <span className="text-[#F6B000]">Factory-Direct</span> Cashews for
-                        {' '}
+                        Premium{' '}
+                        <span className="text-[#F6B000]">Factory-Direct</span>{' '}
+                        Cashews<br />
+                        for{' '}
                         <span
-                            className="text-transparent bg-clip-text font-bold"
+                            className="text-transparent bg-clip-text"
                             style={{
                                 backgroundImage: 'linear-gradient(to right, #FF9933 0%, #138808 100%)',
-                                WebkitTextStroke: '0.3px rgba(0,0,0,0.15)',
-                                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                                WebkitTextStroke: '0.3px rgba(0,0,0,0.12)',
+                                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
                             }}
                         >
                             India's
-                        </span>
-                        {' '}
+                        </span>{' '}
                         Top Businesses.
                     </motion.h1>
 
+                    {/* Subtitle — shorter, punchier */}
                     <motion.p
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-[14px] md:text-[16px] text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto font-medium"
+                        className="text-[14px] md:text-[16px] text-gray-500 leading-relaxed mb-8 max-w-xl mx-auto font-medium"
                     >
-                        Processed in our state-of-the-art Siliguri facility. We combine premium raw material sourcing with advanced automated grading to deliver consistent, export-quality cashews at wholesale volume.
+                        Processed in our state-of-the-art Siliguri facility.
+                        We combine premium raw material sourcing with advanced automated grading to deliver consistent,
+                        export-quality cashews at wholesale volume.
                     </motion.p>
 
+                    {/* CTA Buttons */}
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 w-full sm:w-auto"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 w-full sm:w-auto"
                     >
                         <button
                             onClick={() => scrollTo(formRef)}
-                            className="group w-full sm:w-auto h-12 flex items-center justify-center gap-3 bg-[#F6B000] text-black font-bold px-8 rounded-xl shadow-[0_4px_14px_rgba(246,176,0,0.3)] transition-all duration-300 hover:scale-105 active:scale-95 text-sm"
+                            className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-[#F6B000] text-black font-bold px-8 rounded-xl shadow-[0_4px_20px_rgba(246,176,0,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-sm"
                         >
+                            <i className="fa-solid fa-tag text-xs" />
                             Request Bulk Pricing
                         </button>
                         <button
                             onClick={() => {
-                                const gradesSec = document.getElementById('our-grades-section');
-                                if (gradesSec) gradesSec.scrollIntoView({ behavior: 'smooth' });
+                                document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="group w-full sm:w-auto h-12 flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-800 font-bold px-8 rounded-xl transition-all duration-300 hover:border-[#F6B000] hover:text-black active:scale-95 text-sm shadow-sm"
+                            className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-800 font-bold px-8 rounded-xl transition-all duration-300 hover:border-[#F6B000] hover:text-black active:scale-95 text-sm shadow-sm"
                         >
+                            <i className="fa-solid fa-layer-group text-xs text-[#F6B000]" />
                             Explore Our Grades
                         </button>
                     </motion.div>
 
-                    {/* Trust badges */}
+                    {/* Trust badges — more prominent */}
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.35 }}
-                        className="flex flex-wrap items-center justify-center gap-6 mb-10 text-[12px] md:text-sm font-bold text-gray-600"
+                        className="flex flex-wrap items-center justify-center gap-3 mb-10"
                     >
-                        <span className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#F6B000]/10 flex items-center justify-center">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
-                            </div>
-                            ISO Certified Facility
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full bg-[#F6B000]/10 flex items-center justify-center">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-[#F6B000]" />
-                            </div>
-                            Pan-India Delivery
-                        </span>
+                        {[
+                            { icon: 'fa-certificate', label: 'ISO Certified Facility' },
+                            { icon: 'fa-truck', label: 'Pan-India Delivery' },
+                            { icon: 'fa-boxes-stacked', label: 'Bulk Orders Welcome' },
+                            { icon: 'fa-headset', label: 'Dedicated B2B Support' },
+                        ].map(badge => (
+                            <span
+                                key={badge.label}
+                                className="flex items-center gap-2 bg-white border border-gray-100 shadow-sm text-gray-700 text-[12px] font-semibold px-4 py-2 rounded-full"
+                            >
+                                <i className={`fa-solid ${badge.icon} text-[#F6B000] text-[11px]`} />
+                                {badge.label}
+                            </span>
+                        ))}
                     </motion.div>
 
-                    {/* Video Embed */}
+                    {/* Video */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="w-full relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] bg-white border-[6px] md:border-8 border-white aspect-[4/3] sm:aspect-video md:aspect-[21/9]"
+                        className="w-full relative rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.12)] bg-white border-[6px] md:border-8 border-white aspect-[4/3] sm:aspect-video md:aspect-[21/9]"
                     >
                         <video
                             src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777747446/VN20260503_001215_u2yinn.mp4"
@@ -892,7 +950,14 @@ export default function BulkOrderPage() {
                             preload="auto"
                             className="w-full h-full object-cover"
                         />
+
+                        {/* Video overlay label */}
+                        <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm text-white text-[11px] font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                            Yu Nut Processing — Siliguri Facility
+                        </div>
                     </motion.div>
+
                 </div>
             </section>
 
