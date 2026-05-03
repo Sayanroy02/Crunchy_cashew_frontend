@@ -5,8 +5,8 @@ export const COLORS = {
   secondary: '#FFFE71',       // High-vibrancy Yellow
   yellow: '#F6B000',          // York Yellow
   amber: '#FBB21B',           // Amber highlights
-  bg: '#FFF9E7',              // Subtle Light Yellow Background
-  bgMobile: '#FFF9E7',        // Unified background for mobile
+  bg: '#FFECDE',              // Subtle Light Yellow Background
+  bgMobile: '#FFECDE',        // Unified background for mobile
   white: '#ffffff',
   black: '#000000',
   danger: '#ef4444',          // Red
