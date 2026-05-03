@@ -819,7 +819,7 @@ export default function BulkOrderPage() {
     };
 
     return (
-        <div className={`min-h-screen ${COLORS.bg}`}>
+        <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* ── Hero ── */}
             <section className="relative w-full pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
 
