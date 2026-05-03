@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { logout } from '@/lib/store/features/authSlice';
 import { usePathname } from 'next/navigation';
-import PincodeSelector from '@/components/PincodeSelector';
 
 const ANNOUNCEMENTS = [
     '🚚 Free Shipping on orders above ₹599',
@@ -21,7 +21,6 @@ const LEFT_LINKS = [
     { label: 'Contact', href: '/contact' },
 ];
 
-// Pages where the navbar starts transparent (has a full-bleed hero behind it)
 const TRANSPARENT_PAGES = ['/'];
 
 export default function Navbar() {
@@ -29,26 +28,27 @@ export default function Navbar() {
     const [annoFade, setAnnoFade] = useState(true);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     const dispatch = useDispatch();
     const pathname = usePathname();
     const cartQty = useSelector((state: RootState) => state.cart.totalQuantity);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-    // Determines if this page has a transparent-start hero
     const isHeroPage = TRANSPARENT_PAGES.includes(pathname);
+
+    /* ── Mount guard for portal ── */
+    useEffect(() => setMounted(true), []);
 
     /* ── Scroll listener ── */
     useEffect(() => {
         if (!isHeroPage) return;
         const onScroll = () => {
-            // Hero section height is clamp(600px, 100svh, 820px)
             const heroHeight = Math.min(Math.max(600, window.innerHeight), 820);
-            // Trigger 80px before BestSellers completely covers the hero (approx navbar height)
             setScrolled(window.scrollY > heroHeight - 80);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll(); // run once on mount
+        onScroll();
         return () => window.removeEventListener('scroll', onScroll);
     }, [isHeroPage]);
 
@@ -72,13 +72,12 @@ export default function Navbar() {
     const isActive = (href: string) =>
         href === '/shop' ? pathname === href : pathname.startsWith(href);
 
-    // Visual state derivation
     const isTransparent = isHeroPage && !scrolled;
 
     return (
         <div className={`${isHeroPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-[100] transition-all duration-400 ease-out flex flex-col ${!isTransparent ? 'bg-white/95 backdrop-blur-md shadow-sm border-none' : ''}`}>
+
             {/* ─── Announcement Bar ─── */}
-            {/* Hide when transparent so it doesn't float over the hero */}
             <div
                 className="bg-primary text-white text-xs py-2 text-center overflow-hidden select-none transition-all duration-300"
                 style={{
@@ -103,11 +102,6 @@ export default function Navbar() {
 
             {/* ─── Main Navbar ─── */}
             <header className="relative w-full">
-                {/* 50% Height Horizontal Stripe (Lite Black 20%) */}
-                {/* <div className={`
-                    absolute inset-x-0 top-0 h-[75%] -z-10 pointer-events-none transition-all duration-500
-                    ${isTransparent ? 'bg-black/20 backdrop-blur-md' : 'opacity-0'}
-                `} /> */}
 
                 {/* Desktop */}
                 <div className="hidden md:flex items-stretch max-w-screen-xl mx-auto" style={{ minHeight: '72px' }}>
@@ -148,10 +142,6 @@ export default function Navbar() {
 
                     {/* RIGHT — icon actions */}
                     <div className="flex flex-1 items-center justify-end gap-1 px-6">
-                        {/* Pincode */}
-                        {/* <div className="flex flex-col items-center">
-                            <PincodeSelector />
-                        </div> */}
 
                         {/* Profile */}
                         <Link
@@ -225,8 +215,8 @@ export default function Navbar() {
                 </div>
             </header>
 
-            {/* ─── Mobile Slide-out Menu ─── */}
-            {mobileOpen && (
+            {/* ─── Mobile Slide-out Menu (Portal) ─── */}
+            {mounted && mobileOpen && createPortal(
                 <div className="fixed inset-0 z-[9999] flex">
                     {/* Backdrop */}
                     <div
@@ -306,7 +296,8 @@ export default function Navbar() {
                             </div>
                         </div>
                     </nav>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
