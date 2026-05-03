@@ -225,7 +225,7 @@ export default function CheckoutPage() {
     if (items.length === 0) return null;
 
     return (
-        <div className={`min-h-screen py-16 px-4 md:px-8 ${COLORS.bg}`}>
+        <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl md:text-4xl font-heading font-black text-black mb-10 pb-4 border-b-2" style={{ borderBottomColor: '#F6B000' }}>
                     Checkout

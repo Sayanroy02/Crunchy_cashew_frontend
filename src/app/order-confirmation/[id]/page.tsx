@@ -74,7 +74,7 @@ export default function OrderConfirmationPage() {
 
   return (
     <>
-      <div className={`min-h-screen py-16 px-4 print:py-0 print:bg-white text-black ${COLORS.bg}`}>
+      <div className={`min-h-screen py-16 px-4 print:py-0 print:bg-white text-black bg-[#FFF9E7]`}>
         {/* CSS specific for printing out the bill */}
         <style dangerouslySetInnerHTML={{
           __html: `
@@ -122,8 +122,8 @@ export default function OrderConfirmationPage() {
                 <div className="flex justify-between border-b border-gray-50 pb-5">
                   <span className="text-sm font-bold text-gray-500">Payment Status</span>
                   <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${paymentStatus === 'Paid' || paymentStatus === 'COD'
-                      ? 'bg-black text-white'
-                      : 'bg-[#F6B000] text-black'
+                    ? 'bg-black text-white'
+                    : 'bg-[#F6B000] text-black'
                     }`}>
                     {paymentStatus}
                   </span>

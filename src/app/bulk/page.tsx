@@ -388,9 +388,9 @@ function GradeCard({
                         ? 'bg-black text-[#F6B000] shadow-lg shadow-black/20'
                         : 'bg-[#F6B000] text-black shadow-lg shadow-[#F6B000]/30'
                         }`}
-                    title="Enquire Now"
+                    title="Enquire on WhatsApp"
                 >
-                    <Package className="w-4 h-4" />
+                    <i className="fa-brands fa-whatsapp text-base" />
                 </div>
             </div>
         </div>
@@ -401,23 +401,27 @@ function GradeCard({
 
 // ─── Businesses We Cater To ──────────────────────────────────────────────────
 
-function BusinessesCateredSection() {
+function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: string, grade?: string, customMessage?: string) => void }) {
     const categories = [
         {
             title: 'Retailers & Resellers',
             image: '/images/retailers.png',
+            message: "Hello,\nI’m interested in partnering as a retailer/reseller for your products. Could you please share your bulk pricing, margin structure, and minimum order requirements?\nLooking forward to collaborating with you. Thank you!"
         },
         {
             title: 'Hotels & Restaurants',
             image: '/images/Horeca.png',
+            message: "Hello,\nI’m interested in sourcing your products for our hotel/restaurant. Could you please provide details on bulk pricing, supply capacity, and delivery options?\nLooking forward to your response. Thank you!"
         },
         {
             title: 'Bakeries & Confectionery',
             image: '/images/bakery.png',
+            message: "Hello,\nI’d like to use your products for our bakery/confectionery needs. Please share your bulk pricing, product varieties, and minimum order details.\nExcited to explore this further. Thank you!"
         },
         {
             title: 'Corporate & Events',
             image: '/images/corporate_gifting.png',
+            message: "Hello,\nI’m interested in bulk orders for corporate/events purposes. Could you please share pricing details, customization options, and minimum order quantity?\nLooking forward to working together. Thank you!"
         },
     ];
 
@@ -425,11 +429,10 @@ function BusinessesCateredSection() {
         <section className="max-w-7xl mx-auto px-6 py-10 md:py-16">
             <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
-                    text="Industries We"
-                    highlight="Supply"
+                    text="Industries"
+                    highlight="We Supply"
                     className="mb-3 !text-[24px] md:!text-4xl"
                 />
-                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-6" />
                 <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
                     Consistent quality and reliable volume for businesses of all sizes.
                 </p>
@@ -460,13 +463,26 @@ function BusinessesCateredSection() {
                             />
 
                             {/* Minimal gradient only at very bottom for text */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t from-black/65 to-transparent" />
+                            <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-80 group-hover:opacity-100 transition-all duration-500" />
 
-                            {/* Title text at bottom */}
-                            <div className="absolute bottom-0 left-0 right-0 p-5">
-                                <h3 className="text-white font-medium text-base md:text-lg leading-snug group-hover:font-black group-hover:text-[#F6B000] transition-all duration-300">
+                            {/* Title and Button at bottom */}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                                <h3 className="text-white font-bold text-lg md:text-xl leading-snug group-hover:text-[#F6B000] transition-all duration-300 mb-0 group-hover:mb-4">
                                     {cat.title}
                                 </h3>
+
+                                <div className="h-0 group-hover:h-12 opacity-0 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openWhatsApp('Industry Supply', undefined, cat.message);
+                                        }}
+                                        className="w-full bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-xl"
+                                    >
+                                        <i className="fa-brands fa-whatsapp text-black text-lg" />
+                                        <span className="text-sm">Enquire Now</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -477,11 +493,11 @@ function BusinessesCateredSection() {
 }
 
 function OurGradesSection({
-    onEnquire,
-    onSelectCheck
+    onSelectCheck,
+    openWhatsApp
 }: {
-    onEnquire: (grade: string) => void;
     onSelectCheck: (grade: string) => boolean;
+    openWhatsApp: (source: string, grade?: string) => void;
 }) {
     const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
@@ -517,7 +533,7 @@ function OurGradesSection({
     };
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-4 md:py-6">
+        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '100px' }}>
             {/* Section Title */}
             <div ref={ref} className="text-center mb-6 md:mb-8">
                 <SectionHeading
@@ -586,7 +602,7 @@ function OurGradesSection({
                                 >
                                     <GradeCard
                                         item={item}
-                                        onEnquire={onEnquire}
+                                        onEnquire={(grade) => openWhatsApp('Grade Section Enquire button', grade)}
                                         isSelected={onSelectCheck(item.code)}
                                     />
                                 </div>
@@ -613,39 +629,66 @@ function OurGradesSection({
 function WhyPartnerWithUsSection() {
     const pillars = [
         {
-            icon: <Target className="w-7 h-7 text-[#138808]" />,
-            title: "Precision Optical Grading",
-            pain: "Inconsistent sizing and mixed batches ruining packaging lines.",
-            copy: "Utilizing advanced automated cutting machinery, we ensure strict uniformity across every batch. A WW 320 from us is exactly a WW 320, every single time.",
+            icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" />
+                </svg>
+            ),
+            title: "Exact Grade, Every Batch",
+            pain: "Wrong sizes mixed in — packaging lines break down",
+            copy: "Our automated optical sorters grade each nut to spec. A WW 320 from us is exactly a WW 320, no surprises on your line.",
             accent: '#138808',
+            painBg: '#13880810',
+            painTextColor: '#0d5e06',
+            painLabelColor: '#138808',
         },
         {
-            icon: <Leaf className="w-7 h-7 text-[#F6B000]" />,
-            title: "Pristine Processing",
-            pain: "Bitter taste and residue.",
-            copy: "Our Siliguri facility utilizes specialized technical processes to completely remove CNSL oil deposits, guaranteeing a flawlessly clean profile and a farm-fresh crunch.",
+            icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c98f00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12" /><path d="M12 6v6l4 2" /><path d="M2 12h4" />
+                </svg>
+            ),
+            title: "Clean Taste, No Bitterness",
+            pain: "Bitter aftertaste and oily residue ruin the product",
+            copy: "Our Siliguri facility fully removes CNSL oil during processing. You get a clean, farm-fresh crunch every single time.",
             accent: '#F6B000',
+            painBg: '#F6B00012',
+            painTextColor: '#7a5600',
+            painLabelColor: '#c98f00',
         },
         {
-            icon: <ShieldCheck className="w-7 h-7 text-[#138808]" />,
-            title: "Zero-Compromise Integrity",
-            pain: "High breakage rates and wasted product.",
-            copy: "From raw sourcing to final packing, our automated handling processes are optimized to protect the nut, delivering a maximum yield of perfectly intact wholes.",
+            icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" />
+                </svg>
+            ),
+            title: "Fewer Broken Nuts, More Profit",
+            pain: "High breakage wastes product and cuts into margins",
+            copy: "Gentle automated handling protects each nut from intake to final pack. You receive maximum whole wholes, minimum waste.",
             accent: '#138808',
+            painBg: '#13880810',
+            painTextColor: '#0d5e06',
+            painLabelColor: '#138808',
         },
         {
-            icon: <CalendarDays className="w-7 h-7 text-[#F6B000]" />,
-            title: "Uninterrupted Supply",
-            pain: "Festival season stockouts and unreliable vendors.",
-            copy: "By directly sourcing raw materials from Africa and leveraging our massive in-house processing capacity, we guarantee reliable volume and timely delivery, even during peak market demand.",
+            icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c98f00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="m9 16 2 2 4-4" />
+                </svg>
+            ),
+            title: "Stock Ready When You Need It",
+            pain: "Running out during festivals due to unreliable vendors",
+            copy: "We source directly from Africa and process in-house at scale. Your order ships on time — even during peak season.",
             accent: '#F6B000',
-        }
+            painBg: '#F6B00012',
+            painTextColor: '#7a5600',
+            painLabelColor: '#c98f00',
+        },
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
-            {/* Heading */}
-            <div className="text-center mb-16">
+        <section className="max-w-7xl mx-auto px-6 py-16 md:py-8">
+            <div className="text-center mb-14">
                 <SectionHeading
                     text="Why Partner"
                     highlight="With Us?"
@@ -657,7 +700,7 @@ function WhyPartnerWithUsSection() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {pillars.map((pillar, idx) => (
                     <motion.div
                         key={idx}
@@ -665,47 +708,51 @@ function WhyPartnerWithUsSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1, duration: 0.5 }}
-                        className="relative bg-white rounded-[1.5rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.09)] transition-all duration-300 flex flex-col group overflow-hidden"
+                        className="bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden hover:border-gray-200 transition-colors duration-300"
                     >
-                        {/* Colored top accent bar */}
-                        <div
-                            className="h-1 w-full"
-                            style={{ backgroundColor: pillar.accent }}
-                        />
+                        {/* Top accent bar */}
+                        <div className="h-1 w-full" style={{ backgroundColor: pillar.accent }} />
 
-                        <div className="p-7 flex flex-col flex-grow">
-                            {/* Icon */}
-                            <div
-                                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
-                                style={{ backgroundColor: `${pillar.accent}15` }}
-                            >
-                                {pillar.icon}
+                        <div className="p-5 flex flex-col gap-4 flex-grow">
+                            {/* Icon + Title side by side */}
+                            <div className="flex items-center gap-3">
+                                <div
+                                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                    style={{ backgroundColor: pillar.painBg }}
+                                >
+                                    {pillar.icon}
+                                </div>
+                                <h3 className="text-[15px] font-bold text-gray-900 leading-snug">
+                                    {pillar.title}
+                                </h3>
                             </div>
 
-                            {/* Title */}
-                            <h3 className="text-[17px] font-black text-gray-900 mb-4 leading-snug">
-                                {pillar.title}
-                            </h3>
-
-                            {/* Pain point — styled as a quote block */}
+                            {/* Pain point block — prominent */}
                             <div
-                                className="flex gap-2.5 items-start mb-4 pb-4 border-b border-gray-100"
+                                className="rounded-xl px-3.5 py-3 flex gap-2.5 items-start"
+                                style={{ backgroundColor: pillar.painBg }}
                             >
-                                <div
-                                    className="mt-0.5 w-1 shrink-0 self-stretch rounded-full"
-                                    style={{ backgroundColor: pillar.accent }}
-                                />
-                                <div>
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-0.5">
-                                        Pain Point
+                                <span className="text-base mt-0.5">⚠</span>
+                                <div className="flex flex-col gap-1">
+                                    <span
+                                        className="text-[10px] font-semibold uppercase tracking-widest"
+                                        style={{ color: pillar.painLabelColor }}
+                                    >
+                                        Your problem
                                     </span>
-                                    <p className="text-[13px] text-gray-600 italic leading-snug">
-                                        "{pillar.pain}"
+                                    <p
+                                        className="text-[13px] font-semibold leading-snug"
+                                        style={{ color: pillar.painTextColor }}
+                                    >
+                                        {pillar.pain}
                                     </p>
                                 </div>
                             </div>
 
-                            {/* Solution copy */}
+                            {/* Divider */}
+                            <div className="border-t border-gray-100" />
+
+                            {/* Solution */}
                             <p className="text-[13px] text-gray-500 leading-relaxed flex-grow">
                                 {pillar.copy}
                             </p>
@@ -748,14 +795,12 @@ export default function BulkOrderPage() {
         return formData.requirements.toLowerCase().includes(grade.toLowerCase());
     };
 
-    const scrollToForm = (grade?: string) => {
-        if (grade) {
-            setFormData(prev => ({
-                ...prev,
-                requirements: grade + ', ' + prev.requirements
-            }));
-        }
-        scrollTo(formRef);
+    const openWhatsApp = (source: string, grade?: string, customMessage?: string) => {
+        const phoneNumber = '917847996343';
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const message = `*Source:* ${baseUrl}/bulk [${source}]\n\n${customMessage || `Hello 👋\n\nI’m interested in learning more about your bulk pricing options${grade ? ` for ${grade}` : ''}. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?`}`;
+        const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -859,19 +904,9 @@ export default function BulkOrderPage() {
                     >
                         Premium{' '}
                         <span className="text-[#F6B000]">Factory-Direct</span>{' '}
-                        Cashews<br />
-                        for{' '}
-                        <span
-                            className="text-transparent bg-clip-text"
-                            style={{
-                                backgroundImage: 'linear-gradient(to right, #FF9933 0%, #138808 100%)',
-                                WebkitTextStroke: '0.3px rgba(0,0,0,0.12)',
-                                filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.15))',
-                            }}
-                        >
-                            India's
-                        </span>{' '}
-                        Top Businesses.
+                        Cashews for{' '}
+                        <span className="text-[#F6B000]">India's Top Businesses.</span>
+
                     </motion.h1>
 
                     {/* Subtitle — shorter, punchier */}
@@ -894,10 +929,10 @@ export default function BulkOrderPage() {
                         className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8 w-full sm:w-auto"
                     >
                         <button
-                            onClick={() => scrollTo(formRef)}
+                            onClick={() => openWhatsApp('Request Bulk Pricing button')}
                             className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-[#F6B000] text-black font-bold px-8 rounded-xl shadow-[0_4px_20px_rgba(246,176,0,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-sm"
                         >
-                            <i className="fa-solid fa-tag text-xs" />
+                            <i className="fa-brands fa-whatsapp text-base text-black" />
                             Request Bulk Pricing
                         </button>
                         <button
@@ -921,7 +956,7 @@ export default function BulkOrderPage() {
                         {[
                             { icon: 'fa-certificate', label: 'ISO Certified Facility' },
                             { icon: 'fa-truck', label: 'Pan-India Delivery' },
-                            { icon: 'fa-boxes-stacked', label: 'Bulk Orders Welcome' },
+                            { icon: 'fa-boxes-stacked', label: 'Small Minimum Orders' },
                             { icon: 'fa-headset', label: 'Dedicated B2B Support' },
                         ].map(badge => (
                             <span
@@ -963,7 +998,7 @@ export default function BulkOrderPage() {
 
             {/* ── Our Trusted Partners ── */}
             <section className={`w-full py-10 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
-                <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
+                <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
                     <SectionHeading
                         text="Trusted by India's"
                         highlight="Leading Businesses"
@@ -996,7 +1031,7 @@ export default function BulkOrderPage() {
 
             {/* ── Businesses We Cater To ── */}
             <div className={COLORS.bg}>
-                <BusinessesCateredSection />
+                <BusinessesCateredSection openWhatsApp={openWhatsApp} />
             </div>
 
 
@@ -1011,7 +1046,7 @@ export default function BulkOrderPage() {
 
             {/* ── Our Grades ── */}
             <div className={COLORS.bg}>
-                <OurGradesSection onEnquire={scrollToForm} onSelectCheck={onSelectCheck} />
+                <OurGradesSection onSelectCheck={onSelectCheck} openWhatsApp={openWhatsApp} />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 mb-12">

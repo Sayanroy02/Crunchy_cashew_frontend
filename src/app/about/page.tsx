@@ -457,9 +457,9 @@ export default function AboutPage() {
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               <span className="text-[10px] font-black tracking-[0.2em] text-amber-700 uppercase">The Core Mission</span>
             </div>
-            <SectionHeading 
-              text="Modern Infrastructure," 
-              highlight="Rooted in Tradition." 
+            <SectionHeading
+              text="Modern Infrastructure,"
+              highlight="Rooted in Tradition."
               textColor="#000000"
               className="text-3xl md:text-4xl"
             />
@@ -468,10 +468,10 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white aspect-[4/3] md:aspect-square relative group">
-            <img 
-              src="/images/Rectangle-112.jpg" 
-              alt="Yu Nut Processing Facility Exterior" 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+            <img
+              src="/images/Rectangle-112.jpg"
+              alt="Yu Nut Processing Facility Exterior"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
@@ -481,9 +481,9 @@ export default function AboutPage() {
         <div className="bg-gray-50 rounded-[2.5rem] p-8 md:p-14 border border-gray-100">
           <div className="max-w-3xl mx-auto text-center mb-12 flex flex-col items-center">
             <span className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Global Supply Chain</span>
-            <SectionHeading 
-              text="Ethically Sourced from the" 
-              highlight="World’s Best." 
+            <SectionHeading
+              text="Ethically Sourced from the"
+              highlight="World’s Best."
               textColor="#000000"
               className="text-2xl md:text-4xl"
             />
@@ -491,7 +491,7 @@ export default function AboutPage() {
               Great cashews start long before they reach our facility. We ethically source our raw materials directly from top cashew-producing regions in Africa, including Tanzania, Ghana, and Benin. By working closely with origin markets, we ensure high crop yields and maintain complete transparency and traceability from the African soil directly to our Siliguri plant.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               { icon: 'fa-earth-africa', title: 'African Origins', desc: 'Tanzania, Ghana & Benin' },
@@ -513,9 +513,9 @@ export default function AboutPage() {
         <div className="space-y-12 py-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-2xl">
-              <SectionHeading 
-                text="Precision Manufacturing" 
-                highlight="at Scale." 
+              <SectionHeading
+                text="Precision Manufacturing"
+                highlight="at Scale."
                 textColor="#000000"
                 className="text-3xl md:text-4xl"
               />
@@ -530,20 +530,20 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { 
-                icon: 'fa-microchip', 
-                title: 'Advanced Technology', 
-                desc: 'Utilizing state-of-the-art automated machinery for perfect yields.' 
+              {
+                icon: 'fa-microchip',
+                title: 'Advanced Technology',
+                desc: 'Utilizing state-of-the-art automated machinery for perfect yields.'
               },
-              { 
-                icon: 'fa-chart-line', 
-                title: 'Data-Driven Quality', 
-                desc: 'We utilize rigorous production reporting to maintain strict quality control.' 
+              {
+                icon: 'fa-chart-line',
+                title: 'Data-Driven Quality',
+                desc: 'We utilize rigorous production reporting to maintain strict quality control.'
               },
-              { 
-                icon: 'fa-award', 
-                title: 'Grade Perfection', 
-                desc: 'Capable of producing over 25 precise cashew grades.' 
+              {
+                icon: 'fa-award',
+                title: 'Grade Perfection',
+                desc: 'Capable of producing over 25 precise cashew grades.'
               },
             ].map(point => (
               <div key={point.title} className="bg-white p-8 rounded-3xl border border-gray-100 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 group">
@@ -559,7 +559,7 @@ export default function AboutPage() {
 
         {/* Gallery Divider */}
         <div className="pt-8 border-t border-gray-100">
-           <AboutImageGrid />
+          <AboutImageGrid />
         </div>
       </div>
     );
@@ -567,54 +567,54 @@ export default function AboutPage() {
     if (activeTab === 'team') return (
       <div className="about-animate">
         <div className="block w-full">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100 mb-6 w-fit">
-                <span className="w-2 h-2 rounded-full bg-black"></span>
-                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">The Owner's Note</span>
-            </div>
-            
-            <SectionHeading 
-                text="A Commitment to" 
-                highlight="Uncompromising Quality." 
-                textColor="#000000"
-                className="text-3xl md:text-4xl mb-8"
-            />
-            
-            <div className="text-gray-600 text-sm md:text-base leading-relaxed mb-10 relative block">
-                {/* Floated Image */}
-                <div className="float-none md:float-right w-full md:w-1/2 lg:w-[45%] md:ml-8 mb-6 mt-2 relative aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
-                    <img 
-                        src="/images/nitesh.png" 
-                        alt="Nitesh Jindal - Founder" 
-                        className="w-full h-full object-cover object-center"
-                    />
-                </div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100 mb-6 w-fit">
+            <span className="w-2 h-2 rounded-full bg-black"></span>
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">The Owner's Note</span>
+          </div>
 
-                {/* Text Content */}
-                <p className="mb-5">
-                    "When I established Yu Nut Processing Industry in Siliguri, my goal wasn't just to enter the cashew market—it was to elevate it. I saw an opportunity to bring better technology, stricter quality controls, and a more ethical supply chain to the Indian B2B landscape.
-                </p>
-                <p className="mb-5">
-                    Today, from personally overseeing our raw material sourcing from Africa to implementing data-driven production standards on our factory floor, my focus remains the same: ensuring that every batch of Crunchy Cashews that leaves our facility represents the pinnacle of taste, nutrition, and reliability.
-                </p>
-                <p className="font-medium text-gray-800 mb-5">
-                    When you partner with us, you aren't just buying cashews; you are trusting my team's dedication to your business's success."
-                </p>
-                
-                <div className="clear-both"></div>
+          <SectionHeading
+            text="A Commitment to"
+            highlight="Uncompromising Quality."
+            textColor="#000000"
+            className="text-3xl md:text-4xl mb-8"
+          />
+
+          <div className="text-gray-600 text-sm md:text-base leading-relaxed mb-10 relative block">
+            {/* Floated Image */}
+            <div className="float-none md:float-right w-full md:w-1/2 lg:w-[45%] md:ml-8 mb-6 mt-2 relative aspect-square rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white">
+              <img
+                src="/images/nitesh.png"
+                alt="Nitesh Jindal - Founder"
+                className="w-full h-full object-cover object-center"
+              />
             </div>
 
-            <div className="pt-8 border-t border-gray-100 max-w-lg">
-                <div className="mb-1" style={{ fontFamily: "'Brush Script MT', 'Great Vibes', cursive", fontSize: '2.5rem', color: '#111' }}>
-                    Nitesh Jindal
-                </div>
-                <p className="font-black text-gray-900 text-sm uppercase tracking-widest mb-1">
-                    Nitesh Jindal
-                </p>
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F6B000' }}>
-                    Managing Director & Proprietor,
-                    <br/>Yu Nut Processing Industry
-                </p>
+            {/* Text Content */}
+            <p className="mb-5">
+              "When I established Yu Nut Processing Industry in Siliguri, my goal wasn't just to enter the cashew market—it was to elevate it. I saw an opportunity to bring better technology, stricter quality controls, and a more ethical supply chain to the Indian B2B landscape.
+            </p>
+            <p className="mb-5">
+              Today, from personally overseeing our raw material sourcing from Africa to implementing data-driven production standards on our factory floor, my focus remains the same: ensuring that every batch of Crunchy Cashews that leaves our facility represents the pinnacle of taste, nutrition, and reliability.
+            </p>
+            <p className="font-medium text-gray-800 mb-5">
+              When you partner with us, you aren't just buying cashews; you are trusting my team's dedication to your business's success."
+            </p>
+
+            <div className="clear-both"></div>
+          </div>
+
+          <div className="pt-8 border-t border-gray-100 max-w-lg">
+            <div className="mb-1" style={{ fontFamily: "'Brush Script MT', 'Great Vibes', cursive", fontSize: '2.5rem', color: '#111' }}>
+              Nitesh Jindal
             </div>
+            <p className="font-black text-gray-900 text-sm uppercase tracking-widest mb-1">
+              Nitesh Jindal
+            </p>
+            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#F6B000' }}>
+              Managing Director & Proprietor,
+              <br />Yu Nut Processing Industry
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -631,9 +631,9 @@ export default function AboutPage() {
         <div className="mb-6">
           <span className="inline-block font-bold uppercase tracking-widest text-xs px-3 py-1 rounded-full mb-3"
             style={{ backgroundColor: '#F6B000', color: '#000000' }}>Exclusive Tour</span>
-          <SectionHeading 
-            text="See the" 
-            highlight="Magic Happen" 
+          <SectionHeading
+            text="See the"
+            highlight="Magic Happen"
             textColor="#000000"
             className="text-2xl md:text-3xl mb-4"
           />
@@ -696,7 +696,7 @@ export default function AboutPage() {
   }
 
   return (
-    <div className={`min-h-screen pb-16 ${COLORS.bg}`}>
+    <div className={`min-h-screen pb-16 bg-[#FFF9E7]`}>
 
       {/* VIDEO HERO */}
       <section className="relative h-[80vh] min-h-[550px] max-h-[850px] overflow-hidden">
@@ -707,7 +707,7 @@ export default function AboutPage() {
         </video>
         <div className="absolute inset-0 bg-black/45" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-        
+
         <div className="absolute inset-0 flex items-center px-6 md:px-12">
           <div className="max-w-5xl mx-auto w-full flex flex-col items-center md:items-start">
             <div className="max-w-3xl text-center md:text-left flex flex-col items-center md:items-start">
@@ -721,16 +721,16 @@ export default function AboutPage() {
               <p className="text-white/90 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-md">
                 Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
               </p>
-              
+
               <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <Link 
-                  href="/bulk" 
+                <Link
+                  href="/bulk"
                   className="bg-[#F6B000] text-black font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:scale-105 transition-transform shadow-2xl flex items-center gap-2"
                 >
                   <i className="fa-solid fa-handshake" />
                   Partner With Us
                 </Link>
-                <button 
+                <button
                   onClick={() => {
                     setActiveTab('process');
                     document.getElementById('about-tabs')?.scrollIntoView({ behavior: 'smooth' });

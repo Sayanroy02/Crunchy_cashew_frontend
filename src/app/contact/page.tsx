@@ -158,7 +158,7 @@ function ContactContent() {
     const moveX = useTransform(smoothX, [-400, 400], [25, -25]);
     const moveY = useTransform(smoothY, [-200, 200], [15, -15]);
     // Slight sway rotation based on horizontal mouse pos
-    const rotateZ = useTransform(smoothX, [-400, 400], [-8, -2]); 
+    const rotateZ = useTransform(smoothX, [-400, 400], [-8, -2]);
 
     const handleMouseMove = (e: React.MouseEvent) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -225,10 +225,10 @@ function ContactContent() {
 
     /* ── render ── */
     return (
-        <main className={`min-h-screen ${COLORS.bg}`}>
+        <main className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
 
             {/* ══ HERO ══ */}
-            <section 
+            <section
                 className="relative overflow-hidden pt-16 pb-16"
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
@@ -244,7 +244,7 @@ function ContactContent() {
                 </div>
 
                 {/* Hanging Cashew Decoration — Desktop Only */}
-                <motion.div 
+                <motion.div
                     className="hidden lg:block absolute top-[-30px] right-[5%] w-64 h-80 pointer-events-none z-20"
                     style={{ x: moveX, y: moveY, rotate: rotateZ }}
                 >

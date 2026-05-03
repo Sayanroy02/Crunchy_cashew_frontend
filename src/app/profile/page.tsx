@@ -279,7 +279,7 @@ function ProfileContent() {
     };
 
     return (
-        <div className="min-h-screen bg-[#f8f9fa] font-sans">
+        <div className="min-h-screen bg-[#FFF9E7] font-sans">
 
             {/* ── Order Success Modal ── */}
             {showSuccessModal && successOrderId && (

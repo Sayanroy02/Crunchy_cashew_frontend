@@ -13,9 +13,9 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export default function TermsPage() {
     return (
-        <div className={`min-h-screen ${COLORS.bg}`}>
+        <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* Header */}
-            <div className="bg-primary py-14 px-6 text-center">
+            <div className="bg-[#000000] py-14 px-6 text-center border-b-4" style={{ borderColor: '#F6B000' }}>
                 <p className="text-amber text-xs font-bold uppercase tracking-widest mb-2">Legal</p>
                 <h1 className="text-4xl md:text-5xl font-heading font-black text-white">Terms &amp; Conditions</h1>
                 <p className="text-white/60 mt-2 text-sm">Last updated: March 2025</p>

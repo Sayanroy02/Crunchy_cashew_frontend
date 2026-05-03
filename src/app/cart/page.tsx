@@ -49,7 +49,7 @@ export default function CartPage() {
                 <h1 className="text-3xl font-heading font-black text-black mb-4">Your Cart is Empty</h1>
                 <p className="text-black/40 mb-8 text-center max-w-md">Looks like you haven't added any of our delicious cashews to your cart yet.</p>
                 <Link href="/shop" className="font-bold py-3 px-8 rounded-full transition-all flex items-center gap-2 shadow-lg active:scale-95"
-                    style={{ backgroundColor: '#000000', color: '#F6B000' }}>
+                    style={{ backgroundColor: '#f6b000', color: '#000000' }}>
                     <i className="fa-solid fa-store"></i> Start Shopping
                 </Link>
             </div>
@@ -57,7 +57,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className={`min-h-screen py-16 px-4 md:px-8 ${COLORS.bg}`}>
+        <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
                 <h1 className="text-4xl font-heading font-black text-black mb-10 border-b-2 pb-4 inline-block" style={{ borderBottomColor: '#F6B000' }}>Shopping Cart</h1>
 

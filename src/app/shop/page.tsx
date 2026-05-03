@@ -92,7 +92,7 @@ export default function ShopPage() {
     };
 
     return (
-        <div className={`min-h-screen pb-24 pt-12 ${COLORS.bg}`}>
+        <div className={`min-h-screen pb-24 pt-12 bg-[#FFF9E7]`}>
             <div className="max-w-7xl mx-auto px-4 md:px-6">
                 <div className="flex gap-8">
 
