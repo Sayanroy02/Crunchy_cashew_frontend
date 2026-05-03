@@ -171,11 +171,11 @@ export default function Navbar() {
                         </Link>
 
                         {/* Cart */}
-                        <Link href="/cart" className="flex flex-col items-center gap-0.5 px-2 py-2 rounded-lg group">
-                            <div className="relative bg-amber group-hover:bg-yellow text-[#2c1a0e] w-10 h-10 flex items-center justify-center rounded-xl shadow-sm group-hover:shadow-md transition-all">
+                        <Link href="/cart" className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-lg group">
+                            <div className="relative bg-[#00863D] group-hover:bg-[#00863D] text-white w-10 h-10 flex items-center justify-center rounded-xl shadow-sm group-hover:shadow-md transition-all">
                                 <i className="fa-solid fa-cart-shopping text-base" />
                                 {cartQty > 0 && (
-                                    <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] font-black w-[18px] h-[18px] flex items-center justify-center rounded-full shadow">
+                                    <span className="absolute -top-1.5 -right-1.5 bg-[#F6B000] text-white text-[9px] font-black w-[18px] h-[18px] flex items-center justify-center rounded-full shadow">
                                         {cartQty > 9 ? '9+' : cartQty}
                                     </span>
                                 )}
