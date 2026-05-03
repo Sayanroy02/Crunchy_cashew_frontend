@@ -8,12 +8,14 @@ import { RootState } from '@/lib/store/store';
 import { logout } from '@/lib/store/features/authSlice';
 import { usePathname } from 'next/navigation';
 
+
 const ANNOUNCEMENTS = [
     '🚚 Free Shipping on orders above ₹599',
     '🌟 Delivered in 5–7 Business Days Pan India',
 ];
 
 const LEFT_LINKS = [
+    { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
     { label: 'B2B', href: '/bulk' },
     { label: 'About', href: '/about' },
