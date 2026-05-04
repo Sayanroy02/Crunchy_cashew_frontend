@@ -4,6 +4,61 @@ import React from 'react';
 import Link from 'next/link';
 import { COLORS } from '@/constants/styles';
 
+const contactItems = [
+    {
+        href: 'tel:+917847996343',
+        icon: 'fa-solid fa-phone',
+        label: 'Call Us',
+        value: '+91 7847996343',
+        external: false,
+    },
+    {
+        href: 'mailto:crunchycashews18@gmail.com',
+        icon: 'fa-solid fa-envelope',
+        label: 'Email',
+        value: 'Crunchycashews18@gmail.com',
+        external: false,
+    },
+    {
+        href: 'https://maps.app.goo.gl/GaLaWva2mpKMxbVT7',
+        icon: 'fa-solid fa-location-dot',
+        label: 'Location',
+        value: 'YU NUT PROCESSING INDUSTRY, Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015',
+        external: true,
+    },
+];
+
+function ContactItem({ item }: { item: typeof contactItems[number] }) {
+    const [hovered, setHovered] = React.useState(false);
+
+    return (
+        <li>
+            <a
+                href={item.href}
+                target={item.external ? '_blank' : undefined}
+                rel={item.external ? 'noopener noreferrer' : undefined}
+                className="group flex items-start gap-3 transition-all duration-300"
+            >
+                <div
+                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border transition-all duration-300 group-hover:scale-110"
+                    style={{
+                        backgroundColor: hovered ? '#f59e0b' : `${COLORS.heading}99`,
+                        borderColor: hovered ? '#f59e0b' : '#ffffff',
+                    }}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
+                >
+                    <i className={`${item.icon} text-xs text-white transition-colors`} />
+                </div>
+                <div>
+                    <p className="text-xs text-white/60 mb-0.5">{item.label}</p>
+                    <p className="text-sm text-white">{item.value}</p>
+                </div>
+            </a>
+        </li>
+    );
+}
+
 export default function Footer() {
     return (
         <footer
@@ -120,57 +175,16 @@ export default function Footer() {
                     </ul>
                 </div>
 
-
                 {/* Contact */}
                 <div className="flex flex-col gap-4">
                     <h3 className="text-sm font-bold tracking-[3px] uppercase text-white">Contact Us</h3>
                     <ul className="flex flex-col gap-3">
-                        <li>
-                            <a href="tel:+917847996343" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
-                                >
-                                    <i className="fa-solid fa-phone text-xs" style={{ color: 'ffffff' }} />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-white/60 mb-0.5">Call Us</p>
-                                    <p className="text-sm text-white group-hover:text-white">+91 7847996343</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="mailto:crunchycashews18@gmail.com" className="group flex items-start gap-3 hover:text-white transition-colors">
-                                <div
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
-                                >
-                                    <i className="fa-solid fa-envelope text-xs" style={{ color: '#ffffff' }} />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-white/60 mb-0.5">Email</p>
-                                    <p className="text-sm text-white group-hover:text-white">Crunchycashews18@gmail.com</p>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <div className="flex items-start gap-3">
-                                <div
-                                    className="w-7 h-7 rounded-lg flex items-center justify-center flex-none mt-0.5 border"
-                                    style={{ backgroundColor: `${COLORS.heading}99`, borderColor: '#ffffff' }}
-                                >
-                                    <i className="fa-solid fa-location-dot text-xs" style={{ color: '#ffffff' }} />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-white/60 mb-0.5">Location</p>
-                                    <p className="text-sm text-white">YU NUT PROCESSING INDUSTRY,
-                                        Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015 </p>
-                                </div>
-                            </div>
-                        </li>
+                        {contactItems.map((item, i) => (
+                            <ContactItem key={i} item={item} />
+                        ))}
                     </ul>
 
-                    {/* Payment Types (Moved under Contact) */}
+                    {/* Payment Types */}
                     <div className="flex flex-col gap-2 mt-0">
                         <span className="text-[10px] font-bold uppercase tracking-[2.5px] text-white">We also accept</span>
                         <div className="flex items-center gap-5 text-white/70">
@@ -192,12 +206,11 @@ export default function Footer() {
                         </p>
                     </div>
 
-                    {/* Attribution — styled, not jarring */}
+                    {/* Attribution */}
                     <div className="flex items-center gap-1 text-xs text-white/60">
                         <span>Developed by</span>
-
-
-                        <a href="https://yunutprocessingindustry.com"
+                        <a
+                            href="https://yunutprocessingindustry.com"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-semibold ml-1 text-white/80 transition-opacity hover:text-white"

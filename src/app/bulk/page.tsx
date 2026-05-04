@@ -326,72 +326,42 @@ function useIntersectionObserver(threshold = 0.15) {
 
 function GradeCard({
     item,
-    onEnquire,
+    onToggle,
     isSelected,
 }: {
     item: (typeof gradeCategories)[0]['items'][0];
-    onEnquire: (grade: string) => void;
+    onToggle: (grade: string) => void;
     isSelected: boolean;
 }) {
     return (
         <div
-            onClick={() => onEnquire(item.code)}
-            className="group relative w-full flex flex-col cursor-pointer transition-all duration-300"
-            style={{
-                borderRadius: '20px',
-                background: isSelected
-                    ? 'linear-gradient(145deg, rgba(246,176,0,0.12) 0%, rgba(255,255,255,0.95) 100%)'
-                    : 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(249,249,247,0.9) 100%)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                border: isSelected
-                    ? '1px solid rgba(246,176,0,0.6)'
-                    : '1px solid rgba(255,255,255,0.8)',
-                boxShadow: isSelected
-                    ? '0 8px 32px rgba(246,176,0,0.2), 0 2px 8px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)'
-                    : '0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
-            }}
+            onClick={() => onToggle(item.code)}
+            className="group flex flex-col items-center cursor-pointer transition-all duration-300 py-2 isolate"
         >
-            {/* Glossy top shine */}
-            <div
-                className="absolute top-0 left-0 right-0 h-1/2 rounded-t-[20px] pointer-events-none"
-                style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%)' }}
-            />
-
-            {/* Image */}
-            <div className="relative w-full flex items-center justify-center pt-4 pb-1 px-4">
-                <div className="relative w-full aspect-square overflow-hidden">
-                    <Image
-                        src={item.image}
-                        alt={item.code}
-                        fill
-                        className="object-contain transition-transform duration-500 group-hover:scale-110"
-                        sizes="300px"
-                    />
-                </div>
-                {isSelected && (
-                    <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#F6B000] flex items-center justify-center shadow-md z-10">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-black" />
-                    </div>
-                )}
+            {/* Bowl Image — Circular and Tucked */}
+            <div className="relative w-full aspect-square z-20 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
+                style={{ background: 'rgba(0,0,0,0.02)' }}>
+                <img
+                    src={item.image}
+                    alt={item.code}
+                    className="w-full h-full object-cover transition-all duration-500 transform scale-[1.05]"
+                    onError={(e: any) => { e.currentTarget.src = '/images/crunchy-cashews-product.png'; }}
+                />
             </div>
 
-            {/* Name + Button */}
-            <div className="px-4 pb-4 pt-2 flex items-center justify-between gap-2">
-                <h4
-                    className="text-sm md:text-base font-black text-gray-900 leading-tight transition-colors duration-300 group-hover:text-[#FBB21B]"
+            {/* Name Tag — Tucked under the bowl */}
+            <div
+                className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
+            >
+                <span
+                    className="text-[1.2rem] md:text-[1.4rem] font-bold uppercase tracking-tight transition-colors duration-300 block"
+                    style={{
+                        color: isSelected ? '#F6B000' : '#000000',
+                        lineHeight: '1.1'
+                    }}
                 >
                     {item.code}
-                </h4>
-                <div
-                    className={`w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isSelected
-                        ? 'bg-black text-[#F6B000] shadow-lg shadow-black/20'
-                        : 'bg-[#F6B000] text-black shadow-lg shadow-[#F6B000]/30'
-                        }`}
-                    title="Enquire on WhatsApp"
-                >
-                    <i className="fa-brands fa-whatsapp text-base" />
-                </div>
+                </span>
             </div>
         </div>
     );
@@ -498,10 +468,10 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
 
 function OurGradesSection({
     onSelectCheck,
-    openWhatsApp
+    onToggleGrade,
 }: {
     onSelectCheck: (grade: string) => boolean;
-    openWhatsApp: (source: string, grade?: string) => void;
+    onToggleGrade: (grade: string) => void;
 }) {
     const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
@@ -514,7 +484,7 @@ function OurGradesSection({
         const updateWidth = () => {
             if (!containerRef.current) return;
             const w = containerRef.current.offsetWidth;
-            const gap = 16; // gap-4 = 16px
+            const gap = 24; // gap-6 = 24px
             if (window.innerWidth >= 1024) {
                 setCardWidth((w - gap * 3) / 4); // 4 cards
             } else if (window.innerWidth >= 768) {
@@ -532,27 +502,26 @@ function OurGradesSection({
 
     const scroll = (dir: 'left' | 'right') => {
         if (!scrollRef.current) return;
-        const amount = cardWidth + 16;
+        const amount = cardWidth + 24;
         scrollRef.current.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
     };
 
     return (
-        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '100px' }}>
+        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-10 md:py-16" style={{ scrollMarginTop: '100px' }}>
             {/* Section Title */}
             <div ref={ref} className="text-center mb-6 md:mb-8">
                 <SectionHeading
-                    text="Our"
-                    highlight="Grades"
-                    className="mb-2 !text-[22px] md:!text-4xl"
+                    text="Precision-Graded Cashews for"
+                    highlight="Every Application"
+                    className="mb-4 !text-[24px] md:!text-4xl lg:!text-5xl"
                 />
-                <div className="w-16 h-1 bg-[#F6B000] mx-auto rounded-full mb-4" />
-                <p className="text-gray-500 max-w-2xl mx-auto text-[13px] leading-relaxed italic">
-                    Premium factory-processed grades optimized for diverse B2B applications.
+                <p className="text-gray-500 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+                    Optically sorted and processed to exact Yunut Processing Industry specifications for diverse B2B requirements.
                 </p>
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex flex-nowrap overflow-x-auto justify-start md:justify-center gap-3 mb-8 pb-4 no-scrollbar -mx-6 px-6 md:mx-0">
+            <div className="flex flex-nowrap overflow-x-auto justify-start md:justify-center gap-3 mb-4 pb-2 no-scrollbar -mx-6 px-6 md:mx-0">
                 {gradeCategories.map((cat) => (
                     <button
                         key={cat.id}
@@ -606,7 +575,7 @@ function OurGradesSection({
                                 >
                                     <GradeCard
                                         item={item}
-                                        onEnquire={(grade) => openWhatsApp('Grade Section Enquire button', grade)}
+                                        onToggle={onToggleGrade}
                                         isSelected={onSelectCheck(item.code)}
                                     />
                                 </div>
@@ -797,6 +766,29 @@ export default function BulkOrderPage() {
 
     const onSelectCheck = (grade: string) => {
         return formData.requirements.toLowerCase().includes(grade.toLowerCase());
+    };
+
+    const toggleGrade = (grade: string) => {
+        const currentReqs = formData.requirements;
+        const gradeLower = grade.toLowerCase();
+
+        // Split existing requirements and clean up
+        const gradesArr = currentReqs.split(',').map(s => s.trim()).filter(Boolean);
+        const index = gradesArr.findIndex(g => g.toLowerCase() === gradeLower);
+
+        let newGrades;
+        if (index > -1) {
+            // Remove if already exists
+            newGrades = gradesArr.filter((_, i) => i !== index);
+        } else {
+            // Add if not exists
+            newGrades = [...gradesArr, grade];
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            requirements: newGrades.join(', ')
+        }));
     };
 
     const openWhatsApp = (source: string, grade?: string, customMessage?: string) => {
@@ -1050,7 +1042,7 @@ export default function BulkOrderPage() {
 
             {/* ── Our Grades ── */}
             <div className={COLORS.bg}>
-                <OurGradesSection onSelectCheck={onSelectCheck} openWhatsApp={openWhatsApp} />
+                <OurGradesSection onSelectCheck={onSelectCheck} onToggleGrade={toggleGrade} />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 mb-12">

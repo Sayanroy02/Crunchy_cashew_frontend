@@ -393,7 +393,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block group-hover:scale-105 transition-transform duration-700">
                 <img
                     src="/images/Cashew-In-Tree.png"
-                    alt=""
+                    alt="cashew-tree"
                     className="w-full h-full object-contain object-right transform rotate-[-5deg] scale-125"
                 />
             </div>

@@ -72,7 +72,7 @@ export default function Navbar() {
     if (pathname.startsWith('/admin')) return null;
 
     const isActive = (href: string) =>
-        href === '/shop' ? pathname === href : pathname.startsWith(href);
+        href === '/' || href === '/shop' ? pathname === href : pathname.startsWith(href);
 
     const isTransparent = isHeroPage && !scrolled;
 
