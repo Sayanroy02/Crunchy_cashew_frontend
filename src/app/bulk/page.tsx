@@ -447,8 +447,12 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1, duration: 0.5 }}
                         onClick={() => {
-                            const form = document.getElementById('bulk-inquiry-form');
-                            form?.scrollIntoView({ behavior: 'smooth' });
+                            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                                openWhatsApp('Industry Supply', undefined, cat.message);
+                            } else {
+                                const form = document.getElementById('bulk-inquiry-form');
+                                form?.scrollIntoView({ behavior: 'smooth' });
+                            }
                         }}
                         className="group flex flex-col items-center cursor-pointer"
                     >
@@ -467,20 +471,20 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
 
                             {/* Title and Button at bottom */}
                             <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-                                <h3 className="text-white font-bold text-lg md:text-xl leading-snug group-hover:text-[#F6B000] transition-all duration-300 mb-0 group-hover:mb-4">
+                                <h3 className="text-white font-bold text-lg md:text-xl leading-snug transition-all duration-300 mb-3 lg:mb-0 lg:group-hover:mb-4">
                                     {cat.title}
                                 </h3>
 
-                                <div className="h-0 group-hover:h-12 opacity-0 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+                                <div className="h-10 opacity-100 lg:h-0 lg:opacity-0 lg:group-hover:h-10 lg:group-hover:opacity-100 transition-all duration-500 overflow-hidden">
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             openWhatsApp('Industry Supply', undefined, cat.message);
                                         }}
-                                        className="w-full bg-white/20 hover:bg-white/40 backdrop-blur-md border border-white/30 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-xl"
+                                        className="w-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold py-1.5 rounded-[10px] flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 shadow-md"
                                     >
-                                        <i className="fa-brands fa-whatsapp text-black text-lg" />
-                                        <span className="text-sm">Enquire Now</span>
+                                        <i className="fa-brands fa-whatsapp text-black text-base" />
+                                        <span className="text-[11px] uppercase tracking-[0.15em]">Enquire</span>
                                     </button>
                                 </div>
                             </div>

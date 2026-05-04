@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COLORS } from '@/constants/styles';
@@ -213,6 +214,23 @@ function WhiteLabelInquiryPopup({ onClose }: { onClose: () => void }) {
 
 export default function WhiteLabelBanner() {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const pathname = usePathname();
+    const isBulkPage = pathname === '/bulk';
+
+    const handleCTA = () => {
+        if (isBulkPage) {
+            const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+            const message = `Source: ${baseUrl}/bulk [White label banner]
+
+Hello 👋
+I’d like to know more about your white label options. Could you please share the details regarding pricing, features, customization, and how the overall process works?`;
+
+            const whatsappUrl = `https://wa.me/917847996343?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        } else {
+            setIsPopupOpen(true);
+        }
+    };
 
     return (
         <section className={`py-6 md:py-8 overflow-hidden ${COLORS.bg}`}>
@@ -260,13 +278,13 @@ export default function WhiteLabelBanner() {
                                 <motion.h2
                                     initial={{ opacity: 0, x: -10 }}
                                     whileInView={{ opacity: 1, x: 0 }}
-                                    className="text-[20px] font-black text-white leading-tight mb-2"
+                                    className="text-[1.45rem] md:text-[1.75rem] font-black text-white leading-tight mb-2"
                                 >
                                     Launch Your Own <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
                                 </motion.h2>
 
                                 <p className="text-white/80 text-[16px] leading-snug max-w-[500px] mb-5 font-medium">
-                                    Leverage our state-of-the-art processing facility to sell premium, factory-direct cashews under your own label. We handle the grading, roasting, and custom packaging so you can focus on selling. Ideal for retailers, corporate gifting, and new brands.
+                                    Leverage our state-of-the-art processing facility to sell premium, factory-direct cashews under your own label. We handle the grading, roasting, and custom packaging so you can focus on selling.
                                 </p>
 
                                 {/* Desktop Buttons */}
@@ -274,21 +292,23 @@ export default function WhiteLabelBanner() {
                                     <motion.button
                                         whileHover={{ scale: 1.05, y: -1 }}
                                         whileTap={{ scale: 0.98 }}
-                                        onClick={() => setIsPopupOpen(true)}
+                                        onClick={handleCTA}
                                         className="h-11 px-7 rounded-xl bg-primary text-black font-black text-[13px] flex items-center gap-2.5 shadow-xl shadow-primary/20 transition-all"
                                     >
-                                        Partner With Us
+                                        {isBulkPage ? 'Discuss White Label Options' : 'Partner With Us'}
                                         <Send className="w-3.5 h-3.5" />
                                     </motion.button>
-                                    <motion.a
-                                        href="/bulk"
-                                        whileHover={{ scale: 1.05, y: -1 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all"
-                                    >
-                                        <BookOpen className="w-4 h-4" />
-                                        Know More
-                                    </motion.a>
+                                    {!isBulkPage && (
+                                        <motion.a
+                                            href="/bulk"
+                                            whileHover={{ scale: 1.05, y: -1 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all"
+                                        >
+                                            <BookOpen className="w-4 h-4" />
+                                            Know More
+                                        </motion.a>
+                                    )}
                                 </div>
                             </div>
 
@@ -313,20 +333,22 @@ export default function WhiteLabelBanner() {
                             <div className="lg:hidden w-full flex flex-col gap-2 mt-1">
                                 <motion.button
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => setIsPopupOpen(true)}
+                                    onClick={handleCTA}
                                     className="w-full h-11 rounded-xl bg-primary text-black font-black text-[13px] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
                                 >
-                                    Partner With Us
+                                    {isBulkPage ? 'Discuss White Label Options' : 'Partner With Us'}
                                     <Send className="w-3.5 h-3.5" />
                                 </motion.button>
-                                <motion.a
-                                    href="/bulk"
-                                    whileTap={{ scale: 0.98 }}
-                                    className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3"
-                                >
-                                    <BookOpen className="w-4 h-4" />
-                                    Know More
-                                </motion.a>
+                                {!isBulkPage && (
+                                    <motion.a
+                                        href="/bulk"
+                                        whileTap={{ scale: 0.98 }}
+                                        className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3"
+                                    >
+                                        <BookOpen className="w-4 h-4" />
+                                        Know More
+                                    </motion.a>
+                                )}
                             </div>
 
                         </div>
