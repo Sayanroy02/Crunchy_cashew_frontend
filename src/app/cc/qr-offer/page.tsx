@@ -198,7 +198,7 @@ export default function QROfferPage() {
 
     const handleWhatsAppShare = () => {
         const text = `🎉 Hey! I just registered on Crunchy Cashews QR Offer!\n\n👤 Name: ${userData.username}\n🆔 UID: ${userData.uid}\n📞 Phone: ${userData.phone}\n📍 Address: ${userData.address}\n\nI'm claiming my reward! 🎁`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        window.open(`https://wa.me/917847996343?text=${encodeURIComponent(text)}`, '_blank');
     };
 
     return (
