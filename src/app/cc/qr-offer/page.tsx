@@ -202,12 +202,12 @@ export default function QROfferPage() {
     };
 
     return (
-        <div className="min-h-screen bg-[#FFF9E7] flex flex-col items-center py-10 px-4">
+        <div className="min-h-screen bg-[#FFF9E7] flex flex-col items-center py-6 px-4">
             {/* Logo */}
             <motion.div 
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="mb-8"
+                className="mb-4"
             >
                 <img src="/images/cc-Logo-01-1.png" alt="Logo" className="h-16 w-auto" />
             </motion.div>
@@ -220,24 +220,24 @@ export default function QROfferPage() {
                             initial={{ x: 20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: -20, opacity: 0 }}
-                            className="bg-white rounded-[40px] shadow-2xl p-8 sm:p-12 border border-gray-100"
+                            className="bg-white rounded-[10px] shadow-2xl p-6 sm:p-8 border border-gray-100"
                         >
-                            <div className="text-center mb-8">
+                            <div className="text-center mb-4">
                                 <span className="inline-block bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[3px] px-4 py-1.5 rounded-full mb-3">
                                     Step 1 of 2
                                 </span>
                                 <h2 className="text-3xl font-black text-gray-900 leading-tight">Create your account</h2>
-                                <p className="text-gray-400 mt-2 text-sm font-medium">Join us to claim your special offer</p>
+                                <p className="text-gray-400 mt-1 text-sm font-medium">Join us to claim your special offer</p>
                             </div>
 
                             {error && (
-                                <div className="bg-red-50 text-red-500 text-xs font-bold p-4 rounded-2xl mb-6 border border-red-100 flex items-center gap-3">
+                                <div className="bg-red-50 text-red-500 text-xs font-bold p-4 rounded-2xl mb-4 border border-red-100 flex items-center gap-3">
                                     <i className="fa-solid fa-circle-exclamation" /> {error}
                                 </div>
                             )}
 
                             <div className="flex flex-col gap-4">
-                                <div className="flex justify-center mb-4">
+                                <div className="flex justify-center mb-2">
                                     <GoogleLogin
                                         onSuccess={handleGoogleSuccess}
                                         onError={() => setError('Google Sign-In failed')}
@@ -248,13 +248,13 @@ export default function QROfferPage() {
                                     />
                                 </div>
 
-                                <div className="flex items-center gap-4 my-2">
+                                <div className="flex items-center gap-4 my-1">
                                     <div className="flex-1 h-px bg-gray-100" />
                                     <span className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Or Register Manually</span>
                                     <div className="flex-1 h-px bg-gray-100" />
                                 </div>
 
-                                <form onSubmit={handleStep1Submit} className="space-y-4">
+                                <form onSubmit={handleStep1Submit} className="space-y-3">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
@@ -262,7 +262,7 @@ export default function QROfferPage() {
                                                 type="text" name="username" required
                                                 value={userData.username} onChange={handleChange}
                                                 placeholder="Enter name"
-                                                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-3.5 text-sm outline-none transition-all"
+                                                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -272,7 +272,7 @@ export default function QROfferPage() {
                                                     type="email" name="email" required
                                                     value={userData.email} onChange={handleChange}
                                                     placeholder="Enter email"
-                                                    className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-3.5 text-sm outline-none transition-all ${
+                                                    className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm outline-none transition-all ${
                                                         !availability.email ? 'border-red-400' : 'border-transparent focus:border-primary/30'
                                                     }`}
                                                 />
@@ -286,13 +286,13 @@ export default function QROfferPage() {
                                             type="password" name="password" required
                                             value={userData.password} onChange={handleChange}
                                             placeholder="Create password"
-                                            className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-3.5 text-sm outline-none transition-all"
+                                            className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all"
                                         />
                                     </div>
                                     <button 
                                         type="submit" 
                                         disabled={!availability.email}
-                                        className="w-full bg-[#00863D] hover:bg-[#006b31] disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-2 mt-4"
+                                        className="w-full bg-[#00863D] hover:bg-[#006b31] disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-2 mt-2"
                                     >
                                         Continue <i className="fa-solid fa-arrow-right text-xs" />
                                     </button>
@@ -307,9 +307,9 @@ export default function QROfferPage() {
                             initial={{ x: 20, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: -20, opacity: 0 }}
-                            className="bg-white rounded-[40px] shadow-2xl p-8 sm:p-12 border border-gray-100"
+                            className="bg-white rounded-[10px] shadow-2xl p-6 sm:p-8 border border-gray-100"
                         >
-                            <div className="text-center mb-8">
+                            <div className="text-center mb-4">
                                 <span className="inline-block bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[3px] px-4 py-1.5 rounded-full mb-3">
                                     Step 2 of 2
                                 </span>
@@ -323,7 +323,7 @@ export default function QROfferPage() {
                                 </div>
                             )}
 
-                            <form onSubmit={handleFinalSubmit} className="space-y-6">
+                            <form onSubmit={handleFinalSubmit} className="space-y-3">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Phone Number</label>
                                     <div className="relative">
@@ -331,7 +331,7 @@ export default function QROfferPage() {
                                             type="tel" name="phone" required
                                             value={userData.phone} onChange={handleChange}
                                             placeholder="Enter your mobile number"
-                                            className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-4 text-sm font-bold outline-none transition-all ${
+                                            className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm font-bold outline-none transition-all ${
                                                 !availability.phone ? 'border-red-400' : 'border-transparent focus:border-primary/30'
                                             }`}
                                         />
@@ -344,7 +344,7 @@ export default function QROfferPage() {
                                         name="address" required rows={3}
                                         value={userData.address} onChange={handleChange}
                                         placeholder="Street, City, Pincode..."
-                                        className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-4 text-sm outline-none transition-all resize-none"
+                                        className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all resize-none"
                                     />
                                 </div>
                                 <button 

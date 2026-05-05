@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { COLORS } from '@/constants/styles';
 
 const contactItems = [
@@ -60,6 +61,10 @@ function ContactItem({ item }: { item: typeof contactItems[number] }) {
 }
 
 export default function Footer() {
+    const pathname = usePathname();
+
+    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer') return null;
+
     return (
         <footer
             className="relative text-white overflow-hidden mt-0"
