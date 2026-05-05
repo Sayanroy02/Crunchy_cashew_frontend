@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleLogin } from '@react-oauth/google';
 import { API } from '@/constants/api';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
@@ -13,6 +12,7 @@ export default function QROfferPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [isRegistered, setIsRegistered] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [userData, setUserData] = useState({
         username: '',
         email: '',
@@ -53,7 +53,7 @@ export default function QROfferPage() {
                     } else {
                         setAvailability(prev => ({ ...prev, email: true }));
                     }
-                } catch (e) {}
+                } catch (e) { }
             }
         }, 800);
         return () => clearTimeout(timer);
@@ -75,7 +75,7 @@ export default function QROfferPage() {
                     } else {
                         setAvailability(prev => ({ ...prev, phone: true }));
                     }
-                } catch (e) {}
+                } catch (e) { }
             }
         }, 800);
         return () => clearTimeout(timer);
@@ -86,49 +86,7 @@ export default function QROfferPage() {
         setError(''); // Clear error on change
     };
 
-    const handleGoogleSuccess = async (credentialResponse: any) => {
-        setIsLoading(true);
-        setError('');
-        try {
-            const res = await fetch(API.AUTH_GOOGLE, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: credentialResponse.credential })
-            });
-            
-            if (res.ok) {
-                // User already exists, redirect to home
-                const data = await res.json();
-                dispatch(login(data.access_token));
-                router.push('/');
-                return;
-            }
 
-            // If we're here, it might be a new user or error.
-            // But API_AUTH_GOOGLE usually handles both login and register.
-            // If it's a new user, the backend might have created them already.
-            // Let's assume we need to fetch their info and move to step 2.
-            
-            // For now, I'll simulate fetching from the token if possible or just parse the JWT
-            const base64Url = credentialResponse.credential.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-
-            const googleData = JSON.parse(jsonPayload);
-            setUserData(prev => ({
-                ...prev,
-                username: googleData.name || '',
-                email: googleData.email || ''
-            }));
-            setStep(2);
-        } catch (err: any) {
-            setError('Google login failed. Please try manual registration.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleStep1Submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -180,7 +138,7 @@ export default function QROfferPage() {
             fd.append('username', userData.email);
             fd.append('password', userData.password);
             const loginRes = await fetch(API.AUTH_LOGIN, { method: 'POST', body: fd });
-            
+
             if (loginRes.ok) {
                 const loginData = await loginRes.json();
                 dispatch(login(loginData.access_token));
@@ -204,7 +162,7 @@ export default function QROfferPage() {
     return (
         <div className="min-h-screen bg-[#FFF9E7] flex flex-col items-center py-6 px-4">
             {/* Logo */}
-            <motion.div 
+            <motion.div
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 className="mb-4"
@@ -226,8 +184,8 @@ export default function QROfferPage() {
                                 <span className="inline-block bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[3px] px-4 py-1.5 rounded-full mb-3">
                                     Step 1 of 2
                                 </span>
-                                <h2 className="text-3xl font-black text-gray-900 leading-tight">Create your account</h2>
-                                <p className="text-gray-400 mt-1 text-sm font-medium">Join us to claim your special offer</p>
+                                <h2 className="text-3xl font-black text-gray-900 leading-tight">Join Us to Claim Your <span className="text-primary">Special Offer</span></h2>
+
                             </div>
 
                             {error && (
@@ -236,68 +194,60 @@ export default function QROfferPage() {
                                 </div>
                             )}
 
-                            <div className="flex flex-col gap-4">
-                                <div className="flex justify-center mb-2">
-                                    <GoogleLogin
-                                        onSuccess={handleGoogleSuccess}
-                                        onError={() => setError('Google Sign-In failed')}
-                                        useOneTap
-                                        theme="filled_blue"
-                                        shape="pill"
-                                        width="100%"
-                                    />
-                                </div>
 
-                                <div className="flex items-center gap-4 my-1">
-                                    <div className="flex-1 h-px bg-gray-100" />
-                                    <span className="text-[10px] text-gray-300 font-bold uppercase tracking-widest">Or Register Manually</span>
-                                    <div className="flex-1 h-px bg-gray-100" />
-                                </div>
 
-                                <form onSubmit={handleStep1Submit} className="space-y-3">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
-                                            <input
-                                                type="text" name="username" required
-                                                value={userData.username} onChange={handleChange}
-                                                placeholder="Enter name"
-                                                className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all"
-                                            />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Email ID</label>
-                                            <div className="relative">
-                                                <input
-                                                    type="email" name="email" required
-                                                    value={userData.email} onChange={handleChange}
-                                                    placeholder="Enter email"
-                                                    className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm outline-none transition-all ${
-                                                        !availability.email ? 'border-red-400' : 'border-transparent focus:border-primary/30'
-                                                    }`}
-                                                />
-                                                {!availability.email && <i className="fa-solid fa-circle-xmark absolute right-4 top-1/2 -translate-y-1/2 text-red-400" />}
-                                            </div>
-                                        </div>
+                            <form onSubmit={handleStep1Submit} className="space-y-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</label>
+                                        <input
+                                            type="text" name="username" required
+                                            value={userData.username} onChange={handleChange}
+                                            placeholder="Enter name"
+                                            className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all"
+                                        />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Password</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Email ID</label>
+                                        <div className="relative">
+                                            <input
+                                                type="email" name="email" required
+                                                value={userData.email} onChange={handleChange}
+                                                placeholder="Enter email"
+                                                className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm outline-none transition-all ${!availability.email ? 'border-red-400' : 'border-transparent focus:border-primary/30'
+                                                    }`}
+                                            />
+                                            {!availability.email && <i className="fa-solid fa-circle-xmark absolute right-4 top-1/2 -translate-y-1/2 text-red-400" />}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Password</label>
+                                    <div className="relative">
                                         <input
-                                            type="password" name="password" required
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password" required
                                             value={userData.password} onChange={handleChange}
                                             placeholder="Create password"
                                             className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all"
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                        >
+                                            <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} />
+                                        </button>
                                     </div>
-                                    <button 
-                                        type="submit" 
-                                        disabled={!availability.email}
-                                        className="w-full bg-[#00863D] hover:bg-[#006b31] disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-2 mt-2"
-                                    >
-                                        Continue <i className="fa-solid fa-arrow-right text-xs" />
-                                    </button>
-                                </form>
-                            </div>
+                                </div>
+                                <button
+                                    type="submit"
+                                    disabled={!availability.email}
+                                    className="w-full bg-[#00863D] hover:bg-[#006b31] disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-2 mt-2"
+                                >
+                                    Continue <i className="fa-solid fa-arrow-right text-xs" />
+                                </button>
+                            </form>
                         </motion.div>
                     )}
 
@@ -331,9 +281,8 @@ export default function QROfferPage() {
                                             type="tel" name="phone" required
                                             value={userData.phone} onChange={handleChange}
                                             placeholder="Enter your mobile number"
-                                            className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm font-bold outline-none transition-all ${
-                                                !availability.phone ? 'border-red-400' : 'border-transparent focus:border-primary/30'
-                                            }`}
+                                            className={`w-full bg-gray-50 border-2 rounded-2xl px-5 py-2.5 text-sm font-bold outline-none transition-all ${!availability.phone ? 'border-red-400' : 'border-transparent focus:border-primary/30'
+                                                }`}
                                         />
                                         {!availability.phone && <i className="fa-solid fa-circle-xmark absolute right-4 top-1/2 -translate-y-1/2 text-red-400" />}
                                     </div>
@@ -347,8 +296,8 @@ export default function QROfferPage() {
                                         className="w-full bg-gray-50 border-2 border-transparent focus:border-primary/30 focus:bg-white rounded-2xl px-5 py-2.5 text-sm outline-none transition-all resize-none"
                                     />
                                 </div>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     disabled={isLoading || !availability.phone}
                                     className="w-full bg-[#00863D] hover:bg-[#006b31] disabled:opacity-50 text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-2"
                                 >
@@ -377,7 +326,7 @@ export default function QROfferPage() {
                                 {/* Decorative elements */}
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
                                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 rounded-full -ml-16 -mb-16 blur-2xl" />
-                                
+
                                 <div className="flex justify-between items-start mb-10">
                                     <img src="/images/cc-Logo-01-1.png" alt="Logo" className="h-10 brightness-0 invert" />
                                     <div className="bg-primary text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm">
@@ -415,18 +364,18 @@ export default function QROfferPage() {
                             <div className="w-full space-y-4 text-center">
                                 <h3 className="text-2xl font-black text-gray-900">Registration Successful!</h3>
                                 <p className="text-gray-500 text-sm max-w-xs mx-auto">Share your digital card to WhatsApp to claim your exclusive reward.</p>
-                                
-                                <button 
+
+                                <button
                                     onClick={handleWhatsAppShare}
                                     className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-black py-4 rounded-2xl shadow-lg shadow-green-900/10 transition-all flex items-center justify-center gap-3 text-lg"
                                 >
                                     <i className="fa-brands fa-whatsapp text-2xl" /> Share to WhatsApp
                                 </button>
-                                
+
                                 <p className="text-[10px] text-gray-400 font-medium leading-relaxed max-w-xs mx-auto italic mt-6">
                                     *Note: Verification will be done manually and may take some time to verify authenticity.
                                 </p>
-                                
+
                                 <button onClick={() => router.push('/')} className="text-primary font-bold text-sm hover:underline">
                                     Back to Store
                                 </button>
