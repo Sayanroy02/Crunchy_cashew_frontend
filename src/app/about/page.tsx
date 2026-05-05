@@ -224,7 +224,7 @@ export default function AboutPage() {
                 playsInline
                 className="w-full h-full object-cover"
               >
-                <source src="/videos/cashew-grading-transcode.mp4" type="video/mp4" />
+                <source src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777965573/cashew-grading-transcode_ebhjkf.mp4" type="video/mp4" />
               </video>
             </div>
 
@@ -242,7 +242,7 @@ export default function AboutPage() {
               playsInline
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             >
-              <source src="/videos/cashew-grading-transcode.mp4" type="video/mp4" />
+              <source src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777965573/cashew-grading-transcode_ebhjkf.mp4" type="video/mp4" />
             </video>
           </div>
         </div>

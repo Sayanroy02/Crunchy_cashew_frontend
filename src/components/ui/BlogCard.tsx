@@ -17,23 +17,46 @@ interface BlogCardProps {
     blog: BlogCardData;
     /** Extra classes applied to the root <Link> (e.g. 'hidden md:flex' for preview grid) */
     className?: string;
+    searchTerm?: string;
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
     'All': 'fa-solid fa-border-all',
+    'Health': 'fa-solid fa-heart-pulse',
     'Health Articles': 'fa-solid fa-heart-pulse',
+    'Recipes': 'fa-solid fa-utensils',
     'Recipes Blog': 'fa-solid fa-utensils',
     'Sustainability': 'fa-solid fa-leaf',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
+    'Health': 'bg-black text-white',
     'Health Articles': 'bg-black text-white',
+    'Recipes': 'bg-[#F6B000] text-black',
     'Recipes Blog': 'bg-[#F6B000] text-black',
     'Sustainability': 'bg-black text-[#F6B000]',
     'Uncategorised': 'bg-gray-100 text-gray-600',
 };
 
-export default function BlogCard({ blog, className = '' }: BlogCardProps) {
+export default function BlogCard({ blog, className = '', searchTerm = '' }: BlogCardProps) {
+    const highlightText = (text: string, highlight: string) => {
+        if (!highlight.trim()) return text;
+        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+        return (
+            <span>
+                {parts.map((part, i) =>
+                    part.toLowerCase() === highlight.toLowerCase() ? (
+                        <span key={i} className="bg-[#F6B000] text-black px-1 rounded-sm">{part}</span>
+                    ) : (
+                        part
+                    )
+                )}
+            </span>
+        );
+    };
+
+    const plainContent = (blog.content || '').replace(/<[^>]*>?/gm, '');
+
     return (
         <Link
             href={`/blogs/${blog._id}`}
@@ -84,11 +107,11 @@ export default function BlogCard({ blog, className = '' }: BlogCardProps) {
                 )}
 
                 <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors">
-                    {blog.title}
+                    {highlightText(blog.title, searchTerm)}
                 </h3>
 
                 <p className="text-gray-500 line-clamp-3 mb-5 flex-grow leading-relaxed text-sm">
-                    {(blog.content || '').replace(/<[^>]*>?/gm, '')}
+                    {highlightText(plainContent, searchTerm)}
                 </p>
 
                 <span className="font-bold flex items-center gap-2 text-sm mt-auto group-hover:gap-3 transition-all" style={{ color: '#000000' }}>

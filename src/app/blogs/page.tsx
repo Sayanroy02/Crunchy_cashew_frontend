@@ -1,22 +1,19 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import BlogCard from '@/components/ui/BlogCard';
 import type { BlogCardData } from '@/components/ui/BlogCard';
 
-
-
-const CATEGORIES = ['All', 'Health Articles', 'Recipes Blog', 'Sustainability'] as const;
+const CATEGORIES = ['All', 'Health', 'Recipes', 'Sustainability'] as const;
 type CategoryFilter = typeof CATEGORIES[number];
 
-const CATEGORY_ICONS: Record<string, string> = {
-    'All': 'fa-solid fa-border-all',
-    'Health Articles': 'fa-solid fa-heart-pulse',
-    'Recipes Blog': 'fa-solid fa-utensils',
-    'Sustainability': 'fa-solid fa-leaf',
+const CATEGORY_DISPLAY_NAMES: Record<CategoryFilter, string> = {
+    'All': 'All Categories',
+    'Health': 'Health',
+    'Recipes': 'Recipes',
+    'Sustainability': 'Sustainability',
 };
 
 export default function BlogsDirectory() {
@@ -24,7 +21,11 @@ export default function BlogsDirectory() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
-    const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc'); // newest first by default
+    const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
+    const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+    const filterRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetch(API.BLOGS)
@@ -39,12 +40,33 @@ export default function BlogsDirectory() {
             });
     }, []);
 
+    // Close filter dropdown on click outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+                setIsFilterOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     const filteredBlogs = useMemo(() => {
         let result = [...blogs];
 
         // Category filter
         if (activeCategory !== 'All') {
-            result = result.filter(b => b.category === activeCategory);
+            result = result.filter(b => {
+                const cat = b.category || '';
+                if (activeCategory === 'Health') return cat === 'Health' || cat === 'Health Articles';
+                if (activeCategory === 'Recipes') return cat === 'Recipes' || cat === 'Recipes Blog';
+                return cat === activeCategory;
+            });
+        }
+
+        // Featured filter
+        if (showFeaturedOnly) {
+            result = result.filter(b => b.featured);
         }
 
         // Search filter
@@ -65,99 +87,147 @@ export default function BlogsDirectory() {
         });
 
         return result;
-    }, [blogs, activeCategory, searchTerm, sortOrder]);
+    }, [blogs, activeCategory, searchTerm, sortOrder, showFeaturedOnly]);
 
     return (
         <div className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
             {/* Hero Header */}
-            <section className="text-black pt-16 pb-10 px-6 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #FFF9E7 0%, #FFFE71 100%)' }}>
-                {/* Dot grid overlay */}
-                <div
-                    className="absolute inset-0 opacity-[0.07] pointer-events-none"
-                    style={{
-                        backgroundImage: 'radial-gradient(circle, #ffffff 1.5px, transparent 1.5px)',
-                        backgroundSize: '24px 24px',
-                    }}
-                />
-                {/* Left decorative image */}
-                <div className="absolute left-0 bottom-0 flex items-end pointer-events-none select-none"
-                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
-                    <img src="/images/Cashew-parachute-03-p-800.png" alt="" className="w-full h-full object-contain object-bottom" style={{ transform: 'scaleX(-1)', opacity: 0.85 }} />
+            <section className="relative h-[450px] md:h-[550px] flex items-center justify-center">
+                {/* Background Image */}
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777967174/ChatGPT_Image_May_5_2026_01_16_00_PM_s0vfn3.png"
+                        alt="Blog Hero"
+                        className="w-full h-full object-cover"
+                    />
                 </div>
-                {/* Right decorative image */}
-                <div className="absolute right-0 bottom-0 flex items-end pointer-events-none select-none"
-                    style={{ width: 'clamp(140px, 18vw, 280px)', height: '110%' }}>
-                    <img src="/images/Cashew-parachute-1-03-03.png" alt="" className="w-full h-full object-contain object-bottom" style={{ opacity: 0.85 }} />
-                </div>
-                <div className="max-w-5xl mx-auto text-center relative z-10">
-                    <span className="inline-flex items-center gap-2 bg-black/5 border border-black/10 text-black/60 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">
-                        <i className="fa-solid fa-pen-nib" /> Our Journal
+
+                <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
+                    <span className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-black/5 text-black/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-6 shadow-sm">
+                        <i className="fa-solid fa-sparkles text-[#F6B000]" /> Our Journal
                     </span>
-                    <h1 className="text-4xl md:text-6xl font-heading font-black mb-5 leading-tight" style={{ color: COLORS.heading }}>
-                        Insights, Recipes &<br />
-                        <span style={{ color: '#F6B000' }}>Sustainability</span>
+                    <h1 className="text-4xl md:text-5xl font-heading font-black mb-6 leading-[1.1]" style={{ color: COLORS.heading }}>
+                        Insights, Recipes <br className="hidden md:block" />
+                        & <span style={{ color: COLORS.primary }}>Sustainability</span>
                     </h1>
-                    <p className="text-black/60 max-w-2xl mx-auto text-lg mb-10">
+                    <p className="text-black/80 max-w-2xl mx-auto text-base md:text-lg font-medium mb-12 drop-shadow-sm">
                         Expert health guides, cashew recipes, and our commitment to sustainable farming — all in one place.
                     </p>
 
-                    {/* Search + Sort Row */}
-                    <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3">
-                        {/* Search Bar */}
-                        <div className="relative flex-1">
-                            <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-black/40" />
+                    {/* Unified Search + Filter Bar */}
+                    <div className="max-w-xl mx-auto relative flex items-center gap-3">
+                        <div className="relative flex-1 group">
+                            <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-black/40 group-focus-within:text-[#F6B000] transition-colors" />
                             <input
                                 type="text"
                                 placeholder="Search articles..."
                                 value={searchTerm}
                                 onChange={e => setSearchTerm(e.target.value)}
-                                className="w-full bg-white/50 border border-black/5 text-black placeholder-black/40 rounded-2xl px-5 py-3.5 pl-11 focus:outline-none focus:bg-white/80 transition-all border-b-2 border-b-black/10"
+                                className="w-full bg-white/90 backdrop-blur-xl border border-white/50 text-black placeholder-black/40 rounded-2xl px-6 py-4 pl-12 focus:outline-none focus:ring-2 focus:ring-[#F6B000]/20 focus:bg-white shadow-xl transition-all font-medium"
                             />
                         </div>
-                        {/* Sort dropdown */}
-                        <select
-                            value={sortOrder}
-                            onChange={e => setSortOrder(e.target.value as 'desc' | 'asc')}
-                            className="bg-white/50 border border-black/5 text-black rounded-2xl px-4 py-3.5 focus:outline-none focus:bg-white/80 transition-all cursor-pointer appearance-none min-w-[160px] text-sm font-bold border-b-2 border-b-black/10"
-                        >
-                            <option value="desc" className="text-black">🕐 Newest First</option>
-                            <option value="asc" className="text-black">🕐 Oldest First</option>
-                        </select>
+
+                        {/* Filter Trigger Button */}
+                        <div className="relative" ref={filterRef}>
+                            <button
+                                onClick={() => setIsFilterOpen(!isFilterOpen)}
+                                className={`h-[58px] px-6 rounded-2xl border flex items-center gap-2 font-bold transition-all shadow-xl ${isFilterOpen || activeCategory !== 'All' || showFeaturedOnly
+                                    ? 'bg-black text-white border-black'
+                                    : 'bg-white/90 backdrop-blur-xl border-white/50 text-black hover:bg-white'
+                                    }`}
+                            >
+                                <i className="fa-solid fa-sliders" />
+                                <span className="hidden sm:inline">Filter</span>
+                                {(activeCategory !== 'All' || showFeaturedOnly) && (
+                                    <span className="w-2 h-2 rounded-full bg-[#F6B000] animate-pulse" />
+                                )}
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {isFilterOpen && (
+                                <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-[10px] shadow-[0_15px_40px_rgba(0,0,0,0.15)] border border-gray-100 p-4 z-[100] animate-slide-in-up origin-top-right">
+                                    <div className="space-y-4">
+                                        {/* Sort Section */}
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Sort By</p>
+                                            <div className="flex flex-col gap-0.5">
+                                                <button
+                                                    onClick={() => setSortOrder('desc')}
+                                                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-colors ${sortOrder === 'desc' ? 'bg-[#F6B000]/10 text-black' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                >
+                                                    Newest First <i className={`fa-solid fa-check text-[10px] ${sortOrder === 'desc' ? 'opacity-100' : 'opacity-0'}`} />
+                                                </button>
+                                                <button
+                                                    onClick={() => setSortOrder('asc')}
+                                                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-colors ${sortOrder === 'asc' ? 'bg-[#F6B000]/10 text-black' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                >
+                                                    Oldest First <i className={`fa-solid fa-check text-[10px] ${sortOrder === 'asc' ? 'opacity-100' : 'opacity-0'}`} />
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Categories Section */}
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-2 px-1">Categories</p>
+                                            <div className="flex flex-col gap-0.5">
+                                                {CATEGORIES.map(cat => (
+                                                    <button
+                                                        key={cat}
+                                                        onClick={() => setActiveCategory(cat)}
+                                                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-colors ${activeCategory === cat ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                    >
+                                                        {CATEGORY_DISPLAY_NAMES[cat]}
+                                                        {activeCategory === cat && <i className="fa-solid fa-check text-[10px]" />}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Special Section */}
+                                        <div className="pt-3 border-t border-gray-100">
+                                            <button
+                                                onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
+                                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition-all border ${showFeaturedOnly ? 'bg-black text-[#F6B000] border-black' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
+                                            >
+                                                <span className="flex items-center gap-2">
+                                                    <i className="fa-solid fa-star" /> Featured Only
+                                                </span>
+                                                <div className={`w-7 h-3.5 rounded-full relative transition-colors ${showFeaturedOnly ? 'bg-[#F6B000]' : 'bg-gray-300'}`}>
+                                                    <div className={`absolute top-0.5 w-2.5 h-2.5 bg-white rounded-full transition-all ${showFeaturedOnly ? 'right-0.5' : 'left-0.5'}`} />
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* Category Tab Bar */}
-            <div className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide py-1">
-                        {CATEGORIES.map(cat => {
-                            const count = cat === 'All' ? blogs.length : blogs.filter(b => b.category === cat).length;
-                            const isActive = activeCategory === cat;
-                            return (
-                                <button
-                                    key={cat}
-                                    onClick={() => setActiveCategory(cat)}
-                                    className={`flex items-center gap-2 px-5 py-3.5 text-sm font-bold whitespace-nowrap border-b-2 transition-all ${isActive
-                                        ? 'border-black text-black'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                        }`}
-                                >
-                                    <i className={CATEGORY_ICONS[cat]} />
-                                    {cat}
-                                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${isActive ? 'text-black' : 'bg-gray-100 text-gray-500'
-                                        }`} style={isActive ? { backgroundColor: '#F6B000' } : {}}>
-                                        {count}
-                                    </span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-
             {/* Blogs Grid */}
-            <section className="max-w-7xl mx-auto px-6 py-12">
+            <section className="max-w-7xl mx-auto px-6 py-6">
+                {/* Results Info */}
+                <div className="flex items-center justify-between mb-10">
+                    <h2 className="text-xl font-heading font-black text-black">
+                        {activeCategory === 'All' ? 'All Articles' : CATEGORY_DISPLAY_NAMES[activeCategory]}
+                        <span className="ml-3 text-sm text-gray-400 font-bold">{filteredBlogs.length} results</span>
+                    </h2>
+                    {(activeCategory !== 'All' || showFeaturedOnly || searchTerm) && (
+                        <button
+                            onClick={() => {
+                                setActiveCategory('All');
+                                setShowFeaturedOnly(false);
+                                setSearchTerm('');
+                                setSortOrder('desc');
+                            }}
+                            className="text-xs font-black uppercase tracking-widest text-[#F6B000] hover:text-black transition-colors flex items-center gap-2"
+                        >
+                            Reset Filters <i className="fa-solid fa-rotate-right" />
+                        </button>
+                    )}
+                </div>
+
                 {loading ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3, 4, 5, 6].map(i => (
@@ -173,29 +243,29 @@ export default function BlogsDirectory() {
                         ))}
                     </div>
                 ) : filteredBlogs.length === 0 ? (
-                    <div className="text-center bg-white p-16 rounded-3xl shadow-sm border border-gray-100 max-w-lg mx-auto">
-                        <i className="fa-regular fa-folder-open text-6xl text-gray-200 mb-5 block" />
-                        <h3 className="text-2xl font-bold text-gray-700 font-heading mb-2">No Articles Found</h3>
-                        <p className="text-gray-400 mb-6">
-                            {searchTerm ? `No results for "${searchTerm}"` : `No articles in ${activeCategory} yet.`}
-                        </p>
-                        <div className="flex gap-3 justify-center">
-                            {searchTerm && (
-                                <button onClick={() => setSearchTerm('')} className="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold">
-                                    Clear Search
-                                </button>
-                            )}
-                            {activeCategory !== 'All' && (
-                                <button onClick={() => setActiveCategory('All')} className="px-5 py-2.5 rounded-full border-2 border-primary text-primary text-sm font-bold">
-                                    View All
-                                </button>
-                            )}
+                    <div className="text-center bg-white p-20 rounded-3xl shadow-sm border border-gray-100 max-w-xl mx-auto">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <i className="fa-regular fa-folder-open text-3xl text-gray-200" />
                         </div>
+                        <h3 className="text-3xl font-black text-gray-900 font-heading mb-4">No Articles Found</h3>
+                        <p className="text-gray-500 mb-8 max-w-sm mx-auto">
+                            We couldn't find any articles matching your current search or filters. Try adjusting them.
+                        </p>
+                        <button
+                            onClick={() => {
+                                setActiveCategory('All');
+                                setShowFeaturedOnly(false);
+                                setSearchTerm('');
+                            }}
+                            className="px-8 py-3 rounded-2xl bg-black text-[#F6B000] text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/20"
+                        >
+                            Clear All Filters
+                        </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                         {filteredBlogs.map(blog => (
-                            <BlogCard key={blog._id} blog={blog} />
+                            <BlogCard key={blog._id} blog={blog} searchTerm={searchTerm} />
                         ))}
                     </div>
                 )}
