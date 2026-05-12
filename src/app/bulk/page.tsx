@@ -339,12 +339,11 @@ function GradeCard({
             className="group flex flex-col items-center cursor-pointer transition-all duration-300 py-2 isolate"
         >
             {/* Bowl Image — Circular and Tucked */}
-            <div className="relative w-full aspect-square z-20 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-105"
-                style={{ background: 'rgba(0,0,0,0.02)' }}>
+            <div className="relative w-full aspect-square z-20 rounded-full overflow-hidden flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                 <img
                     src={item.image}
                     alt={item.code}
-                    className="w-full h-full object-cover transition-all duration-500 transform scale-[1.05]"
+                    className="w-full h-full object-cover transition-all duration-500 transform scale-[1.05] mix-blend-multiply"
                     onError={(e: any) => { e.currentTarget.src = '/images/crunchy-cashews-product.png'; }}
                 />
             </div>
