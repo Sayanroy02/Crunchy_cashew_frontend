@@ -186,7 +186,7 @@ export default function AboutFactory() {
 
 
             {/* ── Right corner fruit ── */}
-            <motion.div
+            {/* <motion.div
                 style={{ x: rightMoveX, y: rightMoveY }}
                 className="absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
@@ -196,7 +196,7 @@ export default function AboutFactory() {
                     className="object-contain object-bottom w-full h-auto translate-x-6 md:translate-x-8"
                     aria-hidden="true"
                 />
-            </motion.div>
+            </motion.div> */}
 
             {/* Reservation Modal Pop-up via Portal */}
             <AnimatePresence>

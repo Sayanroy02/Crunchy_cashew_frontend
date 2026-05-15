@@ -41,7 +41,7 @@ function scrollTo(ref: React.RefObject<HTMLElement | null>) {
 const gradeCategories = [
     {
         id: 'white-wholes',
-        title: 'White Wholes',
+        title: 'Premium Wholes',
         icon: <Package className="w-4 h-4" />,
         subtitle: 'Premium whole cashews — prized for visual appeal, size, and taste.',
         accent: '#000000',
@@ -53,6 +53,14 @@ const gradeCategories = [
                 description: 'The highest grade by size. Critical where visual appeal and nut size matter. ~160–180 nuts/lb.',
                 origins: 'Ghana · Ivory Coast · Tanzania',
                 link: 'http://www.amazon.in/dp/B0983Y6F8P?ref=myi_title_dp',
+            },
+            {
+                code: 'WW 210',
+                image: '/images/WW240-min.png',
+                tagline: 'Exceptionally large',
+                description: 'Exceptionally large and flawless wholes, perfect for premium branded snacking lines.',
+                origins: 'Ghana · Ivory Coast · Tanzania',
+                link: 'http://www.amazon.in/dp/B0983W92KN?ref=myi_title_dp',
             },
             {
                 code: 'WW 240',
@@ -78,95 +86,127 @@ const gradeCategories = [
                 origins: 'Guinea Bissau · Senegal',
                 link: 'http://www.amazon.in/dp/B0987SRM89?ref=myi_title_dp',
             },
+            {
+                code: 'p 210',
+                image: '/images/WW180-min.png',
+                tagline: 'Naturally pale-ivory',
+                description: 'Large, naturally pale-ivory jumbos that are excellent for flavored or roasted snacking lines.',
+                origins: 'Guinea Bissau · Senegal',
+                link: 'http://www.amazon.in/dp/B0987SRM89?ref=myi_title_dp',
+            },
+            {
+                code: 'P 280',
+                image: '/images/WW320-min.png',
+                tagline: 'Subtly pale',
+                description: 'Subtly pale large wholes that offer premium texture and crunch at a highly competitive wholesale margin.',
+                origins: 'Guinea Bissau · Senegal',
+                link: 'http://www.amazon.in/dp/B0987SRM89?ref=myi_title_dp',
+            },
+            {
+                code: 'SW 280',
+                image: '/images/SW240-min.png',
+                tagline: 'Lightly scorched',
+                description: 'Lightly scorched large wholes delivering a rich, robust flavor that is ideal for commercial roasting.',
+                origins: 'Guinea Bissau · Senegal',
+                link: 'http://www.amazon.in/dp/B0987SRM89?ref=myi_title_dp',
+            },
         ],
     },
     {
         id: 'scorched-wholes',
-        title: 'Scorched Wholes',
+        title: 'Precision Pieces',
         icon: <UtensilsCrossed className="w-4 h-4" />,
         subtitle: 'Ideal for roasting, coating, and processing — where appearance is secondary.',
         accent: '#F6B000',
         items: [
             {
-                code: 'SW 240',
-                image: '/images/SW240-min.png',
-                tagline: 'Large Scorched',
-                description: 'Scorched variant of WW240. Large nuts suited for roasting and coating. ~220–240 nuts/lb.',
+                code: 'JH / 2pc',
+                image: '/images/SS-min.png',
+                tagline: 'Scorched Halved',
+                description: 'Perfectly split jumbo halves, delivering a premium look for high-end confectionery and garnishing.',
                 origins: 'Multi-origin',
-                link: 'http://www.amazon.in/dp/B0983Z14VC?ref=myi_title_dp',
+                link: 'http://www.amazon.in/dp/B09854W53D?ref=myi_title_dp',
             },
             {
-                code: 'SW 320',
-                image: '/images/SW320-min.png',
+                code: 'JK / 4pc',
+                image: '/images/SP-min.png',
                 tagline: 'Most Popular Scorched',
-                description: 'Most popular scorched grade. Perfect for all processed food applications. ~300–320 nuts/lb.',
+                description: 'Uniformly quartered pieces, providing excellent crunch and volume for bakery and culinary inputs.',
                 origins: 'Multi-origin',
                 link: 'http://www.amazon.in/dp/B0983Z14VC?ref=myi_title_dp',
             },
             {
-                code: 'SW 400',
-                image: '/images/SW450-min.png',
-                tagline: 'Processing Grade',
-                description: 'Best for slicing, dicing, grinding and further processing. ~380–400 nuts/lb.',
+                code: 'JH2',
+                image: '/images/SS-min.png',
+                tagline: 'Scorched Halved',
+                description: 'Symmetrical standard halves tailored for cost-effective integration into commercial snacks and sweets.',
                 origins: 'Multi-origin',
-                link: 'http://www.amazon.in/dp/B0983Z14VC?ref=myi_title_dp',
+                link: 'http://www.amazon.in/dp/B09854W53D?ref=myi_title_dp',
+            },
+            {
+                code: 'Splits',
+                image: '/images/S-min.png',
+                tagline: 'Halved Whole',
+                description: 'Cleanly separated standard halves, a reliable staple ingredient for bulk food production.',
+                origins: 'Multi-origin',
+                link: 'http://www.amazon.in/dp/B09854W53D?ref=myi_title_dp',
+            },
+            {
+                code: 'LWP',
+                image: '/images/LWP-min.png',
+                tagline: 'Quartered',
+                description: 'Distinct, bite-sized large white pieces with zero dust, perfect for chocolate manufacturing and premium baking.',
+                origins: 'Multi-origin',
+                link: 'http://www.amazon.in/dp/B09856N2D8?ref=myi_title_dp',
+            },
+            {
+                code: 'SWP',
+                image: '/images/WSP.png',
+                tagline: 'Micro Pieces',
+                description: 'Finely sized small white pieces offering uniform distribution and texture for health bars and commercial pastries.',
+                origins: 'Multi-origin',
+                link: 'http://www.amazon.in/dp/B09856JVLD?ref=myi_title_dp',
             },
         ],
     },
     {
         id: 'cashew-forms',
-        title: 'Cashew Forms',
+        title: 'Enterprise Grades',
         icon: <ShoppingBag className="w-4 h-4" />,
         subtitle: 'Splits and pieces — optimized for toppings, coatings, and culinary formulations.',
         accent: '#000000',
         items: [
             {
-                code: 'White Splits',
-                image: '/images/S-min.png',
+                code: 'Government Tender Grade',
+                image: '/images/WW240-min.png',
                 tagline: 'Halved Whole',
-                description: 'Whole cashew split into halves. ~350–360 pieces/250g. For topping and coating.',
+                description: 'Strictly sorted Grade 240 wholes that rigorously meet and exceed government tender specifications.',
                 origins: 'Multi-origin',
                 link: 'http://www.amazon.in/dp/B09854W53D?ref=myi_title_dp',
             },
             {
-                code: 'Large White Pieces',
-                image: '/images/LWP-min.png',
+                code: 'Hospitality Grade',
+                image: '/images/WW450-min.png',
                 tagline: 'Quartered',
-                description: 'Whole cashew diced into 4 pieces. For topping, coating and garnishing.',
+                description: 'Flawless, optically sorted king-size wholes reserved exclusively for luxury hotel mini-bars and premium lounges.',
                 origins: 'Multi-origin',
                 link: 'http://www.amazon.in/dp/B09856N2D8?ref=myi_title_dp',
             },
             {
-                code: 'Small White Pieces',
-                image: '/images/WSP.png',
+                code: 'Confectionery Grade',
+                image: '/images/S-min.png',
                 tagline: 'Micro Pieces',
-                description: 'Diced into 8 pieces. Used as topping or sauce / curry thickener.',
+                description: 'Highly uniform, dust-free splits designed for even baking and seamless integration into premium chocolates.',
                 origins: 'Multi-origin',
                 link: 'http://www.amazon.in/dp/B09856JVLD?ref=myi_title_dp',
             },
             {
-                code: 'Scorched Splits',
-                image: '/images/SS-min.png',
+                code: 'Gifting Grade',
+                image: '/images/WW240-min.png',
                 tagline: 'Scorched Halved',
-                description: 'Scorched variety of White Splits. For applications where visual appeal is not important.',
+                description: 'Unblemished, visually perfect wholes curated specifically for high-end festival hampers and corporate gifts.',
                 origins: 'Multi-origin',
                 link: 'http://www.amazon.in/dp/B09854W53D?ref=myi_title_dp',
-            },
-            {
-                code: 'Scorched Pieces',
-                image: '/images/SP-min.png',
-                tagline: 'Scorched Quarters',
-                description: 'Scorched Large White Pieces for further processing applications.',
-                origins: 'Multi-origin',
-                link: 'http://www.amazon.in/dp/B09856N2D8?ref=myi_title_dp',
-            },
-            {
-                code: 'Small Scorched Pieces',
-                image: '/images/SSP-min.png',
-                tagline: 'Fine Processing',
-                description: 'Scorched Small White Pieces for processing where appearance is not critical.',
-                origins: 'Multi-origin',
-                link: 'http://www.amazon.in/dp/B09856JVLD?ref=myi_title_dp',
             },
         ],
     },
@@ -176,21 +216,21 @@ const gradeCategories = [
 
 const ALL_GRADE_SUGGESTIONS = [
     // White Wholes
-    { label: 'WW 180', tag: 'Jumbo', color: '#F6B000', text: 'WW 180 (Jumbo) – ~160–180 nuts/lb, Ghana/Ivory Coast/Tanzania' },
-    { label: 'WW 240', tag: 'Large', color: '#F6B000', text: 'WW 240 (Large) – ~220–240 nuts/lb, Ghana/Ivory Coast/Tanzania' },
-    { label: 'WW 320', tag: 'Popular', color: '#F6B000', text: 'WW 320 (Most Popular) – ~300–320 nuts/lb, Multi-origin' },
-    { label: 'WW 400', tag: 'Value', color: '#F6B000', text: 'WW 400 (Value) – ~380–400 nuts/lb, Guinea Bissau/Senegal' },
+    { label: 'WW 180', tag: 'Jumbo', color: '#F6B000', text: 'WW 180' },
+    { label: 'WW 240', tag: 'Large', color: '#F6B000', text: 'WW 240' },
+    { label: 'WW 320', tag: 'Popular', color: '#F6B000', text: 'WW 320' },
+    { label: 'WW 400', tag: 'Value', color: '#F6B000', text: 'WW 400' },
     // Scorched Wholes
-    { label: 'SW 240', tag: 'Scorched', color: '#000000', text: 'SW 240 (Scorched Large) – ~220–240 nuts/lb, for roasting/coating' },
-    { label: 'SW 320', tag: 'Scorched', color: '#000000', text: 'SW 320 (Scorched Popular) – ~300–320 nuts/lb, all food applications' },
-    { label: 'SW 400', tag: 'Scorched', color: '#000000', text: 'SW 400 (Processing) – ~380–400 nuts/lb, slicing/dicing/grinding' },
+    { label: 'SW 240', tag: 'Scorched', color: '#000000', text: 'SW 240' },
+    { label: 'SW 320', tag: 'Scorched', color: '#000000', text: 'SW 320' },
+    { label: 'SW 400', tag: 'Scorched', color: '#000000', text: 'SW 400' },
     // Cashew Forms
-    { label: 'White Splits', tag: 'Form', color: '#000000', text: 'White Splits – halved wholes, ~350–360 pcs/250g, topping/coating' },
-    { label: 'Large White Pieces', tag: 'Form', color: '#000000', text: 'Large White Pieces – quartered, topping/garnishing' },
-    { label: 'Small White Pieces', tag: 'Form', color: '#000000', text: 'Small White Pieces – 1/8th pieces, sauce/curry thickener' },
-    { label: 'Scorched Splits', tag: 'Form', color: '#000000', text: 'Scorched Splits – processing/coating, visual appeal not critical' },
-    { label: 'Scorched Pieces', tag: 'Form', color: '#000000', text: 'Scorched Pieces – further processing applications' },
-    { label: 'Small Scorched Pieces', tag: 'Form', color: '#000000', text: 'Small Scorched Pieces – fine processing, appearance not critical' },
+    { label: 'White Splits', tag: 'Form', color: '#000000', text: 'White Splits' },
+    { label: 'Large White Pieces', tag: 'Form', color: '#000000', text: 'Large White Pieces' },
+    { label: 'Small White Pieces', tag: 'Form', color: '#000000', text: 'Small White Pieces' },
+    { label: 'Scorched Splits', tag: 'Form', color: '#000000', text: 'Scorched Splits' },
+    { label: 'Scorched Pieces', tag: 'Form', color: '#000000', text: 'Scorched Pieces' },
+    { label: 'Small Scorched Pieces', tag: 'Form', color: '#000000', text: 'Small Scorched Pieces' },
 ];
 
 // ─── Smart Grade Input ────────────────────────────────────────────────────────
@@ -353,7 +393,7 @@ function GradeCard({
                 className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
             >
                 <span
-                    className="text-[1.2rem] md:text-[1.4rem] font-bold uppercase tracking-tight transition-colors duration-300 block"
+                    className="text-[1.1rem] md:text-[1.2rem] font-bold uppercase tracking-tight transition-colors duration-300 block"
                     style={{
                         color: isSelected ? '#F6B000' : '#000000',
                         lineHeight: '1.1'
@@ -518,6 +558,7 @@ function OurGradesSection({
                     Optically sorted and processed to exact Yunut Processing Industry specifications for diverse B2B requirements.
                 </p>
             </div>
+
 
             {/* Tab Navigation */}
             <div className="flex flex-nowrap overflow-x-auto justify-start md:justify-center gap-3 mb-4 pb-2 no-scrollbar -mx-6 px-6 md:mx-0">
@@ -946,7 +987,7 @@ export default function BulkOrderPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.35 }}
-                        className="flex flex-wrap items-center justify-center gap-3 mb-10"
+                        className="hidden md:flex flex-wrap items-center justify-center gap-3 mb-10"
                     >
                         {[
                             { icon: 'fa-certificate', label: 'ISO Certified Facility' },
@@ -986,6 +1027,29 @@ export default function BulkOrderPage() {
                             <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
                             Yu Nut Processing — Siliguri Facility
                         </div>
+                    </motion.div>
+
+                    {/* Trust badges — Mobile (2x2 Grid below video) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.45 }}
+                        className="grid grid-cols-2 md:hidden gap-2 mt-6 w-full"
+                    >
+                        {[
+                            { icon: 'fa-certificate', label: 'ISO Certified Facility' },
+                            { icon: 'fa-truck', label: 'Pan-India Delivery' },
+                            { icon: 'fa-boxes-stacked', label: 'Small Minimum Orders' },
+                            { icon: 'fa-headset', label: 'Dedicated B2B Support' },
+                        ].map(badge => (
+                            <span
+                                key={badge.label}
+                                className="flex items-center justify-center gap-1.5 bg-white border border-gray-100 shadow-sm text-gray-700 text-[10px] sm:text-[11px] font-semibold px-2 py-2.5 rounded-xl text-center leading-tight"
+                            >
+                                <i className={`fa-solid ${badge.icon} text-[#F6B000] text-[12px] shrink-0`} />
+                                <span>{badge.label}</span>
+                            </span>
+                        ))}
                     </motion.div>
 
                 </div>

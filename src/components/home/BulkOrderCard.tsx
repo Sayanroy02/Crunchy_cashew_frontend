@@ -516,7 +516,7 @@ export default function BulkOrderCard() {
             className="py-4 md:py-6 bg-bg-cream relative overflow-hidden"
         >
             {/* Decorative Fruits with Parallax */}
-            <motion.div
+            {/* <motion.div
                 style={{ x: moveX, y: moveY }}
                 className="absolute top-[-5%] right-[-3%] w-[150px] md:w-[220px] h-auto pointer-events-none z-[11] hidden sm:block"
             >
@@ -525,7 +525,7 @@ export default function BulkOrderCard() {
                     alt=""
                     className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
-            </motion.div>
+            </motion.div> */}
 
             <motion.div
                 style={{ x: moveX, y: moveY }}
