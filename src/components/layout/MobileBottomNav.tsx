@@ -6,9 +6,29 @@ import { usePathname } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 
+import { useState, useEffect } from 'react';
+
 export default function MobileBottomNav() {
     const pathname = usePathname();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const [isVisible, setIsVisible] = useState(pathname !== '/');
+
+    useEffect(() => {
+        if (pathname !== '/') {
+            setIsVisible(true);
+            return;
+        }
+
+        const handleScroll = () => {
+            setIsVisible(window.scrollY > 500);
+        };
+
+        // Check initial scroll on load
+        handleScroll();
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [pathname]);
 
     // Hide on admin routes or specific pages
     if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer') return null;
@@ -22,7 +42,13 @@ export default function MobileBottomNav() {
     ];
 
     return (
-        <div className="md:hidden fixed bottom-4 left-4 right-4 z-[90]">
+        <div 
+            className={`md:hidden fixed bottom-4 left-4 right-4 z-[90] transition-all duration-500 ease-out transform
+                ${isVisible 
+                    ? 'opacity-100 translate-y-0 pointer-events-auto' 
+                    : 'opacity-0 translate-y-10 pointer-events-none'
+                }`}
+        >
             <div className="bg-white/95 backdrop-blur-md border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-3xl flex items-center justify-evenly px-2 py-1.5 relative">
                 {navItems.map((item) => {
                     const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);

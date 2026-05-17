@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { motion } from 'framer-motion';
 
 type Tab = 'story' | 'team' | 'gallery' | 'visit';
 
@@ -502,77 +503,88 @@ export default function AboutPage() {
   }
 
   return (
-    <div className={`min-h-screen pb-16 bg-[#FFF9E7]`}>
+    <div className={`min-h-screen pb-16 bg-[#FFF9E7] relative`}>
 
-      {/* VIDEO HERO */}
-      <section className="relative h-[80vh] min-h-[550px] max-h-[850px] overflow-hidden">
-        <video autoPlay loop muted playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          poster="/images/Rectangle-112.jpg">
-          <source src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777747446/VN20260503_001215_u2yinn.mp4" type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+      {/* Seamless Background Image (like bulk/shop page) */}
+      <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
+          <img
+              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/about-banner_fpgcpm.png"
+              alt="About Background"
+              className="w-full h-full object-cover object-bottom opacity-80"
+          />
+          <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+      </div>
 
-        <div className="absolute inset-0 flex items-center px-6 md:px-12">
-          <div className="max-w-5xl mx-auto w-full flex flex-col items-center md:items-start">
-            <div className="max-w-3xl text-center md:text-left flex flex-col items-center md:items-start">
-              <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-lg">
-                Industry Leaders
-              </span>
-              <h1 className="text-[24px] md:text-[36px] font-heading font-black text-white leading-[1.2] mb-6 drop-shadow-2xl">
-                Redefining Quality in<br />
-                <span style={{ color: '#F6B000' }}>Cashew Manufacturing.</span>
-              </h1>
-              <p className="text-white/90 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-md">
-                Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
-              </p>
+      {/* Floating Cashew Decoration */}
+      <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
+          <img
+              src="/images/Fruit-3-1.png"
+              alt=""
+              className="w-full h-auto drop-shadow-2xl brightness-110"
+          />
+      </div>
 
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-                <Link
-                  href="/bulk"
-                  className="bg-[#F6B000] text-black font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:scale-105 transition-transform shadow-2xl flex items-center gap-2"
-                >
-                  <i className="fa-solid fa-handshake" />
-                  Partner With Us
-                </Link>
-                <button
-                  onClick={() => {
-                    setActiveTab('gallery');
-                    document.getElementById('about-tabs')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="bg-white/10 backdrop-blur-md border border-white/30 text-white font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:bg-white/20 transition-all shadow-xl flex items-center gap-2"
-                >
-                  <i className="fa-solid fa-industry" />
-                  Explore Our Facility
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center">
+        
+        <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-sm">
+          Industry Leaders
+        </span>
+        
+        <SectionHeading 
+          text="Redefining Quality in" 
+          highlight="Cashew Manufacturing." 
+          className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mb-6" 
+        />
+        
+        <p className="text-gray-700 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-sm">
+          Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 w-full sm:w-auto px-2">
+          <Link
+            href="/bulk"
+            className="w-full sm:w-auto justify-center bg-[#F6B000] text-black font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:scale-105 transition-transform shadow-md flex items-center gap-2"
+          >
+            <i className="fa-solid fa-handshake" />
+            Partner With Us
+          </Link>
+          <button
+            onClick={() => {
+              setActiveTab('gallery');
+              document.getElementById('about-tabs')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="w-full sm:w-auto justify-center bg-white border-2 border-gray-200 text-gray-800 font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:border-[#F6B000] hover:text-black transition-all shadow-sm flex items-center gap-2"
+          >
+            <i className="fa-solid fa-industry text-[#F6B000]" />
+            Explore Our Facility
+          </button>
         </div>
-      </section>
 
-      {/* ── STICKY TABS ── */}
-      <div id="about-tabs" className="sticky top-0 z-40 bg-[#FFF9E7]/80 backdrop-blur-md border-b border-black/5">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex items-center justify-start gap-6 md:gap-10 overflow-x-auto no-scrollbar py-1">
+        {/* ── TABS BELOW CTA (Segmented Control) ── */}
+        <div id="about-tabs" className="w-full max-w-4xl px-2 pb-6" style={{ scrollMarginTop: '100px' }}>
+          <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm p-1.5 md:p-2 rounded-[10px] md:rounded-2xl flex items-center overflow-x-auto no-scrollbar relative w-full">
             {TABS.map(tab => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex items-center gap-2 py-5 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap ${isActive
-                    ? 'text-black'
-                    : 'text-gray-400 hover:text-gray-600'}`}
+                  className={`relative flex-1 min-w-[130px] md:min-w-0 flex items-center justify-center gap-2 px-3 md:px-5 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-colors duration-300 z-10 ${
+                    isActive ? 'text-white' : 'text-gray-500 hover:text-gray-800'
+                  }`}
                 >
-                  <span className={`transition-colors duration-300 ${isActive ? 'text-[#F6B000]' : 'text-gray-300'}`}>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeAboutTab"
+                      className="absolute inset-0 bg-[#00863D] rounded-lg md:rounded-xl z-[-1] shadow-sm"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                  <span className={`relative z-10 ${isActive ? 'text-white' : 'text-gray-400'}`}>
                     {Icons[tab.id]}
                   </span>
-                  {tab.label}
-                  {isActive && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#F6B000] rounded-t-full" />
-                  )}
+                  <span className="relative z-10">{tab.label}</span>
                 </button>
               );
             })}

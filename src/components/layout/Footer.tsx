@@ -204,7 +204,7 @@ export default function Footer() {
 
             {/* Bottom Bar */}
             <div className="relative border-t border-white/10">
-                <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div className="max-w-7xl mx-auto px-6 pt-5 pb-28 sm:py-5 flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div className="flex flex-col items-center sm:items-start gap-2">
                         <p className="text-xs text-white/60">
                             &copy; {new Date().getFullYear()} <span className="text-white/80">Crunchy Cashews.</span> All rights reserved.

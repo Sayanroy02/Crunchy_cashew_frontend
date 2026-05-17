@@ -340,7 +340,7 @@ export function BulkInquiryPopup({ onClose }: { onClose: () => void }) {
 
 function GradeCard({ grade }: { grade: typeof grades[0] }) {
     return (
-        <div className="group grade-card-link flex-shrink-0 snap-center flex flex-col items-center w-[160px] md:w-auto overflow-visible isolate">
+        <div className="group grade-card-link flex-shrink-0 flex flex-col items-center w-full md:w-auto overflow-visible isolate">
             <div className="grade-circle rounded-full flex items-center justify-center relative z-20"
                 style={{ width: '100%', aspectRatio: '1 / 1', transition: 'transform 0.3s ease' }}>
                 <img src={grade.img} alt={grade.name} className="w-full h-full object-cover scale-[1.05]"
@@ -390,7 +390,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                 style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)' }} />
 
             {/* Hanging Cashew Tree Image */}
-            <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden md:block group-hover:scale-105 transition-transform duration-700">
+            <div className="absolute -right-8 -top-12 bottom-0 w-1/3 pointer-events-none z-10 hidden xl:block group-hover:scale-105 transition-transform duration-700">
                 <img
                     src="/images/Cashew-In-Tree.png"
                     alt="cashew-tree"
@@ -399,14 +399,10 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
             </div>
 
             {/* Content */}
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 px-7 md:px-10 py-8 md:py-9">
+            <div className="relative z-10 flex flex-col xl:flex-row items-center xl:items-start justify-between gap-6 px-5 py-6 md:px-8 md:py-8 xl:px-10 xl:py-9">
 
                 {/* Left: Pitch */}
-                <div className="flex-1 text-center md:text-left">
-                    {/* <div className="inline-flex items-center gap-2 mb-3">
-                        <span className="h-px w-5 bg-emerald-400/60" /> */}
-                    {/* <span className="text-emerald-400 text-[10px] font-black uppercase tracking-[0.22em]">Factory Direct · Siliguri</span> */}
-                    {/* </div> */}
+                <div className="flex-1 text-center xl:text-left w-full">
 
                     <h3 className="text-[1.45rem] md:text-[1.75rem] font-black text-white leading-tight tracking-tight mb-2.5">
                         Looking for a reliable,{' '}
@@ -414,25 +410,25 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                         supplier?
                     </h3>
 
-                    <p className="text-white/80 text-sm leading-relaxed max-w-[620px] mb-4">
+                    <p className="text-white/80 text-sm leading-relaxed max-w-[620px] mb-4 mx-auto xl:mx-0">
                         Cut out the middlemen. Get consistent grading, custom packaging, and volume pricing shipped straight from our Yu Nut Processing Industry facility in Siliguri.
                     </p>
 
                     {/* Trust badges */}
-                    <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    <div className="flex flex-wrap gap-2 justify-center xl:justify-start">
                         {TRUST_BADGES.map(b => (
                             <span key={b.text}
-                                className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full"
+                                className="inline-flex items-center gap-1.5 text-[9.5px] sm:text-[11px] font-semibold px-2 py-1 sm:px-2.5 sm:py-1 rounded-full"
                                 style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.12)' }}>
-                                <span className="text-emerald-400">{b.icon}</span>
+                                <span className="text-emerald-400 scale-[0.85] sm:scale-100">{b.icon}</span>
                                 {b.text}
                             </span>
                         ))}
                     </div>
                 </div>
 
-                {/* Right: CTA buttons — horizontal */}
-                <div className="flex flex-col gap-3 w-full md:w-auto flex-shrink-0 justify-center md:justify-center md:-translate-x-16 md:translate-y-2 relative z-20">
+                {/* Right: CTA buttons — horizontal on tablet, stacked on mobile/desktop */}
+                <div className="flex flex-col md:flex-row xl:flex-col gap-3 w-full xl:w-auto flex-shrink-0 justify-center xl:-translate-x-16 xl:translate-y-2 relative z-20">
                     {/* Top — Download B2B Catalog — 3D glass */}
                     <motion.a
                         whileHover={{ scale: 1.03, y: -2 }}
@@ -529,7 +525,7 @@ export default function BulkOrderCard() {
 
             <motion.div
                 style={{ x: moveX, y: moveY }}
-                className="absolute top-[8%] left-[-4%] w-[120px] md:w-[180px] h-auto pointer-events-none z-[11] hidden sm:block rotate-[-15deg]"
+                className="absolute top-0 xl:top-[1%] left-[-2%] xl:left-[-2%] w-[120px] xl:w-[140px] h-auto pointer-events-none z-[11] hidden xl:block rotate-[-15deg]"
             >
                 <img
                     src="/images/Fruit-3-1.png"
@@ -552,8 +548,8 @@ export default function BulkOrderCard() {
                     </p>
                 </div>
 
-                {/* Grade Cards — mobile scroll */}
-                <div className="flex md:hidden overflow-x-auto pb-4 gap-4 snap-x snap-mandatory px-2 hide-scrollbar -mt-4">
+                {/* Grade Cards — mobile grid */}
+                <div className="grid grid-cols-2 md:hidden gap-x-4 gap-y-6 mb-8 mt-2 px-2 relative z-10">
                     {grades.map(g => <GradeCard key={g.id} grade={g} />)}
                 </div>
 

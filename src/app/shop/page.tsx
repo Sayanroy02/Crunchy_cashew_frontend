@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 // Price range tiers: [label, min, max]
 const PRICE_RANGES = [
@@ -92,13 +93,37 @@ export default function ShopPage() {
     };
 
     return (
-        <div className={`min-h-screen pb-24 pt-12 bg-[#FFF9E7]`}>
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <div className="flex gap-8">
+        <div className={`min-h-screen pb-24 bg-[#FFF9E7] relative`}>
+
+            {/* Seamless Background Image (like bulk/blogs page) */}
+            <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
+                <img
+                    src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/shop-banner_c8nltj.png"
+                    alt="Shop Background"
+                    className="w-full h-full object-cover object-top opacity-90"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+            </div>
+
+            <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20">
+                {/* Heading placed naturally over the background */}
+                <div className="text-center mb-10 md:mb-16">
+                    <SectionHeading
+                        text="Premium Wholesale"
+                        highlight="Cashews"
+                        className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm"
+                    />
+                    <p className="text-sm md:text-lg text-gray-700 max-w-2xl mx-auto font-medium mt-3 drop-shadow-sm">
+                        Factory-direct sourcing for every need.
+                    </p>
+                </div>
+
+                {/* Main Content */}
+                <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
 
                     {/* ── SIDEBAR ── */}
                     {/* Desktop sidebar */}
-                    <aside className="hidden lg:flex flex-col gap-6 w-64 flex-shrink-0">
+                    <aside className="hidden md:flex flex-col gap-6 w-56 lg:w-64 flex-shrink-0">
                         <SidebarContent
                             sortKey={sortKey} setSortKey={setSortKey}
                             priceRange={priceRange} setPriceRange={setPriceRange}
@@ -112,7 +137,7 @@ export default function ShopPage() {
 
                     {/* Mobile sidebar overlay */}
                     {sidebarOpen && (
-                        <div className="fixed inset-0 z-50 lg:hidden">
+                        <div className="fixed inset-0 z-50 md:hidden">
                             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
                             <div className="absolute right-0 top-0 bottom-0 w-80 bg-white shadow-2xl flex flex-col">
                                 <div className="flex justify-between items-center p-5 border-b border-gray-100">
@@ -164,7 +189,7 @@ export default function ShopPage() {
                             {/* Mobile Filter Trigger */}
                             <button
                                 onClick={() => setSidebarOpen(true)}
-                                className="lg:hidden flex items-center gap-2 bg-white border border-gray-200 text-gray-800 font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-gray-50 transition-colors shadow-sm"
+                                className="md:hidden flex items-center gap-2 bg-white border border-gray-200 text-gray-800 font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-gray-50 transition-colors shadow-sm"
                             >
                                 <i className="fa-solid fa-sliders" /> Filters
                                 {hasFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
@@ -208,19 +233,6 @@ export default function ShopPage() {
                                     </div>
                                 )}
                             </div>
-                            {/* Desktop quick sort */}
-                            <select
-                                value={sortKey}
-                                onChange={e => setSortKey(e.target.value as SortKey)}
-                                className="hidden sm:block text-sm border-2 border-gray-200 rounded-xl px-3 py-2 bg-white font-semibold text-gray-700 focus:outline-none focus:border-primary transition-colors"
-                            >
-                                <option value="default">Sort: Default</option>
-                                <option value="newest">Sort: Newest First</option>
-                                <option value="popular">Sort: Popularity</option>
-                                <option value="price_asc">Price: Low → High</option>
-                                <option value="price_desc">Price: High → Low</option>
-                                <option value="discount">Biggest Discount</option>
-                            </select>
                         </div>
 
                         {loading ? (
@@ -287,6 +299,16 @@ function SidebarContent({
     resultCount: number;
 }) {
     const categories = ['Value Packs', 'Premium', 'Flavors', 'Gifting'];
+    const categoryIcons: Record<string, string> = {
+        'Value Packs': 'fa-solid fa-box-open',
+        'Premium': 'fa-solid fa-crown',
+        'Flavors': 'fa-solid fa-pepper-hot',
+        'Gifting': 'fa-solid fa-gift',
+    };
+    const [categoriesOpen, setCategoriesOpen] = useState(true);
+    const [collectionsOpen, setCollectionsOpen] = useState(false);
+    const [sortOpen, setSortOpen] = useState(false);
+    const [priceOpen, setPriceOpen] = useState(false);
 
     return (
         <div className="flex flex-col gap-6">
@@ -302,125 +324,157 @@ function SidebarContent({
 
             {/* Categories */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-shapes" style={{ color: COLORS.primary }} /> Categories
-                </h3>
-                <div className="flex flex-col gap-2">
-                    <button
-                        onClick={() => setCategoryFilter('all')}
-                        className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === 'all'
-                            ? 'shadow-lg scale-[1.02]'
-                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                            }`}
-                        style={categoryFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                    >
-                        <i className="fa-solid fa-border-all text-xs" />
-                        All Categories
-                    </button>
-
-                    {categories.map(cat => (
+                <button
+                    onClick={() => setCategoriesOpen(!categoriesOpen)}
+                    className="w-full flex justify-between items-center font-bold text-gray-800"
+                >
+                    <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-shapes" style={{ color: COLORS.primary }} /> Categories
+                    </span>
+                    <i className={`fa-solid fa-chevron-${categoriesOpen ? 'up' : 'down'} text-sm text-gray-400 transition-transform`} />
+                </button>
+                {categoriesOpen && (
+                    <div className="flex flex-col gap-2 mt-4">
                         <button
-                            key={cat}
-                            onClick={() => setCategoryFilter(cat)}
-                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === cat
+                            onClick={() => setCategoryFilter('all')}
+                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === 'all'
                                 ? 'shadow-lg scale-[1.02]'
                                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                 }`}
-                            style={categoryFilter === cat ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            style={categoryFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
                         >
-                            <i className="fa-solid fa-layer-group text-xs" />
-                            {cat}
+                            <i className="fa-solid fa-border-all text-xs" />
+                            All Categories
                         </button>
-                    ))}
-                </div>
+
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setCategoryFilter(cat)}
+                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${categoryFilter === cat
+                                    ? 'shadow-lg scale-[1.02]'
+                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                    }`}
+                                style={categoryFilter === cat ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            >
+                                <i className={`${categoryIcons[cat] || 'fa-solid fa-layer-group'} text-xs`} />
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Special Collections / Dynamic Tags */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-layer-group" style={{ color: COLORS.primary }} /> Collections
-                </h3>
-                <div className="flex flex-col gap-2">
-                    <button
-                        onClick={() => setTagFilter('all')}
-                        className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === 'all'
-                            ? 'shadow-lg scale-[1.02]'
-                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                            }`}
-                        style={tagFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                    >
-                        <i className="fa-solid fa-border-all text-xs" />
-                        All Products
-                    </button>
-
-                    {availableTags.map(tag => (
+                <button
+                    onClick={() => setCollectionsOpen(!collectionsOpen)}
+                    className="w-full flex justify-between items-center font-bold text-gray-800"
+                >
+                    <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-layer-group" style={{ color: COLORS.primary }} /> Collections
+                    </span>
+                    <i className={`fa-solid fa-chevron-${collectionsOpen ? 'up' : 'down'} text-sm text-gray-400 transition-transform`} />
+                </button>
+                {collectionsOpen && (
+                    <div className="flex flex-col gap-2 mt-4">
                         <button
-                            key={tag}
-                            onClick={() => setTagFilter(tag)}
-                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === tag
+                            onClick={() => setTagFilter('all')}
+                            className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === 'all'
                                 ? 'shadow-lg scale-[1.02]'
                                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                 }`}
-                            style={tagFilter === tag ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            style={tagFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
                         >
-                            <i className="fa-solid fa-tag text-xs" />
-                            {tag}
+                            <i className="fa-solid fa-border-all text-xs" />
+                            All Products
                         </button>
-                    ))}
-                </div>
+
+                        {availableTags.map(tag => (
+                            <button
+                                key={tag}
+                                onClick={() => setTagFilter(tag)}
+                                className={`flex items-center gap-4 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${tagFilter === tag
+                                    ? 'shadow-lg scale-[1.02]'
+                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                    }`}
+                                style={tagFilter === tag ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            >
+                                <i className="fa-solid fa-tag text-xs" />
+                                {tag}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Sort */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-arrow-up-wide-short" style={{ color: COLORS.primary }} /> Sort By
-                </h3>
-                <div className="flex flex-col gap-2">
-                    {([
-                        { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
-                        { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
-                        { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
-                        { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
-                        { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
-                        { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
-                    ] as const).map(opt => (
-                        <button
-                            key={opt.value}
-                            onClick={() => setSortKey(opt.value)}
-                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
-                                ? 'shadow-lg scale-[1.02]'
-                                : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                }`}
-                            style={sortKey === opt.value ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                        >
-                            <i className={opt.icon} />
-                            {opt.label}
-                        </button>
-                    ))}
-                </div>
+                <button
+                    onClick={() => setSortOpen(!sortOpen)}
+                    className="w-full flex justify-between items-center font-bold text-gray-800"
+                >
+                    <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-arrow-up-wide-short" style={{ color: COLORS.primary }} /> Sort By
+                    </span>
+                    <i className={`fa-solid fa-chevron-${sortOpen ? 'up' : 'down'} text-sm text-gray-400 transition-transform`} />
+                </button>
+                {sortOpen && (
+                    <div className="flex flex-col gap-2 mt-4">
+                        {([
+                            { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
+                            { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
+                            { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
+                            { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
+                            { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
+                            { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
+                        ] as const).map(opt => (
+                            <button
+                                key={opt.value}
+                                onClick={() => setSortKey(opt.value)}
+                                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
+                                    ? 'shadow-lg scale-[1.02]'
+                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                    }`}
+                                style={sortKey === opt.value ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            >
+                                <i className={opt.icon} />
+                                {opt.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Price Range */}
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <i className="fa-solid fa-indian-rupee-sign" style={{ color: COLORS.primary }} /> Price Range
-                </h3>
-                <div className="flex flex-col gap-2">
-                    {PRICE_RANGES.map((range, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setPriceRange(idx)}
-                            className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${priceRange === idx
-                                ? 'shadow-lg scale-[1.02]'
-                                : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                }`}
-                            style={priceRange === idx ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                        >
-                            <span>{range.label}</span>
-                            {priceRange === idx && <i className="fa-solid fa-check text-white text-xs" />}
-                        </button>
-                    ))}
-                </div>
+                <button
+                    onClick={() => setPriceOpen(!priceOpen)}
+                    className="w-full flex justify-between items-center font-bold text-gray-800"
+                >
+                    <span className="flex items-center gap-2">
+                        <i className="fa-solid fa-indian-rupee-sign" style={{ color: COLORS.primary }} /> Price Range
+                    </span>
+                    <i className={`fa-solid fa-chevron-${priceOpen ? 'up' : 'down'} text-sm text-gray-400 transition-transform`} />
+                </button>
+                {priceOpen && (
+                    <div className="flex flex-col gap-2 mt-4">
+                        {PRICE_RANGES.map((range, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => setPriceRange(idx)}
+                                className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${priceRange === idx
+                                    ? 'shadow-lg scale-[1.02]'
+                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                                    }`}
+                                style={priceRange === idx ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            >
+                                <span>{range.label}</span>
+                                {priceRange === idx && <i className="fa-solid fa-check text-white text-xs" />}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Result count badge */}

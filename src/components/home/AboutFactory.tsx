@@ -113,7 +113,7 @@ export default function AboutFactory() {
             className="py-10 md:py-20 bg-bg-cream relative z-20 overflow-hidden"
         >
             {/* ── Left corner fruit ── */}
-            <motion.div
+            {/* <motion.div
                 style={{ x: leftMoveX, y: leftMoveY }}
                 className="absolute left-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
@@ -123,7 +123,7 @@ export default function AboutFactory() {
                     className="object-contain object-bottom w-full h-auto -translate-x-6 md:-translate-x-8"
                     aria-hidden="true"
                 />
-            </motion.div>
+            </motion.div> */}
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 {/* 1. Global Heading — centered at top for desktop and mobile */}
@@ -153,12 +153,12 @@ export default function AboutFactory() {
 
                     {/* 3. Content Section */}
                     <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
-                        <p className="text-gray-700 text-lg md:text-xl mb-6 leading-relaxed font-medium">
-                            <span style={{ color: COLORS.heading }} className="font-bold">Quality isn't just a promise; it's a process.</span> We maintain strict control over every step, from raw cashew grading to state-of-the-art roasting and vacuum sealing. We believe in complete transparency. Whether you are a B2B partner looking to audit our standards or a curious customer, we invite you to schedule a visit to our Siliguri facility to see the precision firsthand.
+                        <p className="text-gray-700 text-lg md:text-xl mb-6 leading-relaxed font-normal">
+                            <span style={{ color: COLORS.heading, fontSize: "1.55rem", }} className="font-bold">Quality isn't just a promise; it's a process.</span> We maintain rigorous control over every stage of premium cashew production. From raw grading to state-of-the-art roasting and vacuum sealing, our high-demand grades (WW320, W180, White Splits) are meticulously tailored for the retail, food service, and bulk wholesale markets.
                         </p>
 
-                        <p className="text-gray-600 text-sm md:text-base mb-10 leading-relaxed max-w-2xl">
-                            As a leading manufacturer and exporter of premium cashews, we meticulously process high-demand grades like WW320, W180, and White Splits tailored specifically for retail, food service, and bulk industry needs. We take immense pride in maintaining a benchmark for hygiene, global food safety standards, and reliable Pan-India B2B wholesale supply.
+                        <p className="text-gray-700 text-lg md:text-xl mb-8 leading-relaxed max-w-2xl">
+                            Setting the standard for hygiene and reliable Pan-India supply requires complete operational transparency. We invite our B2B partners and prospective buyers to schedule an on-site audit at our Siliguri plant to see our quality control in action.
                         </p>
 
                         <div className="flex flex-wrap items-center gap-4 mb-2">
@@ -178,7 +178,7 @@ export default function AboutFactory() {
                         </div>
 
                         <p className="text-sm text-gray-500 font-bold tracking-wide mt-5">
-                            Do You Have Questions About the Factory? <button onClick={openQuote} className="text-primary hover:underline font-bold transition-all focus:outline-none">Get a Quote</button>
+                            INTERESTED IN A BULK ORDER? <button onClick={openQuote} className="text-primary hover:underline font-bold transition-all focus:outline-none">GET A QUOTE</button>
                         </p>
                     </div>
                 </div>
@@ -186,7 +186,7 @@ export default function AboutFactory() {
 
 
             {/* ── Right corner fruit ── */}
-            {/* <motion.div
+            <motion.div
                 style={{ x: rightMoveX, y: rightMoveY }}
                 className="absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
@@ -196,7 +196,7 @@ export default function AboutFactory() {
                     className="object-contain object-bottom w-full h-auto translate-x-6 md:translate-x-8"
                     aria-hidden="true"
                 />
-            </motion.div> */}
+            </motion.div>
 
             {/* Reservation Modal Pop-up via Portal */}
             <AnimatePresence>

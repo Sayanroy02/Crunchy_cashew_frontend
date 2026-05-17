@@ -393,9 +393,10 @@ function GradeCard({
                 className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
             >
                 <span
-                    className="text-[1.1rem] md:text-[1.2rem] font-bold uppercase tracking-tight transition-colors duration-300 block"
+                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold uppercase tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${
+                        isSelected ? 'text-[#F6B000]' : 'text-gray-900'
+                    }`}
                     style={{
-                        color: isSelected ? '#F6B000' : '#000000',
                         lineHeight: '1.1'
                     }}
                 >
@@ -419,23 +420,45 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
         },
         {
             title: 'Hotels & Restaurants',
-            image: '/images/Horeca.png',
+            image: '/images/horeca.png',
             message: "Hello,\nI’m interested in sourcing your products for our hotel/restaurant. Could you please provide details on bulk pricing, supply capacity, and delivery options?\nLooking forward to your response. Thank you!"
         },
         {
             title: 'Bakeries & Confectionery',
-            image: '/images/bakery.png',
+            image: '/images/bakery-img.png',
             message: "Hello,\nI’d like to use your products for our bakery/confectionery needs. Please share your bulk pricing, product varieties, and minimum order details.\nExcited to explore this further. Thank you!"
         },
         {
             title: 'Corporate & Events',
-            image: '/images/corporate_gifting.png',
+            image: '/images/corporate-gifting.png',
             message: "Hello,\nI’m interested in bulk orders for corporate/events purposes. Could you please share pricing details, customization options, and minimum order quantity?\nLooking forward to working together. Thank you!"
         },
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-10 md:py-16">
+        <section className="max-w-7xl mx-auto px-6 py-10 md:py-10 relative">
+            {/* Smaller Floating Parachute Cashew (desktop only) */}
+            <motion.div
+                initial={{ y: 0, rotate: -5 }}
+                animate={{
+                    y: [0, -20, 0],
+                    rotate: [-6, 6, -6],
+                    x: [0, 6, 0]
+                }}
+                transition={{
+                    duration: 7,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute right-[-2%] xl:right-[-4%] top-0 w-[90px] lg:w-[110px] pointer-events-none select-none z-10 hidden xl:block"
+            >
+                <img
+                    src="/images/Cashew-parachute-03-p-800.png"
+                    alt="Parachute Cashew"
+                    className="w-full h-auto drop-shadow-2xl"
+                />
+            </motion.div>
+
             <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
                     text="Industries"
@@ -447,7 +470,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                 {categories.map((cat, idx) => (
                     <motion.div
                         key={idx}
@@ -456,12 +479,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1, duration: 0.5 }}
                         onClick={() => {
-                            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
-                                openWhatsApp('Industry Supply', undefined, cat.message);
-                            } else {
-                                const form = document.getElementById('bulk-inquiry-form');
-                                form?.scrollIntoView({ behavior: 'smooth' });
-                            }
+                            openWhatsApp('Industry Supply', undefined, cat.message);
                         }}
                         className="group flex flex-col items-center cursor-pointer"
                     >
@@ -475,25 +493,25 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 300px"
                             />
 
-                            {/* Minimal gradient only at very bottom for text */}
-                            <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-80 group-hover:opacity-100 transition-all duration-500" />
+                            {/* Deeper gradient covering a larger area for absolute contrast on mobile */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent opacity-90 transition-all duration-500" />
 
                             {/* Title and Button at bottom */}
-                            <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
-                                <h3 className="text-white font-bold text-lg md:text-xl leading-snug transition-all duration-300 mb-3 lg:mb-0 lg:group-hover:mb-4">
+                            <div className="absolute bottom-0 left-0 right-0 p-3.5 sm:p-5 md:p-3.5 lg:p-5 xl:p-6 z-10">
+                                <h3 className="text-white font-extrabold text-[13px] sm:text-base md:text-sm lg:text-lg xl:text-xl leading-tight transition-all duration-300 mb-2 md:mb-3 lg:mb-0 lg:group-hover:mb-4 text-center lg:text-left drop-shadow-md">
                                     {cat.title}
                                 </h3>
 
-                                <div className="h-10 opacity-100 lg:h-0 lg:opacity-0 lg:group-hover:h-10 lg:group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+                                <div className="h-9 sm:h-10 md:h-8.5 lg:h-0 lg:opacity-0 lg:group-hover:h-11 lg:group-hover:opacity-100 transition-all duration-500 overflow-hidden">
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             openWhatsApp('Industry Supply', undefined, cat.message);
                                         }}
-                                        className="w-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white font-bold py-1.5 rounded-[10px] flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 shadow-md"
+                                        className="w-full h-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold rounded-lg lg:rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 shadow-md"
                                     >
-                                        <i className="fa-brands fa-whatsapp text-black text-base" />
-                                        <span className="text-[11px] uppercase tracking-[0.15em]">Enquire</span>
+                                        <i className="fa-brands fa-whatsapp text-white text-sm" />
+                                        <span className="text-[10px] sm:text-[11px] md:text-[9.5px] lg:text-xs uppercase tracking-[0.1em]">Enquire</span>
                                     </button>
                                 </div>
                             </div>
@@ -508,45 +526,30 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
 function OurGradesSection({
     onSelectCheck,
     onToggleGrade,
+    openWhatsApp,
 }: {
     onSelectCheck: (grade: string) => boolean;
     onToggleGrade: (grade: string) => void;
+    openWhatsApp: (source: string, grade?: string, customMessage?: string) => void;
 }) {
     const [activeTab, setActiveTab] = useState(gradeCategories[0].id);
     const { ref, visible } = useIntersectionObserver(0.1);
     const scrollRef = useRef<HTMLDivElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [cardWidth, setCardWidth] = useState(0);
-
-    // Responsive card width: 4 on desktop, 3 on tablet, 2 on mobile
-    useEffect(() => {
-        const updateWidth = () => {
-            if (!containerRef.current) return;
-            const w = containerRef.current.offsetWidth;
-            const gap = 24; // gap-6 = 24px
-            if (window.innerWidth >= 1024) {
-                setCardWidth((w - gap * 3) / 4); // 4 cards
-            } else if (window.innerWidth >= 768) {
-                setCardWidth((w - gap * 2) / 3); // 3 cards
-            } else {
-                setCardWidth((w - gap) / 2); // 2 cards
-            }
-        };
-        updateWidth();
-        window.addEventListener('resize', updateWidth);
-        return () => window.removeEventListener('resize', updateWidth);
-    }, []);
 
     const activeCategory = gradeCategories.find(c => c.id === activeTab) || gradeCategories[0];
 
     const scroll = (dir: 'left' | 'right') => {
         if (!scrollRef.current) return;
-        const amount = cardWidth + 24;
-        scrollRef.current.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
+        const firstCard = scrollRef.current.firstElementChild as HTMLElement;
+        if (firstCard) {
+            const cardWidth = firstCard.offsetWidth;
+            const amount = cardWidth + 24; // gap-6 = 24px
+            scrollRef.current.scrollBy({ left: dir === 'right' ? amount : -amount, behavior: 'smooth' });
+        }
     };
 
     return (
-        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-10 md:py-16" style={{ scrollMarginTop: '100px' }}>
+        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-10 md:py-10" style={{ scrollMarginTop: '100px' }}>
             {/* Section Title */}
             <div ref={ref} className="text-center mb-6 md:mb-8">
                 <SectionHeading
@@ -601,17 +604,17 @@ function OurGradesSection({
                     </button>
 
                     {/* Scrollable Row */}
-                    <div ref={containerRef}>
+                    <div className="w-full">
                         <div
                             ref={scrollRef}
-                            className="flex gap-4 overflow-x-auto no-scrollbar pb-4"
+                            className="flex gap-6 overflow-x-auto no-scrollbar pb-4"
                             style={{ scrollSnapType: 'x mandatory' }}
                         >
                             {activeCategory.items.map((item) => (
                                 <div
                                     key={item.code}
-                                    className="flex-shrink-0"
-                                    style={{ width: cardWidth > 0 ? cardWidth : undefined, scrollSnapAlign: 'start' }}
+                                    className="w-[calc((100%-24px)/2)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] shrink-0"
+                                    style={{ scrollSnapAlign: 'start' }}
                                 >
                                     <GradeCard
                                         item={item}
@@ -633,23 +636,49 @@ function OurGradesSection({
                     </button>
                 </motion.div>
             </AnimatePresence>
+
+            {/* Symmetrical Centered Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 md:mt-12 z-20 relative px-4">
+                {/* Enquire Now with WhatsApp logo */}
+                <button
+                    onClick={() => openWhatsApp(
+                        'enquiry now about cashew grade button',
+                        undefined,
+                        'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
+                    )}
+                    className="w-full sm:w-auto h-10 md:h-11 lg:h-12 px-5 md:px-6 lg:px-8 rounded-[10px] font-extrabold text-black bg-[#F6B000] hover:bg-[#e0a000] border border-[#F6B000] hover:border-[#e0a000] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 text-[13px] md:text-[14px] lg:text-[15px]"
+                >
+                    <i className="fa-brands fa-whatsapp text-base md:text-lg text-black" />
+                    Enquire Now
+                </button>
+
+                {/* Download Catalogue button */}
+                <a
+                    href="/document/Cashew-Catalogue.pdf"
+                    download="Cashew-Catalogue.pdf"
+                    className="w-full sm:w-auto h-10 md:h-11 lg:h-12 px-5 md:px-6 lg:px-8 rounded-[10px] font-extrabold bg-white text-gray-900 border border-gray-200 hover:border-[#F6B000] hover:text-[#004724] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 text-[13px] md:text-[14px] lg:text-[15px]"
+                >
+                    <i className="fa-solid fa-download text-sm md:text-base text-[#F6B000]" />
+                    Download Catalogue
+                </a>
+            </div>
         </section>
     );
 }
 
 
 // ─── Why Partner With Us ──────────────────────────────────────────────────────
-function WhyPartnerWithUsSection() {
+function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: string, grade?: string, customMessage?: string) => void }) {
     const pillars = [
         {
             icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 shrink-0">
                     <circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" />
                 </svg>
             ),
             title: "Exact Grade, Every Batch",
             pain: "Wrong sizes mixed in — packaging lines break down",
-            copy: "Our automated optical sorters grade each nut to spec. A WW 320 from us is exactly a WW 320, no surprises on your line.",
+            desc: "Avoid packaging line breakdowns. Our automated optical sorters guarantee perfect, uniform sizing in every single batch.",
             accent: '#138808',
             painBg: '#13880810',
             painTextColor: '#0d5e06',
@@ -657,27 +686,13 @@ function WhyPartnerWithUsSection() {
         },
         {
             icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c98f00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12" /><path d="M12 6v6l4 2" /><path d="M2 12h4" />
-                </svg>
-            ),
-            title: "Clean Taste, No Bitterness",
-            pain: "Bitter aftertaste and oily residue ruin the product",
-            copy: "Our Siliguri facility fully removes CNSL oil during processing. You get a clean, farm-fresh crunch every single time.",
-            accent: '#F6B000',
-            painBg: '#F6B00012',
-            painTextColor: '#7a5600',
-            painLabelColor: '#c98f00',
-        },
-        {
-            icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#138808" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 shrink-0">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-4" />
                 </svg>
             ),
             title: "Fewer Broken Nuts, More Profit",
             pain: "High breakage wastes product and cuts into margins",
-            copy: "Gentle automated handling protects each nut from intake to final pack. You receive maximum whole wholes, minimum waste.",
+            desc: "Maximize your wholesale margins. Gentle, automated handling protects each cashew from intake to the final package.",
             accent: '#138808',
             painBg: '#13880810',
             painTextColor: '#0d5e06',
@@ -685,94 +700,295 @@ function WhyPartnerWithUsSection() {
         },
         {
             icon: (
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c98f00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="m9 16 2 2 4-4" />
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F6B000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 shrink-0">
+                    <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12" /><path d="M12 6v6l4 2" /><path d="M2 12h4" />
                 </svg>
             ),
-            title: "Stock Ready When You Need It",
-            pain: "Running out during festivals due to unreliable vendors",
-            copy: "We source directly from Africa and process in-house at scale. Your order ships on time — even during peak season.",
+            title: "Clean Taste, No Bitterness",
+            pain: "Bitter aftertaste and oily residue ruin the product",
+            desc: "Zero bitter aftertaste. Advanced processing fully removes CNSL oil, delivering a clean, farm-fresh crunch every single time.",
             accent: '#F6B000',
             painBg: '#F6B00012',
             painTextColor: '#7a5600',
             painLabelColor: '#c98f00',
         },
+        {
+            icon: (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F6B000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 shrink-0">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /><path d="m9 16 2 2 4-4" />
+                </svg>
+            ),
+            title: "Stock Ready When You Need It",
+            pain: "Running out during festivals due to unreliable vendors",
+            desc: "No peak-season shortages. Direct African sourcing and massive in-house processing ensure your shipments go out on time.",
+            accent: '#F6B000',
+            painBg: '#F6B00012',
+            painTextColor: '#7a5600',
+            painLabelColor: '#c98f00',
+        }
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-16 md:py-8">
-            <div className="text-center mb-14">
-                <SectionHeading
-                    text="Why Partner"
-                    highlight="With Us?"
-                    className="mb-4 !text-[28px] md:!text-4xl"
-                />
-                <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-medium">
-                    We solve the most common B2B cashew supply chain headaches
-                    so you can focus on growing your brand.
-                </p>
-            </div>
+        <section className="max-w-7xl mx-auto px-6 py-10 md:py-10 my-10 relative overflow-hidden">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {pillars.map((pillar, idx) => (
+            {/* 1. TABLET & DESKTOP VERSION (show on tablet and desktop, hidden on phone) */}
+            <div className="hidden md:block">
+                <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_2fr] gap-12 lg:gap-16 items-center">
+
+                    {/* LEFT (Top on iPad): Branding & Main Headings */}
                     <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: idx * 0.1, duration: 0.5 }}
-                        className="bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden hover:border-gray-200 transition-colors duration-300"
+                        transition={{ duration: 0.6 }}
+                        className="flex flex-col gap-5 text-center lg:text-left items-center lg:items-start"
                     >
-                        {/* Top accent bar */}
-                        <div className="h-1 w-full" style={{ backgroundColor: pillar.accent }} />
+                        {/* Tagline style: / Why Partner? */}
+                        <div className="flex items-center gap-2 justify-center lg:justify-start">
+                            <span className="text-xl font-extrabold text-[#F6B000]">/</span>
+                            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-[#00863D]">
+                                Why Partner With Us?
+                            </span>
+                        </div>
 
-                        <div className="p-5 flex flex-col gap-4 flex-grow">
-                            {/* Icon + Title side by side */}
-                            <div className="flex items-center gap-3">
-                                <div
-                                    className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                    style={{ backgroundColor: pillar.painBg }}
-                                >
-                                    {pillar.icon}
-                                </div>
-                                <h3 className="text-[15px] font-bold text-gray-900 leading-snug">
-                                    {pillar.title}
-                                </h3>
-                            </div>
+                        <SectionHeading
+                            text="The Crunchy"
+                            highlight="Cashew Difference"
+                            className="!text-3xl md:!text-5xl lg:!text-6xl font-black leading-[1.1] text-center lg:text-left mb-0 w-full"
+                        />
 
-                            {/* Pain point block — prominent */}
-                            <div
-                                className="rounded-xl px-3.5 py-3 flex gap-2.5 items-start"
-                                style={{ backgroundColor: pillar.painBg }}
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-lg lg:max-w-sm font-medium text-center lg:text-left mx-auto lg:mx-0">
+                            We solve the most common B2B cashew supply chain headaches so you can focus entirely on growing your brand.
+                        </p>
+
+                        {/* CTA Buttons - Side by Side (forced row on md and above) */}
+                        <div className="flex flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mt-2 pt-4 border-t border-gray-100 w-full">
+                            <button
+                                onClick={() => {
+                                    openWhatsApp(
+                                        'why choose Us Section',
+                                        undefined,
+                                        'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
+                                    );
+                                }}
+                                className="h-12 flex items-center justify-center gap-2 bg-[#00863D] hover:bg-[#007033] text-white font-bold px-4 sm:px-5 rounded-xl shadow-md transition-all duration-300 active:scale-95 text-sm whitespace-nowrap"
                             >
-                                <span className="text-base mt-0.5">⚠</span>
-                                <div className="flex flex-col gap-1">
-                                    <span
-                                        className="text-[10px] font-semibold uppercase tracking-widest"
-                                        style={{ color: pillar.painLabelColor }}
-                                    >
-                                        Your problem
-                                    </span>
-                                    <p
-                                        className="text-[13px] font-semibold leading-snug"
-                                        style={{ color: pillar.painTextColor }}
-                                    >
-                                        {pillar.pain}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Divider */}
-                            <div className="border-t border-gray-100" />
-
-                            {/* Solution */}
-                            <p className="text-[13px] text-gray-500 leading-relaxed flex-grow">
-                                {pillar.copy}
-                            </p>
+                                <i className="fa-brands fa-whatsapp text-lg" />
+                                Request bulk pricing
+                            </button>
+                            <button
+                                onClick={() => {
+                                    document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="h-12 flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-800 hover:border-[#00863D] hover:text-black font-bold px-4 sm:px-5 rounded-xl transition-all duration-300 active:scale-95 text-sm whitespace-nowrap shadow-sm"
+                            >
+                                Explore Our Grades
+                            </button>
                         </div>
                     </motion.div>
-                ))}
+
+                    {/* RIGHT (Bottom on iPad): Symmetrical 2x2 Grid with green border lines */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16 relative lg:pl-6">
+                        {/* Symmetrical Vertical green line down the middle */}
+                        <div
+                            className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[1.5px]"
+                            style={{ backgroundColor: COLORS.heading, opacity: 0.3 }}
+                        />
+
+                        {/* Pillar 1 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4 }}
+                            className="flex items-start gap-4 border-b pb-10 md:pb-12 md:pr-8"
+                            style={{ borderColor: `${COLORS.heading}30` }}
+                        >
+                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
+                                {pillars[0].icon}
+                            </div>
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
+                                    {pillars[0].title}
+                                </h3>
+                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
+                                    {pillars[0].desc}
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Pillar 2 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: 0.1 }}
+                            className="flex items-start gap-4 border-b pb-10 md:pb-12 md:pl-8"
+                            style={{ borderColor: `${COLORS.heading}30` }}
+                        >
+                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
+                                {pillars[1].icon}
+                            </div>
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
+                                    {pillars[1].title}
+                                </h3>
+                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
+                                    {pillars[1].desc}
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Pillar 3 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: 0.2 }}
+                            className="flex items-start gap-4 md:pt-4 md:pr-8"
+                        >
+                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
+                                {pillars[2].icon}
+                            </div>
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
+                                    {pillars[2].title}
+                                </h3>
+                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
+                                    {pillars[2].desc}
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        {/* Pillar 4 */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: 0.3 }}
+                            className="flex items-start gap-4 md:pt-4 md:pl-8"
+                        >
+                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
+                                {pillars[3].icon}
+                            </div>
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
+                                    {pillars[3].title}
+                                </h3>
+                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
+                                    {pillars[3].desc}
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+
+                </div>
             </div>
+
+            {/* 2. PHONE VERSION (show on mobile `< md`, hidden on tablet/desktop) */}
+            <div className="md:hidden flex flex-col gap-8">
+                {/* Header & Content */}
+                <div className="flex flex-col gap-4 text-center items-center">
+                    <div className="flex items-center gap-2 justify-center">
+                        <span className="text-xl font-extrabold text-[#F6B000]">/</span>
+                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#00863D]">
+                            Why Partner With Us?
+                        </span>
+                    </div>
+
+                    <SectionHeading
+                        text="The Crunchy"
+                        highlight="Cashew Difference"
+                        className="!text-3xl font-black leading-snug text-center mb-0 w-full"
+                    />
+
+                    <p className="text-gray-500 text-xs leading-relaxed max-w-xs font-medium text-center">
+                        We solve the most common B2B cashew supply chain headaches so you can focus entirely on growing your brand.
+                    </p>
+
+                    {/* CTA Buttons - Side by Side */}
+                    <div className="flex flex-row flex-wrap items-center justify-center gap-3 mt-1 pt-3 border-t border-gray-100 w-full">
+                        <button
+                            onClick={() => {
+                                openWhatsApp(
+                                    'why choose Us Section',
+                                    undefined,
+                                    'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
+                                );
+                            }}
+                            className="h-10 flex items-center justify-center gap-1.5 bg-[#00863D] text-white font-bold px-4 rounded-lg shadow-sm text-xs whitespace-nowrap"
+                        >
+                            <i className="fa-brands fa-whatsapp text-sm" />
+                            Request bulk pricing
+                        </button>
+                        <button
+                            onClick={() => {
+                                document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="h-10 flex items-center justify-center bg-white border border-gray-200 text-gray-800 font-bold px-4 rounded-lg text-xs whitespace-nowrap shadow-sm"
+                        >
+                            Explore Grades
+                        </button>
+                    </div>
+                </div>
+
+                {/* Card stack (as they were like before) */}
+                <div className="flex flex-col gap-4">
+                    {pillars.map((pillar, idx) => (
+                        <motion.div
+                            key={idx}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden hover:border-gray-200 transition-colors duration-300"
+                        >
+                            <div className="h-1 w-full" style={{ backgroundColor: pillar.accent }} />
+
+                            <div className="p-5 flex flex-col gap-4 flex-grow">
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                        style={{ backgroundColor: pillar.painBg }}
+                                    >
+                                        {pillar.icon}
+                                    </div>
+                                    <h3 className="text-[15px] font-bold text-gray-900 leading-snug">
+                                        {pillar.title}
+                                    </h3>
+                                </div>
+
+                                <div
+                                    className="rounded-xl px-3.5 py-3 flex gap-2.5 items-start"
+                                    style={{ backgroundColor: pillar.painBg }}
+                                >
+                                    <span className="text-base mt-0.5">⚠</span>
+                                    <div className="flex flex-col gap-1 text-left">
+                                        <span
+                                            className="text-[10px] font-semibold uppercase tracking-widest"
+                                            style={{ color: pillar.painLabelColor }}
+                                        >
+                                            Your problem
+                                        </span>
+                                        <p
+                                            className="text-[13px] font-semibold leading-snug"
+                                            style={{ color: pillar.painTextColor }}
+                                        >
+                                            {pillar.pain}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="border-t border-gray-100" />
+
+                                <p className="text-[13px] text-gray-500 leading-relaxed text-left flex-grow">
+                                    {pillar.desc}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
         </section>
     );
 }
@@ -902,7 +1118,7 @@ export default function BulkOrderPage() {
     return (
         <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* ── Hero ── */}
-            <section className="relative w-full pt-6 pb-12 md:pt-10 md:pb-20 overflow-hidden">
+            <section className="relative w-full pt-6 pb-10 md:pt-10 md:pb-10 overflow-hidden">
 
                 {/* Background Image */}
                 <div className="absolute top-0 left-0 z-0 w-full h-[60%]">
@@ -932,18 +1148,18 @@ export default function BulkOrderPage() {
                     </motion.div>
 
                     {/* Headline — fixed line break */}
-                    <motion.h1
+                    <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-[26px] md:text-[42px] font-black text-black leading-[1.3] mb-4 max-w-3xl mx-auto"
+                        className="mb-4"
                     >
-                        Premium{' '}
-                        <span className="text-[#F6B000]">Factory-Direct</span>{' '}
-                        Cashews for{' '}
-                        <span className="text-[#F6B000]">India's Top Businesses.</span>
-
-                    </motion.h1>
+                        <SectionHeading
+                            text="Premium Factory-Direct Cashews for"
+                            highlight="India's Top Businesses."
+                            className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mx-auto"
+                        />
+                    </motion.div>
 
                     {/* Subtitle — shorter, punchier */}
                     <motion.p
@@ -977,7 +1193,7 @@ export default function BulkOrderPage() {
                             }}
                             className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-800 font-bold px-8 rounded-xl transition-all duration-300 hover:border-[#F6B000] hover:text-black active:scale-95 text-sm shadow-sm"
                         >
-                            <i className="fa-solid fa-layer-group text-xs text-[#F6B000]" />
+                            <i className="fa-solid fa-compass text-xs text-[#F6B000]" />
                             Explore Our Grades
                         </button>
                     </motion.div>
@@ -1057,7 +1273,7 @@ export default function BulkOrderPage() {
 
             {/* ── Our Trusted Partners ── */}
             <section className={`w-full py-10 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
-                <div className="max-w-7xl mx-auto px-6 mb-12 text-center">
+                <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
                     <SectionHeading
                         text="Trusted by India's"
                         highlight="Leading Businesses"
@@ -1068,20 +1284,18 @@ export default function BulkOrderPage() {
                 {/* Infinite Marquee */}
                 <div className={`flex overflow-hidden w-full ${COLORS.bg} select-none`}>
                     <motion.div
-                        className="flex items-center gap-16 md:gap-24 whitespace-nowrap px-8"
+                        className="flex w-max items-center gap-16 md:gap-24 whitespace-nowrap px-8"
                         animate={{ x: ["0%", "-50%"] }}
                         transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
                     >
                         {/* Repeat logos twice for seamless loop */}
-                        {[...Array(2)].map((_, idx) => (
-                            <div key={idx} className="flex items-center gap-16 md:gap-24 grayscale opacity-60 hover:opacity-100 transition-opacity duration-300 cursor-default">
-                                <i className="fa-brands fa-amazon text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-google text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-microsoft text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-airbnb text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-dhl text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-meta text-5xl md:text-6xl text-gray-600"></i>
-                                <i className="fa-brands fa-stripe text-5xl md:text-6xl text-gray-600"></i>
+                        {[...Array(4)].map((_, idx) => (
+                            <div key={idx} className="flex items-center gap-16 md:gap-24 shrink-0">
+                                <img src="/images/partners/reliance-smart-2.png" alt="Smart Bazaar" className="h-20 md:h-30 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                                <img src="/images/partners/Global-nuts.png" alt="Global Nuts" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                                <img src="/images/partners/9to10-logo.png" alt="9to10" className="h-16 md:h-24 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                                <img src="/images/partners/natures-nut.png" alt="Nature's Nut" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                                <img src="/images/partners/SPENCERS%20Logo.png" alt="Spencers" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
                             </div>
                         ))}
                     </motion.div>
@@ -1098,276 +1312,288 @@ export default function BulkOrderPage() {
 
             {/* ── Why Partner With Us ── */}
             <div className={COLORS.bg}>
-                <WhyPartnerWithUsSection />
+                <WhyPartnerWithUsSection openWhatsApp={openWhatsApp} />
             </div>
 
             <div className="w-full h-px bg-gray-100 mx-auto max-w-4xl" />
 
             {/* ── Our Grades ── */}
             <div className={COLORS.bg}>
-                <OurGradesSection onSelectCheck={onSelectCheck} onToggleGrade={toggleGrade} />
+                <OurGradesSection onSelectCheck={onSelectCheck} onToggleGrade={toggleGrade} openWhatsApp={openWhatsApp} />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 mb-12">
+            <div className="max-w-7xl mx-auto px-6 mb-10">
                 <WhiteLabelBanner />
             </div>
 
             {/* ── Bulk Order Form ── */}
-            <div ref={formRef} id="bulk-inquiry-form" className="max-w-7xl mx-auto px-6 py-4 md:py-6" style={{ scrollMarginTop: '80px' }}>
-                {/* Form section label */}
-                <div className="text-center mb-6 md:mb-8">
-                    <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
-                        Get a Quote
-                    </span>
-                    <SectionHeading
-                        text="Wholesale"
-                        highlight="Inquiries"
-                        className="mb-2 !text-[22px] md:!text-4xl"
+            <div className="relative w-full overflow-hidden">
+                {/* ── Right corner fruit ── */}
+                <div className="absolute right-0 top-1/3 w-32 md:w-44 lg:w-56 pointer-events-none select-none z-0 hidden md:block">
+                    <img
+                        src="/images/Right-Fruit-2-2-1.png"
+                        alt=""
+                        className="object-contain object-bottom w-full h-auto translate-x-8 md:translate-x-12"
+                        aria-hidden="true"
                     />
-                    <p className="text-gray-500 max-w-2xl mx-auto text-[13px] leading-relaxed italic">
-                        Our B2B team responds within 24 hours with a tailored quote and priority service.
-                    </p>
                 </div>
 
-                <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-gray-100 min-h-[600px]">
-                    {/* Form */}
-                    <div className="w-full md:w-3/5 p-8 md:p-12">
-                        <h2
-                            className="text-3xl font-bold text-gray-900 mb-2"
-                            style={{ fontFamily: 'Georgia, serif' }}
-                        >
-                            Request Custom Wholesale Pricing
-                        </h2>
-                        <p className="text-gray-500 mb-8 text-sm">
-                            Fill out the form below and our B2B team will provide a tailored quote within 24 hours.
+                <div ref={formRef} id="bulk-inquiry-form" className="max-w-7xl mx-auto px-6 py-10 md:py-10 relative z-10" style={{ scrollMarginTop: '80px' }}>
+                    {/* Form section label */}
+                    <div className="text-center mb-6 md:mb-8">
+                        <span className="inline-block text-[10px] font-bold tracking-[0.2em] uppercase px-4 py-1.5 rounded-full mb-6" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
+                            Get a Quote
+                        </span>
+                        <SectionHeading
+                            text="Wholesale"
+                            highlight="Inquiries"
+                            className="mb-2 !text-[22px] md:!text-4xl"
+                        />
+                        <p className="text-gray-500 max-w-2xl mx-auto text-[13px] leading-relaxed italic">
+                            Our B2B team responds within 24 hours with a tailored quote and priority service.
                         </p>
+                    </div>
 
-                        {submitStatus === 'success' ? (
-                            <div className="bg-primary/10 text-black p-8 rounded-2xl border border-primary/20 text-center">
-                                <div className="text-5xl mb-4 text-primary">
-                                    <i className="fa-solid fa-circle-check" />
+                    <div className="bg-white rounded-2xl md:rounded-[3rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-gray-100 min-h-[600px]">
+                        {/* Form */}
+                        <div className="w-full md:w-3/5 p-8 md:p-12">
+                            <h2
+                                className="text-[22px] sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2"
+                                style={{ fontFamily: 'Georgia, serif' }}
+                            >
+                                Request Custom Wholesale Pricing
+                            </h2>
+                            <p className="text-gray-500 mb-8 text-sm">
+                                Fill out the form below and our B2B team will provide a tailored quote within 24 hours.
+                            </p>
+
+                            {submitStatus === 'success' ? (
+                                <div className="bg-primary/10 text-black p-8 rounded-2xl border border-primary/20 text-center">
+                                    <div className="text-5xl mb-4 text-primary">
+                                        <i className="fa-solid fa-circle-check" />
+                                    </div>
+                                    <h3 className="font-bold text-2xl mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+                                        Inquiry Submitted!
+                                    </h3>
+                                    <p className="text-sm">
+                                        We've received your bulk order request. Our team will get back to you shortly.
+                                    </p>
+                                    <button
+                                        onClick={() => setSubmitStatus('idle')}
+                                        className="mt-6 text-primary font-bold hover:underline text-sm"
+                                    >
+                                        Submit another request
+                                    </button>
                                 </div>
-                                <h3 className="font-bold text-2xl mb-2" style={{ fontFamily: 'Georgia, serif' }}>
-                                    Inquiry Submitted!
-                                </h3>
-                                <p className="text-sm">
-                                    We've received your bulk order request. Our team will get back to you shortly.
-                                </p>
-                                <button
-                                    onClick={() => setSubmitStatus('idle')}
-                                    className="mt-6 text-primary font-bold hover:underline text-sm"
-                                >
-                                    Submit another request
-                                </button>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            Full Name *
-                                        </label>
-                                        <input
-                                            required
-                                            type="text"
-                                            value={formData.name}
-                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{ '--tw-ring-color': '#F6B000' } as any}
-                                        />
+                            ) : (
+                                <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                Full Name *
+                                            </label>
+                                            <input
+                                                required
+                                                type="text"
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                Email Address *
+                                            </label>
+                                            <input
+                                                required
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                Phone Number *
+                                            </label>
+                                            <input
+                                                required
+                                                type="tel"
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                Company Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value={formData.company}
+                                                onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                Partnership Type *
+                                            </label>
+                                            <select
+                                                required
+                                                value={formData.partnershipType}
+                                                onChange={(e) => setFormData({ ...formData, partnershipType: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            >
+                                                <option value="">Select Category</option>
+                                                <option value="Retailer">Retailer / Reseller</option>
+                                                <option value="HoReCa">Hotel / Restaurant / Cafe</option>
+                                                <option value="Bakery">Bakery / Confectionery</option>
+                                                <option value="Corporate">Corporate / Events</option>
+                                                <option value="Distributor">Distributor / Wholesaler</option>
+                                                <option value="Other">Other Business</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
+                                                FSSAI / GSTIN (Optional)
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="Enter ID if applicable"
+                                                value={formData.fssaiGstin}
+                                                onChange={(e) => setFormData({ ...formData, fssaiGstin: e.target.value })}
+                                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                                                style={{ '--tw-ring-color': '#F6B000' } as any}
+                                            />
+                                        </div>
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            Email Address *
-                                        </label>
-                                        <input
-                                            required
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{ '--tw-ring-color': '#F6B000' } as any}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            Phone Number *
-                                        </label>
-                                        <input
-                                            required
-                                            type="tel"
-                                            value={formData.phone}
-                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{ '--tw-ring-color': '#F6B000' } as any}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            Company Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            value={formData.company}
-                                            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{ '--tw-ring-color': '#F6B000' } as any}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            Partnership Type *
+                                            Expected Monthly Volume (kg) *
                                         </label>
                                         <select
                                             required
-                                            value={formData.partnershipType}
-                                            onChange={(e) => setFormData({ ...formData, partnershipType: e.target.value })}
+                                            value={formData.volume}
+                                            onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
                                             className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                                             style={{ '--tw-ring-color': '#F6B000' } as any}
                                         >
-                                            <option value="">Select Category</option>
-                                            <option value="Retailer">Retailer / Reseller</option>
-                                            <option value="HoReCa">Hotel / Restaurant / Cafe</option>
-                                            <option value="Bakery">Bakery / Confectionery</option>
-                                            <option value="Corporate">Corporate / Events</option>
-                                            <option value="Distributor">Distributor / Wholesaler</option>
-                                            <option value="Other">Other Business</option>
+                                            <option value="">Select an option</option>
+                                            <option value="5-10">5 – 10 kg</option>
+                                            <option value="10-50">10 – 50 kg</option>
+                                            <option value="50-100">50 – 100 kg</option>
+                                            <option value="100-500">100 – 500 kg</option>
+                                            <option value="500-1000">500 – 1,000 kg</option>
+                                            <option value="1000+">1,000+ kg</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                            FSSAI / GSTIN (Optional)
+                                            Specific Requirements / Grades
                                         </label>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter ID if applicable"
-                                            value={formData.fssaiGstin}
-                                            onChange={(e) => setFormData({ ...formData, fssaiGstin: e.target.value })}
-                                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                            style={{ '--tw-ring-color': '#F6B000' } as any}
+                                        <GradeRequirementsInput
+                                            value={formData.requirements}
+                                            onChange={(val) => setFormData({ ...formData, requirements: val })}
                                         />
+                                        <p className="text-[10px] text-gray-400 mt-1.5">
+                                            💡 Click any grade chip to add it, or type to filter suggestions
+                                        </p>
                                     </div>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                        Expected Monthly Volume (kg) *
-                                    </label>
-                                    <select
-                                        required
-                                        value={formData.volume}
-                                        onChange={(e) => setFormData({ ...formData, volume: e.target.value })}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                                        style={{ '--tw-ring-color': '#F6B000' } as any}
-                                    >
-                                        <option value="">Select an option</option>
-                                        <option value="5-10">5 – 10 kg</option>
-                                        <option value="10-50">10 – 50 kg</option>
-                                        <option value="50-100">50 – 100 kg</option>
-                                        <option value="100-500">100 – 500 kg</option>
-                                        <option value="500-1000">500 – 1,000 kg</option>
-                                        <option value="1000+">1,000+ kg</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-600 mb-2 uppercase tracking-wider">
-                                        Specific Requirements / Grades
-                                    </label>
-                                    <GradeRequirementsInput
-                                        value={formData.requirements}
-                                        onChange={(val) => setFormData({ ...formData, requirements: val })}
-                                    />
-                                    <p className="text-[10px] text-gray-400 mt-1.5">
-                                        💡 Click any grade chip to add it, or type to filter suggestions
-                                    </p>
-                                </div>
 
-                                {submitStatus === 'error' && (
-                                    <p className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg border border-red-100">
-                                        ⚠ Failed to submit. Please try again.
-                                    </p>
+                                    {submitStatus === 'error' && (
+                                        <p className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg border border-red-100">
+                                            ⚠ Failed to submit. Please try again.
+                                        </p>
+                                    )}
+
+                                    <button
+                                        type="submit"
+                                        disabled={submitStatus === 'loading'}
+                                        className="w-full font-bold text-base py-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95"
+                                        style={{ backgroundColor: '#F6B000', color: '#000000' }}
+                                    >
+                                        {submitStatus === 'loading' ? '⏳ Sending...' : '📩 Submit Wholesale Inquiry'}
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+
+                        {/* Track Status */}
+                        <div ref={inquiryRef} className="w-full md:w-2/5 bg-gray-50 p-8 md:p-12 border-t md:border-t-0 md:border-l border-gray-100" style={{ scrollMarginTop: '80px' }}>
+                            <div className="sticky top-32">
+                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm border border-gray-100">
+                                    🔍
+                                </div>
+                                <h3
+                                    className="text-2xl font-bold text-gray-900 mb-3"
+                                    style={{ fontFamily: 'Georgia, serif' }}
+                                >
+                                    Track Existing Query
+                                </h3>
+                                <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+                                    Already submitted a bulk order request or factory visit? Enter your email to check the
+                                    current status of your inquiry.
+                                </p>
+
+                                {!isAuthenticated && (
+                                    <div className="bg-blue-50 text-blue-800 p-4 rounded-xl mb-6 text-xs border border-blue-100">
+                                        ℹ️ Log in to automatically track all your queries from your{' '}
+                                        <Link href="/profile" className="font-bold underline">
+                                            Profile Dashboard
+                                        </Link>
+                                        .
+                                    </div>
                                 )}
 
-                                <button
-                                    type="submit"
-                                    disabled={submitStatus === 'loading'}
-                                    className="w-full font-bold text-base py-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95"
-                                    style={{ backgroundColor: '#F6B000', color: '#000000' }}
-                                >
-                                    {submitStatus === 'loading' ? '⏳ Sending...' : '📩 Submit Wholesale Inquiry'}
-                                </button>
-                            </form>
-                        )}
-                    </div>
+                                <form onSubmit={handleStatusCheck} className="space-y-4">
+                                    <input
+                                        required
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={searchEmail}
+                                        onChange={(e) => setSearchEmail(e.target.value)}
+                                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-primary hover:text-black transition-colors shadow-md text-sm"
+                                    >
+                                        Check Status
+                                    </button>
+                                </form>
 
-                    {/* Track Status */}
-                    <div ref={inquiryRef} className="w-full md:w-2/5 bg-gray-50 p-8 md:p-12 border-t md:border-t-0 md:border-l border-gray-100" style={{ scrollMarginTop: '80px' }}>
-                        <div className="sticky top-32">
-                            <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl mb-6 shadow-sm border border-gray-100">
-                                🔍
+                                {queryStatus.searched && (
+                                    <div className="mt-8">
+                                        {queryStatus.found ? (
+                                            <div className="bg-white p-5 rounded-xl border-l-4 border-yellow-400 shadow-sm">
+                                                <span className="text-xs uppercase tracking-widest font-bold text-gray-400 mb-1 block">
+                                                    Status
+                                                </span>
+                                                <span className="inline-block bg-yellow-100 text-yellow-800 font-bold px-3 py-1 rounded-full text-xs mb-3">
+                                                    {queryStatus.status}
+                                                </span>
+                                                <p className="text-xs text-gray-600 italic border-t border-gray-100 pt-3 mt-1">
+                                                    "{queryStatus.notes}"
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-100 text-xs">
+                                                No recent inquiries found for this email address.
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                            <h3
-                                className="text-2xl font-bold text-gray-900 mb-3"
-                                style={{ fontFamily: 'Georgia, serif' }}
-                            >
-                                Track Existing Query
-                            </h3>
-                            <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-                                Already submitted a bulk order request or factory visit? Enter your email to check the
-                                current status of your inquiry.
-                            </p>
-
-                            {!isAuthenticated && (
-                                <div className="bg-blue-50 text-blue-800 p-4 rounded-xl mb-6 text-xs border border-blue-100">
-                                    ℹ️ Log in to automatically track all your queries from your{' '}
-                                    <Link href="/profile" className="font-bold underline">
-                                        Profile Dashboard
-                                    </Link>
-                                    .
-                                </div>
-                            )}
-
-                            <form onSubmit={handleStatusCheck} className="space-y-4">
-                                <input
-                                    required
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    value={searchEmail}
-                                    onChange={(e) => setSearchEmail(e.target.value)}
-                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
-                                />
-                                <button
-                                    type="submit"
-                                    className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-primary hover:text-black transition-colors shadow-md text-sm"
-                                >
-                                    Check Status
-                                </button>
-                            </form>
-
-                            {queryStatus.searched && (
-                                <div className="mt-8">
-                                    {queryStatus.found ? (
-                                        <div className="bg-white p-5 rounded-xl border-l-4 border-yellow-400 shadow-sm">
-                                            <span className="text-xs uppercase tracking-widest font-bold text-gray-400 mb-1 block">
-                                                Status
-                                            </span>
-                                            <span className="inline-block bg-yellow-100 text-yellow-800 font-bold px-3 py-1 rounded-full text-xs mb-3">
-                                                {queryStatus.status}
-                                            </span>
-                                            <p className="text-xs text-gray-600 italic border-t border-gray-100 pt-3 mt-1">
-                                                "{queryStatus.notes}"
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <div className="bg-red-50 text-red-700 p-4 rounded-xl border border-red-100 text-xs">
-                                            No recent inquiries found for this email address.
-                                        </div>
-                                    )}
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

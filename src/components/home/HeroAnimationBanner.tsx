@@ -51,8 +51,7 @@ export default function HeroVideo() {
                 loop
                 playsInline
                 preload="metadata"
-                className="absolute inset-0 w-full h-full object-cover hidden md:block"
-                style={{ objectPosition: '35% center' }}
+                className="absolute inset-0 w-full h-full object-cover hidden md:block object-right lg:object-[35%_center]"
             />
 
             {/* ── Mobile Video ── */}
@@ -195,7 +194,7 @@ export default function HeroVideo() {
                         aria-label="Place a bulk or wholesale cashew order"
                         className="group inline-flex items-center gap-2
                             bg-white/10 hover:bg-white/20 active:scale-[0.97]
-                            text-white font-black text-sm
+                            text-white font-black text-md
                             px-6 py-3 rounded-full
                             border border-white/30 hover:border-white/55
                             backdrop-blur-sm
@@ -203,7 +202,7 @@ export default function HeroVideo() {
                             whitespace-nowrap"
                     >
                         <i className="fa-solid fa-boxes-stacked text-xs" />
-                        Bulk Order
+                        B2B
                         <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                 </div>
@@ -272,7 +271,7 @@ export default function HeroVideo() {
                                 <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                             </Link>
 
-                            <Link
+                            {/* <Link
                                 href="/bulk"
                                 aria-label="Place a bulk or wholesale cashew order"
                                 className="group inline-flex items-center gap-2
@@ -285,9 +284,9 @@ export default function HeroVideo() {
                                     whitespace-nowrap"
                             >
                                 <i className="fa-solid fa-boxes-stacked text-xs" />
-                                Bulk Order
+                                B2B
                                 <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>

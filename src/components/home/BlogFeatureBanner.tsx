@@ -5,11 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { COLORS } from '@/constants/styles';
 
-const topics = [
-  { label: '🍳 Recipe', color: '#FDC700' },
-  { label: '💚 Health', color: '#5CB85C' },
-  { label: '🌱 Sustainability', color: '#4CAF9A' },
-];
 
 export default function BlogFeatureBanner() {
   const [hovered, setHovered] = useState(false);
@@ -64,8 +59,8 @@ export default function BlogFeatureBanner() {
             />
           </div>
 
-          {/* ── CENTER: Text + Topics ── */}
-          <div className="relative z-10 flex-1 flex flex-col sm:flex-row items-center sm:items-center gap-3 md:gap-6 text-center sm:text-left">
+          {/* ── CENTER: Text ── */}
+          <div className="relative z-10 flex-1 text-center sm:text-left">
             {/* Text block */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 justify-center sm:justify-start">
@@ -83,23 +78,6 @@ export default function BlogFeatureBanner() {
               <p className="text-white/50 text-xs leading-relaxed max-w-xs sm:max-w-sm">
                 Share your knowledge on recipes, health, or sustainability — we'll feature your blog on our site.
               </p>
-            </div>
-
-            {/* Topic chips */}
-            <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-              {topics.map((t) => (
-                <span
-                  key={t.label}
-                  className="text-[11px] font-semibold px-3 py-1 rounded-full whitespace-nowrap"
-                  style={{
-                    backgroundColor: `${t.color}18`,
-                    color: t.color,
-                    border: `1px solid ${t.color}40`,
-                  }}
-                >
-                  {t.label}
-                </span>
-              ))}
             </div>
           </div>
 

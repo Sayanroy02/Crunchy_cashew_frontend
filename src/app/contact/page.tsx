@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Dynamically import Lottie — prevents SSR crash / loading hang
 const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
@@ -17,18 +17,18 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 
 /* ══════ SVG Icons ══════ */
 const IconLocation = () => (
-    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
 );
 const IconPhone = () => (
-    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
     </svg>
 );
 const IconEmail = () => (
-    <svg className="w-5 h-5" style={{ color: COLORS.button }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
 );
@@ -121,13 +121,13 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
 /* ══════ Sidebar info row ══════ */
 function InfoRow({ icon, title, lines }: { icon: React.ReactNode; title: string; lines: string[] }) {
     return (
-        <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+        <div className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-[14px] border border-white/80 bg-transparent flex items-center justify-center shrink-0">
                 {icon}
             </div>
             <div>
-                <p style={{ color: COLORS.primary }} className="text-[10px] font-bold tracking-widest uppercase mb-0.5">{title}</p>
-                {lines.map((l, i) => <p key={i} className="text-white/70 text-sm leading-relaxed">{l}</p>)}
+                <p style={{ color: COLORS.button }} className="text-[10px] font-black tracking-widest uppercase mb-1 mt-0.5">{title}</p>
+                {lines.map((l, i) => <p key={i} className="text-white text-sm leading-relaxed">{l}</p>)}
             </div>
         </div>
     );
@@ -145,33 +145,6 @@ function ContactContent() {
 
     const [form, setForm] = useState({ name: '', email: '', phone: '', enquiry_type: '', message: '' });
     const [visitForm, setVisitForm] = useState({ name: '', email: '', company: '', date: '' });
-
-    // ── Mouse Motion for Hanging Fruit ──
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    // Smooth movement
-    const smoothX = useSpring(mouseX, { damping: 20, stiffness: 100 });
-    const smoothY = useSpring(mouseY, { damping: 20, stiffness: 100 });
-
-    // Opposite motion: range [ -width/2, width/2 ] maps to [ 20, -20 ] pixels
-    const moveX = useTransform(smoothX, [-400, 400], [25, -25]);
-    const moveY = useTransform(smoothY, [-200, 200], [15, -15]);
-    // Slight sway rotation based on horizontal mouse pos
-    const rotateZ = useTransform(smoothX, [-400, 400], [-8, -2]);
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        mouseX.set(x);
-        mouseY.set(y);
-    };
-
-    const handleMouseLeave = () => {
-        mouseX.set(0);
-        mouseY.set(0);
-    };
 
     // Handle Search Params for Pre-filling
     useEffect(() => {
@@ -223,52 +196,41 @@ function ContactContent() {
         } catch (err: any) { setStatus('error'); setErrorMsg(err.message); }
     };
 
-    /* ── render ── */
     return (
-        <main className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
+        <main className={`min-h-screen pb-24 bg-[#FFF9E7] relative`}>
+
+            {/* Seamless Background Image */}
+            <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
+                <img
+                    src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/contact-us_wdd2w9.png"
+                    alt="Contact Background"
+                    className="w-full h-full object-cover object-bottom opacity-80"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+            </div>
+
+            {/* Floating Cashew Decoration */}
+            <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
+                <img
+                    src="/images/Fruit-3-1.png"
+                    alt=""
+                    className="w-full h-auto drop-shadow-2xl brightness-110"
+                />
+            </div>
 
             {/* ══ HERO ══ */}
-            <section
-                className="relative overflow-hidden pt-16 pb-16"
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-            >
-                {/* blobs */}
-                <div aria-hidden className="absolute inset-0 pointer-events-none overflow-hidden">
-                    <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-10 animate-blob" style={{ backgroundColor: COLORS.primary }} />
-                    <div className="absolute -top-10 right-0 w-72 h-72 rounded-full animate-blob animation-delay-2000" style={{ backgroundColor: `${COLORS.primary}0D` }} />
-                    <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-                        <defs><pattern id="dotpat" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="black" /></pattern></defs>
-                        <rect width="100%" height="100%" fill="url(#dotpat)" />
-                    </svg>
-                </div>
-
-                {/* Hanging Cashew Decoration — Desktop Only */}
-                <motion.div
-                    className="hidden lg:block absolute top-[-30px] right-[5%] w-64 h-80 pointer-events-none z-20"
-                    style={{ x: moveX, y: moveY, rotate: rotateZ }}
-                >
-                    <img
-                        src="/images/Cashew-In-Tree.png"
-                        alt=""
-                        className="w-full h-full object-contain object-top drop-shadow-2xl"
-                    />
-                </motion.div>
-
-                <div className="relative z-10 max-w-5xl mx-auto px-6 md:px-10">
-                    <div className="inline-flex items-center gap-2 bg-black/5 border border-black/10 rounded-full px-4 py-1.5 mb-6">
-                        <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: COLORS.primary }} />
-                        <span style={{ color: COLORS.black }} className="text-[10px] font-bold tracking-widest uppercase">We'd love to hear from you</span>
-                    </div>
-                    <SectionHeading
-                        text="Get in"
-                        highlight="Touch"
-                        className="!text-5xl md:!text-7xl !text-left !mb-5"
-                    />
-                    <p className="text-black/60 text-base md:text-lg max-w-md leading-relaxed">
-                        Bulk wholesale orders, general questions, or just curious about our cashews — we reply within 24 hours.
-                    </p>
-                </div>
+            <section className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center pb-16">
+                <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-sm">
+                    We'd love to hear from you
+                </span>
+                <SectionHeading
+                    text="Get in"
+                    highlight="Touch"
+                    className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm mb-6"
+                />
+                <p className="text-gray-700 text-sm md:text-lg max-w-2xl leading-relaxed font-medium drop-shadow-sm">
+                    Bulk wholesale orders, general questions, or just curious about our cashews — we reply within 24 hours.
+                </p>
             </section>
 
             {/* ══ CARD ══ */}
@@ -300,14 +262,11 @@ function ContactContent() {
                         <div className="relative z-10 border-t border-white/10 pt-6 mt-auto">
                             <p style={{ color: COLORS.button }} className="text-[10px] font-bold tracking-widest uppercase mb-3">Follow Us</p>
                             <div className="flex gap-3">
-                                {['fa-facebook-f', 'fa-instagram', 'fa-twitter', 'fa-whatsapp'].map(ic => (
+                                {['fa-instagram', 'fa-facebook-f', 'fa-whatsapp', 'fa-youtube'].map(ic => (
                                     <a key={ic} href="https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ=="
-                                        className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-white/60 transition-all duration-200"
-                                        style={{ '--hover-bg': COLORS.button, '--hover-text': COLORS.primary, '--hover-border': COLORS.button } as any}
-                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.button; e.currentTarget.style.color = COLORS.primary; e.currentTarget.style.borderColor = COLORS.button; }}
-                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+                                        className="w-11 h-11 rounded-[14px] bg-transparent border border-white/30 flex items-center justify-center text-white transition-all duration-300 hover:bg-[#F6B000] hover:border-[#F6B000] hover:-translate-y-1"
                                     >
-                                        <i className={`fa-brands ${ic} text-sm`} />
+                                        <i className={`fa-brands ${ic} text-lg`} />
                                     </a>
                                 ))}
                             </div>

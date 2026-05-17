@@ -6,6 +6,7 @@ import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { motion } from 'framer-motion';
 
 type CategoryFilter = 'all' | 'Value Packs' | 'Premium' | 'Flavors' | 'Gifting';
 
@@ -51,8 +52,30 @@ export default function BestSellers() {
     }, [products, activeTag]);
 
     return (
-        <section className="pt-[48px] pb-4 md:pb-6 bg-bg">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <section className="pt-[48px] pb-4 md:pb-6 bg-bg relative overflow-hidden">
+            {/* Floating Parachute Cashew (desktop only) */}
+            <motion.div
+                initial={{ y: 0, rotate: -5 }}
+                animate={{
+                    y: [0, -30, 0],
+                    rotate: [-8, 8, -8],
+                    x: [0, 10, 0]
+                }}
+                transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                className="absolute right-[4%] lg:right-[8%] top-[8%] w-[130px] lg:w-[175px] pointer-events-none select-none z-10 hidden xl:block"
+            >
+                <img
+                    src="/images/Cashew-parachute-03-p-800.png"
+                    alt="Parachute Cashew"
+                    className="w-full h-auto drop-shadow-2xl"
+                />
+            </motion.div>
+
+            <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
 
                 {/* Heading */}
                 <div className="text-center mb-5 md:mb-6">
