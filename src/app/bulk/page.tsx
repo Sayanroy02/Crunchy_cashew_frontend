@@ -393,9 +393,8 @@ function GradeCard({
                 className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
             >
                 <span
-                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold uppercase tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${
-                        isSelected ? 'text-[#F6B000]' : 'text-gray-900'
-                    }`}
+                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold uppercase tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${isSelected ? 'text-[#F6B000]' : 'text-gray-900'
+                        }`}
                     style={{
                         lineHeight: '1.1'
                     }}
@@ -1288,10 +1287,10 @@ export default function BulkOrderPage() {
                         animate={{ x: ["0%", "-50%"] }}
                         transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
                     >
-                        {/* Repeat logos twice for seamless loop */}
-                        {[...Array(4)].map((_, idx) => (
+                        {/* Repeat logos five times for seamless loop */}
+                        {[...Array(5)].map((_, idx) => (
                             <div key={idx} className="flex items-center gap-16 md:gap-24 shrink-0">
-                                <img src="/images/partners/reliance-smart-2.png" alt="Smart Bazaar" className="h-20 md:h-30 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                                <img src="/images/partners/reliance-smart-2.png" alt="Smart Bazaar" className="h-40 md:h-50 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
                                 <img src="/images/partners/Global-nuts.png" alt="Global Nuts" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
                                 <img src="/images/partners/9to10-logo.png" alt="9to10" className="h-16 md:h-24 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
                                 <img src="/images/partners/natures-nut.png" alt="Nature's Nut" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />

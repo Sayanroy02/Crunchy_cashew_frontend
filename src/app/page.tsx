@@ -24,14 +24,14 @@ import { COLORS } from "@/constants/styles";
 export default function Home() {
   return (
     <main className="relative min-h-screen">
-      {/* Fixed Hero Background — will-change promotes to own GPU layer so scroll compositing is cheaper */}
-      <div className="fixed top-0 left-0 w-full pointer-events-auto z-0" style={{ willChange: 'transform' }}>
+      {/* Hero Background - removed parallax effect */}
+      <div className="relative w-full z-0">
         <HeroVideo />
       </div>
 
       {/* ── Scrollable content ── */}
       <div
-        className="relative z-10 w-full mt-[clamp(600px,100svh,820px)] bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px]"
+        className="relative z-10 w-full bg-bg-cream shadow-[0_-15px_40px_rgba(0,0,0,0.2)] rounded-t-[40px]"
         style={{ transform: 'translateZ(0)' }}
       >
         {/* BestSellers */}

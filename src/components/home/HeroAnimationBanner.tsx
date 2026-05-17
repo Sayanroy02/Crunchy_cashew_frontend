@@ -51,7 +51,7 @@ export default function HeroVideo() {
                 loop
                 playsInline
                 preload="metadata"
-                className="absolute inset-0 w-full h-full object-cover hidden md:block object-right lg:object-[35%_center]"
+                className="absolute inset-0 w-full h-full object-cover hidden md:block object-[100%_top] lg:object-[35%_top]"
             />
 
             {/* ── Mobile Video ── */}

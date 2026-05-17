@@ -507,40 +507,40 @@ export default function AboutPage() {
 
       {/* Seamless Background Image (like bulk/shop page) */}
       <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
-          <img
-              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/about-banner_fpgcpm.png"
-              alt="About Background"
-              className="w-full h-full object-cover object-bottom opacity-80"
-          />
-          <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+        <img
+          src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/about-banner_fpgcpm.png"
+          alt="About Background"
+          className="w-full h-full object-cover object-bottom opacity-80"
+        />
+        <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
       </div>
 
       {/* Floating Cashew Decoration */}
       <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
-          <img
-              src="/images/Fruit-3-1.png"
-              alt=""
-              className="w-full h-auto drop-shadow-2xl brightness-110"
-          />
+        <img
+          src="/images/Fruit-3-1.png"
+          alt=""
+          className="w-full h-auto drop-shadow-2xl brightness-110"
+        />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center">
-        
+
         <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-sm">
           Industry Leaders
         </span>
-        
-        <SectionHeading 
-          text="Redefining Quality in" 
-          highlight="Cashew Manufacturing." 
-          className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mb-6" 
+
+        <SectionHeading
+          text="Redefining Quality in"
+          highlight="Cashew Manufacturing."
+          className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mb-6"
         />
-        
+
         <p className="text-gray-700 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-sm">
           Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 w-full sm:w-auto px-2">
+        {/* <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 w-full sm:w-auto px-2">
           <Link
             href="/bulk"
             className="w-full sm:w-auto justify-center bg-[#F6B000] text-black font-black px-8 py-3.5 rounded-xl text-sm md:text-base hover:scale-105 transition-transform shadow-md flex items-center gap-2"
@@ -558,7 +558,7 @@ export default function AboutPage() {
             <i className="fa-solid fa-industry text-[#F6B000]" />
             Explore Our Facility
           </button>
-        </div>
+        </div> */}
 
         {/* ── TABS BELOW CTA (Segmented Control) ── */}
         <div id="about-tabs" className="w-full max-w-4xl px-2 pb-6" style={{ scrollMarginTop: '100px' }}>
@@ -569,9 +569,8 @@ export default function AboutPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex-1 min-w-[130px] md:min-w-0 flex items-center justify-center gap-2 px-3 md:px-5 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-colors duration-300 z-10 ${
-                    isActive ? 'text-white' : 'text-gray-500 hover:text-gray-800'
-                  }`}
+                  className={`relative flex-1 min-w-[130px] md:min-w-0 flex items-center justify-center gap-2 px-3 md:px-5 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-colors duration-300 z-10 ${isActive ? 'text-white' : 'text-gray-500 hover:text-gray-800'
+                    }`}
                 >
                   {isActive && (
                     <motion.div

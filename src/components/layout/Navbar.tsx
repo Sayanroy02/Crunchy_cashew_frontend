@@ -23,7 +23,7 @@ const LEFT_LINKS = [
     { label: 'Contact', href: '/contact' },
 ];
 
-const TRANSPARENT_PAGES = ['/'];
+const TRANSPARENT_PAGES: string[] = [];
 
 export default function Navbar() {
     const [annoIdx, setAnnoIdx] = useState(0);

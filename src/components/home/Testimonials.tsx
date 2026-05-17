@@ -134,21 +134,21 @@ export default function Testimonials() {
                         <div className="hidden md:flex items-center gap-3">
                             <button onClick={() => scroll('left')}
                                 className="w-12 h-12 rounded-full border-2 bg-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
-                                style={{ borderColor: COLORS.primary }}
+                                style={{ borderColor: COLORS.heading }}
                             >
-                                <i className="fa-solid fa-chevron-left text-sm" style={{ color: COLORS.primary }} />
+                                <i className="fa-solid fa-chevron-left text-sm" style={{ color: COLORS.heading }} />
                             </button>
                             <button onClick={() => scroll('right')}
                                 className="w-12 h-12 rounded-full border-2 bg-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm"
-                                style={{ borderColor: COLORS.primary }}
+                                style={{ borderColor: COLORS.heading }}
                             >
-                                <i className="fa-solid fa-chevron-right text-sm" style={{ color: COLORS.primary }} />
+                                <i className="fa-solid fa-chevron-right text-sm" style={{ color: COLORS.heading }} />
                             </button>
                         </div>
 
                         <button
                             onClick={openForm}
-                            className="bg-black text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
+                            className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
                         >
                             <i className="fa-solid fa-pen-nib text-sm md:text-xs" />
                             <span className="hidden md:inline">Share Your Experience</span>

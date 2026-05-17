@@ -169,7 +169,7 @@ export default function BestSellers() {
                 <div className="mt-7 text-center">
                     <Link
                         href="/shop"
-                        className="inline-flex items-center gap-2 border-2 font-bold px-8 py-3 rounded-full transition-all duration-300 group"
+                        className="inline-flex items-center gap-2 border-2 font-bold px-8 py-3 rounded-xl duration-300 group hover:scale-105 active:scale-95"
                         style={{ borderColor: COLORS.black, color: COLORS.black }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.backgroundColor = COLORS.primary;
@@ -177,9 +177,9 @@ export default function BestSellers() {
                             e.currentTarget.style.color = COLORS.black;
                         }}
                         onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.borderColor = COLORS.black;
-                            e.currentTarget.style.color = COLORS.black;
+                            e.currentTarget.style.backgroundColor = COLORS.heading;
+                            e.currentTarget.style.borderColor = COLORS.heading;
+                            e.currentTarget.style.color = COLORS.white;
                         }}
                     >
                         View All Products <i className="fa-solid fa-arrow-right" />

@@ -351,7 +351,7 @@ function ContactContent() {
                                         className="inline-flex items-center gap-3 font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                                         style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
                                         onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.primary; e.currentTarget.style.color = COLORS.black; }}
-                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.black; e.currentTarget.style.color = COLORS.primary; }}
+                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.heading; e.currentTarget.style.color = COLORS.primary; }}
                                     >
                                         {status === 'loading'
                                             ? <span className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: COLORS.primary }} />
