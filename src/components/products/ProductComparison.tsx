@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ExternalLink, Zap, ShieldCheck } from 'lucide-react';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 interface Product {
   _id: string;
@@ -56,17 +57,21 @@ export default function ProductComparison({ product }: { product: Product }) {
     },
   ].filter(p => p.price);
 
-  const avgMarketplacePrice = platforms
-    .filter(p => !p.isBest)
-    .reduce((acc, p) => acc + (p.price || 0), 0) / (platforms.length - 1 || 1);
+  // Get other marketplaces with pricing (excluding "Our Website" / isBest)
+  const otherMarketplaces = platforms.filter(p => !p.isBest && p.price !== undefined && p.price !== null);
 
-  const savingsPerPack = Math.max(0, Math.round(avgMarketplacePrice - product.price));
+  // Find the lowest price among them
+  const lowestMarketplacePrice = otherMarketplaces.length > 0
+    ? Math.min(...otherMarketplaces.map(p => p.price as number))
+    : product.price;
+
+  const savingsPerPack = Math.max(0, Math.round(lowestMarketplacePrice - product.price));
   const totalSavings = savingsPerPack * quantity;
 
   return (
     <div className="mt-16 space-y-12">
       <div className="text-center space-y-2">
-        <h2 className="text-3xl font-black tracking-tight text-center" style={{ color: COLORS.heading }}>Price Comparison</h2>
+        <SectionHeading text="Price" highlight="Comparison" className="text-3xl md:text-4xl" />
         <p className="text-slate-500 font-medium italic text-center">See how much you save by buying direct</p>
       </div>
 
@@ -117,13 +122,13 @@ export default function ProductComparison({ product }: { product: Product }) {
 
         {/* Savings Calculator */}
         <div className="lg:col-span-4 space-y-6">
-          <div className="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden" style={{ backgroundColor: COLORS.primary, boxShadow: `0 20px 25px -5px ${COLORS.primary}4D` }}>
+          <div className="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden" style={{ backgroundColor: COLORS.heading, boxShadow: `0 20px 25px -5px ${COLORS.heading}4D` }}>
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
 
             <div className="relative space-y-6">
-              <div className="flex items-center gap-2" style={{ color: COLORS.highlight }}>
-                <Zap size={18} fill={COLORS.highlight} />
-                <h3 className="text-sm font-black uppercase tracking-widest">Savings Calculator</h3>
+              <div className="flex items-center gap-2" style={{ color: 'rgb(17, 17, 17)' }}>
+                <i className="fa-solid fa-calculator text-base animate-pulse" style={{ color: 'rgba(255, 255, 255, 1)' }}></i>
+                <h3 className="text-sm font-black uppercase tracking-widest" style={{ color: 'rgba(255, 254, 254, 1)' }}>Savings Calculator</h3>
               </div>
 
               <div className="space-y-4">
@@ -162,12 +167,12 @@ export default function ProductComparison({ product }: { product: Product }) {
             </div>
           </div>
 
-          <div className="bg-white border rounded-3xl p-6 flex items-center gap-4 shadow-sm group transition-colors" style={{ borderColor: `${COLORS.primary}1A` }}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.button}1A`, color: COLORS.primary }}>
+          <div className="bg-white border rounded-3xl p-6 flex items-center gap-4 shadow-sm group transition-colors" style={{ borderColor: `${COLORS.heading}1A` }}>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.heading}1A`, color: COLORS.heading }}>
               <ShieldCheck size={24} />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest" style={{ color: COLORS.primary }}>Factory Direct Price</p>
+              <p className="text-xs font-black uppercase tracking-widest" style={{ color: COLORS.heading }}>Factory Direct Price</p>
               <p className="text-[10px] text-slate-500 font-medium">No marketplace commissions.</p>
             </div>
           </div>

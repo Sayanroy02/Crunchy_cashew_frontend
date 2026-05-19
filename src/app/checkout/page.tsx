@@ -16,6 +16,7 @@ import { clearCart } from '@/lib/store/features/cartSlice';
 import { API } from '@/constants/api';
 import CheckoutButton from '@/components/CheckoutButton';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 export default function CheckoutPage() {
     const { items, totalAmount } = useSelector((state: RootState) => state.cart);
@@ -227,9 +228,7 @@ export default function CheckoutPage() {
     return (
         <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl md:text-4xl font-heading font-black text-black mb-10 pb-4 border-b-2" style={{ borderBottomColor: '#F6B000' }}>
-                    Checkout
-                </h1>
+                <SectionHeading text="Secure" highlight="Checkout" className="mb-10" textColor="#000000" />
 
                 <div className="flex flex-col lg:flex-row gap-10">
                     {/* Left Side: Shipping + Payment Form */}
@@ -362,8 +361,8 @@ export default function CheckoutPage() {
 
                     {/* Right Side: Order Summary + Checkout Button */}
                     <div className="lg:w-1/3">
-                        <div className="rounded-3xl p-8 shadow-xl sticky top-28" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
-                            <h2 className="text-xl font-heading font-black mb-6 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)', color: '#F6B000' }}>
+                        <div className="rounded-3xl p-8 shadow-xl sticky top-28" style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}>
+                            <h2 className="text-xl font-heading font-black mb-6 pb-4 border-b text-white" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                                 Order Summary
                             </h2>
 
@@ -398,7 +397,7 @@ export default function CheckoutPage() {
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center text-xl mt-4 pt-4 border-t" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
-                                    <span className="font-black" style={{ color: '#F6B000' }}>Total</span>
+                                    <span className="font-black text-white">Total</span>
                                     <span className="font-black text-white">₹{finalTotal.toFixed(2)}</span>
                                 </div>
                             </div>
@@ -419,11 +418,11 @@ export default function CheckoutPage() {
                                         // Trigger HTML5 form validation by submitting the form
                                         (document.getElementById('form-submit-trigger') as HTMLButtonElement)?.click();
                                     }}
-                                    className="w-full font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70"
-                                    style={{ backgroundColor: '#F6B000', color: '#000000' }}
+                                    className="w-full text-black p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-70"
+                                    style={{ backgroundColor: COLORS.primary, color: '#000000' }}
                                 >
-                                    {checkingPin ? <i className="fa-solid fa-spinner fa-spin" /> : <i className="fa-solid fa-lock" />}
-                                    {checkingPin ? 'Checking location...' : 'Place Order'}
+                                    {checkingPin ? <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" /> : <i className="fa-solid fa-lock text-sm md:text-xs" />}
+                                    <span>{checkingPin ? 'Checking location...' : 'Place Order'}</span>
                                 </button>
                             )}
                             <p className="text-white/50 text-xs text-center mt-4">Safe &amp; Secure Checkout</p>

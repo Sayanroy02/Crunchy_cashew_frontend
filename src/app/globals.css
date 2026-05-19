@@ -26,6 +26,14 @@
 :root {
   --background: #FFF9E7;
   --foreground: #000000;
+  /* Hero uses: height = calc(100svh - var(--navbar-h)) to fill viewport below navbar */
+  --navbar-h: 56px; /* mobile navbar height */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --navbar-h: 72px; /* desktop navbar height */
+  }
 }
 
 /* ── Base ── */

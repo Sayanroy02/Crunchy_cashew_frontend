@@ -30,6 +30,35 @@ export default function ShopPage() {
     const [tagFilter, setTagFilter] = useState<string>('all');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sortOpen, setSortOpen] = useState(false);
+    const [activeMobileTab, setActiveMobileTab] = useState<'categories' | 'collections' | 'sort' | 'price'>('categories');
+    const [tempCategory, setTempCategory] = useState<string>('all');
+    const [tempTag, setTempTag] = useState<string>('all');
+    const [tempPriceRange, setTempPriceRange] = useState<number>(0);
+    const [tempSortKey, setTempSortKey] = useState<SortKey>('default');
+
+    const openMobileFilters = () => {
+        setTempCategory(categoryFilter);
+        setTempTag(tagFilter);
+        setTempPriceRange(priceRange);
+        setTempSortKey(sortKey);
+        setSidebarOpen(true);
+    };
+
+    const applyMobileFilters = () => {
+        setCategoryFilter(tempCategory);
+        setTagFilter(tempTag);
+        setPriceRange(tempPriceRange);
+        setSortKey(tempSortKey);
+        setSidebarOpen(false);
+    };
+
+    const clearTempFilters = () => {
+        setTempCategory('all');
+        setTempTag('all');
+        setTempPriceRange(0);
+        setTempSortKey('default');
+    };
 
     useEffect(() => {
         fetch(API.PRODUCTS)
@@ -37,6 +66,17 @@ export default function ShopPage() {
             .then(data => { setProducts(data); setLoading(false); })
             .catch(err => { console.error('Failed to fetch products:', err); setLoading(false); });
     }, []);
+
+    useEffect(() => {
+        if (sidebarOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [sidebarOpen]);
 
     // Extract unique tags from all products
     const availableTags = useMemo(() => {
@@ -83,6 +123,27 @@ export default function ShopPage() {
         return result;
     }, [products, searchTerm, sortKey, priceRange, tagFilter, categoryFilter]);
 
+    const tempFilteredCount = useMemo(() => {
+        const { min, max } = PRICE_RANGES[tempPriceRange];
+
+        return products.filter(p => {
+            const prices = p.variants?.map(v => v.price) || [(p as any).price || 0];
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+
+            const matchSearch = !searchTerm ||
+                p.name.toLowerCase().includes(searchTerm.toLowerCase().trim()) ||
+                (p.category || '').toLowerCase().includes(searchTerm.toLowerCase().trim());
+
+            const matchPrice = minPrice <= max && maxPrice >= min;
+            const matchTag = tempTag === 'all' || (p.tags && p.tags.includes(tempTag));
+            const matchCategory = tempCategory === 'all' ||
+                (p.category || '').toLowerCase() === tempCategory.toLowerCase();
+
+            return matchSearch && matchPrice && matchTag && matchCategory;
+        }).length;
+    }, [products, searchTerm, tempPriceRange, tempTag, tempCategory]);
+
     const hasFilters = !!searchTerm || sortKey !== 'default' || priceRange !== 0 || tagFilter !== 'all' || categoryFilter !== 'all';
     const clearAll = () => {
         setSearchTerm('');
@@ -105,17 +166,262 @@ export default function ShopPage() {
                 <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
             </div>
 
+            {/* Mobile sidebar overlay (Full Screen Dual-Pane Pop Up) */}
+            {sidebarOpen && (
+                <>
+                    {/* Semi-transparent backdrop — matches bulk inquiry popup style */}
+                    <div
+                        className="fixed inset-0 z-[9998] md:hidden"
+                        style={{ background: 'rgba(12,10,9,0.72)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
+                        onClick={() => setSidebarOpen(false)}
+                    />
+
+                    {/* Popup: 80% height, centered, CTABanner-style rounded-[28px] */}
+                    <div
+                        className="fixed z-[9999] md:hidden flex flex-col overflow-hidden"
+                        style={{
+                            left: '5%',
+                            right: '5%',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            height: '80vh',
+                            borderRadius: '28px',
+                            background: '#fff',
+                            boxShadow: '0 32px 80px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.6)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                        }}
+                    >
+                        {/* Top Bar */}
+                        <div className="flex justify-between items-center px-5 py-4 border-b border-gray-100 flex-shrink-0">
+                            <div className="flex items-center gap-3">
+                                <button onClick={() => setSidebarOpen(false)} className="p-1">
+                                    <i className="fa-solid fa-arrow-left text-xl text-gray-800" />
+                                </button>
+                                <span className="font-bold text-lg text-gray-800">Filters</span>
+                            </div>
+                            <button onClick={clearTempFilters} className="text-sm font-bold text-gray-500 hover:text-gray-700">
+                                Clear Filters
+                            </button>
+                        </div>
+
+                        {/* Content Area - Dual Pane — flex-[9] = 90% of space */}
+                        <div className="flex overflow-hidden" style={{ flex: 9 }}>
+                            {/* Left Pane - Tabs */}
+                            <div className="w-1/3 bg-gray-50 border-r border-gray-100 flex flex-col overflow-y-auto">
+                                {([
+                                    { id: 'categories', label: 'Categories' },
+                                    { id: 'collections', label: 'Collection' },
+                                    { id: 'sort', label: 'Sort' },
+                                    { id: 'price', label: 'Price Range' }
+                                ] as const).map(tab => {
+                                    const isActive = activeMobileTab === tab.id;
+                                    return (
+                                        <button
+                                            key={tab.id}
+                                            onClick={() => setActiveMobileTab(tab.id)}
+                                            className={`w-full py-4 px-3 text-left text-xs font-bold transition-all border-l-4 ${isActive 
+                                                ? 'bg-white text-emerald-800 border-emerald-700' 
+                                                : 'text-gray-600 border-transparent bg-gray-50 hover:bg-gray-100'
+                                            }`}
+                                        >
+                                            {tab.label}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Right Pane - Options */}
+                            <div className="w-2/3 bg-white p-4 overflow-y-auto flex flex-col gap-3">
+                                {activeMobileTab === 'categories' && (
+                                    <>
+                                        <div className="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Select Category</div>
+                                        {/* Category Option: All */}
+                                        <button
+                                            onClick={() => setTempCategory('all')}
+                                            className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                        >
+                                            <span className="text-sm font-semibold text-gray-800">All Categories</span>
+                                            <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${tempCategory === 'all' ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                {tempCategory === 'all' && <i className="fa-solid fa-check text-xs" />}
+                                            </div>
+                                        </button>
+                                        {/* Category Options */}
+                                        {['Value Packs', 'Premium', 'Flavors', 'Gifting'].map(cat => (
+                                            <button
+                                                key={cat}
+                                                onClick={() => setTempCategory(cat)}
+                                                className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                            >
+                                                <span className="text-sm font-semibold text-gray-800">{cat}</span>
+                                                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${tempCategory === cat ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                    {tempCategory === cat && <i className="fa-solid fa-check text-xs" />}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </>
+                                )}
+
+                                {activeMobileTab === 'collections' && (
+                                    <>
+                                        <div className="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Select Collection</div>
+                                        {/* Tag Option: All */}
+                                        <button
+                                            onClick={() => setTempTag('all')}
+                                            className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                        >
+                                            <span className="text-sm font-semibold text-gray-800">All Products</span>
+                                            <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${tempTag === 'all' ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                {tempTag === 'all' && <i className="fa-solid fa-check text-xs" />}
+                                            </div>
+                                        </button>
+                                        {/* Tag Options */}
+                                        {availableTags.map(tag => (
+                                            <button
+                                                key={tag}
+                                                onClick={() => setTempTag(tag)}
+                                                className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                            >
+                                                <span className="text-sm font-semibold text-gray-800">{tag}</span>
+                                                <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${tempTag === tag ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                    {tempTag === tag && <i className="fa-solid fa-check text-xs" />}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </>
+                                )}
+
+                                {activeMobileTab === 'sort' && (
+                                    <>
+                                        <div className="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Select Sort</div>
+                                        {([
+                                            { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
+                                            { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
+                                            { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
+                                            { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
+                                            { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
+                                            { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
+                                        ] as const).map(opt => (
+                                            <button
+                                                key={opt.value}
+                                                onClick={() => setTempSortKey(opt.value)}
+                                                className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                            >
+                                                <span className="text-sm font-semibold text-gray-800">{opt.label}</span>
+                                                <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${tempSortKey === opt.value ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                    {tempSortKey === opt.value && <i className="fa-solid fa-check text-[10px]" />}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </>
+                                )}
+
+                                {activeMobileTab === 'price' && (
+                                    <>
+                                        <div className="text-[10px] font-bold text-gray-400 mb-1 uppercase tracking-wider">Select Price</div>
+                                        {PRICE_RANGES.map((range, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setTempPriceRange(idx)}
+                                                className="flex items-center justify-between w-full p-3 rounded-xl border border-gray-100 hover:bg-gray-50 transition-all text-left"
+                                            >
+                                                <span className="text-sm font-semibold text-gray-800">{range.label}</span>
+                                                <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${tempPriceRange === idx ? 'bg-[#FF6F00] border-[#FF6F00] text-white' : 'border-gray-300'}`}>
+                                                    {tempPriceRange === idx && <i className="fa-solid fa-check text-[10px]" />}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Fixed Bottom Bar — flex-[1], always visible */}
+                        <div
+                            className="flex items-center justify-between px-5 bg-white flex-shrink-0"
+                            style={{ flex: 1, minHeight: '64px', borderTop: '1px solid #f3f4f6' }}
+                        >
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-base font-black text-gray-800">{tempFilteredCount}</span>
+                                <span className="text-sm font-bold text-gray-500">products found</span>
+                            </div>
+                            <button
+                                onClick={applyMobileFilters}
+                                className="font-bold py-2.5 px-7 text-sm text-white active:scale-95 transition-all shadow-lg"
+                                style={{ backgroundColor: COLORS.heading, borderRadius: '10px' }}
+                            >
+                                Apply
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+
             <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20">
                 {/* Heading placed naturally over the background */}
-                <div className="text-center mb-10 md:mb-16">
+                <div className="text-center mb-10 md:mb-16 relative z-20">
                     <SectionHeading
-                        text="Premium Wholesale"
-                        highlight="Cashews"
+                        text="Snack Smarter,"
+                        highlight="Crunch Louder"
                         className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm"
                     />
                     <p className="text-sm md:text-lg text-gray-700 max-w-2xl mx-auto font-medium mt-3 drop-shadow-sm">
-                        Factory-direct sourcing for every need.
+                        Skip the middleman without compromising on taste. Stock up on your favorite roasted, flavored, and raw batches today at prices that make sense.
                     </p>
+
+                    {/* Centered Search Bar like Image 2 */}
+                    <div className="mt-8 max-w-2xl mx-auto flex items-center gap-3 px-4">
+                        <div className="relative flex-1 shadow-sm rounded-2xl bg-white flex items-center h-14">
+                            <i className="fa-solid fa-magnifying-glass absolute left-5 text-gray-400 z-10" />
+                            <input
+                                type="text"
+                                placeholder="Search cashews by name or category..."
+                                value={searchTerm}
+                                onChange={e => setSearchTerm(e.target.value)}
+                                className="w-full bg-transparent border-0 text-black placeholder-gray-400 rounded-2xl px-5 h-full pl-12 focus:outline-none focus:ring-0 transition-all text-sm font-semibold"
+                            />
+                            {searchTerm && (
+                                <button onClick={() => setSearchTerm('')} className="absolute right-4 text-gray-400 hover:text-gray-600 transition-colors">
+                                    <i className="fa-solid fa-circle-xmark text-lg" />
+                                </button>
+                            )}
+                        </div>
+                        <div className="relative">
+                            <button
+                                onClick={() => {
+                                    if (window.innerWidth < 768) {
+                                        openMobileFilters();
+                                    } else {
+                                        setSortOpen(!sortOpen);
+                                    }
+                                }}
+                                className="flex items-center gap-2 bg-white text-gray-800 font-bold px-6 h-14 rounded-2xl text-sm whitespace-nowrap hover:bg-gray-50 transition-colors shadow-sm"
+                            >
+                                <i className="fa-solid fa-sliders" /> Filter
+                            </button>
+                            {sortOpen && (
+                                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden text-left py-2">
+                                    {([
+                                        { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
+                                        { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
+                                        { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
+                                        { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
+                                        { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
+                                        { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
+                                    ] as const).map(opt => (
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => { setSortKey(opt.value as SortKey); setSortOpen(false); }}
+                                            className="flex items-center gap-3 w-full px-4 py-3 text-sm font-semibold transition-all hover:bg-gray-50"
+                                            style={sortKey === opt.value ? { color: COLORS.heading } : { color: '#4B5563' }}
+                                        >
+                                            <i className={opt.icon} />
+                                            {opt.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Main Content */}
@@ -135,76 +441,15 @@ export default function ShopPage() {
                         />
                     </aside>
 
-                    {/* Mobile sidebar overlay */}
-                    {sidebarOpen && (
-                        <div className="fixed inset-0 z-50 md:hidden">
-                            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
-                            <div className="absolute right-0 top-0 bottom-0 w-80 bg-white shadow-2xl flex flex-col">
-                                <div className="flex justify-between items-center p-5 border-b border-gray-100">
-                                    <h3 className="font-bold text-lg">Filters</h3>
-                                    <button onClick={() => setSidebarOpen(false)} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100">
-                                        <i className="fa-solid fa-xmark text-gray-500" />
-                                    </button>
-                                </div>
-                                <div className="flex-1 overflow-y-auto p-5">
-                                    <SidebarContent
-                                        sortKey={sortKey} setSortKey={setSortKey}
-                                        priceRange={priceRange} setPriceRange={setPriceRange}
-                                        tagFilter={tagFilter} setTagFilter={setTagFilter}
-                                        categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
-                                        availableTags={availableTags}
-                                        hasFilters={hasFilters} clearAll={clearAll}
-                                        resultCount={filtered.length}
-                                    />
-                                </div>
-                                <div className="p-5 border-t border-gray-100">
-                                    <button onClick={() => setSidebarOpen(false)} className="w-full font-bold py-3 rounded-xl transition-all active:scale-95 shadow-lg" style={{ backgroundColor: COLORS.black, color: COLORS.primary }}>
-                                        Show {filtered.length} Results
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+
 
                     {/* ── PRODUCT GRID ── */}
                     <div className="flex-1 min-w-0">
-                        {/* Search Bar */}
-                        <div className="mb-6 flex items-center gap-3">
-                            <div className="relative flex-1 shadow-sm rounded-2xl">
-                                <i className="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
-                                <input
-                                    type="text"
-                                    placeholder="Search cashews by name or category..."
-                                    value={searchTerm}
-                                    onChange={e => setSearchTerm(e.target.value)}
-                                    className="w-full bg-white border border-gray-200 text-black placeholder-gray-400 rounded-2xl px-5 py-4 pl-14 focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all text-sm font-semibold"
-                                    style={{ '--tw-ring-color': COLORS.primary } as any}
-                                />
-                                {searchTerm && (
-                                    <button onClick={() => setSearchTerm('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                                        <i className="fa-solid fa-circle-xmark text-lg" />
-                                    </button>
-                                )}
-                            </div>
-                            {/* Mobile Filter Trigger */}
-                            <button
-                                onClick={() => setSidebarOpen(true)}
-                                className="md:hidden flex items-center gap-2 bg-white border border-gray-200 text-gray-800 font-bold px-5 py-4 rounded-2xl text-sm whitespace-nowrap hover:bg-gray-50 transition-colors shadow-sm"
-                            >
-                                <i className="fa-solid fa-sliders" /> Filters
-                                {hasFilters && <span className="w-2 h-2 rounded-full bg-primary" />}
-                            </button>
-                        </div>
 
                         {/* Results header */}
-                        <div className="flex items-center justify-between mb-6">
-                            <div>
-                                <p className="text-sm text-black/50 font-medium">
-                                    {loading ? 'Loading...' : (
-                                        <><span className="font-bold text-black">{filtered.length}</span> {filtered.length === 1 ? 'product' : 'products'} found</>
-                                    )}
-                                </p>
-                                {hasFilters && (
+                        {hasFilters && (
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {searchTerm && (
                                             <span className="inline-flex items-center gap-1.5 bg-primary text-black text-xs font-bold px-3 py-1 rounded-full shadow-sm">
@@ -231,9 +476,9 @@ export default function ShopPage() {
                                             </span>
                                         )}
                                     </div>
-                                )}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {loading ? (
                             <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
@@ -261,7 +506,7 @@ export default function ShopPage() {
                                 <button
                                     onClick={clearAll}
                                     className="px-8 py-3 font-bold rounded-xl transition-all shadow-md active:scale-95"
-                                    style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
+                                    style={{ backgroundColor: COLORS.heading, color: COLORS.white }}
                                 >
                                     Clear All Filters
                                 </button>
@@ -307,7 +552,6 @@ function SidebarContent({
     };
     const [categoriesOpen, setCategoriesOpen] = useState(true);
     const [collectionsOpen, setCollectionsOpen] = useState(false);
-    const [sortOpen, setSortOpen] = useState(false);
     const [priceOpen, setPriceOpen] = useState(false);
 
     return (
@@ -341,7 +585,7 @@ function SidebarContent({
                                 ? 'shadow-lg scale-[1.02]'
                                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                 }`}
-                            style={categoryFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            style={categoryFilter === 'all' ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                         >
                             <i className="fa-solid fa-border-all text-xs" />
                             All Categories
@@ -355,7 +599,7 @@ function SidebarContent({
                                     ? 'shadow-lg scale-[1.02]'
                                     : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                     }`}
-                                style={categoryFilter === cat ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                                style={categoryFilter === cat ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                             >
                                 <i className={`${categoryIcons[cat] || 'fa-solid fa-layer-group'} text-xs`} />
                                 {cat}
@@ -384,7 +628,7 @@ function SidebarContent({
                                 ? 'shadow-lg scale-[1.02]'
                                 : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                 }`}
-                            style={tagFilter === 'all' ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                            style={tagFilter === 'all' ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                         >
                             <i className="fa-solid fa-border-all text-xs" />
                             All Products
@@ -398,48 +642,10 @@ function SidebarContent({
                                     ? 'shadow-lg scale-[1.02]'
                                     : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                     }`}
-                                style={tagFilter === tag ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                                style={tagFilter === tag ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                             >
                                 <i className="fa-solid fa-tag text-xs" />
                                 {tag}
-                            </button>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {/* Sort */}
-            <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
-                <button
-                    onClick={() => setSortOpen(!sortOpen)}
-                    className="w-full flex justify-between items-center font-bold text-gray-800"
-                >
-                    <span className="flex items-center gap-2">
-                        <i className="fa-solid fa-arrow-up-wide-short" style={{ color: COLORS.primary }} /> Sort By
-                    </span>
-                    <i className={`fa-solid fa-chevron-${sortOpen ? 'up' : 'down'} text-sm text-gray-400 transition-transform`} />
-                </button>
-                {sortOpen && (
-                    <div className="flex flex-col gap-2 mt-4">
-                        {([
-                            { value: 'default', label: 'Default', icon: 'fa-solid fa-sparkles' },
-                            { value: 'newest', label: 'Newest First', icon: 'fa-solid fa-clock' },
-                            { value: 'popular', label: 'Popularity', icon: 'fa-solid fa-fire' },
-                            { value: 'price_asc', label: 'Price: Low → High', icon: 'fa-solid fa-arrow-trend-up' },
-                            { value: 'price_desc', label: 'Price: High → Low', icon: 'fa-solid fa-arrow-trend-down' },
-                            { value: 'discount', label: 'Biggest Discount', icon: 'fa-solid fa-tag' },
-                        ] as const).map(opt => (
-                            <button
-                                key={opt.value}
-                                onClick={() => setSortKey(opt.value)}
-                                className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all ${sortKey === opt.value
-                                    ? 'shadow-lg scale-[1.02]'
-                                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
-                                    }`}
-                                style={sortKey === opt.value ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
-                            >
-                                <i className={opt.icon} />
-                                {opt.label}
                             </button>
                         ))}
                     </div>
@@ -467,7 +673,7 @@ function SidebarContent({
                                     ? 'shadow-lg scale-[1.02]'
                                     : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
                                     }`}
-                                style={priceRange === idx ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                                style={priceRange === idx ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                             >
                                 <span>{range.label}</span>
                                 {priceRange === idx && <i className="fa-solid fa-check text-white text-xs" />}

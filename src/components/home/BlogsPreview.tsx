@@ -38,8 +38,7 @@ export default function BlogsPreview() {
 
                     <Link
                         href="/blogs"
-                        className="group inline-flex items-center gap-3 font-bold uppercase tracking-wider px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 text-sm whitespace-nowrap"
-                        style={{ backgroundColor: COLORS.button, color: COLORS.buttonText, boxShadow: '0 4px 20px rgba(246, 176, 0, 0.2)' }}
+                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap"
                     >
                         View All Articles
                         <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />

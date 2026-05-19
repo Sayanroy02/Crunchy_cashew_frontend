@@ -52,9 +52,10 @@ export default function AddToCartButton({ product, selectedVariant }: { product:
 
             <button
                 onClick={handleAdd}
-                className="flex-1 bg-primary text-black font-black text-lg py-4 rounded-2xl shadow-lg hover:bg-black hover:text-white hover:shadow-black/20 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-3"
+                className="flex-1 text-white font-bold p-4 rounded-2xl text-base transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"
+                style={{ backgroundColor: '#00863D' }}
             >
-                <i className="fa-solid fa-bag-shopping"></i> Add to Cart
+                <i className="fa-solid fa-bag-shopping text-sm"></i> Add to Cart
             </button>
         </div>
     );

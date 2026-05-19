@@ -24,7 +24,7 @@ import { COLORS } from "@/constants/styles";
 export default function Home() {
   return (
     <main className="relative min-h-screen">
-      {/* Hero Background - removed parallax effect */}
+      {/* Hero — starts below the fixed navbar on all breakpoints */}
       <div className="relative w-full z-0">
         <HeroVideo />
       </div>

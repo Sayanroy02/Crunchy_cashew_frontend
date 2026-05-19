@@ -191,18 +191,18 @@ export default function CheckoutButton({
       type="button"
       onClick={handleCheckout}
       disabled={disabled || loading}
-      className="w-full font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg"
-      style={{ backgroundColor: '#000000', color: '#F6B000' }}
+      className="w-full text-black p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+      style={{ backgroundColor: COLORS.primary, color: '#000000' }}
     >
       {loading ? (
         <>
-          <i className="fa-solid fa-spinner fa-spin" />
-          Processing...
+          <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" />
+          <span>Processing...</span>
         </>
       ) : (
         <>
-          <i className="fa-solid fa-lock" />
-          Place Order
+          <i className="fa-solid fa-lock text-sm md:text-xs" />
+          <span>Place Order</span>
         </>
       )}
     </button>

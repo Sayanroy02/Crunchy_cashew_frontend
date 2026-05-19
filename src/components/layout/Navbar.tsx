@@ -23,36 +23,39 @@ const LEFT_LINKS = [
     { label: 'Contact', href: '/contact' },
 ];
 
-const TRANSPARENT_PAGES: string[] = [];
-
 export default function Navbar() {
     const [annoIdx, setAnnoIdx] = useState(0);
     const [annoFade, setAnnoFade] = useState(true);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const [mounted, setMounted] = useState(false);
+    // true once user has scrolled past 100vh (1 screen height)
+    const [scrolledPast, setScrolledPast] = useState(false);
 
     const dispatch = useDispatch();
     const pathname = usePathname();
     const cartQty = useSelector((state: RootState) => state.cart.totalQuantity);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-    const isHeroPage = TRANSPARENT_PAGES.includes(pathname);
+    /* ── Only the home page gets the transparent / reveal behaviour ── */
+    const isHomePage = pathname === '/';
 
     /* ── Mount guard for portal ── */
     useEffect(() => setMounted(true), []);
 
-    /* ── Scroll listener ── */
+    /* ── Scroll listener: reveal announcement + solidify mobile after 100vh ── */
     useEffect(() => {
-        if (!isHeroPage) return;
+        if (!isHomePage) {
+            setScrolledPast(true); // always show on non-home pages
+            return;
+        }
+        setScrolledPast(false); // reset when navigating back to home
         const onScroll = () => {
-            const heroHeight = Math.min(Math.max(600, window.innerHeight), 820);
-            setScrolled(window.scrollY > heroHeight - 80);
+            setScrolledPast(window.scrollY > window.innerHeight * 0.85);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
         return () => window.removeEventListener('scroll', onScroll);
-    }, [isHeroPage]);
+    }, [isHomePage, pathname]);
 
     /* ── Announcement rotator ── */
     useEffect(() => {
@@ -74,19 +77,25 @@ export default function Navbar() {
     const isActive = (href: string) =>
         href === '/' || href === '/shop' ? pathname === href : pathname.startsWith(href);
 
-    const isTransparent = isHeroPage && !scrolled;
+    /*
+     * showAnnouncement:
+     *   - homepage: shows after user scrolls past ~85% of viewport height
+     *   - all other pages: always visible
+     */
+    const showAnnouncement = scrolledPast;
 
     return (
-        <div className={`${isHeroPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-[100] transition-all duration-400 ease-out flex flex-col ${!isTransparent ? 'bg-white/95 backdrop-blur-md shadow-sm border-none' : ''}`}>
+        <div className="fixed top-0 left-0 right-0 z-[100] flex flex-col bg-white/95 backdrop-blur-md shadow-sm transition-all duration-500 ease-out">
 
             {/* ─── Announcement Bar ─── */}
             <div
-                className="bg-[#00863D] text-white text-xs py-2 text-center overflow-hidden select-none transition-all duration-300"
+                className="bg-[#00863D] text-white text-xs py-2 text-center overflow-hidden select-none"
                 style={{
-                    opacity: isTransparent ? 0 : 1,
-                    maxHeight: isTransparent ? '0px' : '40px',
-                    padding: isTransparent ? '0' : undefined,
-                    pointerEvents: isTransparent ? 'none' : 'auto',
+                    opacity: showAnnouncement ? 1 : 0,
+                    maxHeight: showAnnouncement ? '40px' : '0px',
+                    padding: showAnnouncement ? undefined : '0',
+                    pointerEvents: showAnnouncement ? 'auto' : 'none',
+                    transition: 'opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease',
                 }}
             >
                 <span
@@ -106,7 +115,7 @@ export default function Navbar() {
             <header className="relative w-full">
 
                 {/* Desktop */}
-                <div className="hidden md:flex items-stretch max-w-screen-xl mx-auto" style={{ minHeight: '72px' }}>
+                <div className="hidden md:flex items-stretch max-w-screen-xl mx-auto" style={{ minHeight: '72px', color: '#1a1a1a' }}>
 
                     {/* LEFT — nav links */}
                     <nav className="flex flex-1 items-center gap-1 px-6">
@@ -116,10 +125,8 @@ export default function Navbar() {
                                 href={link.href}
                                 className={`relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors
                                     ${isActive(link.href)
-                                        ? (isTransparent ? 'text-amber' : 'text-[#00863D]')
-                                        : (isTransparent
-                                            ? 'text-white/80 hover:text-white hover:bg-white/10'
-                                            : 'text-gray-600 hover:text-[#00863D] hover:bg-[#00863D]/10')
+                                        ? 'text-[#00863D]'
+                                        : 'text-gray-600 hover:text-[#00863D] hover:bg-[#00863D]/10'
                                     }`}
                             >
                                 {link.label}
@@ -137,7 +144,7 @@ export default function Navbar() {
                                 src="/images/cc-Logo-01-1.png"
                                 alt="Crunchy Cashews"
                                 className="h-14 lg:h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300"
-                                style={{ filter: isTransparent ? 'drop-shadow(0 0 8px rgba(0,0,0,0.6)) drop-shadow(0 2px 4px rgba(0,0,0,0.4))' : 'none' }}
+                                style={{ filter: 'none' }}
                             />
                         </Link>
                     </div>
@@ -148,14 +155,13 @@ export default function Navbar() {
                         {/* Profile */}
                         <Link
                             href={isAuthenticated ? '/profile' : '/login'}
-                            className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group
-                                ${isTransparent ? 'hover:bg-white/10' : 'hover:bg-gray-50'}`}
+                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
                         >
                             <i className={`text-lg ${isAuthenticated
-                                ? isTransparent ? 'fa-solid fa-user text-white' : 'fa-solid fa-user text-[#00863D]'
-                                : isTransparent ? 'fa-regular fa-user text-white/80 group-hover:text-white' : 'fa-regular fa-user text-gray-500 group-hover:text-[#00863D]'
+                                ? 'fa-solid fa-user text-[#00863D]'
+                                : 'fa-regular fa-user text-gray-500 group-hover:text-[#00863D]'
                                 }`} />
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`}>
+                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">
                                 {isAuthenticated ? 'Profile' : 'Login'}
                             </span>
                         </Link>
@@ -163,54 +169,53 @@ export default function Navbar() {
                         {/* Wishlist */}
                         <Link
                             href="/profile?tab=wishlist"
-                            className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group
-                                ${isTransparent ? 'hover:bg-white/10' : 'hover:bg-gray-50'}`}
+                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
                         >
-                            <i className={`fa-regular fa-heart text-lg ${isTransparent ? 'text-white/80 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`} />
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${isTransparent ? 'text-white/70 group-hover:text-white' : 'text-gray-500 group-hover:text-[#00863D]'}`}>
+                            <i className="fa-regular fa-heart text-lg text-gray-500 group-hover:text-[#00863D]" />
+                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">
                                 Wishlist
                             </span>
                         </Link>
 
                         {/* Cart */}
-                        <Link href="/cart" className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg group">
-                            <div className="relative bg-[#00863D] group-hover:bg-[#00863D] text-white w-10 h-10 flex items-center justify-center rounded-xl shadow-sm group-hover:shadow-md transition-all">
-                                <i className="fa-solid fa-cart-shopping text-base" />
-                                {cartQty > 0 && (
-                                    <span className="absolute -top-1.5 -right-1.5 bg-[#F6B000] text-white text-[9px] font-black w-[18px] h-[18px] flex items-center justify-center rounded-full shadow">
-                                        {cartQty > 9 ? '9+' : cartQty}
-                                    </span>
-                                )}
-                            </div>
+                        <Link href="/cart" className="relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50">
+                            <i className="fa-solid fa-cart-shopping text-lg text-gray-500 group-hover:text-[#00863D]" />
+                            {cartQty > 0 && (
+                                <span className="absolute top-1 right-2 bg-[#F6B000] text-white text-[9px] font-black w-[16px] h-[16px] flex items-center justify-center rounded-full shadow">
+                                    {cartQty > 9 ? '9+' : cartQty}
+                                </span>
+                            )}
+                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">Cart</span>
                         </Link>
                     </div>
                 </div>
 
-                {/* Mobile header */}
+                {/* Mobile header — always white, black icons */}
                 <div className="md:hidden flex items-center justify-between px-4 py-3">
+                    {/* Hamburger */}
                     <button
                         onClick={() => setMobileOpen(true)}
                         aria-label="Open menu"
-                        className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors
-                            ${isTransparent ? 'hover:bg-white/15' : 'hover:bg-gray-100'}`}
+                        className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-colors"
                     >
-                        <i className={`fa-solid fa-bars text-xl ${isTransparent ? 'text-white' : 'text-gray-700'}`} />
+                        <i className="fa-solid fa-bars text-xl text-gray-800" />
                     </button>
 
+                    {/* Logo */}
                     <Link href="/">
                         <img
                             src="/images/cc-Logo-01-1.png"
                             alt="Crunchy Cashews"
-                            className="h-10 object-contain transition-all duration-300"
-                            style={{ filter: isTransparent ? 'drop-shadow(0 0 6px rgba(0,0,0,0.6))' : 'none' }}
+                            className="h-10 object-contain"
                         />
                     </Link>
 
-                    <Link href="/cart" className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-amber hover:bg-yellow transition-colors">
-                        <i className="fa-solid fa-cart-shopping text-[#2c1a0e] text-lg" />
+                    {/* Cart */}
+                    <Link href="/cart" className="relative w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-colors">
+                        <i className="fa-solid fa-cart-shopping text-xl text-gray-800" />
                         {cartQty > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-primary text-white text-[9px] font-black w-4 h-4 flex items-center justify-center rounded-full">
-                                {cartQty}
+                            <span className="absolute -top-0.5 -right-0.5 bg-[#F6B000] text-white text-[9px] font-black w-[16px] h-[16px] flex items-center justify-center rounded-full shadow">
+                                {cartQty > 9 ? '9+' : cartQty}
                             </span>
                         )}
                     </Link>

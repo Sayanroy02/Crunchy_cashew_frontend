@@ -8,6 +8,7 @@ import { removeFromCart, updateQuantity, clearCart } from '@/lib/store/features/
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 function RecommendedProducts() {
     const [products, setProducts] = React.useState<Product[]>([]);
@@ -44,13 +45,14 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-[70vh] flex flex-col items-center justify-center bg-bg px-6">
-                <i className="fa-solid fa-cart-arrow-down text-6xl text-gray-200 mb-6"></i>
+            <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF9E7] px-6 py-16">
+                <i className="fa-solid fa-cart-arrow-down text-6xl text-gray-400/50 mb-6 animate-bounce"></i>
                 <h1 className="text-3xl font-heading font-black text-black mb-4">Your Cart is Empty</h1>
                 <p className="text-black/40 mb-8 text-center max-w-md">Looks like you haven't added any of our delicious cashews to your cart yet.</p>
-                <Link href="/shop" className="font-bold py-3 px-8 rounded-full transition-all flex items-center gap-2 shadow-lg active:scale-95"
-                    style={{ backgroundColor: '#f6b000', color: '#000000' }}>
-                    <i className="fa-solid fa-store"></i> Start Shopping
+                <Link href="/shop" className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
+                    style={{ backgroundColor: '#00863D' }}>
+                    <i className="fa-solid fa-store text-sm md:text-xs" />
+                    <span>Start Shopping</span>
                 </Link>
             </div>
         );
@@ -59,7 +61,9 @@ export default function CartPage() {
     return (
         <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
-                <h1 className="text-4xl font-heading font-black text-black mb-10 border-b-2 pb-4 inline-block" style={{ borderBottomColor: '#F6B000' }}>Shopping Cart</h1>
+                <div className="mb-10 border-b-2 pb-4" style={{ borderBottomColor: '#F6B000' }}>
+                    <SectionHeading text="Shopping" highlight="Cart" className="text-4xl md:text-5xl" textColor="#000000" />
+                </div>
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Cart Items List */}
@@ -122,36 +126,36 @@ export default function CartPage() {
 
                     {/* Order Summary */}
                     <div className="lg:w-1/3">
-                        <div className="rounded-3xl p-8 shadow-2xl sticky top-28" style={{ backgroundColor: '#000000', color: '#ffffff' }}>
-                            <h2 className="text-2xl font-heading font-black mb-6 pb-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.1)', color: '#F6B000' }}>Order Summary</h2>
+                        <div className="rounded-3xl p-8 shadow-2xl sticky top-28 text-white" style={{ backgroundColor: COLORS.heading }}>
+                            <h2 className="text-2xl font-heading font-black mb-6 pb-4 border-b text-white" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>Order Summary</h2>
 
                             <div className="flex flex-col gap-4 mb-8">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-gray-400 font-medium">Subtotal</span>
-                                    <span className="font-bold">₹{totalAmount.toFixed(2)}</span>
+                                    <span className="text-white/80 font-medium">Subtotal</span>
+                                    <span className="font-bold text-white">₹{totalAmount.toFixed(2)}</span>
                                 </div>
-                                <div className="flex justify-between items-center text-gray-400 font-medium">
+                                <div className="flex justify-between items-center text-white/80 font-medium">
                                     <span>Shipping</span>
-                                    <span className="text-xs">Calculated at checkout</span>
+                                    <span className="text-xs text-white/65">Calculated at checkout</span>
                                 </div>
-                                <hr className="my-2" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+                                <hr className="my-2" style={{ borderColor: 'rgba(255,255,255,0.15)' }} />
                                 <div className="flex justify-between items-center text-xl">
-                                    <span className="font-black" style={{ color: '#F6B000' }}>Total</span>
-                                    <span className="font-black">₹{totalAmount.toFixed(2)}</span>
+                                    <span className="font-black text-white">Total</span>
+                                    <span className="font-black text-white">₹{totalAmount.toFixed(2)}</span>
                                 </div>
                             </div>
 
                             {isAuthenticated ? (
-                                <Link href="/checkout" className="w-full font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
+                                <Link href="/checkout" className="w-full text-black font-bold p-4 rounded-2xl text-sm transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2" style={{ backgroundColor: '#F6B000' }}>
                                     <i className="fa-solid fa-lock"></i> Proceed to Checkout
                                 </Link>
                             ) : (
                                 <div className="flex flex-col gap-3">
-                                    <p className="text-xs text-center text-gray-400 mb-2">You must sign in to secure your checkout.</p>
-                                    <Link href="/login" className="w-full font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95" style={{ backgroundColor: '#F6B000', color: '#000000' }}>
+                                    <p className="text-xs text-center text-white/70 mb-2">You must sign in to secure your checkout.</p>
+                                    <Link href="/login" className="w-full text-black font-bold p-4 rounded-2xl text-sm transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2" style={{ backgroundColor: '#F6B000' }}>
                                         Sign In to Checkout
                                     </Link>
-                                    <Link href="/register" className="w-full bg-transparent border font-bold py-3 rounded-xl flex items-center justify-center transition-all hover:bg-white/5" style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#ffffff' }}>
+                                    <Link href="/register" className="w-full bg-transparent border font-bold p-3 rounded-2xl flex items-center justify-center transition-all hover:bg-white/5 active:scale-95" style={{ borderColor: 'rgba(255,255,255,0.2)', color: '#ffffff' }}>
                                         Create an Account
                                     </Link>
                                 </div>

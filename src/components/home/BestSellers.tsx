@@ -52,7 +52,7 @@ export default function BestSellers() {
     }, [products, activeTag]);
 
     return (
-        <section className="pt-[48px] pb-4 md:pb-6 bg-bg relative overflow-hidden">
+        <section data-bestsellers className="pt-[48px] pb-4 md:pb-6 bg-bg relative overflow-hidden">
             {/* Floating Parachute Cashew (desktop only) */}
             <motion.div
                 initial={{ y: 0, rotate: -5 }}
@@ -169,18 +169,7 @@ export default function BestSellers() {
                 <div className="mt-7 text-center">
                     <Link
                         href="/shop"
-                        className="inline-flex items-center gap-2 border-2 font-bold px-8 py-3 rounded-xl duration-300 group hover:scale-105 active:scale-95"
-                        style={{ borderColor: COLORS.black, color: COLORS.black }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = COLORS.primary;
-                            e.currentTarget.style.borderColor = COLORS.primary;
-                            e.currentTarget.style.color = COLORS.black;
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = COLORS.heading;
-                            e.currentTarget.style.borderColor = COLORS.heading;
-                            e.currentTarget.style.color = COLORS.white;
-                        }}
+                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2"
                     >
                         View All Products <i className="fa-solid fa-arrow-right" />
                     </Link>

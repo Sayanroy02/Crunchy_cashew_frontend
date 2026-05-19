@@ -164,13 +164,13 @@ export default function AboutFactory() {
                         <div className="flex flex-wrap items-center gap-4 mb-2">
                             <button
                                 onClick={openModal}
-                                className="bg-primary text-black font-bold px-8 py-4 rounded-2xl hover:bg-primary/80 transition-all shadow-lg hover:-translate-y-1 active:translate-y-0"
+                                className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2"
                             >
                                 Schedule a Visit
                             </button>
                             <Link
                                 href="/about"
-                                className="bg-transparent font-bold px-8 py-4 rounded-2xl border-2 hover:bg-black/5 transition-all hover:-translate-y-1 active:translate-y-0"
+                                className="bg-transparent border-2 p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 hover:bg-black/5"
                                 style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                             >
                                 Our Story

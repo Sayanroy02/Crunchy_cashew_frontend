@@ -68,7 +68,7 @@ export default function RootLayout({
             <SplashScreen />
             <FloatingBackground />
             <Navbar />
-            <main className="min-h-screen">
+            <main className="min-h-screen pt-[56px] md:pt-[72px]">
               {children}
             </main>
             <Footer />

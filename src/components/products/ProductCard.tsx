@@ -237,7 +237,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     ))}
                 </div>
 
-                <div className="pt-2 flex items-center justify-between border-t border-gray-50">
+                <div className="pt-2 flex flex-col gap-3 border-t border-gray-50 md:flex-row md:items-center md:justify-between md:gap-0">
                     <div className="flex flex-col">
                         <div className="flex items-baseline gap-1.5">
                             <span className="text-black font-black text-xl">₹{selectedVariant.price.toFixed(0)}</span>
@@ -252,19 +252,22 @@ export default function ProductCard({ product }: ProductCardProps) {
                             </span>
                         </div>
                     </div>
-
-                        <button
-                            onClick={handleAddToCart}
-                            disabled={selectedVariant.stock <= 0}
-                            className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-sm ${selectedVariant.stock > 0
-                                ? 'bg-primary text-black hover:bg-black hover:text-white hover:shadow-lg hover:-translate-y-1 active:translate-y-0'
-                                : 'bg-gray-100 text-gray-300 cursor-not-allowed border border-gray-200'
-                                }`}
-                            style={selectedVariant.stock > 0 ? { backgroundColor: COLORS.primary } : {}}
-                            aria-label="Add to cart"
-                        >
-                            <i className={`fa-solid ${selectedVariant.stock > 0 ? 'fa-bag-shopping' : 'fa-hourglass-start'} text-sm`}></i>
-                        </button>
+ 
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={selectedVariant.stock <= 0}
+                        className={`w-full h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm ${selectedVariant.stock > 0
+                            ? 'bg-primary text-black hover:bg-black hover:text-white hover:shadow-lg hover:-translate-y-0.5 md:hover:-translate-y-1 active:translate-y-0'
+                            : 'bg-gray-100 text-gray-300 cursor-not-allowed border border-gray-200'
+                            }`}
+                        style={selectedVariant.stock > 0 ? { backgroundColor: COLORS.primary } : {}}
+                        aria-label="Add to cart"
+                    >
+                        <i className={`fa-solid ${selectedVariant.stock > 0 ? 'fa-bag-shopping' : 'fa-hourglass-start'} text-sm`}></i>
+                        <span className="md:hidden text-xs font-black uppercase tracking-wider">
+                            {selectedVariant.stock > 0 ? 'Add to Bag' : 'Out of Stock'}
+                        </span>
+                    </button>
                 </div>
             </div>
         </div>

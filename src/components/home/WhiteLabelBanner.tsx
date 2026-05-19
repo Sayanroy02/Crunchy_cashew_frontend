@@ -289,25 +289,30 @@ I’d like to know more about your white label options. Could you please share t
 
                                 {/* Desktop Buttons */}
                                 <div className="hidden lg:flex items-center gap-4">
-                                    <motion.button
-                                        whileHover={{ scale: 1.05, y: -1 }}
-                                        whileTap={{ scale: 0.98 }}
+                                    <button
                                         onClick={handleCTA}
-                                        className="h-11 px-7 rounded-xl bg-primary text-black font-black text-[13px] flex items-center gap-2.5 shadow-xl shadow-primary/20 transition-all"
+                                        className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                        style={{
+                                            background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
+                                            color: '#000',
+                                        }}
                                     >
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                                        </svg>
                                         {isBulkPage ? 'Discuss White Label Options' : 'Partner With Us'}
-                                        <Send className="w-3.5 h-3.5" />
-                                    </motion.button>
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+                                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                                        </svg>
+                                    </button>
                                     {!isBulkPage && (
-                                        <motion.a
+                                        <a
                                             href="/bulk"
-                                            whileHover={{ scale: 1.05, y: -1 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all"
+                                            className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all hover:scale-105 active:scale-95 shadow-xl"
                                         >
                                             <BookOpen className="w-4 h-4" />
                                             Know More
-                                        </motion.a>
+                                        </a>
                                     )}
                                 </div>
                             </div>
@@ -331,23 +336,30 @@ I’d like to know more about your white label options. Could you please share t
 
                             {/* Mobile Buttons */}
                             <div className="lg:hidden w-full flex flex-col gap-2 mt-1">
-                                <motion.button
-                                    whileTap={{ scale: 0.98 }}
+                                <button
                                     onClick={handleCTA}
-                                    className="w-full h-11 rounded-xl bg-primary text-black font-black text-[13px] flex items-center justify-center gap-3 shadow-xl shadow-primary/20"
+                                    className="group font-black w-full px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                    style={{
+                                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
+                                        color: '#000',
+                                    }}
                                 >
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                                    </svg>
                                     {isBulkPage ? 'Discuss White Label Options' : 'Partner With Us'}
-                                    <Send className="w-3.5 h-3.5" />
-                                </motion.button>
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+                                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                                    </svg>
+                                </button>
                                 {!isBulkPage && (
-                                    <motion.a
+                                    <a
                                         href="/bulk"
-                                        whileTap={{ scale: 0.98 }}
-                                        className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3"
+                                        className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl"
                                     >
                                         <BookOpen className="w-4 h-4" />
                                         Know More
-                                    </motion.a>
+                                    </a>
                                 )}
                             </div>
 

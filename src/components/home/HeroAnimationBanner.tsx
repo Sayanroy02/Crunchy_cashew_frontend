@@ -41,7 +41,7 @@ export default function HeroVideo() {
         <section
             aria-label="Crunchy Cashews – Premium Cashew Nuts from Factory to Doorstep"
             className="relative w-full overflow-hidden bg-[#1a0a04]"
-            style={{ height: 'clamp(600px, 100svh, 820px)' }}
+            style={{ height: 'calc(100svh - var(--navbar-h, 72px))' }}
         >
             {/* ── Desktop Video ── */}
             <video
@@ -93,7 +93,7 @@ export default function HeroVideo() {
 
             {/* ════════════════════
                 MOBILE: Top block
-                Eyebrow + H1 pinned above the packet (~top 13%)
+                Eyebrow + H1 pinned below the transparent navbar (~navbar height + some gap)
             ════════════════════ */}
             <div
                 className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
@@ -212,6 +212,7 @@ export default function HeroVideo() {
                 DESKTOP LAYOUT
                 Original left-aligned, always visible (no delay)
             ════════════════════ */}
+            {/* Desktop: hero already starts below navbar, no extra padding needed */}
             <div className="hidden md:flex absolute inset-0 items-center">
                 <div className="w-full max-w-screen-xl mx-auto px-10 lg:px-16">
                     <div className="flex flex-col items-start text-left max-w-[580px]">
