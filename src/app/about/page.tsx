@@ -115,7 +115,7 @@ function Gallery() {
         <SectionHeading
           text="Our Factory"
           highlight="Gallery"
-          textColor="#000000"
+          textColor={COLORS.heading}
           className="text-3xl md:text-4xl"
         />
         <p className="text-gray-500 mt-4 max-w-2xl">
@@ -183,6 +183,13 @@ export default function AboutPage() {
     } catch { setSubmitStatus('error'); }
   };
 
+  const handleWhatsAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const currentOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://crunchycashews.in';
+    const message = `source- ${currentOrigin}/about [From about page bottom banner]\n\nI would like to know more about bulk or white label services that you provide.`;
+    window.open(`https://wa.me/917847996343?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
   function renderContent() {
     if (isLoading) {
       return (
@@ -211,7 +218,7 @@ export default function AboutPage() {
               <SectionHeading
                 text="Modern Infrastructure,"
                 highlight="Rooted in Tradition."
-                textColor="#000000"
+                textColor={COLORS.heading}
                 className="text-3xl md:text-5xl"
               />
             </div>
@@ -266,7 +273,7 @@ export default function AboutPage() {
                 <SectionHeading
                   text="Ethically Sourced from the"
                   highlight="World’s Best."
-                  textColor="#000000"
+                  textColor={COLORS.heading}
                   className="text-3xl md:text-5xl"
                 />
               </div>
@@ -294,14 +301,14 @@ export default function AboutPage() {
               <SectionHeading
                 text="Precision Manufacturing"
                 highlight="at Scale."
-                textColor="#000000"
+                textColor={COLORS.heading}
                 className="text-3xl md:text-5xl"
               />
               <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-4">
                 Our 28,800 sq. ft. facility is equipped to handle high-volume demands without compromising on grade or quality.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-black text-[#F6B000] px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl h-fit">
+            <div className="flex items-center gap-3 bg-green-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl h-fit">
               <i className="fa-solid fa-industry text-base" /> 28,800 Sq. Ft.
             </div>
           </div>
@@ -325,7 +332,7 @@ export default function AboutPage() {
               },
             ].map(point => (
               <div key={point.title} className="p-8 rounded-3xl hover:bg-white/60 transition-all duration-300 group">
-                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-black mb-6 group-hover:bg-[#F6B000] group-hover:rotate-6 transition-all shadow-sm">
+                <div className="w-14 h-14 bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#F6B000] group-hover:rotate-6 transition-all shadow-sm">
                   <i className={`fa-solid ${point.icon} text-xl`} />
                 </div>
                 <h3 className="font-black text-gray-900 mb-3 text-lg">{point.title}</h3>
@@ -348,9 +355,9 @@ export default function AboutPage() {
             </div>
 
             <SectionHeading
-              text="A Commitment to"
-              highlight="Uncompromising Quality."
-              textColor="#000000"
+              text="Quality,"
+              highlight="Uncompromised."
+              textColor={COLORS.heading}
               className="text-3xl md:text-5xl"
             />
 
@@ -406,7 +413,7 @@ export default function AboutPage() {
             <SectionHeading
               text="The Heart of"
               highlight="Our Industry."
-              textColor="#000000"
+              textColor={COLORS.heading}
               className="text-3xl md:text-5xl"
             />
 
@@ -439,7 +446,7 @@ export default function AboutPage() {
           <SectionHeading
             text="Witness the"
             highlight="Magic Firsthand."
-            textColor="#000000"
+            textColor={COLORS.heading}
             className="text-3xl md:text-4xl mb-6"
           />
           <p className="text-gray-600 text-sm md:text-base leading-relaxed max-w-2xl">
@@ -489,11 +496,10 @@ export default function AboutPage() {
               </div>
               {submitStatus === 'error' && <p className="text-red-500 text-xs font-medium text-center">Failed to submit. Please try again.</p>}
               <button type="submit" disabled={submitStatus === 'loading'}
-                className="w-full font-black py-5 rounded-[2rem] transition-all shadow-2xl flex items-center justify-center gap-3 text-sm disabled:opacity-60 active:scale-[0.98]"
-                style={{ backgroundColor: '#000000', color: '#F6B000' }}>
+                className="w-full bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-60 disabled:hover:scale-100 disabled:active:scale-100">
                 {submitStatus === 'loading'
                   ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Processing...</>
-                  : <><i className="fa-solid fa-paper-plane" /> Submit Visit Request</>}
+                  : <><i className="fa-solid fa-paper-plane text-xs" /> Submit Visit Request</>}
               </button>
             </form>
           )}
@@ -506,23 +512,23 @@ export default function AboutPage() {
     <div className={`min-h-screen pb-16 bg-[#FFF9E7] relative`}>
 
       {/* Seamless Background Image (like bulk/shop page) */}
-      <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
+      <div className="absolute top-0 left-0 z-0 w-full h-[70vh]">
         <img
-          src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/about-banner_fpgcpm.png"
+          src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779214005/ChatGPT_Image_May_19_2026_11_31_49_PM_x5vgjt.png"
           alt="About Background"
-          className="w-full h-full object-cover object-bottom opacity-80"
+          className="w-full h-full object-cover object-[center_20%] opacity-80"
         />
         <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
       </div>
 
       {/* Floating Cashew Decoration */}
-      <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
+      {/* <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
         <img
           src="/images/Fruit-3-1.png"
           alt=""
           className="w-full h-auto drop-shadow-2xl brightness-110"
         />
-      </div>
+      </div> */}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center">
 
@@ -530,11 +536,18 @@ export default function AboutPage() {
           Industry Leaders
         </span>
 
-        <SectionHeading
-          text="Redefining Quality in"
-          highlight="Cashew Manufacturing."
-          className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mb-6"
-        />
+        <h1
+          className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm max-w-3xl mb-6 text-center"
+          style={{ color: COLORS.heading }}
+        >
+          Redefining Quality in{' '}
+          <span
+            className="inline-block md:whitespace-nowrap"
+            style={{ color: COLORS.highlight }}
+          >
+            Cashew Manufacturing.
+          </span>
+        </h1>
 
         <p className="text-gray-700 text-sm md:text-lg max-w-2xl mb-10 leading-relaxed font-medium drop-shadow-sm">
           Welcome to Yu Nut Processing Industry. From ethical sourcing to advanced processing, we deliver farm-fresh, premium cashews tailored for businesses across India.
@@ -592,8 +605,74 @@ export default function AboutPage() {
       </div>
 
       {/* ── CONTENT AREA ── */}
-      <main className="max-w-6xl mx-auto px-6 py-20">
+      <main className="max-w-6xl mx-auto px-6 py-12 md:py-20 flex flex-col gap-12 md:gap-16">
         {renderContent()}
+
+        {/* ── COMMON BANNER: Ready to Elevate Your Supply Chain? ── */}
+        <section className="w-full animate-fade-in" aria-label="Bulk Supply CTA Banner">
+          <div
+            className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-[32px] overflow-hidden px-8 md:px-12 py-8 md:py-10 shadow-2xl border border-white/10"
+            style={{
+              background: `linear-gradient(135deg, ${COLORS.heading} 0%, #006b31 100%)`,
+              boxShadow: `0 12px 40px rgba(0, 134, 61, 0.15), 0 4px 12px rgba(0,0,0,0.1)`,
+            }}
+          >
+            {/* Background dot pattern */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-45"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #ffffff0d 1px, transparent 1px)',
+                backgroundSize: '16px 16px',
+              }}
+            />
+
+            {/* Gold accent glow */}
+            <div
+              className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, #FDC7001A 0%, transparent 70%)' }}
+            />
+
+            {/* LEFT side content */}
+            <div className="relative z-10 flex-1 text-center md:text-left flex flex-col items-center md:items-start">
+              <h2 className="text-xl md:text-2xl font-black text-white leading-tight">
+                Ready to Elevate <span style={{ color: COLORS.primary }}>Your Supply Chain</span>?
+              </h2>
+              <p className="text-white/80 text-sm md:text-base max-w-xl mt-3 mb-6 leading-relaxed font-medium">
+                Whether you need consistent bulk orders of premium grades or white-label solutions for your brand, we have the capacity and the quality to be your trusted manufacturing partner.
+              </p>
+              <div className="relative z-10 flex-shrink-0">
+                <a
+                  id="bulk-quote-banner-cta"
+                  onClick={handleWhatsAppClick}
+                  href="#"
+                  className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                  style={{
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
+                    color: '#000',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                  </svg>
+                  Request a Bulk Quote
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* RIGHT side illustration */}
+            <div className="relative z-10 flex-shrink-0 hidden md:block">
+              <img
+                src="/images/iLLUSTARTION-1.png"
+                alt="Bulk quote illustration"
+                className="w-36 h-auto object-contain drop-shadow-2xl animate-pulse-subtle"
+                style={{ filter: 'drop-shadow(0 12px 24px rgba(253,199,0,0.2))' }}
+              />
+            </div>
+          </div>
+        </section>
       </main>
 
       <style>{`

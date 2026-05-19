@@ -103,24 +103,31 @@ export default function BlogsDirectory() {
                     />
                 </div>
 
-                {/* Floating Cashew Decoration */}
+                {/* Floating Cashew Decoration
                 <div className="absolute top-[20%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
                     <img
                         src="/images/Fruit-3-1.png"
                         alt=""
                         className="w-full h-auto drop-shadow-2xl brightness-110"
                     />
-                </div>
+                </div> */}
 
                 <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
                     <span className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-black/5 text-black/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-6 shadow-sm">
                         <i className="fa-solid fa-sparkles text-[#F6B000]" /> Our Journal
                     </span>
-                    <SectionHeading
-                        text="Insights, Recipes &"
-                        highlight="Sustainability"
-                        className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm mb-6"
-                    />
+                    <h1
+                        className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm mb-6 text-center"
+                        style={{ color: COLORS.heading }}
+                    >
+                        Insights, Recipes &{' '}
+                        <span
+                            className="block"
+                            style={{ color: COLORS.highlight }}
+                        >
+                            Sustainability
+                        </span>
+                    </h1>
                     <p className="text-black/80 max-w-2xl mx-auto text-base md:text-lg font-medium mb-12 drop-shadow-sm">
                         Expert health guides, cashew recipes, and our commitment to sustainable farming — all in one place.
                     </p>

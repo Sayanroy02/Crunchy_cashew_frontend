@@ -54,7 +54,7 @@ export default function BestSellers() {
     return (
         <section data-bestsellers className="pt-[48px] pb-4 md:pb-6 bg-bg relative overflow-hidden">
             {/* Floating Parachute Cashew (desktop only) */}
-            <motion.div
+            {/* <motion.div
                 initial={{ y: 0, rotate: -5 }}
                 animate={{
                     y: [0, -30, 0],
@@ -73,7 +73,7 @@ export default function BestSellers() {
                     alt="Parachute Cashew"
                     className="w-full h-auto drop-shadow-2xl"
                 />
-            </motion.div>
+            </motion.div> */}
 
             <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
 

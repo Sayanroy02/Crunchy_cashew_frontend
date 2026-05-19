@@ -78,10 +78,10 @@ interface FieldProps {
 
 function Field({ label, name, type = 'text', value, onChange, required, as, options, placeholder }: FieldProps) {
     const inputClass =
-        'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300';
+        'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300 focus:border-[#F6B000] focus:ring-2 focus:ring-[#F6B000]/20';
 
     return (
-        <div className="flex flex-col gap-1.5 focus-within:ring-2 focus-within:ring-opacity-10" style={{ '--tw-ring-color': COLORS.primary } as any}>
+        <div className="flex flex-col gap-1.5">
             <label className="text-[11px] font-bold tracking-widest uppercase ml-0.5" style={{ color: COLORS.black }}>
                 {label}{required && <span style={{ color: COLORS.primary }} className="ml-0.5">*</span>}
             </label>
@@ -126,7 +126,7 @@ function InfoRow({ icon, title, lines }: { icon: React.ReactNode; title: string;
                 {icon}
             </div>
             <div>
-                <p style={{ color: COLORS.button }} className="text-[10px] font-black tracking-widest uppercase mb-1 mt-0.5">{title}</p>
+                <p style={{ color: COLORS.white }} className="text-[10px] font-black tracking-widest uppercase mb-1 mt-0.5">{title}</p>
                 {lines.map((l, i) => <p key={i} className="text-white text-sm leading-relaxed">{l}</p>)}
             </div>
         </div>
@@ -210,13 +210,13 @@ function ContactContent() {
             </div>
 
             {/* Floating Cashew Decoration */}
-            <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
+            {/* <div className="absolute top-[15%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
                 <img
                     src="/images/Fruit-3-1.png"
                     alt=""
                     className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
-            </div>
+            </div> */}
 
             {/* ══ HERO ══ */}
             <section className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center pb-16">
@@ -286,7 +286,7 @@ function ContactContent() {
                         {/* Tab bar */}
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
                             <div>
-                                <h2 className="text-2xl font-black text-[#1a1f1c]">
+                                <h2 className="text-2xl font-black" style={{ color: COLORS.heading }}>
                                     {activeTab === 'general' ? 'Send a Message' : 'Request a Factory Visit'}
                                 </h2>
                                 <p className="text-gray-400 text-sm mt-1">
@@ -299,7 +299,7 @@ function ContactContent() {
                                 {(['general', 'visit'] as Tab[]).map(tab => (
                                     <button key={tab} onClick={() => switchTab(tab)}
                                         className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${activeTab === tab ? 'shadow' : 'text-gray-400'}`}
-                                        style={activeTab === tab ? { backgroundColor: COLORS.black, color: COLORS.white } : {}}
+                                        style={activeTab === tab ? { backgroundColor: COLORS.heading, color: COLORS.white } : {}}
                                     >
                                         {tab === 'general' ? 'General' : 'Factory Visit'}
                                     </button>
@@ -348,13 +348,10 @@ function ContactContent() {
                                 <Field label="Your Message" name="message" value={form.message} onChange={onChange} required as="textarea" />
                                 <div className="pt-2">
                                     <button type="submit" disabled={status === 'loading'}
-                                        className="inline-flex items-center gap-3 font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                                        style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
-                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.primary; e.currentTarget.style.color = COLORS.black; }}
-                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.heading; e.currentTarget.style.color = COLORS.primary; }}
+                                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:hover:scale-100 disabled:active:scale-100"
                                     >
                                         {status === 'loading'
-                                            ? <span className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: COLORS.primary }} />
+                                            ? <span className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#ffffff' }} />
                                             : <><span>Send Message</span><IconSend /></>}
                                     </button>
                                 </div>
@@ -382,10 +379,7 @@ function ContactContent() {
                                 </div>
                                 <div className="pt-2">
                                     <button type="submit" disabled={status === 'loading'}
-                                        className="inline-flex items-center gap-3 font-bold text-sm px-8 py-4 rounded-2xl shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                                        style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
-                                        onMouseEnter={e => { e.currentTarget.style.backgroundColor = COLORS.primary; e.currentTarget.style.color = COLORS.black; }}
-                                        onMouseLeave={e => { e.currentTarget.style.backgroundColor = COLORS.black; e.currentTarget.style.color = COLORS.primary; }}
+                                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:hover:scale-100 disabled:active:scale-100"
                                     >
                                         {status === 'loading'
                                             ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

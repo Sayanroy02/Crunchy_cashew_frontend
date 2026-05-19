@@ -11,9 +11,9 @@ interface SectionHeadingProps {
     highlightColor?: string;
 }
 
-export default function SectionHeading({ 
-    text, 
-    highlight, 
+export default function SectionHeading({
+    text,
+    highlight,
     className = "mb-3",
     textColor,
     highlightColor

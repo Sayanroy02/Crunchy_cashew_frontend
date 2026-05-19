@@ -424,7 +424,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
         },
         {
             title: 'Bakeries & Confectionery',
-            image: '/images/bakery-img.png',
+            image: '/images/bakery-image.png',
             message: "Hello,\nI’d like to use your products for our bakery/confectionery needs. Please share your bulk pricing, product varieties, and minimum order details.\nExcited to explore this further. Thank you!"
         },
         {
@@ -519,6 +519,51 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                 ))}
             </div>
         </section>
+    );
+}
+// ─── Trusted Partners Marquee ─────────────────────────────────────────────────
+function TrustedMarquee() {
+    const trackRef = useRef<HTMLDivElement>(null);
+    const animRef = useRef<number>(0);
+    const xRef = useRef<number>(0);
+
+    useEffect(() => {
+        const track = trackRef.current;
+        if (!track) return;
+
+        const singleSetWidth = track.scrollWidth / 5;
+        const speed = 0.8; // increase for faster
+
+        const tick = () => {
+            xRef.current -= speed;
+            if (Math.abs(xRef.current) >= singleSetWidth) {
+                xRef.current = 0;
+            }
+            track.style.transform = `translateX(${xRef.current}px)`;
+            animRef.current = requestAnimationFrame(tick);
+        };
+
+        animRef.current = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(animRef.current);
+    }, []);
+
+    return (
+        <div className={`flex overflow-hidden w-full select-none`}>
+            <div
+                ref={trackRef}
+                className="flex w-max items-center gap-16 md:gap-24 whitespace-nowrap px-8 will-change-transform"
+            >
+                {[...Array(5)].map((_, idx) => (
+                    <div key={idx} className="flex items-center gap-16 md:gap-24 shrink-0">
+                        <img src="/images/partners/reliance-logo.png" alt="Smart Bazaar" className="h-20 md:h-30 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                        <img src="/images/partners/Global-nuts.png" alt="Global Nuts" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                        <img src="/images/partners/9to10-logo.png" alt="9to10" className="h-16 md:h-24 w-auto object-contain grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                        <img src="/images/partners/natures-nut.png" alt="Nature's Nut" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                        <img src="/images/partners/SPENCERS%20Logo.png" alt="Spencers" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -645,9 +690,9 @@ function OurGradesSection({
                         undefined,
                         'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                     )}
-                    className="w-full sm:w-auto h-10 md:h-11 lg:h-12 px-5 md:px-6 lg:px-8 rounded-[10px] font-extrabold text-black bg-[#F6B000] hover:bg-[#e0a000] border border-[#F6B000] hover:border-[#e0a000] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 text-[13px] md:text-[14px] lg:text-[15px]"
+                    className="w-full sm:w-auto bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2.5"
                 >
-                    <i className="fa-brands fa-whatsapp text-base md:text-lg text-black" />
+                    <i className="fa-brands fa-whatsapp text-base md:text-lg text-white" />
                     Enquire Now
                 </button>
 
@@ -655,9 +700,10 @@ function OurGradesSection({
                 <a
                     href="/document/Cashew-Catalogue.pdf"
                     download="Cashew-Catalogue.pdf"
-                    className="w-full sm:w-auto h-10 md:h-11 lg:h-12 px-5 md:px-6 lg:px-8 rounded-[10px] font-extrabold bg-white text-gray-900 border border-gray-200 hover:border-[#F6B000] hover:text-[#004724] transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 text-[13px] md:text-[14px] lg:text-[15px]"
+                    className="w-full sm:w-auto bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2.5 border-2"
+                    style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                 >
-                    <i className="fa-solid fa-download text-sm md:text-base text-[#F6B000]" />
+                    <i className="fa-solid fa-download text-sm md:text-base" />
                     Download Catalogue
                 </a>
             </div>
@@ -699,8 +745,8 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
         },
         {
             icon: (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F6B000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 shrink-0">
-                    <path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12" /><path d="M12 6v6l4 2" /><path d="M2 12h4" />
+                <svg width="24" height="24" viewBox="0 0 640 640" fill="#F6B000" className="w-6 h-6 shrink-0">
+                    <path d="M64 320C64 290.4 69 262.1 78.2 235.6L95.5 252.5L90.9 279.5C86.7 303.9 96.5 325.7 112.9 339.4C122.7 445.2 211.7 528.1 320 528.1C428.3 528.1 517.4 445.3 527.1 339.5C543.5 325.8 553.2 304.1 549.1 279.6L544.5 252.6L561.8 235.7C571 262.1 576 290.5 576 320.1C576 461.5 461.4 576.1 320 576.1C178.6 576.1 64 461.4 64 320zM320 112C304.8 112 290 113.6 275.7 116.7L265.4 95.8C261 87 255.1 79.8 248.2 74.2C271 67.6 295.1 64 320 64C344.9 64 369 67.6 391.8 74.2C384.9 79.8 379 87 374.6 95.8L364.3 116.7C350 113.6 335.2 112 320 112zM436.2 366.3C448 362.7 459.9 372.4 455.8 384.1C436 440 382.7 480.1 320 480.1C257.3 480.1 204 440.1 184.2 384.2C180.1 372.6 192 362.8 203.8 366.4C238.5 377 278 382.9 319.9 382.9C361.9 382.9 401.4 376.9 436.2 366.3zM417.7 117.1C423.6 105.2 440.5 105.2 446.4 117.1L469.7 164.3L521.7 171.9C534.8 173.8 540.1 189.9 530.6 199.2L492.9 235.9L501.8 287.7C504 300.8 490.3 310.7 478.6 304.6L432 280L385.5 304.5C373.8 310.7 360 300.7 362.3 287.6L371.2 235.8L333.5 199.1C324 189.8 329.2 173.7 342.4 171.8L394.4 164.2L417.7 117zM222.4 117.1L245.7 164.3L297.7 171.9C310.8 173.8 316.1 189.9 306.6 199.2L268.9 235.9L277.8 287.7C280 300.8 266.3 310.7 254.6 304.6L208 280L161.5 304.5C149.8 310.7 136 300.7 138.3 287.6L147.2 235.8L109.5 199.1C100 189.8 105.2 173.7 118.4 171.8L170.4 164.2L193.7 117C199.6 105.1 216.5 105.1 222.4 117z" />
                 </svg>
             ),
             title: "Clean Taste, No Bitterness",
@@ -732,7 +778,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
 
             {/* 1. TABLET & DESKTOP VERSION (show on tablet and desktop, hidden on phone) */}
             <div className="hidden md:block">
-                <div className="grid grid-cols-1 lg:grid-cols-[1.35fr_2fr] gap-12 lg:gap-16 items-center">
+                <div className="grid grid-cols-1 xl:grid-cols-[1.35fr_2fr] gap-12 xl:gap-16 items-center">
 
                     {/* LEFT (Top on iPad): Branding & Main Headings */}
                     <motion.div
@@ -740,10 +786,10 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
-                        className="flex flex-col gap-5 text-center lg:text-left items-center lg:items-start"
+                        className="flex flex-col gap-5 text-center xl:text-left items-center xl:items-start"
                     >
                         {/* Tagline style: / Why Partner? */}
-                        <div className="flex items-center gap-2 justify-center lg:justify-start">
+                        <div className="flex items-center gap-2 justify-center xl:justify-start">
                             <span className="text-xl font-extrabold text-[#F6B000]">/</span>
                             <span className="text-xs md:text-sm font-bold uppercase tracking-[0.25em] text-[#00863D]">
                                 Why Partner With Us?
@@ -753,15 +799,15 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                         <SectionHeading
                             text="The Crunchy"
                             highlight="Cashew Difference"
-                            className="!text-3xl md:!text-5xl lg:!text-6xl font-black leading-[1.1] text-center lg:text-left mb-0 w-full"
+                            className="!text-3xl md:!text-5xl xl:!text-6xl font-black leading-[1.1] text-center xl:text-left mb-0 w-full"
                         />
 
-                        <p className="text-gray-500 text-sm leading-relaxed max-w-lg lg:max-w-sm font-medium text-center lg:text-left mx-auto lg:mx-0">
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-lg xl:max-w-sm font-medium text-center xl:text-left mx-auto xl:mx-0">
                             We solve the most common B2B cashew supply chain headaches so you can focus entirely on growing your brand.
                         </p>
 
                         {/* CTA Buttons - Side by Side (forced row on md and above) */}
-                        <div className="flex flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mt-2 pt-4 border-t border-gray-100 w-full">
+                        <div className="flex flex-row items-center justify-center xl:justify-start gap-3 sm:gap-4 mt-2 pt-4 border-t border-gray-100 w-full">
                             <button
                                 onClick={() => {
                                     openWhatsApp(
@@ -770,7 +816,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                         'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                                     );
                                 }}
-                                className="h-12 flex items-center justify-center gap-2 bg-[#00863D] hover:bg-[#007033] text-white font-bold px-4 sm:px-5 rounded-xl shadow-md transition-all duration-300 active:scale-95 text-sm whitespace-nowrap"
+                                className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 whitespace-nowrap"
                             >
                                 <i className="fa-brands fa-whatsapp text-lg" />
                                 Request bulk pricing
@@ -779,7 +825,8 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                 onClick={() => {
                                     document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className="h-12 flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-800 hover:border-[#00863D] hover:text-black font-bold px-4 sm:px-5 rounded-xl transition-all duration-300 active:scale-95 text-sm whitespace-nowrap shadow-sm"
+                                className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 whitespace-nowrap"
+                                style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                             >
                                 Explore Our Grades
                             </button>
@@ -787,7 +834,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                     </motion.div>
 
                     {/* RIGHT (Bottom on iPad): Symmetrical 2x2 Grid with green border lines */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16 relative lg:pl-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16 relative xl:pl-6">
                         {/* Symmetrical Vertical green line down the middle */}
                         <div
                             className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[1.5px]"
@@ -915,7 +962,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                     'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                                 );
                             }}
-                            className="h-10 flex items-center justify-center gap-1.5 bg-[#00863D] text-white font-bold px-4 rounded-lg shadow-sm text-xs whitespace-nowrap"
+                            className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 text-xs whitespace-nowrap"
                         >
                             <i className="fa-brands fa-whatsapp text-sm" />
                             Request bulk pricing
@@ -924,7 +971,8 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                             onClick={() => {
                                 document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="h-10 flex items-center justify-center bg-white border border-gray-200 text-gray-800 font-bold px-4 rounded-lg text-xs whitespace-nowrap shadow-sm"
+                            className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 text-xs whitespace-nowrap"
+                            style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                         >
                             Explore Grades
                         </button>
@@ -1117,7 +1165,7 @@ export default function BulkOrderPage() {
     return (
         <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* ── Hero ── */}
-            <section className="relative w-full pt-6 pb-10 md:pt-10 md:pb-10 overflow-hidden">
+            <section className="relative w-full pt-16 pb-10 md:pt-10 md:pb-10 overflow-hidden">
 
                 {/* Background Image */}
                 <div className="absolute top-0 left-0 z-0 w-full h-[60%]">
@@ -1181,18 +1229,19 @@ export default function BulkOrderPage() {
                     >
                         <button
                             onClick={() => openWhatsApp('Request Bulk Pricing button')}
-                            className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-[#F6B000] text-black font-bold px-8 rounded-xl shadow-[0_4px_20px_rgba(246,176,0,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-sm"
+                            className="w-full sm:w-auto bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"
                         >
-                            <i className="fa-brands fa-whatsapp text-base text-black" />
+                            <i className="fa-brands fa-whatsapp text-base text-white" />
                             Request Bulk Pricing
                         </button>
                         <button
                             onClick={() => {
                                 document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="w-full sm:w-auto h-12 flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-800 font-bold px-8 rounded-xl transition-all duration-300 hover:border-[#F6B000] hover:text-black active:scale-95 text-sm shadow-sm"
+                            className="w-full sm:w-auto bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2"
+                            style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                         >
-                            <i className="fa-solid fa-compass text-xs text-[#F6B000]" />
+                            <i className="fa-solid fa-compass text-xs" />
                             Explore Our Grades
                         </button>
                     </motion.div>
@@ -1271,7 +1320,7 @@ export default function BulkOrderPage() {
             </section>
 
             {/* ── Our Trusted Partners ── */}
-            <section className={`w-full py-10 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
+            <section className={`w-full py-5 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
                 <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
                     <SectionHeading
                         text="Trusted by India's"
@@ -1280,25 +1329,10 @@ export default function BulkOrderPage() {
                     />
                 </div>
 
+
                 {/* Infinite Marquee */}
-                <div className={`flex overflow-hidden w-full ${COLORS.bg} select-none`}>
-                    <motion.div
-                        className="flex w-max items-center gap-16 md:gap-24 whitespace-nowrap px-8"
-                        animate={{ x: ["0%", "-50%"] }}
-                        transition={{ repeat: Infinity, ease: "linear", duration: 30 }}
-                    >
-                        {/* Repeat logos five times for seamless loop */}
-                        {[...Array(5)].map((_, idx) => (
-                            <div key={idx} className="flex items-center gap-16 md:gap-24 shrink-0">
-                                <img src="/images/partners/reliance-smart-2.png" alt="Smart Bazaar" className="h-40 md:h-50 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
-                                <img src="/images/partners/Global-nuts.png" alt="Global Nuts" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
-                                <img src="/images/partners/9to10-logo.png" alt="9to10" className="h-16 md:h-24 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
-                                <img src="/images/partners/natures-nut.png" alt="Nature's Nut" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
-                                <img src="/images/partners/SPENCERS%20Logo.png" alt="Spencers" className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
-                            </div>
-                        ))}
-                    </motion.div>
-                </div>
+                {/* Infinite Marquee */}
+                <TrustedMarquee />
             </section>
 
             {/* ── Businesses We Cater To ── */}
@@ -1518,10 +1552,20 @@ export default function BulkOrderPage() {
                                     <button
                                         type="submit"
                                         disabled={submitStatus === 'loading'}
-                                        className="w-full font-bold text-base py-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2 active:scale-95"
-                                        style={{ backgroundColor: '#F6B000', color: '#000000' }}
+                                        className="w-full text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-70"
+                                        style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
                                     >
-                                        {submitStatus === 'loading' ? '⏳ Sending...' : '📩 Submit Wholesale Inquiry'}
+                                        {submitStatus === 'loading' ? (
+                                            <>
+                                                <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" />
+                                                <span>Sending...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fa-solid fa-envelope text-sm md:text-xs" />
+                                                <span>Submit Wholesale Inquiry</span>
+                                            </>
+                                        )}
                                     </button>
                                 </form>
                             )}
@@ -1565,7 +1609,8 @@ export default function BulkOrderPage() {
                                     />
                                     <button
                                         type="submit"
-                                        className="w-full bg-black text-white font-bold py-4 rounded-xl hover:bg-primary hover:text-black transition-colors shadow-md text-sm"
+                                        className="w-full text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"
+                                        style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
                                     >
                                         Check Status
                                     </button>
