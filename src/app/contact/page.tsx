@@ -3,6 +3,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/store/store';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
@@ -74,9 +76,10 @@ interface FieldProps {
     as?: 'textarea' | 'select';
     options?: { value: string; label: string }[];
     placeholder?: string;
+    helperText?: React.ReactNode;
 }
 
-function Field({ label, name, type = 'text', value, onChange, required, as, options, placeholder }: FieldProps) {
+function Field({ label, name, type = 'text', value, onChange, required, as, options, placeholder, helperText }: FieldProps) {
     const inputClass =
         'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300 focus:border-[#F6B000] focus:ring-2 focus:ring-[#F6B000]/20';
 
@@ -114,6 +117,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
                     style={{ '--tw-border-color': 'transparent' } as any}
                 />
             )}
+            {helperText && <p className="text-[10px] text-gray-400 mt-0.5 ml-1">{helperText}</p>}
         </div>
     );
 }
@@ -145,6 +149,8 @@ function ContactContent() {
 
     const [form, setForm] = useState({ name: '', email: '', phone: '', enquiry_type: '', message: '' });
     const [visitForm, setVisitForm] = useState({ name: '', email: '', company: '', date: '' });
+    const { token, isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const [profile, setProfile] = useState<{ name?: string; email?: string } | null>(null);
 
     // Handle Search Params for Pre-filling
     useEffect(() => {
@@ -153,6 +159,37 @@ function ContactContent() {
             setForm(p => ({ ...p, enquiry_type: preFill }));
         }
     }, [searchParams]);
+
+    // Fetch user profile if logged in
+    useEffect(() => {
+        const fetchProfile = async () => {
+            if (!isAuthenticated) return;
+            const currentToken = token || localStorage.getItem('access_token');
+            if (!currentToken) return;
+            try {
+                const res = await fetch(API.AUTH_ME, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setProfile({ name: data.full_name || data.username, email: data.email });
+                }
+            } catch (e) {
+                console.error('Failed to load profile for contact form');
+            }
+        };
+        fetchProfile();
+    }, [isAuthenticated, token]);
+
+    // Pre-fill user data if logged in
+    useEffect(() => {
+        if (profile?.email) {
+            const userEmail = profile.email;
+            const userName = profile.name || '';
+            setForm(prev => ({ ...prev, email: userEmail, name: prev.name || userName }));
+            setVisitForm(prev => ({ ...prev, email: userEmail, name: prev.name || userName }));
+        }
+    }, [profile]);
 
     // Load lottie separately — never blocks page render
     useEffect(() => {
@@ -338,7 +375,7 @@ function ContactContent() {
                             <form onSubmit={submitGeneral} className="flex flex-col gap-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Field label="Full Name" name="name" value={form.name} onChange={onChange} required />
-                                    <Field label="Email Address" name="email" type="email" value={form.email} onChange={onChange} required />
+                                    <Field label="Email Address" name="email" type="email" value={form.email} onChange={onChange} required helperText={!profile?.email ? <span><i className="fa-solid fa-circle-info mr-1"></i>Use registered email to track query in your profile.</span> : undefined} />
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Field label="Phone Number" name="phone" type="tel" value={form.phone} onChange={onChange} />
@@ -378,7 +415,7 @@ function ContactContent() {
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Field label="Full Name" name="name" value={visitForm.name} onChange={onVisitChange} required />
-                                    <Field label="Email Address" name="email" type="email" value={visitForm.email} onChange={onVisitChange} required />
+                                    <Field label="Email Address" name="email" type="email" value={visitForm.email} onChange={onVisitChange} required helperText={!profile?.email ? <span><i className="fa-solid fa-circle-info mr-1"></i>Use registered email to track query in your profile.</span> : undefined} />
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Field label="Company Name" name="company" value={visitForm.company} onChange={onVisitChange} />

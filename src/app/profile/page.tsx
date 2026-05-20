@@ -39,30 +39,30 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
     );
 }
 
-const STATUS_STEPS = ['Pending', 'Accepted', 'Dispatched', 'Shipped', 'Delivered'];
-
-type TabKey = 'home' | 'details' | 'orders' | 'wishlist' | 'queries' | 'reviews' | 'blogs';
+type TabKey = 'home' | 'settings' | 'orders' | 'wishlist' | 'blogs' | 'reviews' | 'support';
 
 const SIDEBAR_TABS: { key: TabKey; label: string; icon: string }[] = [
-    { key: 'details', label: 'My Accounts', icon: 'fa-user' },
     { key: 'orders', label: 'My Orders', icon: 'fa-box' },
     { key: 'wishlist', label: 'My Wishlist', icon: 'fa-heart' },
-    { key: 'reviews', label: 'My Rating & Reviews', icon: 'fa-star' },
     { key: 'blogs', label: 'My Blogs', icon: 'fa-blog' },
-    { key: 'queries', label: 'Queries & Contact', icon: 'fa-clipboard-question' },
+    { key: 'reviews', label: 'My Ratings & Reviews', icon: 'fa-star' },
+    { key: 'support', label: 'Support & Queries', icon: 'fa-headset' },
+    { key: 'settings', label: 'Settings', icon: 'fa-gear' },
 ];
 
-// ── Mobile grid items ──
-// NOTE: key matches the TabKey or a filter value.
-// 'blogs' now correctly maps to the 'blogs' tab directly.
-const MOBILE_GRID = [
-    { key: 'Pending', label: 'Pending\nPayment', icon: 'fa-wallet', color: 'text-blue-500', tab: 'orders', filter: 'Pending' },
-    { key: 'Delivered', label: 'Delivered', icon: 'fa-truck-fast', color: 'text-yellow-500', tab: 'orders', filter: 'Delivered' },
-    { key: 'Processing', label: 'Processing', icon: 'fa-arrows-rotate', color: 'text-orange-500', tab: 'orders', filter: 'Processing' },
-    { key: 'Cancelled', label: 'Cancelled', icon: 'fa-ban', color: 'text-red-500', tab: 'orders', filter: 'Cancelled' },
-    { key: 'wishlist', label: 'Wishlist', icon: 'fa-heart', color: 'text-pink-500', tab: 'wishlist', filter: null },
-    { key: 'blogs', label: 'My Blogs', icon: 'fa-blog', color: 'text-amber-500', tab: 'blogs', filter: null },
-    { key: 'queries', label: 'Customer Care', icon: 'fa-headset', color: 'text-purple-500', tab: 'queries', filter: null },
+const MOBILE_SERVICES = [
+    { key: 'wishlist', label: 'Wishlist', icon: 'fa-regular fa-heart', color: 'text-pink-500' },
+    { key: 'blogs', label: 'Blogs', icon: 'fa-regular fa-newspaper', color: 'text-amber' },
+    { key: 'reviews', label: 'Reviews', icon: 'fa-regular fa-star', color: 'text-orange-500' },
+    { key: 'support', label: 'Support', icon: 'fa-regular fa-comment-dots', color: 'text-blue-500' },
+    { key: 'settings', label: 'Settings', icon: 'fa-solid fa-gear', color: 'text-gray-500' },
+];
+
+const MOBILE_ORDER_STATUSES = [
+    { key: 'Pending', label: 'Pending', icon: 'fa-regular fa-clock' },
+    { key: 'Processing', label: 'Processing', icon: 'fa-solid fa-arrows-rotate' },
+    { key: 'Delivered', label: 'Delivered', icon: 'fa-regular fa-circle-check' },
+    { key: 'Cancelled', label: 'Cancelled', icon: 'fa-regular fa-circle-xmark' }
 ];
 
 export default function ProfilePage() {
@@ -81,6 +81,7 @@ function ProfileContent() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState<TabKey>('home');
+    const [currentDesktopTab, setCurrentDesktopTab] = useState<TabKey>('orders');
     const [mobileOrderFilter, setMobileOrderFilter] = useState<string>('All');
 
     const [isEditing, setIsEditing] = useState(false);
@@ -128,10 +129,11 @@ function ProfileContent() {
     }, [isAuthenticated, router, token]);
 
     useEffect(() => {
-        if (activeTab === 'wishlist') fetchWishlist();
-        else if (activeTab === 'queries') fetchQueries();
-        else if (activeTab === 'orders' || activeTab === 'home') fetchOrders();
-    }, [activeTab]);
+        const tab = window.innerWidth < 768 ? activeTab : currentDesktopTab;
+        if (tab === 'wishlist') fetchWishlist();
+        else if (tab === 'support') fetchQueries();
+        else if (tab === 'orders' || tab === 'home') fetchOrders();
+    }, [activeTab, currentDesktopTab]);
 
     const fetchWishlist = async () => {
         try {
@@ -200,7 +202,7 @@ function ProfileContent() {
         try {
             const res = await fetch(API.AUTH_PROFILE, {
                 method: 'PUT',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(editForm)
             });
             if (res.ok) {
@@ -212,7 +214,7 @@ function ProfileContent() {
                 const meRes = await fetch(API.AUTH_ME, {
                     headers: { 'Authorization': `Bearer ${data.access_token || token}` }
                 });
-                setProfile(await meRes.json());
+                if (meRes.ok) setProfile(await meRes.json());
             }
         } catch (err) { console.error('Update failed', err); }
     };
@@ -223,14 +225,15 @@ function ProfileContent() {
         navigator.geolocation.getCurrentPosition(
             async pos => {
                 try {
-                    const { latitude, longitude } = pos.coords;
-                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
                     const data = await res.json();
-                    if (data?.display_name) setEditForm(prev => ({ ...prev, address: data.display_name }));
-                } catch { alert('Could not fetch address.'); }
+                    if (data.display_name) {
+                        setEditForm(prev => ({ ...prev, address: data.display_name }));
+                    }
+                } catch { alert('Could not get address'); }
                 setLocating(false);
             },
-            () => { alert('Unable to retrieve location'); setLocating(false); }
+            () => { alert('Permission denied'); setLocating(false); }
         );
     };
 
@@ -241,65 +244,46 @@ function ProfileContent() {
             const res = await fetch(API.TESTIMONIALS, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(reviewForm)
+                body: JSON.stringify(reviewForm),
             });
             if (res.ok) {
                 setReviewStatus('success');
-                setTimeout(() => setReviewStatus('idle'), 4000);
+                setReviewForm(prev => ({ ...prev, description: '', rating: 5 }));
+                setTimeout(() => setReviewStatus('idle'), 3000);
             } else setReviewStatus('error');
         } catch { setReviewStatus('error'); }
     };
 
     if (loading) return (
-        <div className="min-h-screen bg-[#f8f9fa] py-8 px-4 flex justify-center">
+        <div className="min-h-screen py-8 px-4 flex justify-center bg-[#f8f9fa]">
             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
     );
 
-    const initials = profile?.username.charAt(0).toUpperCase() || '?';
-    const currentDesktopTab = activeTab === 'home' ? 'details' : activeTab;
-
-    // Filter logic for Mobile Order views
-    let displayedOrders = orders;
-    if (activeTab === 'orders' && mobileOrderFilter !== 'All') {
-        displayedOrders = orders.filter((o: any) => {
-            if (mobileOrderFilter === 'Pending') return o.status === 'Pending' || o.status === 'Order placed';
-            if (mobileOrderFilter === 'Processing') return o.status === 'Accepted' || o.status === 'Dispatched' || o.status === 'Shipped';
-            if (mobileOrderFilter === 'Delivered') return o.status === 'Delivered';
-            if (mobileOrderFilter === 'Cancelled') return o.status === 'Cancelled';
-            return true;
-        });
-    }
-
-    // ── Mobile grid tap handler ──
-    const handleMobileGridTap = (item: typeof MOBILE_GRID[number]) => {
-        setActiveTab(item.tab as TabKey);
-        if (item.filter) setMobileOrderFilter(item.filter);
-        else setMobileOrderFilter('All');
-    };
+    const displayedOrders = mobileOrderFilter === 'All' ? orders : orders.filter(o => o.status === mobileOrderFilter);
 
     return (
         <div className="min-h-screen bg-[#FFF9E7] font-sans">
-
             {/* ── Order Success Modal ── */}
             {showSuccessModal && successOrderId && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-                    <div className="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl text-center">
-                        <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <i className="fa-solid fa-circle-check text-4xl text-primary" />
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl relative overflow-hidden animate-in zoom-in-95 duration-500">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber to-yellow" />
+                        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                            <i className="fa-solid fa-check text-4xl text-green-500 drop-shadow-sm" />
                         </div>
-                        <h2 className="text-2xl font-black text-gray-900 mb-2">Order Placed! 🎉</h2>
-                        <code className="block text-xs bg-gray-100 text-primary font-mono font-bold px-4 py-2 rounded-xl mt-3 mb-6 select-all">
-                            #{successOrderId.slice(-10).toUpperCase()}
-                        </code>
+                        <h3 className="text-2xl font-black text-gray-800 mb-2">Order Confirmed!</h3>
+                        <p className="text-gray-500 mb-6 font-medium">Thank you for your purchase.</p>
+                        <div className="bg-gray-50 rounded-2xl p-4 mb-8 border border-gray-100">
+                            <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Order ID</p>
+                            <p className="font-black text-gray-800 tracking-wider">#{successOrderId}</p>
+                        </div>
                         <div className="flex flex-col gap-3">
-                            <Link href={`/track?order=${successOrderId}`}
-                                className="block bg-primary text-white font-bold py-3 rounded-xl hover:bg-black transition flex items-center justify-center gap-2">
-                                <i className="fa-solid fa-truck-fast" /> Track Your Order
+                            <Link href={`/profile/orders/${successOrderId}`} className="w-full bg-black text-amber font-black py-4 rounded-xl shadow-lg hover:bg-gray-900 active:scale-95 transition-all uppercase tracking-wide">
+                                Track Order
                             </Link>
-                            <button onClick={() => setShowSuccessModal(false)}
-                                className="block bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition text-sm w-full">
-                                View My Orders
+                            <button onClick={() => { setShowSuccessModal(false); router.replace('/profile'); }} className="w-full bg-gray-100 text-gray-600 font-bold py-4 rounded-xl hover:bg-gray-200 active:scale-95 transition-all">
+                                Close
                             </button>
                         </div>
                     </div>
@@ -307,303 +291,296 @@ function ProfileContent() {
             )}
 
             {/* ══════════════════════════════════════
-                DESKTOP VIEW
+                DESKTOP VIEW 
             ══════════════════════════════════════ */}
-            <div className="hidden md:flex max-w-[1200px] mx-auto pt-10 pb-20 px-6 gap-8 items-start">
-
-                {/* Desktop Sidebar */}
-                <div className="w-72 shrink-0 flex flex-col gap-6">
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-
-                        {/* Profile Info Card — NO camera icon */}
-                        <div className="p-6 border-b border-gray-100 flex items-center gap-4">
-                            <div className="w-16 h-16 bg-[#F6B000] rounded-full flex items-center justify-center text-2xl font-black text-black">
-                                {initials}
+            <div className="hidden md:flex flex-col max-w-[1200px] mx-auto pt-10 pb-10 px-6">
+                <div className="flex gap-8 items-start mb-8">
+                    {/* Desktop Sidebar */}
+                    <div className="w-72 shrink-0 flex flex-col gap-6">
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            {/* Profile Info Card */}
+                            <div className="p-6 border-b border-gray-100 flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white shadow-md shrink-0" style={{ backgroundColor: COLORS.heading }}>
+                                    <i className="fa-solid fa-user"></i>
+                                </div>
+                                <div className="overflow-hidden">
+                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hello</p>
+                                    <h2 className="text-base font-black text-gray-800 line-clamp-1">{profile?.username}</h2>
+                                </div>
                             </div>
-                            <div className="overflow-hidden">
-                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hello</p>
-                                <h2 className="text-base font-black text-gray-800 line-clamp-1">{profile?.username}</h2>
-                            </div>
-                        </div>
-
-                        {/* Sidebar Navigation */}
-                        <div className="flex flex-col p-3 gap-1">
-                            {SIDEBAR_TABS.map(tab => (
-                                <button key={tab.key} onClick={() => { setActiveTab(tab.key); setMobileOrderFilter('All'); }}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'bg-black text-white shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}>
-                                    <i className={`fa-solid ${tab.icon} w-5 text-center ${currentDesktopTab === tab.key ? 'text-white' : 'text-gray-400'}`}></i>
-                                    {tab.label}
+                            
+                            {/* Sidebar Navigation */}
+                            <div className="flex flex-col p-3 gap-1">
+                                {SIDEBAR_TABS.map(tab => (
+                                    <button key={tab.key} onClick={() => { setCurrentDesktopTab(tab.key); }}
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${currentDesktopTab === tab.key ? 'shadow-md' : 'text-gray-500 hover:bg-gray-50'}`}
+                                        style={currentDesktopTab === tab.key ? { backgroundColor: COLORS.heading, color: 'white' } : {}}>
+                                        <i className={`fa-solid ${tab.icon} w-5 text-center ${currentDesktopTab === tab.key ? 'text-white' : 'text-gray-400'}`}></i>
+                                        {tab.label}
+                                    </button>
+                                ))}
+                                <div className="h-px bg-gray-100 my-2 mx-2"></div>
+                                <button onClick={() => { dispatch(logout()); router.push('/'); }}
+                                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors">
+                                    <i className="fa-solid fa-right-from-bracket w-5 text-center"></i>
+                                    Logout
                                 </button>
-                            ))}
+                            </div>
                         </div>
                     </div>
 
-                    <button onClick={() => { dispatch(logout()); router.push('/'); }}
-                        className="bg-white rounded-2xl px-4 py-3.5 border border-gray-100 shadow-sm flex items-center gap-3 font-bold text-sm text-gray-500 hover:bg-gray-50 transition-colors">
-                        <i className="fa-solid fa-right-from-bracket w-5 text-center text-gray-400"></i> Logout
-                    </button>
-                </div>
-
-                {/* Desktop Content Panel */}
-                <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 min-h-[600px]">
-                    {currentDesktopTab === 'details' && (
-                        <div className="animate-in fade-in duration-300">
-                            <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-                                <h2 className="text-xl font-black text-gray-800">Personal Information</h2>
-                                {!isEditing && (
-                                    <button onClick={() => setIsEditing(true)}
-                                        className="text-sm font-bold flex items-center gap-2 px-4 py-2 rounded-xl transition-colors" style={{ color: '#000000', backgroundColor: '#F6B000' }}>
-                                        <i className="fa-solid fa-pen-to-square" /> Change Information
-                                    </button>
-                                )}
-                            </div>
-
-                            <div className="flex gap-10">
-                                {/* Profile Picture — NO camera overlay */}
-                                <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-black text-black shadow-lg border-4 border-white ring-1 ring-gray-100 flex-shrink-0" style={{ backgroundColor: '#F6B000' }}>
-                                    {initials}
-                                </div>
-
-                                {/* Info Form / Display */}
-                                <div className="flex-1">
-                                    {!isEditing ? (
-                                        <div className="grid grid-cols-2 gap-y-8 gap-x-8">
-                                            <div>
-                                                <p className="text-xs font-bold text-gray-800 mb-2">Name</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600">{profile?.username}</div>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-bold text-gray-800 mb-2">Role</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 capitalize">{profile?.role}</div>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-bold text-gray-800 mb-2">Phone Number</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 flex items-center gap-2">
-                                                    <span className="text-gray-400">🇮🇳 +91</span> {profile?.phone || 'Missing'}
+                    {/* Desktop Content Area */}
+                    <div className="flex-1 min-w-0 bg-white rounded-2xl shadow-sm border border-gray-100 p-8 min-h-[500px]">
+                        {currentDesktopTab === 'settings' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300">
+                                <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Personal Information</h2>
+                                
+                                <div className="flex gap-10">
+                                    {/* Profile Picture */}
+                                    <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl text-white shadow-lg border-4 border-white ring-1 ring-gray-100 shrink-0" style={{ backgroundColor: COLORS.heading }}>
+                                        <i className="fa-solid fa-user"></i>
+                                    </div>
+                                    
+                                    {/* Form */}
+                                    <div className="flex-1 max-w-xl">
+                                        {!isEditing ? (
+                                            <div className="space-y-6">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <h3 className="font-black text-lg text-gray-800">Account Details</h3>
+                                                    <button onClick={() => setIsEditing(true)}
+                                                        className="text-sm font-bold px-4 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors flex items-center gap-2">
+                                                        <i className="fa-solid fa-pen" /> Edit
+                                                    </button>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-bold text-gray-800 mb-2">Email</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 truncate">{profile?.email}</div>
-                                            </div>
-                                            <div className="col-span-2">
-                                                <p className="text-xs font-bold text-gray-800 mb-2">Address</p>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 min-h-[80px]">
-                                                    {profile?.address || 'Not provided. Update to receive orders.'}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <form onSubmit={handleUpdateProfile} className="space-y-6">
-                                            <div className="grid grid-cols-2 gap-y-6 gap-x-6">
-                                                <div>
-                                                    <label className="text-xs font-bold text-gray-800 mb-2 block">Display Name</label>
-                                                    <input type="text" value={editForm.username}
-                                                        onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))}
-                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
-                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
-                                                        placeholder="Your full name" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
-                                                    <input type="text" value={editForm.phone}
-                                                        onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
-                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
-                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
-                                                        placeholder="10-digit mobile number" />
-                                                </div>
-                                                <div className="col-span-2">
-                                                    <div className="flex justify-between items-center mb-2">
-                                                        <label className="text-xs font-bold text-gray-800">Complete Address</label>
-                                                        <button type="button" onClick={handleGetLocation}
-                                                            className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest">
-                                                            <i className="fa-solid fa-location-crosshairs mr-1"></i> Auto-locate
-                                                        </button>
+                                                <div className="grid grid-cols-2 gap-6">
+                                                    <div>
+                                                        <p className="text-xs font-bold text-gray-800 mb-2">Display Name</p>
+                                                        <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600">{profile?.username}</div>
                                                     </div>
-                                                    <textarea rows={4} value={editForm.address}
-                                                        onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
-                                                        className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black"
-                                                        style={{ '--tw-ring-color': '#F6B000' } as any}
-                                                        placeholder="Enter flat/house no, street, area, city, pincode" />
+                                                    <div>
+                                                        <p className="text-xs font-bold text-gray-800 mb-2">Email</p>
+                                                        <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 truncate">{profile?.email}</div>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-xs font-bold text-gray-800 mb-2">Phone Number</p>
+                                                        <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600">{profile?.phone || 'Not provided'}</div>
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <p className="text-xs font-bold text-gray-800 mb-2">Address</p>
+                                                        <div className="bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm font-semibold text-gray-600 min-h-[80px]">
+                                                            {profile?.address || 'Not provided. Update to receive orders.'}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-4">
-                                                <button type="submit"
-                                                    className="px-8 py-3 rounded-xl font-bold transition-all text-sm active:scale-95"
-                                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}>
-                                                    Save Complete Info
-                                                </button>
-                                                <button type="button" onClick={() => setIsEditing(false)}
-                                                    className="px-8 py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 text-sm">
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        </form>
-                                    )}
+                                        ) : (
+                                            <form onSubmit={handleUpdateProfile} className="space-y-6">
+                                                <div className="grid grid-cols-2 gap-y-6 gap-x-6">
+                                                    <div>
+                                                        <label className="text-xs font-bold text-gray-800 mb-2 block">Display Name</label>
+                                                        <input type="text" value={editForm.username}
+                                                            onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))}
+                                                            className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                            placeholder="Your full name" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-xs font-bold text-gray-800 mb-2 block">Phone Number</label>
+                                                        <input type="text" value={editForm.phone}
+                                                            onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
+                                                            className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                            placeholder="10-digit mobile number" />
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <div className="flex justify-between items-center mb-2">
+                                                            <label className="text-xs font-bold text-gray-800">Complete Address</label>
+                                                            <button type="button" onClick={handleGetLocation}
+                                                                className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest flex items-center gap-1">
+                                                                <i className="fa-solid fa-location-crosshairs"></i> Auto-locate
+                                                            </button>
+                                                        </div>
+                                                        <textarea rows={4} value={editForm.address}
+                                                            onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
+                                                            className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black"
+                                                            placeholder="Enter complete address" />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-4">
+                                                    <button type="submit"
+                                                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 flex-1 md:flex-none">
+                                                        <i className="fa-solid fa-check text-sm md:text-xs" />
+                                                        <span>Save Complete Info</span>
+                                                    </button>
+                                                    <button type="button" onClick={() => setIsEditing(false)}
+                                                        className="p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-sm flex items-center justify-center gap-2 bg-transparent border-2"
+                                                        style={{ color: COLORS.heading, borderColor: COLORS.heading }}>
+                                                        <i className="fa-solid fa-xmark text-sm md:text-xs" />
+                                                        <span>Cancel</span>
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+                        )}
+                        
+                        {currentDesktopTab === 'orders' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300">
+                                <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Orders</h2>
+                                <OrderListRenderer orders={orders} tabLoading={tabLoading} cancelOrder={cancelOrder} />
+                            </div>
+                        )}
+                        
+                        {currentDesktopTab === 'wishlist' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300">
+                                <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Wishlist</h2>
+                                <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} />
+                            </div>
+                        )}
+                        
+                        {currentDesktopTab === 'blogs' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300">
+                                <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Blogs</h2>
+                                <CustomerBlogs />
+                            </div>
+                        )}
+                        
+                        {currentDesktopTab === 'reviews' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300 max-w-2xl">
+                                <h2 className="text-xl font-black text-gray-800 mb-2">My Ratings & Reviews</h2>
+                                <p className="text-sm text-gray-400 mb-6 border-b border-gray-100 pb-4">Share your experience with Crunchy Cashews.</p>
+                                <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} profile={profile} />
+                            </div>
+                        )}
+                        
+                        {currentDesktopTab === 'support' && (
+                            <div className="animate-in slide-in-from-right-4 duration-300">
+                                <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Support & Queries</h2>
+                                <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+                
+                {/* Desktop Bottom Highlights */}
+                <div className="flex items-center justify-around bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-xl text-2xl shadow-sm" style={{ backgroundColor: COLORS.heading, color: 'white' }}>
+                            <i className="fa-solid fa-box-open" />
                         </div>
-                    )}
-
-                    {currentDesktopTab === 'orders' && (
-                        <div className="animate-in slide-in-from-right-4 duration-300">
-                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Orders</h2>
-                            <OrderListRenderer orders={orders} tabLoading={tabLoading} cancelOrder={cancelOrder} />
+                        <div>
+                            <h4 className="font-bold text-gray-800">Free Shipping</h4>
+                            <p className="text-xs text-gray-400 font-medium">Free shipping for order above ₹599</p>
                         </div>
-                    )}
-                    {currentDesktopTab === 'wishlist' && (
-                        <div className="animate-in slide-in-from-right-4 duration-300">
-                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Wishlist</h2>
-                            <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} />
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-xl text-2xl shadow-sm" style={{ backgroundColor: COLORS.heading, color: 'white' }}>
+                            <i className="fa-solid fa-wallet" />
                         </div>
-                    )}
-                    {currentDesktopTab === 'queries' && (
-                        <div className="animate-in slide-in-from-right-4 duration-300">
-                            <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Queries & Factory Visits</h2>
-                            <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} />
+                        <div>
+                            <h4 className="font-bold text-gray-800">Flexible Payment</h4>
+                            <p className="text-xs text-gray-400 font-medium">Multiple secure payment options</p>
                         </div>
-                    )}
-                    {currentDesktopTab === 'reviews' && (
-                        <div className="animate-in slide-in-from-right-4 duration-300 max-w-2xl">
-                            <h2 className="text-xl font-black text-gray-800 mb-2">My Reviews</h2>
-                            <p className="text-sm text-gray-400 mb-6 border-b border-gray-100 pb-4">Share your experience with Crunchy Cashews on our homepage.</p>
-                            <ReviewFormRenderer
-                                reviewForm={reviewForm}
-                                setReviewForm={setReviewForm}
-                                reviewStatus={reviewStatus}
-                                handleReviewSubmit={handleReviewSubmit}
-                            />
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-xl text-2xl shadow-sm" style={{ backgroundColor: COLORS.heading, color: 'white' }}>
+                            <i className="fa-solid fa-headset" />
                         </div>
-                    )}
-                    {currentDesktopTab === 'blogs' && (
-                        <div className="animate-in slide-in-from-right-4 duration-300">
-                            <CustomerBlogs />
+                        <div>
+                            <h4 className="font-bold text-gray-800">24x7 Support</h4>
+                            <p className="text-xs text-gray-400 font-medium">We support online all days</p>
                         </div>
-                    )}
+                    </div>
                 </div>
             </div>
 
             {/* ══════════════════════════════════════
-                MOBILE VIEW  (redesigned)
+                MOBILE VIEW 
             ══════════════════════════════════════ */}
             <div className="md:hidden">
                 {activeTab === 'home' ? (
-                    /* ── Home Screen ── */
-                    <div className="animate-in fade-in duration-300 bg-[#f8f9fa] min-h-screen">
-
-                        {/* Wavy Header */}
-                        <div className="relative text-black pt-8 pb-[140px] shadow-sm overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#FFF9E7] to-[#FFFE71]"></div>
-                            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-
-                            <div className="relative z-10 flex justify-between items-center px-6">
-                                <button onClick={() => router.push('/')}
-                                    className="w-10 h-10 flex items-center justify-center text-lg active:scale-95 transition-transform">
-                                    <i className="fa-solid fa-chevron-left" />
-                                </button>
-                                <span className="text-base font-bold tracking-widest uppercase">Profile</span>
-                                <div className="w-10"></div>
+                    <div className="animate-in fade-in duration-300 min-h-screen pb-20 bg-[#FFF9E7]">
+                        {/* Header */}
+                        <div className="relative pt-12 pb-24 px-6 rounded-b-[40px] shadow-sm overflow-hidden" style={{ backgroundColor: COLORS.heading }}>
+                            {/* Decorative background shapes */}
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
+                            
+                            <div className="relative z-10 flex flex-col items-center">
+                                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl text-white shadow-xl border-4 border-white/20 mb-3 bg-white/10 backdrop-blur-sm">
+                                    <i className="fa-solid fa-user"></i>
+                                </div>
+                                <h2 className="text-2xl font-black text-white">{profile?.username}</h2>
+                                <p className="text-sm font-medium text-white/80 capitalize">{profile?.role}</p>
                             </div>
-
-                            {/* Wavy bottom */}
-                            <svg className="absolute bottom-0 left-0 w-full translate-y-[1px] text-[#f8f9fa]"
-                                viewBox="0 0 1440 320" preserveAspectRatio="none" style={{ height: '70px' }}>
-                                <path fill="currentColor" fillOpacity="1"
-                                    d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,106.7C672,96,768,128,864,154.7C960,181,1056,203,1152,181.3C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
-                            </svg>
                         </div>
 
-                        {/* Avatar — NO camera icon */}
-                        <div className="flex flex-col items-center -mt-[90px] relative z-20 px-6">
-                            <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center text-4xl font-black text-black border-4 border-[#f8f9fa] shadow-xl shadow-gray-200" style={{ backgroundColor: '#F6B000' }}>
-                                {initials}
+                        {/* Overlapping Quick Access - Orders */}
+                        <div className="px-5 -mt-12 relative z-20">
+                            <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-5 border border-gray-50">
+                                <div className="flex items-center justify-between mb-4 border-b border-gray-50 pb-3">
+                                    <h3 className="font-black text-gray-800">My Orders</h3>
+                                    <button onClick={() => { setActiveTab('orders'); setMobileOrderFilter('All'); }} className="text-xs font-bold text-gray-400 hover:text-gray-600 flex items-center gap-1">
+                                        View All <i className="fa-solid fa-chevron-right text-[10px]" />
+                                    </button>
+                                </div>
+                                <div className="flex justify-between items-start">
+                                    {MOBILE_ORDER_STATUSES.map(status => (
+                                        <button key={status.key} onClick={() => { setActiveTab('orders'); setMobileOrderFilter(status.key); }} className="flex flex-col items-center gap-2 group">
+                                            <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center group-active:scale-95 transition-transform" style={{ color: COLORS.amber }}>
+                                                <i className={`${status.icon} text-xl`} />
+                                            </div>
+                                            <span className="text-[10px] font-bold text-gray-500 text-center">{status.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                            <h2 className="text-2xl font-black text-gray-800 mt-3">{profile?.username}</h2>
-                            <p className="text-xs font-semibold text-gray-400 capitalize">{profile?.role}</p>
                         </div>
 
-                        {/* Mobile Grid Section */}
-                        <div className="px-6 mt-8 mb-6">
-                            <h3 className="text-lg font-black text-gray-800 mb-5 pl-1 shadow-[inset_0_-8px_0_0_var(--theme-amber)] inline-block -ml-1 pr-2">
-                                Quick Access
-                            </h3>
-                            <div className="grid grid-cols-3 gap-y-8 gap-x-4">
-                                {MOBILE_GRID.map(item => (
-                                    <button
-                                        key={item.key}
-                                        onClick={() => handleMobileGridTap(item)}
-                                        className="flex flex-col items-center gap-2 group"
-                                    >
-                                        <div className={`w-14 h-14 bg-white rounded-[20px] flex items-center justify-center shadow-[0_8px_16px_-4px_rgba(0,0,0,0.05)] border border-gray-100 group-active:scale-95 transition-transform ${item.color}`}>
-                                            <i className={`fa-solid ${item.icon} text-2xl group-active:scale-110 transition-transform`} />
+                        {/* Services Grid */}
+                        <div className="px-5 mt-8">
+                            <h3 className="font-black text-gray-800 mb-4 ml-1">Services</h3>
+                            <div className="grid grid-cols-4 gap-y-6 gap-x-2">
+                                {MOBILE_SERVICES.map(service => (
+                                    <button key={service.key} onClick={() => setActiveTab(service.key as TabKey)} className="flex flex-col items-center gap-2 group">
+                                        <div className={`w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 group-active:scale-95 transition-transform ${service.color}`}>
+                                            <i className={`${service.icon} text-2xl`} />
                                         </div>
-                                        <span className="text-[10px] font-bold text-gray-600 text-center leading-tight whitespace-pre-wrap">
-                                            {item.label}
-                                        </span>
+                                        <span className="text-[10px] font-bold text-gray-600 text-center leading-tight">{service.label}</span>
                                     </button>
                                 ))}
                             </div>
                         </div>
-
-                        {/* List Actions */}
-                        <div className="px-6 space-y-3 pb-10">
-                            <button onClick={() => setActiveTab('details')}
-                                className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                                <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                        <i className="fa-solid fa-user text-gray-400" />
-                                    </div>
-                                    Edit Profile
-                                </span>
-                                <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
+                        
+                        <div className="px-5 mt-10">
+                             <button onClick={() => { dispatch(logout()); router.push('/'); }}
+                                className="w-full bg-white rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm border border-gray-100 text-red-500 font-bold active:bg-gray-50">
+                                <i className="fa-solid fa-right-from-bracket" /> Logout
                             </button>
-                            <button onClick={() => setActiveTab('details')}
-                                className="w-full bg-white rounded-[20px] p-5 flex items-center justify-between shadow-sm border border-gray-100 active:scale-95 transition-transform">
-                                <span className="font-bold text-gray-700 text-sm flex items-center gap-4">
-                                    <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                                        <i className="fa-solid fa-location-dot text-gray-400" />
-                                    </div>
-                                    Shipping Address
-                                </span>
-                                <i className="fa-solid fa-chevron-right text-xs text-gray-300"></i>
-                            </button>
-
-                            <div className="pt-6 pb-6 flex justify-center mt-4">
-                                <button onClick={() => { dispatch(logout()); router.push('/'); }}
-                                    className="flex items-center gap-2 text-gray-400 font-bold text-sm bg-white border border-gray-200 px-6 py-2.5 rounded-full active:bg-gray-50 transition-colors">
-                                    <i className="fa-solid fa-right-from-bracket"></i> Logout
-                                </button>
-                            </div>
                         </div>
                     </div>
                 ) : (
-                    /* ── Detail / Sub-screen ── */
-                    <div className="animate-in slide-in-from-right-8 duration-300 bg-white min-h-screen">
-
+                    /* Mobile Detail Screen */
+                    <div className="animate-in slide-in-from-right-8 duration-300 bg-[#FFF9E7] min-h-screen pt-20">
                         {/* Detail Header */}
-                        <div className="flex items-center justify-between bg-white px-5 py-4 sticky top-0 z-30 shadow-sm border-b border-gray-100">
+                        <div className="flex items-center justify-between bg-white px-5 py-4 sticky top-[65px] sm:top-[75px] md:top-[85px] z-30 shadow-sm border-b border-gray-100" style={{ top: '60px' }}>
                             <div className="flex items-center gap-4">
                                 <button onClick={() => { setActiveTab('home'); setMobileOrderFilter('All'); }}
-                                    className="w-8 h-8 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
+                                    className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
                                     <i className="fa-solid fa-chevron-left text-sm"></i>
                                 </button>
                                 <h2 className="text-xl font-black text-gray-800 tracking-tight">
-                                    {activeTab === 'orders' ? 'My Orders' :
-                                        activeTab === 'blogs' ? 'My Blogs' :
-                                            SIDEBAR_TABS.find(t => t.key === activeTab)?.label || 'Profile'}
+                                    {SIDEBAR_TABS.find(t => t.key === activeTab)?.label || 'Details'}
                                 </h2>
                             </div>
-                            <button className="text-gray-400">
-                                <i className="fa-solid fa-magnifying-glass font-bold" />
-                            </button>
                         </div>
 
-                        {/* Order Filters (only for orders tab) */}
+                        {/* Order Filters */}
                         {activeTab === 'orders' && (
-                            <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky top-[65px] z-20 -mx-1">
+                            <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky z-20" style={{ top: '125px' }}>
                                 {['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'].map(f => (
                                     <button key={f} onClick={() => setMobileOrderFilter(f)}
-                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'bg-black text-white' : 'bg-gray-100 text-gray-500'}`}>
+                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'text-white shadow-md' : 'bg-gray-100 text-gray-500'}`}
+                                        style={mobileOrderFilter === f ? { backgroundColor: COLORS.heading } : {}}>
                                         {f}
                                     </button>
                                 ))}
@@ -611,26 +588,22 @@ function ProfileContent() {
                         )}
 
                         {/* Content Area */}
-                        <div className="p-5 bg-white min-h-[calc(100vh-65px)] pb-10">
-
-                            {/* ── Details tab ── */}
-                            {activeTab === 'details' && (
+                        <div className="p-5 pb-10">
+                            {activeTab === 'settings' && (
                                 <div className="space-y-6">
                                     {!isEditing ? (
-                                        <div className="space-y-6 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                        <div className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div className="flex justify-between items-center pb-4 border-b border-gray-50">
                                                 <div className="flex items-center gap-3">
-                                                    {/* Avatar in detail view — NO camera icon */}
-                                                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-xl font-black text-primary">
-                                                        {initials}
+                                                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white shrink-0" style={{ backgroundColor: COLORS.heading }}>
+                                                        <i className="fa-solid fa-user"></i>
                                                     </div>
                                                     <div>
                                                         <h3 className="font-black text-sm text-gray-800">{profile?.username}</h3>
                                                         <p className="text-[10px] text-gray-400 font-bold mt-0.5">{profile?.email}</p>
                                                     </div>
                                                 </div>
-                                                <button onClick={() => setIsEditing(true)}
-                                                    className="text-primary bg-primary/10 w-8 h-8 rounded-full flex items-center justify-center shrink-0">
+                                                <button onClick={() => setIsEditing(true)} className="text-gray-500 bg-gray-50 w-8 h-8 rounded-full flex items-center justify-center shrink-0 border border-gray-200">
                                                     <i className="fa-solid fa-pen text-xs" />
                                                 </button>
                                             </div>
@@ -644,38 +617,26 @@ function ProfileContent() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <form onSubmit={handleUpdateProfile}
-                                            className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+                                        <form onSubmit={handleUpdateProfile} className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Full Name</label>
-                                                <input type="text" value={editForm.username}
-                                                    onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))}
-                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary mb-4" />
-
+                                                <input type="text" value={editForm.username} onChange={e => setEditForm(r => ({ ...r, username: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold mb-4" />
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Phone</label>
-                                                <input type="text" value={editForm.phone}
-                                                    onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))}
-                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary" />
+                                                <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold" />
                                             </div>
                                             <div>
                                                 <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Address</label>
-                                                <textarea rows={3} value={editForm.address}
-                                                    onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
-                                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold focus:border-primary resize-none" />
-                                                <button type="button" onClick={handleGetLocation}
-                                                    className="mt-2 text-[10px] font-bold text-primary uppercase tracking-widest bg-primary/5 border border-primary/10 px-4 py-2 rounded-full inline-flex items-center gap-1.5">
+                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold resize-none" />
+                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold px-4 py-2 rounded-full inline-flex items-center gap-1.5 bg-gray-100 text-gray-600">
                                                     <i className="fa-solid fa-location-crosshairs"></i> Auto Locate
                                                 </button>
                                             </div>
                                             <div className="flex gap-3 pt-2">
-                                                <button type="submit"
-                                                    className="flex-1 py-3.5 rounded-xl font-bold text-sm shadow-md active:scale-95"
-                                                    style={{ backgroundColor: '#000000', color: '#F6B000' }}>
-                                                    Save
+                                                <button type="submit" className="bg-green-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 flex-1">
+                                                    <i className="fa-solid fa-check text-xs" /> Save
                                                 </button>
-                                                <button type="button" onClick={() => setIsEditing(false)}
-                                                    className="px-6 bg-gray-100 text-gray-600 font-bold text-sm rounded-xl">
-                                                    Cancel
+                                                <button type="button" onClick={() => setIsEditing(false)} className="py-3.5 rounded-xl font-bold text-sm bg-transparent border-2 flex items-center justify-center gap-2 flex-1" style={{ color: COLORS.heading, borderColor: COLORS.heading }}>
+                                                    <i className="fa-solid fa-xmark text-xs" /> Cancel
                                                 </button>
                                             </div>
                                         </form>
@@ -683,52 +644,11 @@ function ProfileContent() {
                                 </div>
                             )}
 
-                            {/* ── Orders tab ── */}
-                            {activeTab === 'orders' && (
-                                <OrderListRenderer
-                                    orders={displayedOrders}
-                                    tabLoading={tabLoading}
-                                    cancelOrder={cancelOrder}
-                                    isMobile
-                                />
-                            )}
-
-                            {/* ── Wishlist tab ── */}
-                            {activeTab === 'wishlist' && (
-                                <WishlistRenderer
-                                    wishlistProducts={wishlistProducts}
-                                    tabLoading={tabLoading}
-                                    isMobile
-                                />
-                            )}
-
-                            {/* ── Queries tab ── */}
-                            {activeTab === 'queries' && (
-                                <QueriesRenderer
-                                    enquiries={enquiries}
-                                    visits={visits}
-                                    tabLoading={tabLoading}
-                                    isMobile
-                                />
-                            )}
-
-                            {/* ── Reviews tab ── */}
-                            {activeTab === 'reviews' && (
-                                <ReviewFormRenderer
-                                    reviewForm={reviewForm}
-                                    setReviewForm={setReviewForm}
-                                    reviewStatus={reviewStatus}
-                                    handleReviewSubmit={handleReviewSubmit}
-                                    isMobile
-                                />
-                            )}
-
-                            {/* ── Blogs tab ── FIXED: now renders CustomerBlogs correctly ── */}
-                            {activeTab === 'blogs' && (
-                                <div className="p-2">
-                                    <CustomerBlogs />
-                                </div>
-                            )}
+                            {activeTab === 'orders' && <OrderListRenderer orders={displayedOrders} tabLoading={tabLoading} cancelOrder={cancelOrder} isMobile />}
+                            {activeTab === 'wishlist' && <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} />}
+                            {activeTab === 'blogs' && <CustomerBlogs />}
+                            {activeTab === 'reviews' && <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} profile={profile} />}
+                            {activeTab === 'support' && <QueriesRenderer enquiries={enquiries} visits={visits} tabLoading={tabLoading} />}
                         </div>
                     </div>
                 )}
@@ -737,9 +657,7 @@ function ProfileContent() {
     );
 }
 
-// ══════════════════════════════════════════════════════
-// RENDER SUB-COMPONENTS
-// ══════════════════════════════════════════════════════
+// ── Renderers ──
 
 function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
     if (tabLoading) return (
@@ -749,251 +667,238 @@ function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
     );
     if (orders.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <i className="fa-solid fa-box-open text-4xl text-gray-200 mb-4 block" />
-            <h3 className="text-lg font-black text-gray-800 mb-1">No Orders Yet</h3>
-            <p className="text-gray-400 text-sm mb-6">You haven't placed any orders.</p>
-            <Link href="/shop"
-                className="font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg active:scale-95 transition-transform"
-                style={{ backgroundColor: '#000000', color: '#F6B000' }}>
-                Explore Store
-            </Link>
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="fa-solid fa-box-open text-3xl text-gray-300" />
+            </div>
+            <h3 className="text-lg font-black text-gray-800 mb-2">No Orders Yet</h3>
+            <p className="text-sm text-gray-400 max-w-xs mx-auto">You haven't placed any orders.</p>
         </div>
     );
-
+    
     return (
-        <div className={`space-y-4 ${isMobile ? '' : 'grid grid-cols-1 gap-4'}`}>
-            {orders.map((order: any) => {
-                const statusClass = ORDER_STATUS_CLASSES[order.status] || 'bg-gray-50 text-gray-700 border-gray-200';
-                const paymentStatus = order.payment_status || (order.payment_mode === 'COD' ? 'COD' : 'Pending');
-                const paymentStatusClass = PAYMENT_STATUS_CLASSES[paymentStatus] || PAYMENT_STATUS_CLASSES.Pending;
-                const canCancel = CANCELLABLE_STATUSES.includes(order.status);
-                return (
-                    <div key={order._id}
-                        className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm shadow-gray-100/50 hover:shadow-md transition-shadow">
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-50 flex-wrap gap-2">
-                            <div className="flex items-center gap-2 font-black text-gray-800 text-sm">
-                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order No:</span>
-                                {order._id.slice(-8).toUpperCase()}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${paymentStatusClass}`}>
-                                    {paymentStatus}
-                                </span>
-                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusClass}`}>
-                                    {order.status || 'Pending'}
-                                </span>
-                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-gray-50 px-2 py-1 rounded-md">
-                                    {order.created_at ? new Date(order.created_at).toLocaleDateString() : ''}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="px-5 py-4 space-y-3">
-                            <div className="flex items-center justify-between text-xs">
-                                <span className="text-gray-500 font-semibold">
-                                    Ref: <span className="font-bold text-gray-800 ml-1">UW{order._id.slice(0, 10).toUpperCase()}</span>
-                                </span>
-                                <span className="text-gray-500 font-semibold">{order.payment_mode || 'COD'}</span>
-                            </div>
-                            <div className="flex items-center justify-between text-xs font-semibold">
-                                <span className="text-gray-500">Items: <span className="font-bold text-gray-800 ml-1">{order.items?.length || 0}</span></span>
-                                <span className="font-black text-sm" style={{ color: '#000000' }}>
-                                    ₹{order.total_amount?.toLocaleString('en-IN')}
-                                </span>
-                            </div>
-                            <div className="flex items-center justify-between pt-3 gap-2">
-                                <Link href={`/profile/orders/${order._id}`}
-                                    className="text-xs font-bold text-gray-600 border-2 border-gray-100 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
-                                    View Details
-                                </Link>
-                                <Link href={`/profile/orders/${order._id}?download=true`}
-                                    className="text-xs font-bold text-primary border-2 border-primary/20 px-5 py-2 rounded-full hover:bg-primary/5 transition-colors">
-                                    Download Bill (PDF)
-                                </Link>
-                                {canCancel && order.status !== 'Cancelled' && (
-                                    <button onClick={() => cancelOrder(order._id)}
-                                        className="text-xs font-bold text-red-500 border-2 border-red-100 px-5 py-2 rounded-full hover:bg-red-50 transition-colors">
-                                        Cancel
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                );
-            })}
+        <div className="space-y-4">
+            {orders.map((o: any) => <ExpandableOrderCard key={o._id} order={o} cancelOrder={cancelOrder} isMobile={isMobile} />)}
         </div>
     );
 }
 
-function WishlistRenderer({ wishlistProducts, tabLoading, isMobile }: any) {
+function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
+    const [expanded, setExpanded] = useState(false);
+    const router = useRouter();
+    const canCancel = CANCELLABLE_STATUSES.includes(order.status);
+    
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all">
+            <div onClick={() => setExpanded(!expanded)} className="p-4 md:p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors select-none">
+                <div className="flex gap-4 items-center">
+                    <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 text-gray-400">
+                        <i className="fa-solid fa-box text-xl" />
+                    </div>
+                    <div>
+                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Order #{order._id.slice(-6)}</p>
+                        <h3 className="font-black text-gray-800">{order.items?.length || 0} Items</h3>
+                    </div>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="text-right hidden sm:block">
+                        <p className="text-sm font-black text-gray-800">₹{order.total_amount || order.totalAmount}</p>
+                    </div>
+                    <i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform ${expanded ? 'rotate-180' : ''}`} />
+                </div>
+            </div>
+            
+            {expanded && (
+                <div className="border-t border-gray-100 bg-gray-50/30 p-4 md:p-5 animate-in fade-in duration-300">
+                    <div className="grid grid-cols-2 gap-4 mb-5 pb-5 border-b border-gray-100">
+                        <div>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Total Price</p>
+                            <p className="font-black text-gray-800 text-sm">₹{order.total_amount || order.totalAmount}</p>
+                        </div>
+                        <div>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Order Status</p>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md inline-block ${ORDER_STATUS_CLASSES[order.status] || 'bg-gray-100 text-gray-600'}`}>{order.status}</span>
+                        </div>
+                        <div>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Payment Method</p>
+                            <p className="font-bold text-gray-600 text-sm">{order.payment_mode || order.paymentMode || 'Online'}</p>
+                        </div>
+                        <div>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Payment Status</p>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md inline-block ${PAYMENT_STATUS_CLASSES[order.payment_status || order.paymentStatus] || 'bg-gray-100 text-gray-600'}`}>{order.payment_status || order.paymentStatus || '-'}</span>
+                        </div>
+                    </div>
+                    
+                    <div className="space-y-3 mb-5">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Order Items</p>
+                        {order.items?.map((item: any, i: number) => (
+                            <div key={i} className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                                <div className="w-12 h-12 bg-gray-50 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
+                                    {item.product_image || item.image || item.product?.images?.[0] ? (
+                                        <img src={item.product_image || item.image || item.product?.images?.[0]} alt={item.product_name || item.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <i className="fa-solid fa-box text-gray-300"></i>
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-bold text-gray-800 line-clamp-1">{item.product_name || item.product?.name || item.name || 'Product'}</p>
+                                    <p className="text-[10px] font-bold text-gray-400 mt-0.5">Qty: {item.quantity}</p>
+                                </div>
+                                <div className="text-right shrink-0">
+                                    <p className="text-sm font-black text-gray-800">₹{item.price}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                        <button onClick={() => router.push('/shop')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
+                            <i className="fa-solid fa-basket-shopping" /> Continue Shopping
+                        </button>
+                        <div className="flex gap-2 justify-stretch sm:justify-end sm:flex-1">
+                            <Link href={`/profile/orders/${order._id}?download=true`} className="flex-1 sm:flex-none text-center px-4 py-3 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 font-bold text-xs rounded-xl transition-colors">
+                                Bill PDF
+                            </Link>
+                            {canCancel && order.status !== 'Cancelled' && (
+                                <button onClick={() => cancelOrder(order._id)} className="flex-1 sm:flex-none px-4 py-3 bg-white border border-red-100 text-red-500 hover:bg-red-50 font-bold text-xs rounded-xl transition-colors">
+                                    Cancel
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function WishlistRenderer({ wishlistProducts, tabLoading }: any) {
     if (tabLoading) return (
-        <div className="flex justify-center py-10">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map(i => <div key={i} className="h-64 bg-gray-100 rounded-2xl animate-pulse" />)}
         </div>
     );
     if (wishlistProducts.length === 0) return (
         <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <i className="fa-solid fa-heart-crack text-4xl text-gray-200 mb-5 block" />
-            <h3 className="text-lg font-black text-gray-800 mb-1">Wishlist is Empty</h3>
-            <p className="text-gray-400 text-sm mb-6">Save your favorite items here.</p>
-            <Link href="/shop"
-                className="bg-primary text-white font-bold px-6 py-2.5 rounded-full text-sm inline-block shadow-lg shadow-primary/20">
-                Start Exploring
-            </Link>
+            <i className="fa-regular fa-heart text-3xl text-gray-300 mb-4" />
+            <h3 className="text-lg font-black text-gray-800">Wishlist Empty</h3>
+            <p className="text-sm text-gray-400 mt-2">Save items you love.</p>
         </div>
     );
     return (
-        <div className={`grid grid-cols-2 gap-4 ${isMobile ? '' : 'md:grid-cols-3 xl:grid-cols-4'}`}>
-            {wishlistProducts.map((p: any) => <ProductCard key={p.id || p._id} product={p} />)}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {wishlistProducts.map((p: any) => <ProductCard key={p._id || p.id} product={p} />)}
         </div>
     );
 }
 
-function QueriesRenderer({ enquiries, visits, tabLoading, isMobile }: any) {
-    if (tabLoading) return (
-        <div className="flex justify-center py-10">
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-    );
-    if (enquiries.length === 0 && visits.length === 0) return (
-        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <i className="fa-solid fa-file-circle-question text-4xl text-gray-200 mb-5 block" />
-            <h3 className="text-lg font-black text-gray-800 mb-1">No Active Queries</h3>
-            <p className="text-gray-400 text-sm mb-6">You have no pending tickets or visit requests.</p>
-            <div className="flex justify-center gap-3">
-                <Link href="/contact" className="bg-gray-800 text-white font-bold px-6 py-2.5 rounded-full text-sm">
-                    Contact Us
-                </Link>
-            </div>
-        </div>
-    );
+function QueriesRenderer({ enquiries, visits, tabLoading }: any) {
+    if (tabLoading) return <div className="h-32 bg-gray-100 rounded-2xl animate-pulse" />;
     return (
         <div className="space-y-6">
-            {enquiries.length > 0 && (
-                <div>
-                    <h3 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3 px-2 border-l-2 border-primary">Enquiries</h3>
-                    <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                        {enquiries.map((enq: any, i: any) => (
-                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-                                <div>
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h4 className="font-black text-sm text-gray-800 line-clamp-1">
-                                            {enq.subject || enq.enquiry_type || 'General Enquiry'}
-                                        </h4>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${enq.status === 'Resolved' || enq.status === 'Accepted' ? 'bg-primary/20 text-black' :
-                                            enq.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-                                            }`}>{enq.status || 'Pending'}</span>
-                                    </div>
-                                    <p className="text-xs text-gray-500 line-clamp-2 italic mb-4 leading-relaxed">"{enq.message}"</p>
-                                    {enq.admin_notes && (
-                                        <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl p-3">
-                                            <p className="text-[10px] font-bold text-black/60 uppercase tracking-widest mb-1">Admin Reply</p>
-                                            <p className="text-xs text-black font-semibold">{enq.admin_notes}</p>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-                                    {new Date(enq.created_at).toLocaleDateString()}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-800 flex items-center gap-2"><i className="fa-solid fa-message text-gray-400" /> My Enquiries</h3>
+                    <span className="text-xs font-bold bg-white px-2 py-1 rounded-md text-gray-500 shadow-sm">{enquiries.length}</span>
                 </div>
-            )}
-            {visits.length > 0 && (
-                <div>
-                    <h3 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3 px-2 border-l-2 border-primary">Visits</h3>
-                    <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                        {visits.map((vis: any, i: any) => (
-                            <div key={i} className="border border-gray-100 rounded-2xl p-5 bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                                <div>
-                                    <div className="flex justify-between items-center mb-3 border-b border-gray-50 pb-2">
-                                        <p className="text-xs font-black text-gray-800 bg-gray-50 px-2 py-1 rounded-md">
-                                            {vis.date || vis.preferred_date || vis.desired_date || 'N/A'}
-                                        </p>
-                                        <span className={`text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md ${vis.status === 'Approved' || vis.status === 'Accepted' ? 'bg-primary/20 text-black' :
-                                            vis.status === 'Rejected' ? 'bg-red-100 text-red-700' :
-                                                vis.status === 'Rescheduled' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700'
-                                            }`}>{vis.status || 'Pending'}</span>
-                                    </div>
-                                    <p className="text-xs text-gray-600 mb-1 font-semibold">
-                                        <span className="text-gray-400">Company/Attendees:</span> {vis.company || vis.company_name || vis.number_of_people || 'N/A'}
-                                    </p>
-                                    <p className="text-xs text-gray-500 italic mb-4">"{vis.purpose || vis.purpose_of_visit || 'Factory Visit'}"</p>
-                                    {vis.admin_notes && (
-                                        <div className="mb-4 bg-primary/10 border border-primary/20 rounded-xl p-3">
-                                            <p className="text-[10px] font-bold text-black/60 uppercase tracking-widest mb-1">Admin Remarks</p>
-                                            <p className="text-xs text-black font-semibold">{vis.admin_notes}</p>
-                                        </div>
-                                    )}
+                <div className="p-2">
+                    {enquiries.length > 0 ? (
+                        <div className="space-y-2">
+                            {enquiries.map((e: any, i: number) => (
+                                <div key={i} className="p-3 bg-white border border-gray-50 rounded-xl">
+                                    <p className="font-bold text-gray-800 text-sm mb-1">{e.subject || 'Enquiry'}</p>
+                                    <p className="text-xs text-gray-500 mb-2">{e.message}</p>
+                                    <p className="text-[10px] text-gray-400 font-bold bg-gray-50 inline-block px-2 py-0.5 rounded">Status: {e.status || 'Pending'}</p>
                                 </div>
-                                {vis.created_at && (
-                                    <div className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
-                                        {new Date(vis.created_at).toLocaleDateString()}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    ) : <p className="text-sm text-gray-400 p-4 text-center">No enquiries found.</p>}
                 </div>
-            )}
+            </div>
+            
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-800 flex items-center gap-2"><i className="fa-solid fa-building text-gray-400" /> Factory Visits</h3>
+                    <span className="text-xs font-bold bg-white px-2 py-1 rounded-md text-gray-500 shadow-sm">{visits.length}</span>
+                </div>
+                <div className="p-2">
+                    {visits.length > 0 ? (
+                        <div className="space-y-2">
+                            {visits.map((v: any, i: number) => (
+                                <div key={i} className="p-3 bg-white border border-gray-50 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <p className="font-bold text-gray-800 text-sm mb-1">{v.date || (v.preferredDate ? new Date(v.preferredDate).toLocaleDateString() : 'Date Not Provided')}</p>
+                                        <p className="text-xs text-gray-500">{v.company || v.purpose || 'Factory Visit'}</p>
+                                    </div>
+                                    <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded-md text-gray-600">{v.status || 'Pending'}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : <p className="text-sm text-gray-400 p-4 text-center">No visits scheduled.</p>}
+                </div>
+            </div>
         </div>
     );
 }
 
-function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleReviewSubmit, isMobile }: any) {
-    if (reviewStatus === 'success') return (
-        <div className="bg-primary/10 border border-primary/20 rounded-2xl p-8 text-center animate-in zoom-in duration-300">
-            <i className="fa-solid fa-circle-check text-4xl text-primary mb-3 block" />
-            <p className="font-black text-black text-lg">Thank You!</p>
-            <p className="text-black/60 text-sm mt-1">Your review helps us improve.</p>
-        </div>
-    );
+function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleReviewSubmit, profile }: any) {
+    const [myReviews, setMyReviews] = useState<any[]>([]);
+    
+    useEffect(() => {
+        if (profile?.username) {
+            fetch(API.TESTIMONIALS)
+                .then(res => res.json())
+                .then(data => {
+                    const userReviews = data.filter((t: any) => t.name === profile.username);
+                    setMyReviews(userReviews);
+                })
+                .catch(err => console.error("Could not fetch reviews:", err));
+        }
+    }, [profile?.username, reviewStatus]); // Re-fetch when reviewStatus changes (e.g. success)
+
     return (
-        <form onSubmit={handleReviewSubmit}
-            className={`space-y-5 ${isMobile ? 'bg-white rounded-2xl p-5 shadow-sm border border-gray-100' : ''}`}>
-            <div>
-                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-2">Rating</label>
-                <StarPicker value={reviewForm.rating} onChange={(v: any) => setReviewForm((r: any) => ({ ...r, rating: v }))} />
-            </div>
-            <div className={`grid gap-4 ${isMobile ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                <div>
-                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Name</label>
-                    <input required type="text" value={reviewForm.name}
-                        onChange={e => setReviewForm((r: any) => ({ ...r, name: e.target.value }))}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+        <div>
+            <form onSubmit={handleReviewSubmit} className="space-y-5 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mb-8">
+                <div className="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Name" required value={reviewForm.name} onChange={e => setReviewForm({ ...reviewForm, name: e.target.value })} className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-black font-semibold" />
+                    <input type="text" placeholder="City, State" required value={reviewForm.city} onChange={e => setReviewForm({ ...reviewForm, city: e.target.value })} className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-black font-semibold" />
                 </div>
-                <div>
-                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">City</label>
-                    <input required type="text" value={reviewForm.city}
-                        onChange={e => setReviewForm((r: any) => ({ ...r, city: e.target.value }))}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+                <textarea placeholder="Share your experience..." required rows={3} value={reviewForm.description} onChange={e => setReviewForm({ ...reviewForm, description: e.target.value })} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-black font-semibold resize-none" />
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-gray-50">
+                    <div>
+                        <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-widest">Your Rating</p>
+                        <StarPicker value={reviewForm.rating} onChange={(v) => setReviewForm({ ...reviewForm, rating: v })} />
+                    </div>
+                    <button type="submit" disabled={reviewStatus === 'loading'} className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 w-full sm:w-auto disabled:opacity-50">
+                        {reviewStatus === 'loading' ? <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" /> : <i className="fa-solid fa-pen-nib text-sm md:text-xs" />}
+                        <span className="hidden md:inline">Share Your Experience</span>
+                        <span className="md:hidden">Submit Review</span>
+                    </button>
                 </div>
-                <div className={isMobile ? '' : 'col-span-2'}>
-                    <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">State</label>
-                    <input required type="text" value={reviewForm.state}
-                        onChange={e => setReviewForm((r: any) => ({ ...r, state: e.target.value }))}
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none text-sm font-bold" />
+                {reviewStatus === 'success' && <p className="text-green-600 text-xs font-bold mt-2 bg-green-50 p-2 rounded-lg"><i className="fa-solid fa-circle-check" /> Submitted successfully!</p>}
+                {reviewStatus === 'error' && <p className="text-red-500 text-xs font-bold mt-2 bg-red-50 p-2 rounded-lg"><i className="fa-solid fa-circle-exclamation" /> Failed to submit review.</p>}
+            </form>
+            
+            {myReviews.length > 0 && (
+                <div className="space-y-4">
+                    <h3 className="font-black text-gray-800 text-lg border-b border-gray-100 pb-2">Your Previous Reviews</h3>
+                    {myReviews.map((r: any, idx: number) => (
+                        <div key={idx} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+                            <div className="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 className="font-bold text-gray-800">{r.name}</h4>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest">{r.city}</p>
+                                </div>
+                                <div className="flex text-amber text-xs">
+                                    {[...Array(5)].map((_, i) => (
+                                        <i key={i} className={i < (r.rating || 5) ? "fa-solid fa-star" : "fa-regular fa-star"} />
+                                    ))}
+                                </div>
+                            </div>
+                            <p className="text-sm text-gray-600 italic">"{r.description}"</p>
+                        </div>
+                    ))}
                 </div>
-            </div>
-            <div>
-                <label className="text-[10px] font-bold tracking-widest text-gray-400 uppercase block mb-1">Your Review</label>
-                <textarea required rows={4} value={reviewForm.description}
-                    onChange={e => setReviewForm((r: any) => ({ ...r, description: e.target.value }))}
-                    className="w-full bg-gray-50 border border-gray-100 rounded-xl py-3 px-4 focus:border-primary outline-none resize-none text-sm font-semibold"
-                    placeholder="Share your experience..." />
-            </div>
-            {reviewStatus === 'error' && (
-                <p className="text-red-500 text-xs font-bold">
-                    <i className="fa-solid fa-circle-exclamation mr-1" /> Error submitting review.
-                </p>
             )}
-            <button type="submit" disabled={reviewStatus === 'loading'}
-                className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm shadow-md shadow-primary/20 hover:-translate-y-0.5 transition-transform disabled:opacity-60 flex items-center justify-center gap-2 uppercase tracking-widest">
-                {reviewStatus === 'loading'
-                    ? <><i className="fa-solid fa-spinner animate-spin" /> Submitting...</>
-                    : <><i className="fa-solid fa-paper-plane" /> Submit Review</>
-                }
-            </button>
-        </form>
+        </div>
     );
 }

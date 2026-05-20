@@ -166,7 +166,7 @@ export default function HeroVideo() {
 
                 {/* CTA buttons */}
                 <div
-                    className="flex items-center gap-3"
+                    className="flex items-center justify-center w-full"
                     style={{
                         opacity: mobileContentVisible ? 1 : 0,
                         transform: mobileContentVisible ? 'translateY(0px) scale(1)' : 'translateY(12px) scale(0.95)',
@@ -176,33 +176,16 @@ export default function HeroVideo() {
                     <Link
                         href="/shop"
                         aria-label="Shop premium cashews online"
-                        className="group inline-flex items-center gap-2
+                        className="group inline-flex items-center justify-center gap-2
                             bg-amber hover:bg-yellow active:scale-[0.97]
                             text-[#1c0800] font-black text-sm
-                            px-6 py-3 rounded-full
+                            p-4 px-8 py-3.5 rounded-2xl
                             shadow-lg shadow-amber/40
-                            transition-all duration-200 hover:scale-[1.02]
+                            transition-all duration-200 hover:scale-105
                             whitespace-nowrap"
                     >
                         <i className="fa-solid fa-store text-xs" />
                         Shop Now
-                        <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
-                    </Link>
-
-                    <Link
-                        href="/bulk"
-                        aria-label="Place a bulk or wholesale cashew order"
-                        className="group inline-flex items-center gap-2
-                            bg-white/10 hover:bg-white/20 active:scale-[0.97]
-                            text-white font-black text-md
-                            px-6 py-3 rounded-full
-                            border border-white/30 hover:border-white/55
-                            backdrop-blur-sm
-                            transition-all duration-200 hover:scale-[1.02]
-                            whitespace-nowrap"
-                    >
-                        <i className="fa-solid fa-boxes-stacked text-xs" />
-                        B2B
                         <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                     </Link>
                 </div>
@@ -216,14 +199,14 @@ export default function HeroVideo() {
             <div className="hidden md:flex absolute inset-0 items-center">
                 <div className="w-full max-w-screen-xl mx-auto px-10 lg:px-16">
                     <div className="flex flex-col items-start text-left max-w-[580px]">
-
+ 
                         <div className="flex items-center gap-2 mb-4">
                             <span className="h-[2px] w-5 bg-amber rounded-full" />
                             <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
                                 Premium Cashews · Since 2018
                             </span>
                         </div>
-
+ 
                         <h1
                             className="text-white font-black leading-[1.0] tracking-tight mb-4"
                             style={{ fontSize: 'clamp(2.0rem, 4vw, 4rem)' }}
@@ -231,7 +214,7 @@ export default function HeroVideo() {
                             Factory Fresh
                             <span className="block text-amber">Premium Cashews</span>
                         </h1>
-
+ 
                         <p
                             className="text-white/80 font-medium leading-relaxed mb-5"
                             style={{ fontSize: 'clamp(0.88rem, 1.2vw, 1rem)', maxWidth: '360px' }}
@@ -239,7 +222,7 @@ export default function HeroVideo() {
                             Hand-picked, roasted to perfection.<br />
                             Delivered fresh from our factory in Siliguri to your door.
                         </p>
-
+ 
                         <div className="flex items-center gap-5 mb-6">
                             {[
                                 { icon: 'fa-shield-halved', text: 'FSSAI' },
@@ -254,40 +237,23 @@ export default function HeroVideo() {
                                 </div>
                             ))}
                         </div>
-
+ 
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/shop"
                                 aria-label="Shop premium cashews online"
-                                className="group inline-flex items-center gap-2
+                                className="group inline-flex items-center justify-center gap-2
                                     bg-amber hover:bg-yellow active:scale-[0.97]
                                     text-[#1c0800] font-black text-sm
-                                    px-6 py-3 rounded-full
+                                    p-4 px-8 py-3.5 rounded-2xl
                                     shadow-lg shadow-amber/40
-                                    transition-all duration-200 hover:scale-[1.02]
+                                    transition-all duration-200 hover:scale-105
                                     whitespace-nowrap"
                             >
                                 <i className="fa-solid fa-store text-xs" />
                                 Shop Now
                                 <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
                             </Link>
-
-                            {/* <Link
-                                href="/bulk"
-                                aria-label="Place a bulk or wholesale cashew order"
-                                className="group inline-flex items-center gap-2
-                                    bg-white/10 hover:bg-white/20 active:scale-[0.97]
-                                    text-white font-black text-sm
-                                    px-6 py-3 rounded-full
-                                    border border-white/30 hover:border-white/55
-                                    backdrop-blur-sm
-                                    transition-all duration-200 hover:scale-[1.02]
-                                    whitespace-nowrap"
-                            >
-                                <i className="fa-solid fa-boxes-stacked text-xs" />
-                                B2B
-                                <i className="fa-solid fa-arrow-right text-[10px] group-hover:translate-x-0.5 transition-transform" />
-                            </Link> */}
                         </div>
                     </div>
                 </div>

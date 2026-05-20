@@ -282,11 +282,14 @@ export default function PriceComparisonPreview() {
                     >
                       <div className="flex items-center gap-4">
                         {p.isBest ? (
-                          <div
-                            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                            style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
-                          >
-                            <Zap size={16} fill={COLORS.primary} />
+                          <div className="w-10 h-10 relative rounded-full bg-white border border-black/5 overflow-hidden shadow-sm shrink-0 flex items-center justify-center">
+                            <Image
+                              src="/images/cc-Logo-01-1.png"
+                              alt="Our Website"
+                              fill
+                              sizes="40px"
+                              className="object-contain"
+                            />
                           </div>
                         ) : (
                           <div className="w-10 h-10 relative rounded-xl bg-white border border-black/5 p-2 overflow-hidden shadow-sm shrink-0">
@@ -324,10 +327,7 @@ export default function PriceComparisonPreview() {
 
                   <Link
                     href={`/shop/${product._id}`}
-                    className="w-full text-white px-10 py-5 rounded-2xl font-black text-sm flex items-center justify-center gap-3 transition-all shadow-xl active:scale-95"
-                    style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = COLORS.primary}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = COLORS.black}
+                    className="w-full bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"
                   >
                     Full Comparison Table <ChevronRight size={20} />
                   </Link>

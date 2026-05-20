@@ -94,7 +94,7 @@ export default function BlogsDirectory() {
     return (
         <div className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
             {/* Hero Header */}
-            <section className="relative h-[450px] md:h-[550px] flex items-center justify-center">
+            <section className="relative z-50 h-[450px] md:h-[550px] flex items-center justify-center">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                     <img
@@ -157,10 +157,11 @@ export default function BlogsDirectory() {
                         <div className="relative" ref={filterRef}>
                             <button
                                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                                className={`h-[58px] px-6 rounded-2xl border flex items-center gap-2 font-bold transition-all shadow-xl ${isFilterOpen || activeCategory !== 'All' || showFeaturedOnly
-                                    ? 'bg-black text-white border-black'
+                                className={`h-[58px] px-6 rounded-2xl border flex items-center gap-2 font-bold transition-all shadow-xl ${(isFilterOpen || activeCategory !== 'All' || showFeaturedOnly)
+                                    ? 'text-white'
                                     : 'bg-white/90 backdrop-blur-xl border-white/50 text-black hover:bg-white'
                                     }`}
+                                style={(isFilterOpen || activeCategory !== 'All' || showFeaturedOnly) ? { backgroundColor: COLORS.heading, borderColor: COLORS.heading } : {}}
                             >
                                 <i className="fa-solid fa-sliders" />
                                 <span className="hidden sm:inline">Filter</span>
@@ -200,7 +201,8 @@ export default function BlogsDirectory() {
                                                     <button
                                                         key={cat}
                                                         onClick={() => setActiveCategory(cat)}
-                                                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-colors ${activeCategory === cat ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                        className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-colors ${activeCategory === cat ? 'text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+                                                        style={activeCategory === cat ? { backgroundColor: COLORS.heading } : {}}
                                                     >
                                                         {CATEGORY_DISPLAY_NAMES[cat]}
                                                         {activeCategory === cat && <i className="fa-solid fa-check text-[10px]" />}
@@ -213,7 +215,8 @@ export default function BlogsDirectory() {
                                         <div className="pt-3 border-t border-gray-100">
                                             <button
                                                 onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
-                                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition-all border ${showFeaturedOnly ? 'bg-black text-[#F6B000] border-black' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
+                                                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition-all border ${showFeaturedOnly ? 'text-white border-transparent' : 'bg-gray-50 text-gray-500 border-transparent hover:border-gray-200'}`}
+                                                style={showFeaturedOnly ? { backgroundColor: COLORS.heading } : {}}
                                             >
                                                 <span className="flex items-center gap-2">
                                                     <i className="fa-solid fa-star" /> Featured Only

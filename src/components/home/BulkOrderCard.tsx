@@ -415,7 +415,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                     </p>
 
                     {/* Trust badges */}
-                    <div className="flex flex-wrap gap-2 justify-center xl:justify-start">
+                    <div className="hidden lg:flex flex-wrap gap-2 justify-center xl:justify-start">
                         {TRUST_BADGES.map(b => (
                             <span key={b.text}
                                 className="inline-flex items-center gap-1.5 text-[9.5px] sm:text-[11px] font-semibold px-2 py-1 sm:px-2.5 sm:py-1 rounded-full"
