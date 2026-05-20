@@ -5,6 +5,7 @@ import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { motion } from 'framer-motion';
 
 // Price range tiers: [label, min, max]
 const PRICE_RANGES = [
@@ -359,6 +360,16 @@ export default function ShopPage() {
             <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20">
                 {/* Heading placed naturally over the background */}
                 <div className="text-center mb-10 md:mb-16 relative z-20">
+                    {/* Eyebrow tag */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                        className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/30 text-[#c48a00] text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
+                    >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F6B000] animate-pulse" />
+                        OUR SHOP
+                    </motion.div>
                     <SectionHeading
                         text="Snack Smarter,"
                         highlight="Crunch Louder"

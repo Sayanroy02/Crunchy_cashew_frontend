@@ -532,9 +532,16 @@ export default function AboutPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center">
 
-        <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-sm">
+        {/* Eyebrow tag */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/30 text-[#c48a00] text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F6B000] animate-pulse" />
           Industry Leaders
-        </span>
+        </motion.div>
 
         <h1
           className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm max-w-3xl mb-6 text-center"

@@ -204,7 +204,7 @@ function ContactContent() {
                 <img
                     src="https://res.cloudinary.com/da1acfqsn/image/upload/v1779008580/contact-us_wdd2w9.png"
                     alt="Contact Background"
-                    className="w-full h-full object-cover object-bottom opacity-80"
+                    className="w-full h-full object-cover object-[center_30%] opacity-80"
                 />
                 <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
             </div>
@@ -220,9 +220,16 @@ function ContactContent() {
 
             {/* ══ HERO ══ */}
             <section className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20 flex flex-col items-center text-center pb-16">
-                <span className="inline-block font-bold tracking-[0.25em] uppercase text-[10px] md:text-xs mb-4 px-3 py-1 bg-[#F6B000] text-black rounded-sm shadow-sm">
+                {/* Eyebrow tag */}
+                <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 }}
+                    className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/30 text-[#c48a00] text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
+                >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F6B000] animate-pulse" />
                     We'd love to hear from you
-                </span>
+                </motion.div>
                 <SectionHeading
                     text="Get in"
                     highlight="Touch"

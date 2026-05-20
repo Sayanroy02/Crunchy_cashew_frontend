@@ -6,6 +6,7 @@ import { COLORS } from '@/constants/styles';
 import BlogCard from '@/components/ui/BlogCard';
 import type { BlogCardData } from '@/components/ui/BlogCard';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { motion } from 'framer-motion';
 
 const CATEGORIES = ['All', 'Health', 'Recipes', 'Sustainability'] as const;
 type CategoryFilter = typeof CATEGORIES[number];
@@ -113,9 +114,16 @@ export default function BlogsDirectory() {
                 </div> */}
 
                 <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
-                    <span className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-black/5 text-black/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-6 shadow-sm">
-                        <i className="fa-solid fa-sparkles text-[#F6B000]" /> Our Journal
-                    </span>
+                    {/* Eyebrow tag */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                        className="inline-flex items-center gap-2 bg-[#F6B000]/10 border border-[#F6B000]/30 text-[#c48a00] text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5"
+                    >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F6B000] animate-pulse" />
+                        Our Journal
+                    </motion.div>
                     <h1
                         className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight drop-shadow-sm mb-6 text-center"
                         style={{ color: COLORS.heading }}
