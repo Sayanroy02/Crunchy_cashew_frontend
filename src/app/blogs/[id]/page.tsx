@@ -16,7 +16,7 @@ interface Blog {
 
 function formatBlogContent(content: string): string {
     if (!content) return "";
-    
+
     // If it already looks like formatted HTML, return as is
     if (/<[a-z][\s\S]*>/i.test(content)) {
         return content;
@@ -24,10 +24,10 @@ function formatBlogContent(content: string): string {
 
     // Step 1: Clean duplicate title & "Introduction"
     let cleanText = content.trim();
-    
+
     // Remove duplicate starting title (starts with 🥜 and ends with "Introduction")
     cleanText = cleanText.replace(/^🥜[^\n]+?Introduction/i, "Introduction");
-    
+
     // Step 2: Separate sections with newlines using emojis and headings as boundaries
     cleanText = cleanText
         .replace(/(Introduction)/gi, "\n\n$1\n\n")
@@ -52,7 +52,7 @@ function formatBlogContent(content: string): string {
     cleanText = cleanText.replace(/\n{3,}/g, "\n\n");
 
     const segments = cleanText.split(/\n\n+/);
-    
+
     const htmlSegments = segments.map(segment => {
         segment = segment.trim();
         if (!segment) return "";
@@ -96,9 +96,9 @@ function formatBlogContent(content: string): string {
             ];
             return `<ul class="list-disc pl-6 space-y-2.5 my-4 text-gray-700">
                 ${items.map(item => {
-                    const parts = item.split(" (");
-                    return `<li><strong class="text-text-dark">${parts[0]}</strong>${parts[1] ? " (" + parts[1] : ""}</li>`;
-                }).join("")}
+                const parts = item.split(" (");
+                return `<li><strong class="text-text-dark">${parts[0]}</strong>${parts[1] ? " (" + parts[1] : ""}</li>`;
+            }).join("")}
             </ul>`;
         }
 
@@ -183,14 +183,14 @@ export default function BlogDetailPage() {
     }
 
     return (
-        <article className={`min-h-screen ${COLORS.bg} pb-24`}>
+        <article className={`min-h-screen bg-[#FFF9E7] pb-24`}>
             {/* Header / Hero */}
             <div className="bg-bg-cream pt-32 pb-16 px-6 relative">
                 <div className="max-w-4xl mx-auto text-center relative z-10">
                     <Link href="/blogs" className="inline-flex items-center text-primary font-bold uppercase tracking-wider text-sm mb-8 hover:underline">
                         <i className="fa-solid fa-arrow-left mr-2"></i> Back to all articles
                     </Link>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-text-dark mb-6 leading-tight">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#006C35] mb-6 leading-tight">
                         {blog.title}
                     </h1>
                     <div className="flex items-center justify-center gap-4 text-gray-500 font-body text-sm font-medium">
@@ -202,10 +202,10 @@ export default function BlogDetailPage() {
             </div>
 
             {/* Featured Image */}
-            <div className="max-w-5xl mx-auto px-6 -mt-10 relative z-20 mb-16">
-                <div className="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl bg-gray-100 border-4 border-white">
+            <div className="max-w-5xl mx-auto px-6 -mt-10 relative z-20 mb-6">
+                <div className="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl bg-yellow-100 backdrop-blur-sm border-4 border-green-700">
                     {blog.image_url ? (
-                        <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
+                        <img src={blog.image_url} alt={blog.title} className="w-full h-full object-contain" />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-300">
                             <i className="fa-solid fa-image text-8xl"></i>
@@ -241,7 +241,7 @@ export default function BlogDetailPage() {
                 <div className="relative bg-[#006C35] rounded-3xl p-10 shadow-[0_20px_50px_rgba(0,108,53,0.25)] border border-[#008744]/20 overflow-hidden flex flex-col items-center text-center">
                     {/* Dotted Grid Background */}
                     <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1.5px, transparent 1.5px)', backgroundSize: '20px 20px' }}></div>
-                    
+
                     {/* Glowing background circles for modern premium aesthetic */}
                     <div className="absolute -right-24 -top-24 w-96 h-96 bg-[#FFC72C]/10 rounded-full blur-3xl pointer-events-none"></div>
                     <div className="absolute -left-24 -bottom-24 w-96 h-96 bg-[#008744]/30 rounded-full blur-3xl pointer-events-none"></div>
@@ -252,11 +252,11 @@ export default function BlogDetailPage() {
                         <div className="inline-flex items-center gap-2 bg-[#004d26]/80 border border-[#FFC72C]/40 text-[#FFC72C] text-[10px] md:text-xs px-3.5 py-1 rounded-full font-bold uppercase tracking-widest mb-4">
                             <i className="fa-solid fa-award text-amber-400"></i> Premium Quality • Factory Direct
                         </div>
-                        
+
                         <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-white mb-2 leading-tight">
                             Taste the <span className="text-[#FFC72C]">Quality Yourself</span>
                         </h2>
-                        
+
                         <p className="text-white/80 font-body font-medium text-xs md:text-sm max-w-md mb-6">
                             Order our premium, freshly roasted cashews direct from the factory.
                         </p>
