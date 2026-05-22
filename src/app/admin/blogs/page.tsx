@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { API } from '@/constants/api';
 
 function getToken() {
@@ -18,7 +18,7 @@ export default function AdminBlogs() {
     const [editingBlog, setEditingBlog] = useState<any | null>(null); // null = add mode
 
     const [form, setForm] = useState(EMPTY_FORM);
-    const [file, setFile] = useState<File | null>(null);
+    const fileRef = useRef<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -52,7 +52,7 @@ export default function AdminBlogs() {
     const openAdd = () => {
         setEditingBlog(null);
         setForm(EMPTY_FORM);
-        setFile(null);
+        fileRef.current = null;
         setError('');
         setIsModalOpen(true);
     };
@@ -67,7 +67,7 @@ export default function AdminBlogs() {
             tags: (blog.tags || []).join(', '),
             category: blog.category || 'Health Articles'
         });
-        setFile(null);
+        fileRef.current = null;
         setError('');
         setIsModalOpen(true);
     };
@@ -76,7 +76,7 @@ export default function AdminBlogs() {
         setIsModalOpen(false);
         setEditingBlog(null);
         setForm(EMPTY_FORM);
-        setFile(null);
+        fileRef.current = null;
         setError('');
     };
 
@@ -99,7 +99,7 @@ export default function AdminBlogs() {
         fd.append('content', form.content);
         fd.append('tags', form.tags);
         fd.append('category', form.category);
-        if (file) fd.append('file', file);
+        if (fileRef.current) fd.append('file', fileRef.current);
 
         const isEdit = !!editingBlog;
         const url = isEdit
@@ -146,7 +146,7 @@ export default function AdminBlogs() {
 
             {loading ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {[1, 2, 3].map(i => <div key={i} className="bg-white rounded-xl h-64 animate-pulse border border-gray-100" />)}
+                    {['skeleton-1', 'skeleton-2', 'skeleton-3'].map(id => <div key={id} className="bg-white rounded-xl h-64 animate-pulse border border-gray-100" />)}
                 </div>
             ) : blogs.length === 0 ? (
                 <div className="bg-white rounded-xl border border-gray-100 p-12 text-center text-gray-400">
@@ -166,7 +166,7 @@ export default function AdminBlogs() {
                                 <h3 className="font-bold text-xl mb-2 line-clamp-2">{b.title}</h3>
                                 <div className="flex items-center text-xs text-gray-500 mb-3 gap-4">
                                     <span><i className="fa-regular fa-user mr-1" />{b.author}</span>
-                                    {b.created_at && <span><i className="fa-regular fa-calendar mr-1" />{new Date(b.created_at).toLocaleDateString()}</span>}
+                                    {b.created_at && <span suppressHydrationWarning><i className="fa-regular fa-calendar mr-1" />{new Date(b.created_at).toLocaleDateString()}</span>}
                                 </div>
                                 <div className="flex flex-wrap gap-1 mb-4">
                                     {b.category && (
@@ -263,7 +263,7 @@ export default function AdminBlogs() {
                                             <p className="text-xs text-gray-500">Current image shown above. Upload to replace.</p>
                                         </div>
                                     )}
-                                    <input id="blog-file" type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
+                                    <input id="blog-file" type="file" accept="image/*" onChange={e => { fileRef.current = e.target.files?.[0] || null; }}
                                         className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border rounded-lg p-2" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">

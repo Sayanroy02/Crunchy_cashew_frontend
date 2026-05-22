@@ -30,20 +30,24 @@ export default function Affiliates() {
     }, []);
 
     useEffect(() => {
+        const timeouts: NodeJS.Timeout[] = [];
         const obs = new IntersectionObserver(([e]) => {
             if (e.isIntersecting && !triggered) {
                 setTriggered(true);
                 setPhase('flying');
                 // Banner & logos appear when plane is roughly mid-screen
-                setTimeout(() => setBannerVisible(true), 2200);
-                setTimeout(() => setLogosVisible(true), 2500);
+                timeouts.push(setTimeout(() => setBannerVisible(true), 2200));
+                timeouts.push(setTimeout(() => setLogosVisible(true), 2500));
                 // Products reveal after plane exits (~5s)
-                setTimeout(() => setProductVisible(true), 4800);
-                setTimeout(() => setPhase('done'), 5200);
+                timeouts.push(setTimeout(() => setProductVisible(true), 4800));
+                timeouts.push(setTimeout(() => setPhase('done'), 5200));
             }
         }, { threshold: 0.3 });
         if (sectionRef.current) obs.observe(sectionRef.current);
-        return () => obs.disconnect();
+        return () => {
+            obs.disconnect();
+            timeouts.forEach(clearTimeout);
+        };
     }, [triggered]);
 
     /* ── MOBILE: static ── */

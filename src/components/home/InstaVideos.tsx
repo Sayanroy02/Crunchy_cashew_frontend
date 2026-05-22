@@ -81,6 +81,84 @@ const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void 
     );
 };
 
+const VideoPopup = ({
+    selectedVideo,
+    mounted,
+    onClose,
+}: {
+    selectedVideo: InstaVideo | null;
+    mounted: boolean;
+    onClose: () => void;
+}) => {
+    if (!selectedVideo || !mounted) return null;
+
+    const content = (
+        <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8"
+            onClick={onClose}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+        >
+            {/* Fixed Close Button - Pinned to Viewport Corner */}
+            <button
+                onClick={onClose}
+                className="fixed top-6 right-6 md:top-10 md:right-10 z-[10000] w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all border border-white/30 backdrop-blur-md shadow-2xl group"
+            >
+                <i className="fa-solid fa-xmark text-2xl group-hover:rotate-90 transition-transform duration-300"></i>
+            </button>
+
+            <div
+                className="relative w-full max-w-[400px] h-full max-h-[85vh] md:max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.9)] border border-white/10 flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="relative flex-1 bg-black">
+                    <video
+                        src={selectedVideo.video_url}
+                        poster={selectedVideo.thumbnail_url}
+                        controls
+                        autoPlay
+                        playsInline
+                        className="w-full h-full object-contain"
+                    />
+
+                    {/* Top Overlay */}
+                    <div className="absolute top-0 inset-x-0 p-6 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
+                        <h3 className="text-white font-bold text-base md:text-lg drop-shadow-lg tracking-wide">
+                            {selectedVideo.title}
+                        </h3>
+                    </div>
+
+                    {/* Shop Now Button (Centered) */}
+                    <div className="absolute bottom-16 left-1/2 -translate-x-1/2">
+                        <Link
+                            href="/shop"
+                            className="bg-white/15 hover:bg-white/25 backdrop-blur-lg text-white border border-white/30 px-8 py-3.5 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 whitespace-nowrap"
+                        >
+                            <i className="fa-solid fa-cart-shopping text-xs"></i>
+                            Shop Now
+                        </Link>
+                    </div>
+
+                    {/* Instagram Link Button */}
+                    {selectedVideo.link && (
+                        <a
+                            href={selectedVideo.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="absolute bottom-8 right-6 bg-white/10 hover:bg-white/30 backdrop-blur-md text-white border border-white/25 w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95"
+                        >
+                            <i className="fa-brands fa-instagram text-2xl"></i>
+                        </a>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+
+    return typeof document !== 'undefined'
+        ? require('react-dom').createPortal(content, document.body)
+        : null;
+};
+
 export default function InstaVideos() {
     const [videos, setVideos] = useState<InstaVideo[]>([]);
     const [selectedVideo, setSelectedVideo] = useState<InstaVideo | null>(null);
@@ -110,76 +188,6 @@ export default function InstaVideos() {
     }, [selectedVideo]);
 
     if (videos.length === 0) return null;
-
-    const VideoPopup = () => {
-        if (!selectedVideo || !mounted) return null;
-
-        const content = (
-            <div
-                className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 md:p-8"
-                onClick={() => setSelectedVideo(null)}
-                style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-            >
-                {/* Fixed Close Button - Pinned to Viewport Corner */}
-                <button
-                    onClick={() => setSelectedVideo(null)}
-                    className="fixed top-6 right-6 md:top-10 md:right-10 z-[10000] w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-all border border-white/30 backdrop-blur-md shadow-2xl group"
-                >
-                    <i className="fa-solid fa-xmark text-2xl group-hover:rotate-90 transition-transform duration-300"></i>
-                </button>
-
-                <div
-                    className="relative w-full max-w-[400px] h-full max-h-[85vh] md:max-h-[90vh] bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.9)] border border-white/10 flex flex-col"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <div className="relative flex-1 bg-black">
-                        <video
-                            src={selectedVideo.video_url}
-                            poster={selectedVideo.thumbnail_url}
-                            controls
-                            autoPlay
-                            playsInline
-                            className="w-full h-full object-contain"
-                        />
-
-                        {/* Top Overlay */}
-                        <div className="absolute top-0 inset-x-0 p-6 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
-                            <h3 className="text-white font-bold text-base md:text-lg drop-shadow-lg tracking-wide">
-                                {selectedVideo.title}
-                            </h3>
-                        </div>
-
-                        {/* Shop Now Button (Centered) */}
-                        <div className="absolute bottom-16 left-1/2 -translate-x-1/2">
-                            <Link
-                                href="/shop"
-                                className="bg-white/15 hover:bg-white/25 backdrop-blur-lg text-white border border-white/30 px-8 py-3.5 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 whitespace-nowrap"
-                            >
-                                <i className="fa-solid fa-cart-shopping text-xs"></i>
-                                Shop Now
-                            </Link>
-                        </div>
-
-                        {/* Instagram Link Button */}
-                        {selectedVideo.link && (
-                            <a
-                                href={selectedVideo.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="absolute bottom-8 right-6 bg-white/10 hover:bg-white/30 backdrop-blur-md text-white border border-white/25 w-14 h-14 rounded-full flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95"
-                            >
-                                <i className="fa-brands fa-instagram text-2xl"></i>
-                            </a>
-                        )}
-                    </div>
-                </div>
-            </div>
-        );
-
-        return typeof document !== 'undefined'
-            ? require('react-dom').createPortal(content, document.body)
-            : null;
-    };
 
     return (
         <section className="py-10 md:py-12 bg-bg-cream overflow-hidden relative">
@@ -230,7 +238,13 @@ export default function InstaVideos() {
                     ))}
                 </div>
 
-                {selectedVideo && <VideoPopup />}
+                {selectedVideo && (
+                    <VideoPopup
+                        selectedVideo={selectedVideo}
+                        mounted={mounted}
+                        onClose={() => setSelectedVideo(null)}
+                    />
+                )}
             </div>
         </section>
     );

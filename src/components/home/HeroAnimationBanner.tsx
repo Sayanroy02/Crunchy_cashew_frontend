@@ -10,6 +10,8 @@ export default function HeroVideo() {
 
     // Desktop: always visible. Mobile: reveals after 5s.
     const [mobileContentVisible, setMobileContentVisible] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
+    const [videoError, setVideoError] = useState(false);
 
     useEffect(() => {
         const isMobile = window.matchMedia('(max-width: 767px)').matches;
@@ -43,6 +45,16 @@ export default function HeroVideo() {
             className="relative w-full overflow-hidden bg-[#1a0a04]"
             style={{ height: 'calc(100svh - var(--navbar-h, 72px))' }}
         >
+            {/* Fallback image shown behind/instead of video if it fails or while loading */}
+            <img
+                src="/images/animation-photo.png"
+                alt="Crunchy Cashews Premium Nuts"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                    videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'
+                }`}
+                style={{ objectPosition: 'center center' }}
+            />
+
             {/* ── Desktop Video ── */}
             <video
                 ref={desktopVideoRef}
@@ -51,6 +63,8 @@ export default function HeroVideo() {
                 loop
                 playsInline
                 preload="metadata"
+                onPlay={() => setVideoLoaded(true)}
+                onError={() => setVideoError(true)}
                 className="absolute inset-0 w-full h-full object-cover hidden md:block object-[100%_top] lg:object-[35%_top]"
             />
 
@@ -61,6 +75,8 @@ export default function HeroVideo() {
                 muted
                 playsInline
                 preload="none"
+                onPlay={() => setVideoLoaded(true)}
+                onError={() => setVideoError(true)}
                 className="absolute inset-0 w-full h-full object-cover md:hidden"
                 style={{ objectPosition: 'center center' }}
             />
