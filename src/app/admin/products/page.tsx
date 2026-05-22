@@ -198,19 +198,23 @@ export default function AdminProducts() {
         }));
     };
 
-    const field = (label: string, key: string, type = 'text', required = true) => (
-        <div className="space-y-1">
-            <label className="text-sm font-semibold text-gray-700">{label}</label>
-            <input
-                type={type}
-                required={required}
-                value={(formData as any)[key]}
-                onChange={e => setFormData({ ...formData, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
-                className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
-                placeholder={`Enter ${label.toLowerCase()}`}
-            />
-        </div>
-    );
+    const field = (label: string, key: string, type = 'text', required = true) => {
+        const id = `field-${key}`;
+        return (
+            <div className="space-y-1">
+                <label htmlFor={id} className="text-sm font-semibold text-gray-700">{label}</label>
+                <input
+                    id={id}
+                    type={type}
+                    required={required}
+                    value={(formData as any)[key]}
+                    onChange={e => setFormData({ ...formData, [key]: type === 'number' ? Number(e.target.value) : e.target.value })}
+                    className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
+                    placeholder={`Enter ${label.toLowerCase()}`}
+                />
+            </div>
+        );
+    };
 
     const handleAddVariant = () => {
         setFormData(prev => ({
@@ -377,8 +381,9 @@ export default function AdminProducts() {
                             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {field('Product Name', 'name')}
                                 <div className="space-y-1">
-                                    <label className="text-sm font-semibold text-gray-700">Category</label>
+                                    <label htmlFor="prod-category" className="text-sm font-semibold text-gray-700">Category</label>
                                     <select
+                                        id="prod-category"
                                         value={formData.category}
                                         onChange={e => setFormData({ ...formData, category: e.target.value })}
                                         className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
@@ -390,8 +395,8 @@ export default function AdminProducts() {
                                     </select>
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-semibold text-gray-700">Description</label>
-                                    <textarea required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                    <label htmlFor="prod-desc" className="text-sm font-semibold text-gray-700">Description</label>
+                                    <textarea id="prod-desc" required value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })}
                                         className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary min-h-[90px] transition-colors resize-none" />
                                 </div>
 
@@ -411,29 +416,29 @@ export default function AdminProducts() {
                                             <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm relative animate-slide-in">
                                                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                                                     <div className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Size</label>
-                                                        <input type="text" placeholder="e.g. 200g" value={v.size} onChange={e => handleVariantChange(idx, 'size', e.target.value)} required
+                                                        <label htmlFor={`v-${idx}-size`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Size</label>
+                                                        <input id={`v-${idx}-size`} type="text" placeholder="e.g. 200g" value={v.size} onChange={e => handleVariantChange(idx, 'size', e.target.value)} required
                                                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Price (₹)</label>
-                                                        <input type="number" value={v.price} onChange={e => handleVariantChange(idx, 'price', Number(e.target.value))} required
+                                                        <label htmlFor={`v-${idx}-price`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Price (₹)</label>
+                                                        <input id={`v-${idx}-price`} type="number" value={v.price} onChange={e => handleVariantChange(idx, 'price', Number(e.target.value))} required
                                                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold" />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MRP (₹)</label>
-                                                        <input type="number" value={v.original_price} onChange={e => handleVariantChange(idx, 'original_price', Number(e.target.value))} required
+                                                        <label htmlFor={`v-${idx}-mrp`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MRP (₹)</label>
+                                                        <input id={`v-${idx}-mrp`} type="number" value={v.original_price} onChange={e => handleVariantChange(idx, 'original_price', Number(e.target.value))} required
                                                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Stock</label>
-                                                        <input type="number" value={v.stock} onChange={e => handleVariantChange(idx, 'stock', Number(e.target.value))} required
+                                                        <label htmlFor={`v-${idx}-stock`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Stock</label>
+                                                        <input id={`v-${idx}-stock`} type="number" value={v.stock} onChange={e => handleVariantChange(idx, 'stock', Number(e.target.value))} required
                                                             className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>
+                                                        <label htmlFor={`v-${idx}-discount`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>
                                                         <div className="flex items-center gap-2">
-                                                            <input type="number" value={v.discount} onChange={e => handleVariantChange(idx, 'discount', Number(e.target.value))}
+                                                            <input id={`v-${idx}-discount`} type="number" value={v.discount} onChange={e => handleVariantChange(idx, 'discount', Number(e.target.value))}
                                                                 className="w-full px-3 py-2 border border-blue-100 bg-white rounded-lg text-xs text-blue-600 font-bold outline-none focus:border-primary" />
                                                             {formData.variants.length > 1 && (
                                                                 <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-1">
@@ -664,7 +669,7 @@ export default function AdminProducts() {
                                         {/* Existing Images */}
                                         {formData.image_urls?.map((url, idx) => (
                                             <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
-                                                <img src={url} className="w-full h-full object-cover" />
+                                                <img src={url} alt={`Gallery image ${idx + 1}`} className="w-full h-full object-cover" />
                                                 <button 
                                                     type="button"
                                                     onClick={() => setFormData(prev => ({ ...prev, image_urls: prev.image_urls.filter((_, i) => i !== idx) }))}

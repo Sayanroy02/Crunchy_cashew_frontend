@@ -83,14 +83,17 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
     const inputClass =
         'w-full bg-[#f8fbfa] border border-gray-200 rounded-2xl px-4 py-3.5 text-sm text-[#1a1f1c] font-medium outline-none transition-all duration-200 placeholder:text-gray-300 focus:border-[#F6B000] focus:ring-2 focus:ring-[#F6B000]/20';
 
+    const inputId = `field-${name}`;
+
     return (
         <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold tracking-widest uppercase ml-0.5" style={{ color: COLORS.black }}>
+            <label htmlFor={inputId} className="text-[11px] font-bold tracking-widest uppercase ml-0.5" style={{ color: COLORS.black }}>
                 {label}{required && <span style={{ color: COLORS.primary }} className="ml-0.5">*</span>}
             </label>
 
             {as === 'textarea' ? (
                 <textarea
+                    id={inputId}
                     name={name} value={value} rows={5} required={required}
                     onChange={onChange as React.ChangeEventHandler<HTMLTextAreaElement>}
                     placeholder={placeholder ?? 'Write your message here…'}
@@ -99,6 +102,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
             ) : as === 'select' ? (
                 <div className="relative">
                     <select
+                        id={inputId}
                         name={name} value={value} required={required}
                         onChange={onChange as React.ChangeEventHandler<HTMLSelectElement>}
                         className={`${inputClass} appearance-none cursor-pointer`}
@@ -110,6 +114,7 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
                 </div>
             ) : (
                 <input
+                    id={inputId}
                     name={name} type={type} value={value} required={required}
                     onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
                     placeholder={placeholder ?? (type === 'date' ? '' : `Enter ${label.toLowerCase()}`)}

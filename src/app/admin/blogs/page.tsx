@@ -212,24 +212,25 @@ export default function AdminBlogs() {
                             )}
                             <form id="blogForm" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-medium text-gray-700">Article Title</label>
-                                    <input type="text" required value={form.title}
+                                    <label htmlFor="blog-title" className="text-sm font-medium text-gray-700">Article Title</label>
+                                    <input id="blog-title" type="text" required value={form.title}
                                         onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30 focus:border-primary text-xl font-medium text-gray-800"
                                         placeholder="The Health Benefits of Premium Cashews..." />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">SEO Slug</label>
+                                    <label htmlFor="blog-slug" className="text-sm font-medium text-gray-700">SEO Slug</label>
                                     <div className="flex bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
                                         <span className="px-3 py-2 text-gray-400 border-r border-gray-200 bg-gray-100 select-none text-sm">/blogs/</span>
-                                        <input type="text" required value={form.slug}
+                                        <input id="blog-slug" type="text" required value={form.slug}
                                             onChange={e => setForm(f => ({ ...f, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]+/g, '') }))}
                                             className="w-full px-4 py-2 bg-transparent outline-none text-gray-600 text-sm" />
                                     </div>
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Category <span className="text-red-500">*</span></label>
+                                    <label htmlFor="blog-category" className="text-sm font-medium text-gray-700">Category <span className="text-red-500">*</span></label>
                                     <select
+                                        id="blog-category"
                                         value={form.category}
                                         onChange={e => setForm(f => ({ ...f, category: e.target.value as Category }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30 focus:border-primary bg-white"
@@ -239,21 +240,21 @@ export default function AdminBlogs() {
                                     </select>
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700">Author</label>
-                                    <input type="text" required value={form.author}
+                                    <label htmlFor="blog-author" className="text-sm font-medium text-gray-700">Author</label>
+                                    <input id="blog-author" type="text" required value={form.author}
                                         onChange={e => setForm(f => ({ ...f, author: e.target.value }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30"
                                         placeholder="Crunchy Cashews Editorial" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-medium text-gray-700">Tags (comma separated)</label>
-                                    <input type="text" value={form.tags}
+                                    <label htmlFor="blog-tags" className="text-sm font-medium text-gray-700">Tags (comma separated)</label>
+                                    <input id="blog-tags" type="text" value={form.tags}
                                         onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30"
                                         placeholder="Health, Nutrition, Recipes" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-medium text-gray-700">
+                                    <label htmlFor="blog-file" className="text-sm font-medium text-gray-700">
                                         Cover Image {editingBlog ? '(upload to replace current)' : '(optional)'}
                                     </label>
                                     {editingBlog?.image_url && (
@@ -262,12 +263,12 @@ export default function AdminBlogs() {
                                             <p className="text-xs text-gray-500">Current image shown above. Upload to replace.</p>
                                         </div>
                                     )}
-                                    <input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
+                                    <input id="blog-file" type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)}
                                         className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border rounded-lg p-2" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label className="text-sm font-medium text-gray-700">Content (Markdown / HTML supported)</label>
-                                    <textarea required value={form.content}
+                                    <label htmlFor="blog-content" className="text-sm font-medium text-gray-700">Content (Markdown / HTML supported)</label>
+                                    <textarea id="blog-content" required value={form.content}
                                         onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
                                         className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-primary/30 min-h-[280px] font-mono text-sm"
                                         placeholder="Write your amazing content here..." />

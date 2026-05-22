@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { hydrateAuth } from '@/lib/store/features/authSlice';
 import { hydrateCart } from '@/lib/store/features/cartSlice';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import { MotionConfig } from 'framer-motion';
 
 export default function StoreProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -17,7 +18,11 @@ export default function StoreProvider({ children }: { children: React.ReactNode 
 
     return (
         <GoogleOAuthProvider clientId={clientId}>
-            <Provider store={store}>{children}</Provider>
+            <Provider store={store}>
+                <MotionConfig reducedMotion="user">
+                    {children}
+                </MotionConfig>
+            </Provider>
         </GoogleOAuthProvider>
     );
 }

@@ -468,28 +468,28 @@ export default function AboutPage() {
             <form onSubmit={handleVisitSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name *</label>
-                  <input required type="text" value={visitForm.name}
+                  <label htmlFor="visit-name" className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name *</label>
+                  <input id="visit-name" required type="text" value={visitForm.name}
                     onChange={e => setVisitForm({ ...visitForm, name: e.target.value })}
                     className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F6B000]/50 transition-all shadow-sm" />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address *</label>
-                  <input required type="email" value={visitForm.email}
+                  <label htmlFor="visit-email" className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address *</label>
+                  <input id="visit-email" required type="email" value={visitForm.email}
                     onChange={e => setVisitForm({ ...visitForm, email: e.target.value })}
                     className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F6B000]/50 transition-all shadow-sm" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Company Name</label>
-                  <input type="text" value={visitForm.company}
+                  <label htmlFor="visit-company" className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Company Name</label>
+                  <input id="visit-company" type="text" value={visitForm.company}
                     onChange={e => setVisitForm({ ...visitForm, company: e.target.value })}
                     className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F6B000]/50 transition-all shadow-sm" />
                 </div>
                 <div className="space-y-2">
-                  <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Requested Date *</label>
-                  <input required type="date" value={visitForm.date}
+                  <label htmlFor="visit-date" className="block text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Requested Date *</label>
+                  <input id="visit-date" required type="date" value={visitForm.date}
                     onChange={e => setVisitForm({ ...visitForm, date: e.target.value })}
                     className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F6B000]/50 transition-all shadow-sm" />
                 </div>
