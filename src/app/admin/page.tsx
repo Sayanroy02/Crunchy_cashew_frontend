@@ -23,7 +23,7 @@ ChartJS.register(
 );
 
 export default function AdminDashboard() {
-    const [stats, setStats] = useState({ total_orders: 0, pending_orders: 0, todays_collection: 0 });
+    const [stats, setStats] = useState({ total_orders: 0, pending_orders: 0, todays_collection: 0, total_revenue: 0 });
     const [traffic, setTraffic] = useState({ unique_visitors: 0, popular_pages: [] as any[] });
     const [loading, setLoading] = useState(true);
 
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-heading font-black text-primary">System Analytics</h1>
 
             {/* Top Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center">
                     <p className="text-gray-500 font-medium text-sm">Total Orders</p>
                     <h2 className="text-4xl font-bold text-gray-800 mt-2">{stats.total_orders}</h2>
@@ -101,7 +101,15 @@ export default function AdminDashboard() {
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center">
                     <p className="text-gray-500 font-medium text-sm">Today's Revenue</p>
-                    <h2 className="text-4xl font-bold text-primary mt-2">₹{stats.todays_collection}</h2>
+                    <h2 className="text-4xl font-bold text-primary mt-2">₹{stats.todays_collection.toLocaleString('en-IN')}</h2>
+                    <p className="text-xs text-gray-400 mt-1 font-medium">Paid orders today</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-50 rounded-bl-full"></div>
+                    <p className="text-gray-500 font-medium text-sm relative z-10">Total Revenue</p>
+                    <h2 className="text-4xl font-bold text-emerald-600 mt-2 relative z-10">₹{(stats.total_revenue || 0).toLocaleString('en-IN')}</h2>
+                    <p className="text-xs text-gray-400 mt-1 font-medium relative z-10">All-time paid orders</p>
                 </div>
 
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center relative overflow-hidden">

@@ -9,6 +9,7 @@ import CookieConsent from "@/components/common/CookieConsent";
 import { COLORS } from "@/constants/styles";
 import { SnackbarProvider } from "@/context/SnackbarContext";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
+import MainContent from "@/components/layout/MainContent";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -68,9 +69,9 @@ export default function RootLayout({
             <SplashScreen />
             <FloatingBackground />
             <Navbar />
-            <main className="min-h-screen pt-[56px] md:pt-[72px]">
+            <MainContent>
               {children}
-            </main>
+            </MainContent>
             <Footer />
             <CookieConsent />
             <MobileBottomNav />
