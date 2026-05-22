@@ -61,8 +61,8 @@ export default function CartPage() {
     return (
         <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
-                <div className="mb-10 border-b-2 pb-4" style={{ borderBottomColor: '#F6B000' }}>
-                    <SectionHeading text="Shopping" highlight="Cart" className="text-4xl md:text-5xl" textColor="#000000" />
+                <div className="mb-5 pb-4">
+                    <SectionHeading text="Shopping" highlight="Cart" className="text-4xl md:text-5xl" textColor={COLORS.heading} />
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8">

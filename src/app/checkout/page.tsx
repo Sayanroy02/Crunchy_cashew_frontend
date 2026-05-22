@@ -228,7 +228,7 @@ export default function CheckoutPage() {
     return (
         <div className={`min-h-screen py-16 px-4 md:px-8 bg-[#FFF9E7]`}>
             <div className="max-w-6xl mx-auto">
-                <SectionHeading text="Secure" highlight="Checkout" className="mb-10" textColor="#000000" />
+                <SectionHeading text="Secure" highlight="Checkout" className="mb-10" textColor={COLORS.heading} />
 
                 <div className="flex flex-col lg:flex-row gap-10">
                     {/* Left Side: Shipping + Payment Form */}
