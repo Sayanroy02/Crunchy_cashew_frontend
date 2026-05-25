@@ -286,7 +286,7 @@ export default function BlogsDirectory() {
                                 setShowFeaturedOnly(false);
                                 setSearchTerm('');
                             }}
-                            className="px-8 py-3 rounded-2xl bg-black text-[#F6B000] text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/20"
+                            className="px-8 py-3 rounded-2xl bg-green-700 text-[#ffffff] text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-black/20"
                         >
                             Clear All Filters
                         </button>

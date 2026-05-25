@@ -520,7 +520,7 @@ export default function BulkOrderCard() {
                 />
             </motion.div> */}
 
-            <motion.div
+            {/* <motion.div
                 style={{ x: moveX, y: moveY }}
                 className="absolute top-0 xl:top-[1%] left-[-2%] xl:left-[-2%] w-[120px] xl:w-[140px] h-auto pointer-events-none z-[11] hidden xl:block rotate-[-15deg]"
             >
@@ -529,7 +529,7 @@ export default function BulkOrderCard() {
                     alt=""
                     className="w-full h-auto drop-shadow-2xl brightness-110"
                 />
-            </motion.div>
+            </motion.div> */}
 
 
             <div className="max-w-7xl mx-auto px-4 md:px-8">

@@ -215,7 +215,7 @@ export default function Footer() {
                     <div className="flex items-center gap-1 text-xs text-white/60">
                         <span>Developed by</span>
                         <a
-                            href="https://yunutprocessingindustry.com"
+                            // href="https://yunutprocessingindustry.com"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-semibold ml-1 text-white/80 transition-opacity hover:text-white"

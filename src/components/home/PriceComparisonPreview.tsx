@@ -107,7 +107,7 @@ export default function PriceComparisonPreview() {
     >
 
       {/* ── Left corner fruit — desktop only, anchored to heading area ── */}
-      <motion.div
+      {/* <motion.div
         style={{ x: moveX, y: moveY }}
         animate={{
           y: [0, -12, 0],
@@ -127,7 +127,7 @@ export default function PriceComparisonPreview() {
           className="object-contain object-top w-full h-auto brightness-110 drop-shadow-2xl rotate-[-5deg]"
           aria-hidden="true"
         />
-      </motion.div>
+      </motion.div> */}
 
       <div className="max-w-7xl mx-auto space-y-16">
         {/* 1. HEADER */}
