@@ -161,8 +161,8 @@ export default function Footer() {
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { label: 'Wholesale', href: '/bulk' },
-                            { label: 'White Label', href: '/bulk' },
-                            { label: 'Corporate Gifting', href: '/bulk' },
+                            { label: 'White Label', href: '/bulk#white-label-section' },
+                            { label: 'Who We Serve', href: '/bulk#industries-we-supply' },
                         ].map(item => (
                             <li key={item.label}>
                                 <Link

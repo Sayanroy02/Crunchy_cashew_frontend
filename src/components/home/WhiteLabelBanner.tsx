@@ -288,7 +288,7 @@ I’d like to know more about your white label options. Could you please share t
                                 </p>
 
                                 {/* Desktop Buttons */}
-                                <div className="hidden lg:flex items-center gap-4">
+                                <div className="relative z-20 hidden lg:flex items-center gap-4">
                                     <button
                                         onClick={handleCTA}
                                         className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
@@ -318,7 +318,7 @@ I’d like to know more about your white label options. Could you please share t
                             </div>
 
                             {/* Right Side: Visual Mockup */}
-                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[260px] -mt-2 lg:mt-0">
+                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[260px] -mt-2 lg:mt-0 pointer-events-none">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
@@ -335,7 +335,7 @@ I’d like to know more about your white label options. Could you please share t
                             </div>
 
                             {/* Mobile Buttons */}
-                            <div className="lg:hidden w-full flex flex-col gap-2 mt-1">
+                            <div className="relative z-20 lg:hidden w-full flex flex-col gap-2 mt-1">
                                 <button
                                     onClick={handleCTA}
                                     className="group font-black w-full px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"

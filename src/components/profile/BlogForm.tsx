@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { API } from '@/constants/api';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/store/store';
+import RichTextEditor from '@/components/ui/RichTextEditor';
 
 interface BlogFormProps {
     blog?: any;
@@ -29,12 +30,28 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
         setLoading(true);
         setError('');
 
+        if (!blog && !image) {
+            setError('Please upload a cover image.');
+            setLoading(false);
+            return;
+        }
+
         try {
+            const formattedTags = tags
+                .split(',')
+                .map((t: string) => {
+                    const clean = t.trim();
+                    if (!clean) return '';
+                    return clean.startsWith('#') ? clean : `#${clean}`;
+                })
+                .filter(Boolean)
+                .join(', ');
+
             const formData = new FormData();
             formData.append('title', title);
             formData.append('content', content);
             formData.append('category', category);
-            formData.append('tags', tags);
+            formData.append('tags', formattedTags);
             if (image) {
                 formData.append('file', image);
             }
@@ -83,7 +100,7 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
                     )}
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Blog Title</label>
+                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Blog Title <span className="text-red-500">*</span></label>
                         <input
                             required
                             type="text"
@@ -96,7 +113,7 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Category</label>
+                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Category <span className="text-red-500">*</span></label>
                             <select
                                 value={category}
                                 onChange={(e) => setCategory(e.target.value)}
@@ -106,7 +123,7 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
                             </select>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Tags (comma separated)</label>
+                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Hashtags (comma separated)</label>
                             <input
                                 type="text"
                                 value={tags}
@@ -118,7 +135,7 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Cover Image</label>
+                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Cover Image <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <input
                                 type="file"
@@ -152,13 +169,10 @@ export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Blog Content</label>
-                        <textarea
-                            required
-                            rows={8}
+                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest pl-1">Blog Content <span className="text-red-500">*</span></label>
+                        <RichTextEditor
                             value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            className="w-full bg-gray-50 border-2 border-transparent focus:border-primary focus:bg-white rounded-2xl py-3 px-4 outline-none transition-all font-medium text-gray-800 resize-none"
+                            onChange={(html) => setContent(html)}
                             placeholder="Write your story here..."
                         />
                     </div>

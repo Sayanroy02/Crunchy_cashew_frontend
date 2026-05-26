@@ -14,7 +14,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 export default function PrivacyPage() {
     return (
         <div className={`min-h-screen bg-[#FFF9E7]`}>
-            <div className="bg-primary py-14 px-6 text-center">
+            <div className="bg-[#00863D] py-14 px-6 text-center">
                 <p className="text-amber text-xs font-bold uppercase tracking-widest mb-2">Legal</p>
                 <h1 className="text-4xl md:text-5xl font-heading font-black text-white">Privacy Policy</h1>
                 <p className="text-white/60 mt-2 text-sm">Last updated: March 2025</p>

@@ -368,10 +368,12 @@ function GradeCard({
     item,
     onToggle,
     isSelected,
+    isEnterpriseGrade = false,
 }: {
     item: (typeof gradeCategories)[0]['items'][0];
     onToggle: (grade: string) => void;
     isSelected: boolean;
+    isEnterpriseGrade?: boolean;
 }) {
     return (
         <div
@@ -393,8 +395,8 @@ function GradeCard({
                 className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
             >
                 <span
-                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold uppercase tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${isSelected ? 'text-[#F6B000]' : 'text-gray-900'
-                        }`}
+                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${isSelected ? 'text-[#F6B000]' : 'text-gray-900'
+                        } ${isEnterpriseGrade ? 'normal-case' : 'uppercase'}`}
                     style={{
                         lineHeight: '1.1'
                     }}
@@ -435,7 +437,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
     ];
 
     return (
-        <section className="max-w-7xl mx-auto px-6 py-10 md:py-10 relative">
+        <section id="industries-we-supply" className="max-w-7xl mx-auto px-6 py-10 md:py-10 relative" style={{ scrollMarginTop: '100px' }}>
             {/* Smaller Floating Parachute Cashew (desktop only) */}
             <motion.div
                 initial={{ y: 0, rotate: -5 }}
@@ -664,6 +666,7 @@ function OurGradesSection({
                                         item={item}
                                         onToggle={onToggleGrade}
                                         isSelected={onSelectCheck(item.code)}
+                                        isEnterpriseGrade={activeTab === 'cashew-forms'}
                                     />
                                 </div>
                             ))}
@@ -1355,7 +1358,7 @@ export default function BulkOrderPage() {
                 <OurGradesSection onSelectCheck={onSelectCheck} onToggleGrade={toggleGrade} openWhatsApp={openWhatsApp} />
             </div>
 
-            <div className="max-w-7xl mx-auto px-6 mb-10">
+            <div id="white-label-section" className="max-w-7xl mx-auto px-6 mb-10" style={{ scrollMarginTop: '100px' }}>
                 <WhiteLabelBanner />
             </div>
 

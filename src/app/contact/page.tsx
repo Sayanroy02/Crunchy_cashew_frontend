@@ -128,18 +128,33 @@ function Field({ label, name, type = 'text', value, onChange, required, as, opti
 }
 
 /* ══════ Sidebar info row ══════ */
-function InfoRow({ icon, title, lines }: { icon: React.ReactNode; title: string; lines: string[] }) {
-    return (
-        <div className="flex items-start gap-4">
-            <div className="w-11 h-11 rounded-[14px] border border-white/80 bg-transparent flex items-center justify-center shrink-0">
+function InfoRow({ icon, title, lines, href, external }: { icon: React.ReactNode; title: string; lines: string[]; href?: string; external?: boolean }) {
+    const content = (
+        <div className="flex items-start gap-4 group cursor-pointer">
+            <div className="w-11 h-11 rounded-[14px] border border-white/80 bg-transparent flex items-center justify-center shrink-0 transition-all duration-300 group-hover:border-[#F6B000] group-hover:scale-105">
                 {icon}
             </div>
             <div>
-                <p style={{ color: COLORS.white }} className="text-[10px] font-black tracking-widest uppercase mb-1 mt-0.5">{title}</p>
-                {lines.map((l, i) => <p key={i} className="text-white text-sm leading-relaxed">{l}</p>)}
+                <p style={{ color: COLORS.white }} className="text-[10px] font-black tracking-widest uppercase mb-1 mt-0.5 transition-colors group-hover:text-[#F6B000]">{title}</p>
+                {lines.map((l, i) => <p key={i} className="text-white text-sm leading-relaxed transition-colors group-hover:text-white/80">{l}</p>)}
             </div>
         </div>
     );
+
+    if (href) {
+        return (
+            <a
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="block hover:no-underline"
+            >
+                {content}
+            </a>
+        );
+    }
+
+    return content;
 }
 
 /* ══════════════════════════════════
@@ -300,11 +315,18 @@ function ContactContent() {
                         {/* info rows */}
                         <div className="relative z-10 flex flex-col gap-6">
                             <InfoRow icon={<IconLocation />} title="Factory"
-                                lines={['YU NUT PROCESSING INDUSTRY,Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015']} />
+                                lines={['YU NUT PROCESSING INDUSTRY,Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015']}
+                                href="https://maps.app.goo.gl/GaLaWva2mpKMxbVT7"
+                                external
+                            />
                             <InfoRow icon={<IconPhone />} title="Phone"
-                                lines={['+91 7847996343', 'Mon – Fri · 9am – 6pm IST']} />
+                                lines={['+91 7847996343', 'Mon – Fri · 9am – 6pm IST']}
+                                href="tel:+917847996343"
+                            />
                             <InfoRow icon={<IconEmail />} title="Email"
-                                lines={['crunchycashews18@gmail.com']} />
+                                lines={['crunchycashews18@gmail.com']}
+                                href="mailto:crunchycashews18@gmail.com"
+                            />
                         </div>
 
                         {/* socials */}

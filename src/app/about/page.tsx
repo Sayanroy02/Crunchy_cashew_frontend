@@ -616,70 +616,72 @@ export default function AboutPage() {
         {renderContent()}
 
         {/* ── COMMON BANNER: Ready to Elevate Your Supply Chain? ── */}
-        <section className="w-full animate-fade-in" aria-label="Bulk Supply CTA Banner">
-          <div
-            className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-[32px] overflow-hidden px-8 md:px-12 py-8 md:py-10 shadow-2xl border border-white/10"
-            style={{
-              background: `linear-gradient(135deg, ${COLORS.heading} 0%, #006b31 100%)`,
-              boxShadow: `0 12px 40px rgba(0, 134, 61, 0.15), 0 4px 12px rgba(0,0,0,0.1)`,
-            }}
-          >
-            {/* Background dot pattern */}
+        {activeTab !== 'visit' && (
+          <section className="w-full animate-fade-in" aria-label="Bulk Supply CTA Banner">
             <div
-              className="absolute inset-0 pointer-events-none opacity-45"
+              className="relative flex flex-col md:flex-row items-center justify-between gap-8 rounded-[32px] overflow-hidden px-8 md:px-12 py-8 md:py-10 shadow-2xl border border-white/10"
               style={{
-                backgroundImage: 'radial-gradient(circle, #ffffff0d 1px, transparent 1px)',
-                backgroundSize: '16px 16px',
+                background: `linear-gradient(135deg, ${COLORS.heading} 0%, #006b31 100%)`,
+                boxShadow: `0 12px 40px rgba(0, 134, 61, 0.15), 0 4px 12px rgba(0,0,0,0.1)`,
               }}
-            />
+            >
+              {/* Background dot pattern */}
+              <div
+                className="absolute inset-0 pointer-events-none opacity-45"
+                style={{
+                  backgroundImage: 'radial-gradient(circle, #ffffff0d 1px, transparent 1px)',
+                  backgroundSize: '16px 16px',
+                }}
+              />
 
-            {/* Gold accent glow */}
-            <div
-              className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, #FDC7001A 0%, transparent 70%)' }}
-            />
+              {/* Gold accent glow */}
+              <div
+                className="absolute -top-12 -right-12 w-48 h-48 rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, #FDC7001A 0%, transparent 70%)' }}
+              />
 
-            {/* LEFT side content */}
-            <div className="relative z-10 flex-1 text-center md:text-left flex flex-col items-center md:items-start">
-              <h2 className="text-xl md:text-2xl font-black text-white leading-tight">
-                Ready to Elevate <span style={{ color: COLORS.primary }}>Your Supply Chain</span>?
-              </h2>
-              <p className="text-white/80 text-sm md:text-base max-w-xl mt-3 mb-6 leading-relaxed font-medium">
-                Whether you need consistent bulk orders of premium grades or white-label solutions for your brand, we have the capacity and the quality to be your trusted manufacturing partner.
-              </p>
-              <div className="relative z-10 flex-shrink-0">
-                <a
-                  id="bulk-quote-banner-cta"
-                  onClick={handleWhatsAppClick}
-                  href="#"
-                  className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
-                  style={{
-                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
-                    color: '#000',
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                  </svg>
-                  Request a Bulk Quote
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
-                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                  </svg>
-                </a>
+              {/* LEFT side content */}
+              <div className="relative z-10 flex-1 text-center md:text-left flex flex-col items-center md:items-start">
+                <h2 className="text-xl md:text-2xl font-black text-white leading-tight">
+                  Ready to Elevate <span style={{ color: COLORS.primary }}>Your Supply Chain</span>?
+                </h2>
+                <p className="text-white/80 text-sm md:text-base max-w-xl mt-3 mb-6 leading-relaxed font-medium">
+                  Whether you need consistent bulk orders of premium grades or white-label solutions for your brand, we have the capacity and the quality to be your trusted manufacturing partner.
+                </p>
+                <div className="relative z-10 flex-shrink-0">
+                  <a
+                    id="bulk-quote-banner-cta"
+                    onClick={handleWhatsAppClick}
+                    href="#"
+                    className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                    style={{
+                      background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
+                      color: '#000',
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                    Request a Bulk Quote
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+                      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              {/* RIGHT side illustration */}
+              <div className="relative z-10 flex-shrink-0 hidden md:block">
+                <img
+                  src="/images/iLLUSTARTION-1.png"
+                  alt="Bulk quote illustration"
+                  className="w-36 h-auto object-contain drop-shadow-2xl animate-pulse-subtle"
+                  style={{ filter: 'drop-shadow(0 12px 24px rgba(253,199,0,0.2))' }}
+                />
               </div>
             </div>
-
-            {/* RIGHT side illustration */}
-            <div className="relative z-10 flex-shrink-0 hidden md:block">
-              <img
-                src="/images/iLLUSTARTION-1.png"
-                alt="Bulk quote illustration"
-                className="w-36 h-auto object-contain drop-shadow-2xl animate-pulse-subtle"
-                style={{ filter: 'drop-shadow(0 12px 24px rgba(253,199,0,0.2))' }}
-              />
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       <style>{`

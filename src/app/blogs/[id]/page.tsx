@@ -12,6 +12,9 @@ interface Blog {
     image_url?: string;
     content: string;
     created_at: string;
+    author?: string;
+    category?: string;
+    tags?: string[] | string;
 }
 
 function formatBlogContent(content: string): string {
@@ -128,6 +131,7 @@ export default function BlogDetailPage() {
     const [blog, setBlog] = useState<Blog | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [toastMsg, setToastMsg] = useState('');
 
     useEffect(() => {
         if (!id) return;
@@ -147,6 +151,11 @@ export default function BlogDetailPage() {
                 setLoading(false);
             });
     }, [id]);
+
+    const showToast = (msg: string) => {
+        setToastMsg(msg);
+        setTimeout(() => setToastMsg(''), 3000);
+    };
 
     if (loading) {
         return (
@@ -182,18 +191,92 @@ export default function BlogDetailPage() {
         );
     }
 
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+    const plainText = (blog.content || '').replace(/<[^>]*>?/gm, '');
+    const previewText = plainText.slice(0, 120) + (plainText.length > 120 ? '...' : '');
+
+    const shareOnWhatsApp = () => {
+        let message = `Check out this article: *${blog.title}*\n\n${previewText}\n\n`;
+        if (blog.image_url) {
+            message += `Image: ${blog.image_url}\n\n`;
+        }
+        message += `Read more here: ${shareUrl}`;
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    };
+
+    const shareOnInstagram = async () => {
+        const text = `Check out this article: ${blog.title}\n\n${previewText}`;
+        let fullShareString = `${text}\n\n`;
+        if (blog.image_url) {
+            fullShareString += `Image: ${blog.image_url}\n\n`;
+        }
+        fullShareString += `Read here: ${shareUrl}`;
+
+        // Attempt Native Sharing first
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: blog.title,
+                    text: text,
+                    url: shareUrl,
+                });
+                return;
+            } catch (err) {
+                console.log('Native share failed/cancelled:', err);
+            }
+        }
+
+        // Fallback: Copy to clipboard and display premium Toast
+        try {
+            await navigator.clipboard.writeText(fullShareString);
+            showToast("Copied to clipboard! Paste it to share on Instagram.");
+        } catch (err) {
+            showToast("Failed to copy link. Please copy the URL from browser address bar.");
+        }
+    };
+
+    // Extract hashtags from blog tags correctly (supporting both string and array)
+    let hashtags: string[] = [];
+    if (blog.tags) {
+        if (Array.isArray(blog.tags)) {
+            hashtags = blog.tags;
+        } else if (typeof blog.tags === 'string') {
+            hashtags = (blog.tags as string).split(',').map(t => t.trim()).filter(Boolean);
+        }
+    }
+
     return (
-        <article className={`min-h-screen bg-[#FFF9E7] pb-24`}>
-            {/* Header / Hero */}
-            <div className="bg-bg-cream pt-32 pb-16 px-6 relative">
-                <div className="max-w-4xl mx-auto text-center relative z-10">
-                    <Link href="/blogs" className="inline-flex items-center text-primary font-bold uppercase tracking-wider text-sm mb-8 hover:underline">
+        <article className={`min-h-screen bg-[#FFF9E7] pb-24 relative`}>
+            {/* Elegant Floating Notification Toast */}
+            {toastMsg && (
+                <div className="fixed bottom-10 right-10 z-[999] bg-[#006C35] border border-white/20 text-[#FFF9E7] font-bold py-3 px-6 rounded-2xl shadow-[0_15px_40px_rgba(0,108,53,0.35)] flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5 duration-300">
+                    <i className="fa-solid fa-circle-check text-[#FFC72C] text-lg"></i>
+                    <span>{toastMsg}</span>
+                </div>
+            )}
+
+            {/* Back Button, Title, Meta and Category at the top */}
+            <div className="pt-32 pb-8 px-6 max-w-4xl mx-auto">
+                <div className="text-center relative z-10">
+                    <Link href="/blogs" className="inline-flex items-center text-primary font-bold uppercase tracking-wider text-xs md:text-sm mb-6 hover:underline">
                         <i className="fa-solid fa-arrow-left mr-2"></i> Back to all articles
                     </Link>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-[#006C35] mb-6 leading-tight">
+                    
+                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-[#006C35] mb-4 leading-tight">
                         {blog.title}
                     </h1>
-                    <div className="flex items-center justify-center gap-4 text-gray-500 font-body text-sm font-medium">
+
+                    {/* Category Pill directly below Heading */}
+                    {blog.category && (
+                        <div className="mb-6 flex justify-center">
+                            <span className="bg-[#006C35]/10 text-[#006C35] font-bold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider border border-[#006C35]/15">
+                                <i className="fa-solid fa-tags mr-1.5 text-[#F6B000]"></i>
+                                {blog.category}
+                            </span>
+                        </div>
+                    )}
+
+                    <div className="flex items-center justify-center gap-4 text-gray-500 font-body text-xs md:text-sm font-medium">
                         <span><i className="fa-regular fa-calendar mr-2"></i>{new Date(blog.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                         <span>•</span>
                         <span><i className="fa-regular fa-clock mr-2"></i>{Math.max(1, Math.ceil(blog.content.length / 1000))} min read</span>
@@ -201,11 +284,11 @@ export default function BlogDetailPage() {
                 </div>
             </div>
 
-            {/* Featured Image */}
-            <div className="max-w-5xl mx-auto px-6 -mt-10 relative z-20 mb-6">
-                <div className="w-full aspect-video rounded-3xl overflow-hidden shadow-2xl bg-yellow-100 backdrop-blur-sm border-4 border-green-700">
+            {/* Featured Image - Responsive Small Size on Desktop, Standard aspect ratio on Mobile */}
+            <div className="max-w-4xl mx-auto px-6 mb-12">
+                <div className="w-full md:max-w-2xl md:mx-auto aspect-video md:aspect-[16/10] md:max-h-[380px] rounded-3xl overflow-hidden shadow-2xl bg-yellow-100 backdrop-blur-sm border-4 border-[#006C35]">
                     {blog.image_url ? (
-                        <img src={blog.image_url} alt={blog.title} className="w-full h-full object-contain" />
+                        <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-300">
                             <i className="fa-solid fa-image text-8xl"></i>
@@ -214,24 +297,54 @@ export default function BlogDetailPage() {
                 </div>
             </div>
 
-            {/* Content */}
+            {/* Content Container */}
             <div className="max-w-3xl mx-auto px-6">
                 <div
                     className="prose prose-lg prose-green max-w-none prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-dark prose-p:font-body prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl"
                     dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.content) }}
                 />
 
-                {/* Tags/Share (Optional placeholder) */}
-                <div className="mt-16 pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-6">
-                    <div className="flex gap-3">
-                        <span className="bg-gray-100 text-gray-600 font-bold text-xs px-4 py-2 rounded-full uppercase tracking-wider">Cashews</span>
-                        <span className="bg-gray-100 text-gray-600 font-bold text-xs px-4 py-2 rounded-full uppercase tracking-wider">Health</span>
+                {/* Hashtags and Share Row */}
+                <div className="mt-16 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    {/* Hashtags on the Left */}
+                    <div className="flex flex-wrap gap-2">
+                        {hashtags.length > 0 ? (
+                            hashtags.map((tag, idx) => {
+                                const cleanTag = tag.trim();
+                                const displayTag = cleanTag.startsWith('#') ? cleanTag : `#${cleanTag}`;
+                                return (
+                                    <span key={idx} className="bg-gray-100 text-gray-600 font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                                        {displayTag}
+                                    </span>
+                                );
+                            })
+                        ) : (
+                            <>
+                                <span className="bg-gray-100 text-gray-600 font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider">#cashews</span>
+                                {blog.category && (
+                                    <span className="bg-gray-100 text-gray-600 font-bold text-xs px-3.5 py-1.5 rounded-full uppercase tracking-wider">
+                                        #{blog.category.toLowerCase()}
+                                    </span>
+                                )}
+                            </>
+                        )}
                     </div>
-                    <div className="flex items-center gap-4">
-                        <span className="text-sm font-bold text-gray-500 uppercase">Share:</span>
-                        <button className="w-10 h-10 rounded-full bg-gray-100 text-text-dark hover:bg-primary hover:text-white transition-colors flex items-center justify-center"><i className="fa-brands fa-facebook-f"></i></button>
-                        <button className="w-10 h-10 rounded-full bg-gray-100 text-text-dark hover:bg-primary hover:text-white transition-colors flex items-center justify-center"><i className="fa-brands fa-twitter"></i></button>
-                        <button className="w-10 h-10 rounded-full bg-gray-100 text-text-dark hover:bg-primary hover:text-white transition-colors flex items-center justify-center"><i className="fa-brands fa-linkedin-in"></i></button>
+
+                    {/* Share buttons on the Right */}
+                    <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest mr-1 hidden sm:inline">Share:</span>
+                        <button
+                            onClick={shareOnWhatsApp}
+                            className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap"
+                        >
+                            <i className="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                        </button>
+                        <button
+                            onClick={shareOnInstagram}
+                            className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:opacity-90 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap"
+                        >
+                            <i className="fa-brands fa-instagram text-sm"></i> Instagram
+                        </button>
                     </div>
                 </div>
             </div>

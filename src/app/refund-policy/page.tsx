@@ -18,7 +18,7 @@ export default function RefundPolicyPage() {
     return (
         <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* Header */}
-            <div className="bg-[#000000] py-16 px-6 text-center border-b-4" style={{ borderColor: '#F6B000' }}>
+            <div className="bg-[#00863D] py-16 px-6 text-center border-b-4" style={{ borderColor: '#F6B000' }}>
                 <p className="text-[#F6B000] text-xs font-black uppercase tracking-[0.2em] mb-3">Customer Care</p>
                 <h1 className="text-4xl md:text-5xl font-heading font-black text-white">Refund Policy</h1>
                 <p className="text-white/40 mt-4 text-xs font-bold uppercase tracking-widest">Last updated: April 2025</p>

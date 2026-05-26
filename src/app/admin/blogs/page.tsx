@@ -2,14 +2,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { API } from '@/constants/api';
+import RichTextEditor from '@/components/ui/RichTextEditor';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 }
 
-const CATEGORIES = ['Health Articles', 'Recipes Blog', 'Sustainability'] as const;
+const CATEGORIES = ['Health', 'Recipes', 'Sustainability'] as const;
 type Category = typeof CATEGORIES[number];
-const EMPTY_FORM = { title: '', author: '', slug: '', content: '', tags: '', category: 'Health Articles' as Category };
+const EMPTY_FORM = { title: '', author: '', slug: '', content: '', tags: '', category: 'Health' as Category };
 
 export default function AdminBlogs() {
     const [blogs, setBlogs] = useState<any[]>([]);
@@ -65,7 +66,7 @@ export default function AdminBlogs() {
             slug: blog.slug || '',
             content: blog.content || '',
             tags: (blog.tags || []).join(', '),
-            category: blog.category || 'Health Articles'
+            category: blog.category || 'Health'
         });
         fileRef.current = null;
         setError('');
@@ -92,12 +93,29 @@ export default function AdminBlogs() {
         e.preventDefault();
         setIsSubmitting(true);
         setError('');
+
+        if (!editingBlog && !fileRef.current) {
+            setError('Please upload a cover image.');
+            setIsSubmitting(false);
+            return;
+        }
+
+        const formattedTags = form.tags
+            .split(',')
+            .map((t: string) => {
+                const clean = t.trim();
+                if (!clean) return '';
+                return clean.startsWith('#') ? clean : `#${clean}`;
+            })
+            .filter(Boolean)
+            .join(', ');
+
         const fd = new FormData();
         fd.append('title', form.title);
         fd.append('author', form.author);
         fd.append('slug', form.slug);
         fd.append('content', form.content);
-        fd.append('tags', form.tags);
+        fd.append('tags', formattedTags);
         fd.append('category', form.category);
         if (fileRef.current) fd.append('file', fileRef.current);
 
@@ -170,10 +188,11 @@ export default function AdminBlogs() {
                                 </div>
                                 <div className="flex flex-wrap gap-1 mb-4">
                                     {b.category && (
-                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${b.category === 'Health Articles' ? 'bg-green-100 text-green-700' :
-                                            b.category === 'Recipes Blog' ? 'bg-amber-100 text-amber-700' :
-                                                'bg-blue-100 text-blue-700'
-                                            }`}>{b.category}</span>
+                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                                            (b.category === 'Health' || b.category === 'Health Articles') ? 'bg-green-100 text-green-700' :
+                                            (b.category === 'Recipes' || b.category === 'Recipes Blog') ? 'bg-amber-100 text-amber-700' :
+                                            'bg-blue-100 text-blue-700'
+                                        }`}>{b.category}</span>
                                     )}
                                     {(b.tags || []).slice(0, 3).map((tag: string, i: number) => (
                                         <span key={i} className="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-md">#{tag}</span>
@@ -212,7 +231,7 @@ export default function AdminBlogs() {
                             )}
                             <form id="blogForm" onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1 md:col-span-2">
-                                    <label htmlFor="blog-title" className="text-sm font-medium text-gray-700">Article Title</label>
+                                    <label htmlFor="blog-title" className="text-sm font-medium text-gray-700">Article Title <span className="text-red-500">*</span></label>
                                     <input id="blog-title" type="text" required value={form.title}
                                         onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30 focus:border-primary text-xl font-medium text-gray-800"
@@ -247,7 +266,7 @@ export default function AdminBlogs() {
                                         placeholder="Crunchy Cashews Editorial" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label htmlFor="blog-tags" className="text-sm font-medium text-gray-700">Tags (comma separated)</label>
+                                    <label htmlFor="blog-tags" className="text-sm font-medium text-gray-700">Hashtags (comma separated)</label>
                                     <input id="blog-tags" type="text" value={form.tags}
                                         onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
                                         className="w-full px-4 py-2 border rounded-lg outline-none focus:ring-2 ring-primary/30"
@@ -255,7 +274,7 @@ export default function AdminBlogs() {
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
                                     <label htmlFor="blog-file" className="text-sm font-medium text-gray-700">
-                                        Cover Image {editingBlog ? '(upload to replace current)' : '(optional)'}
+                                        Cover Image <span className="text-red-500">*</span> {editingBlog ? '(upload to replace current)' : ''}
                                     </label>
                                     {editingBlog?.image_url && (
                                         <div className="flex items-center gap-3 mb-2">
@@ -267,11 +286,12 @@ export default function AdminBlogs() {
                                         className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-green-50 file:text-primary hover:file:bg-green-100 cursor-pointer border rounded-lg p-2" />
                                 </div>
                                 <div className="space-y-1 md:col-span-2">
-                                    <label htmlFor="blog-content" className="text-sm font-medium text-gray-700">Content (Markdown / HTML supported)</label>
-                                    <textarea id="blog-content" required value={form.content}
-                                        onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                                        className="w-full px-4 py-3 border rounded-lg outline-none focus:ring-2 ring-primary/30 min-h-[280px] font-mono text-sm"
-                                        placeholder="Write your amazing content here..." />
+                                    <label className="text-sm font-medium text-gray-700 mb-1 block">Content (Markdown / HTML supported) <span className="text-red-500">*</span></label>
+                                    <RichTextEditor
+                                        value={form.content}
+                                        onChange={html => setForm(f => ({ ...f, content: html }))}
+                                        placeholder="Write your amazing content here..."
+                                    />
                                 </div>
                                 <div className="md:col-span-2 pt-2">
                                     <button type="submit" disabled={isSubmitting}

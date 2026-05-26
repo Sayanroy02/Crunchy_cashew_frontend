@@ -30,12 +30,26 @@ const CATEGORY_ICONS: Record<string, string> = {
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-    'Health': 'bg-black text-white',
-    'Health Articles': 'bg-black text-white',
-    'Recipes': 'bg-[#F6B000] text-black',
-    'Recipes Blog': 'bg-[#F6B000] text-black',
-    'Sustainability': 'bg-black text-[#F6B000]',
+    'Health': 'bg-green-600 text-white',
+    'Health Articles': 'bg-green-600 text-white',
+    'Recipes': 'bg-[#bb3e00] text-white',
+    'Recipes Blog': 'bg-[#bb3e00] text-white',
+    'Sustainability': 'bg-sky-400 text-white',
     'Uncategorised': 'bg-gray-100 text-gray-600',
+};
+
+const getCategoryStyle = (category: string) => {
+    const key = Object.keys(CATEGORY_COLORS).find(
+        k => k.toLowerCase() === category.toLowerCase()
+    );
+    return key ? CATEGORY_COLORS[key] : CATEGORY_COLORS['Uncategorised'];
+};
+
+const getCategoryIcon = (category: string) => {
+    const key = Object.keys(CATEGORY_ICONS).find(
+        k => k.toLowerCase() === category.toLowerCase()
+    );
+    return key ? CATEGORY_ICONS[key] : 'fa-solid fa-tag';
 };
 
 export default function BlogCard({ blog, className = '', searchTerm = '' }: BlogCardProps) {
@@ -76,17 +90,9 @@ export default function BlogCard({ blog, className = '', searchTerm = '' }: Blog
                     </div>
                 )}
 
-                {/* Category Badge — top left */}
-                {blog.category && (
-                    <span className={`absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm ${CATEGORY_COLORS[blog.category] || CATEGORY_COLORS['Uncategorised']}`}>
-                        <i className={`${CATEGORY_ICONS[blog.category] || 'fa-solid fa-tag'} mr-1.5`} />
-                        {blog.category}
-                    </span>
-                )}
-
-                {/* Featured Badge — top right */}
+                {/* Featured Badge — top left */}
                 {blog.featured && (
-                    <span className="absolute top-4 right-4 bg-black text-[#F6B000] text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
+                    <span className="absolute top-4 left-4 bg-green-700 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 z-10">
                         <i className="fa-solid fa-star" /> Featured
                     </span>
                 )}
@@ -99,11 +105,23 @@ export default function BlogCard({ blog, className = '', searchTerm = '' }: Blog
 
             {/* ── Content ── */}
             <div className="p-7 flex flex-col flex-grow">
-                {blog.author && (
-                    <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                        <i className="fa-solid fa-user-pen text-primary" />
-                        {blog.author}
-                    </p>
+                {(blog.author || blog.category) && (
+                    <div className="flex items-center justify-between gap-2.5 mb-3">
+                        {blog.author ? (
+                            <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+                                <i className="fa-solid fa-user-pen text-primary" />
+                                {blog.author}
+                            </span>
+                        ) : (
+                            <div />
+                        )}
+                        {blog.category && (
+                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm ${getCategoryStyle(blog.category)}`}>
+                                <i className={`${getCategoryIcon(blog.category)} mr-1`} />
+                                {blog.category}
+                            </span>
+                        )}
+                    </div>
                 )}
 
                 <h3 className="text-xl font-bold font-heading text-gray-900 mb-3 line-clamp-2 group-hover:text-black transition-colors">
