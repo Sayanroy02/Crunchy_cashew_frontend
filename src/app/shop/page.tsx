@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
@@ -37,6 +37,18 @@ export default function ShopPage() {
     const [tempTag, setTempTag] = useState<string>('all');
     const [tempPriceRange, setTempPriceRange] = useState<number>(0);
     const [tempSortKey, setTempSortKey] = useState<SortKey>('default');
+    const sortDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close sort dropdown on click outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+                setSortOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const openMobileFilters = () => {
         setTempCategory(categoryFilter);
@@ -396,7 +408,7 @@ export default function ShopPage() {
                                 </button>
                             )}
                         </div>
-                        <div className="relative">
+                        <div className="relative" ref={sortDropdownRef}>
                             <button
                                 onClick={() => {
                                     if (window.innerWidth < 768) {

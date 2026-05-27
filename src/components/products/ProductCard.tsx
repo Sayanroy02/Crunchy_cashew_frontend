@@ -162,7 +162,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <button
                     onClick={handleWishlistToggle}
-                    className="absolute top-3 right-3 z-20 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform text-black"
+                    className="absolute top-3 right-3 z-20 w-9 h-9 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                    style={{ color: isWishlisted ? '#ff6b6b' : '#000000' }}
                     aria-label="Toggle Wishlist"
                 >
                     <i className={`${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart text-lg`}></i>

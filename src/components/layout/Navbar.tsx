@@ -72,7 +72,7 @@ export default function Navbar() {
     /* ── Close mobile menu on navigation ── */
     useEffect(() => setMobileOpen(false), [pathname]);
 
-    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer') return null;
+    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance') return null;
 
     const isActive = (href: string) =>
         href === '/' || href === '/shop' ? pathname === href : pathname.startsWith(href);

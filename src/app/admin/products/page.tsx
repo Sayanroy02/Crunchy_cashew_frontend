@@ -30,7 +30,8 @@ const defaultForm = {
         flipkart: { price: 0, link: '' },
         blinkit: { price: 0, link: '' },
         swiggy: { price: 0, link: '' }
-    }
+    },
+    video_url: ''
 };
 
 export default function AdminProducts() {
@@ -103,7 +104,8 @@ export default function AdminProducts() {
             isFlavors: !!p.isFlavors,
             event: p.event || { type: '', label: '' },
             marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices,
-            image_urls: p.image_urls || (p.image_url ? [p.image_url] : [])
+            image_urls: p.image_urls || (p.image_url ? [p.image_url] : []),
+            video_url: p.video_url || ''
         });
         setFiles([]);
         setError('');
@@ -151,6 +153,7 @@ export default function AdminProducts() {
         fd.append('marketplace_prices', JSON.stringify(formData.marketplace_prices));
         fd.append('variants', JSON.stringify(formData.variants));
         fd.append('image_urls', JSON.stringify(formData.image_urls));
+        fd.append('video_url', formData.video_url);
         
         files.forEach(f => fd.append('files', f));
 
@@ -725,6 +728,22 @@ export default function AdminProducts() {
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* Video URL Section */}
+                                <div className="space-y-1 md:col-span-2">
+                                    <label htmlFor="prod-video-url" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                                        <i className="fa-brands fa-youtube text-red-600 text-base"></i> Product Video URL (YouTube Shorts/Video 9:16)
+                                    </label>
+                                    <input
+                                        id="prod-video-url"
+                                        type="text"
+                                        value={formData.video_url}
+                                        onChange={e => setFormData({ ...formData, video_url: e.target.value })}
+                                        className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl text-sm outline-none focus:border-primary transition-colors"
+                                        placeholder="e.g. https://www.youtube.com/shorts/3H02_Y98d7k"
+                                    />
+                                </div>
+
                                 <div className="md:col-span-2 pt-2">
                                     <button type="submit" disabled={isSubmitting}
                                         className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-green-800 transition disabled:opacity-50 flex items-center justify-center gap-2">

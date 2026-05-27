@@ -63,7 +63,7 @@ function ContactItem({ item }: { item: typeof contactItems[number] }) {
 export default function Footer() {
     const pathname = usePathname();
 
-    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer') return null;
+    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance') return null;
 
     return (
         <footer

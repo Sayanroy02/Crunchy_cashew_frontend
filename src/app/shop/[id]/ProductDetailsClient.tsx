@@ -34,6 +34,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                     <ProductGallery 
                         images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
                         name={product.name} 
+                        videoUrl={product.video_url}
                     />
                 </div>
 
