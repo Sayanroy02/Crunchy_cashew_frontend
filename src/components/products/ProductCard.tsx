@@ -132,7 +132,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100 h-full">
             <Link
                 href={`/shop/${product.id || product._id}`}
-                className="relative w-full aspect-[4/3] bg-[#f8faf9] py-8 px-4 flex justify-center items-center overflow-hidden"
+                className="relative w-full aspect-square bg-[#f8faf9] py-4 px-3 flex justify-center items-center overflow-hidden"
             >
                 <Image
                     src={product.image_url || '/images/products/placeholder.jpg'}
@@ -170,23 +170,17 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </button>
             </Link>
 
-            <div className="p-5 flex flex-col flex-grow bg-white">
+            <div className="p-3 md:p-5 flex flex-col flex-grow bg-white">
                 <Link href={`/shop/${product.id || product._id}`}>
-                    <div className="text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-1">{product.category}</div>
-                    <h3 className="text-base font-heading font-bold text-black mb-3 line-clamp-2 leading-tight hover:text-primary transition-colors">
+                    <div className="text-[9px] md:text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-0.5 md:mb-1">{product.category}</div>
+                    <h3 className="text-sm md:text-base font-heading font-bold text-black mb-2 md:mb-3 line-clamp-2 leading-tight hover:text-primary transition-colors">
                         {product.name.length > 20 ? `${product.name.slice(0, 20)}...` : product.name} <span className="ml-1 font-black shrink-0" style={{ color: COLORS.heading }}>({selectedVariant.size})</span>
                     </h3>
                 </Link>
 
                 {/* Enhanced Variant Selector */}
                 {product.variants && product.variants.length > 0 && (
-                    <div className="mb-4 space-y-2">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Select Size</span>
-                            <span className="text-[10px] font-bold text-primary bg-primary/10 px-1.5 py-0.5 rounded uppercase">
-                                {selectedVariant.size}
-                            </span>
-                        </div>
+                    <div className="mb-2 space-y-1">
                         <div className="flex flex-wrap gap-2">
                             {product.variants.map((v, idx) => (
                                 <button
@@ -196,7 +190,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                                         e.stopPropagation();
                                         setSelectedVariant(v);
                                     }}
-                                    className={`relative group px-2.5 py-1.5 rounded-lg border-2 transition-all duration-300 flex items-center justify-center min-w-[50px] ${
+                                    className={`relative group px-2 py-1 rounded-md border-2 transition-all duration-300 flex items-center justify-center min-w-[50px] ${
                                         selectedVariant.size === v.size
                                             ? 'border-[#00863D] bg-[#00863D] text-white shadow-md -translate-y-0.5'
                                             : 'border-gray-100 bg-gray-50 text-gray-500 hover:border-gray-300 hover:bg-white'
@@ -213,7 +207,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 )}
 
                 {/* Thin Marketing Tags Row */}
-                <div className="mb-2 flex flex-wrap gap-1.5 min-h-[18px]">
+                <div className="mb-1.5 flex flex-wrap gap-1 min-h-[14px]">
                     {isValuePack && (
                         <span className="text-[9px] font-black bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Value Pack</span>
                     )}
@@ -238,10 +232,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                     ))}
                 </div>
 
-                <div className="pt-2 flex flex-col gap-3 border-t border-gray-50 md:flex-row md:items-center md:justify-between md:gap-0">
+                <div className="pt-1.5 flex flex-col gap-2 border-t border-gray-50 md:flex-row md:items-center md:justify-between md:gap-0">
                     <div className="flex flex-col">
                         <div className="flex items-baseline gap-1.5">
-                            <span className="text-black font-black text-xl">₹{selectedVariant.price.toFixed(0)}</span>
+                            <span className="text-black font-black text-lg md:text-xl">₹{selectedVariant.price.toFixed(0)}</span>
                             {hasDiscount && (
                                 <span className="text-gray-400 text-xs line-through font-medium">₹{originalPrice.toFixed(0)}</span>
                             )}
@@ -257,7 +251,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <button
                         onClick={handleAddToCart}
                         disabled={selectedVariant.stock <= 0}
-                        className={`w-full h-11 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm ${selectedVariant.stock > 0
+                        className={`w-full h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center gap-2 transition-all shadow-sm ${selectedVariant.stock > 0
                             ? 'bg-primary text-black hover:bg-black hover:text-white hover:shadow-lg hover:-translate-y-0.5 md:hover:-translate-y-1 active:translate-y-0'
                             : 'bg-gray-100 text-gray-300 cursor-not-allowed border border-gray-200'
                             }`}

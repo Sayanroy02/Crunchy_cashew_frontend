@@ -326,10 +326,10 @@ export default function PriceComparisonPreview() {
                   </div>
 
                   <Link
-                    href={`/shop/${product._id}`}
+                    href="/shop"
                     className="w-full bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"
                   >
-                    Full Comparison Table <ChevronRight size={20} />
+                    Shop Now <ChevronRight size={20} />
                   </Link>
                 </div>
               </div>

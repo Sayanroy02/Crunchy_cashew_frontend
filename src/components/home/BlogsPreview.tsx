@@ -28,8 +28,8 @@ export default function BlogsPreview() {
         <section className="py-10 md:py-14 bg-bg-cream relative">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* Section Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between items-start mb-10 gap-6">
-                    <div className="text-left">
+                <div className="flex flex-col md:flex-row md:items-end justify-between items-center md:items-start mb-10 gap-6">
+                    <div className="text-center md:text-left w-full md:w-auto">
                         <span className="text-black font-bold tracking-[4px] uppercase text-xs mb-3 block">
                             Latest News &amp; Insights
                         </span>
@@ -38,7 +38,7 @@ export default function BlogsPreview() {
 
                     <Link
                         href="/blogs"
-                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap"
+                        className="hidden md:inline-flex bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl items-center justify-center gap-2 group whitespace-nowrap"
                     >
                         View All Articles
                         <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />
@@ -54,6 +54,17 @@ export default function BlogsPreview() {
                             className={index !== 0 ? 'hidden md:flex' : ''}
                         />
                     ))}
+                </div>
+
+                {/* Mobile View All Button */}
+                <div className="flex md:hidden justify-center mt-8">
+                    <Link
+                        href="/blogs"
+                        className="bg-green-700 text-white p-4 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap animate-pulse"
+                    >
+                        View All Articles
+                        <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />
+                    </Link>
                 </div>
             </div>
         </section>

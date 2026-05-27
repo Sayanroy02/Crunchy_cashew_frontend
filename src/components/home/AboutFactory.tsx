@@ -20,6 +20,7 @@ function Portal({ children }: { children: React.ReactNode }) {
 
 export default function AboutFactory() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [readMore, setReadMore] = useState(false);
     const openModal = useCallback(() => setIsModalOpen(true), []);
     const closeModal = useCallback(() => setIsModalOpen(false), []);
 
@@ -153,15 +154,38 @@ export default function AboutFactory() {
 
                     {/* 3. Content Section */}
                     <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
-                        <p className="text-gray-700 text-lg md:text-xl mb-6 leading-relaxed font-normal">
-                            <span style={{ color: COLORS.heading, fontSize: "1.55rem", }} className="font-bold">Quality isn't just a promise; it's a process.</span> We maintain rigorous control over every stage of premium cashew production. From raw grading to state-of-the-art roasting and vacuum sealing, our high-demand grades (WW320, W180, White Splits) are meticulously tailored for the retail, food service, and bulk wholesale markets.
+                        <p className="text-gray-700 text-lg md:text-xl mb-4 md:mb-6 leading-relaxed font-normal">
+                            <span style={{ color: COLORS.heading, fontSize: "1.55rem", }} className="font-bold block lg:inline">Quality isn't just a promise; it's a process.</span> We maintain rigorous control over every stage of premium cashew production.
+                            {!readMore && (
+                                <button
+                                    type="button"
+                                    onClick={() => setReadMore(true)}
+                                    className="lg:hidden text-amber-500 font-bold ml-1 hover:underline focus:outline-none"
+                                >
+                                    ...Read More
+                                </button>
+                            )}
+                            <span className={`${readMore ? 'inline' : 'hidden lg:inline'}`}>
+                                {" "}From raw grading to state-of-the-art roasting and vacuum sealing, our high-demand grades (WW320, W180, White Splits) are meticulously tailored for the retail, food service, and bulk wholesale markets.
+                            </span>
                         </p>
 
-                        <p className="text-gray-700 text-lg md:text-xl mb-8 leading-relaxed max-w-2xl">
-                            Setting the standard for hygiene and reliable Pan-India supply requires complete operational transparency. We invite our B2B partners and prospective buyers to schedule an on-site audit at our Siliguri plant to see our quality control in action.
-                        </p>
+                        <div className={`${readMore ? 'block' : 'hidden lg:block'}`}>
+                            <p className="text-gray-700 text-lg md:text-xl mb-6 md:mb-8 leading-relaxed max-w-2xl">
+                                Setting the standard for hygiene and reliable Pan-India supply requires complete operational transparency. We invite our B2B partners and prospective buyers to schedule an on-site audit at our Siliguri plant to see our quality control in action.
+                                {readMore && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setReadMore(false)}
+                                        className="lg:hidden text-amber-500 font-bold ml-1 hover:underline focus:outline-none"
+                                    >
+                                        [Read Less]
+                                    </button>
+                                )}
+                            </p>
+                        </div>
 
-                        <div className="flex flex-wrap items-center gap-4 mb-2">
+                        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-2 w-full">
                             <button
                                 onClick={openModal}
                                 className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2"
@@ -177,7 +201,7 @@ export default function AboutFactory() {
                             </Link>
                         </div>
 
-                        <p className="text-sm text-gray-500 font-bold tracking-wide mt-5">
+                        <p className="text-sm text-gray-500 font-bold tracking-wide mt-5 w-full text-center lg:text-left">
                             INTERESTED IN A BULK ORDER? <button onClick={openQuote} className="text-primary hover:underline font-bold transition-all focus:outline-none">GET A QUOTE</button>
                         </p>
                     </div>
@@ -188,7 +212,7 @@ export default function AboutFactory() {
             {/* ── Right corner fruit ── */}
             <motion.div
                 style={{ x: rightMoveX, y: rightMoveY }}
-                className="absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
+                className="hidden lg:block absolute right-0 bottom-0 w-24 md:w-32 lg:w-44 pointer-events-none select-none z-10"
             >
                 <img
                     src="/images/Right-Fruit-2-2-1.png"
