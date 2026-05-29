@@ -137,19 +137,18 @@ function Gallery({ onSelectImage }: { onSelectImage: (idx: number) => void }) {
                 <div className="w-8 h-8 border-4 border-amber-400/80 border-t-transparent rounded-full animate-spin" />
               </div>
             )}
-            
+
             <Image
               src={img.url}
               alt={img.alt}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className={`object-cover transition-all duration-700 group-hover:scale-105 ${
-                loaded[i] ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-95 blur-md'
-              }`}
+              className={`object-cover transition-all duration-700 group-hover:scale-105 ${loaded[i] ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-95 blur-md'
+                }`}
               onLoadingComplete={() => setLoaded(prev => ({ ...prev, [i]: true }))}
               priority={i < 3}
             />
-            
+
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
               <p className="text-white font-bold text-sm transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 capitalize">
                 {img.alt}
@@ -419,9 +418,9 @@ export default function AboutPage() {
 
           <div className="order-1 md:order-2 rounded-[2.5rem] overflow-hidden shadow-2xl">
             <img
-              src="/images/nitesh.png"
+              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780058888/nitesh_jindal_pem4gk.png"
               alt="Nitesh Jindal - Founder"
-              className="w-full h-full object-cover"
+              className="w-full h-[80vh] object-cover"
             />
           </div>
         </div>
@@ -430,7 +429,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-10">
           <div className="rounded-[2.5rem] overflow-hidden shadow-2xl">
             <img
-              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1741088655/6_j9j9j9.png"
+              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780057811/cc-workforce_bhasay.jpg"
               alt="Our Skilled Workforce"
               className="w-full h-full object-cover"
             />
@@ -610,8 +609,8 @@ export default function AboutPage() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`relative flex items-center justify-center gap-2 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-all duration-300 z-10
-                    ${isActive 
-                      ? 'text-white px-4 md:px-5 flex-grow min-w-[120px] md:min-w-0 md:flex-1' 
+                    ${isActive
+                      ? 'text-white px-4 md:px-5 flex-grow min-w-[120px] md:min-w-0 md:flex-1'
                       : 'text-gray-500 hover:text-gray-800 px-3 md:px-5 flex-shrink-0 min-w-[50px] md:min-w-0 md:flex-1'
                     }`}
                 >
@@ -712,7 +711,7 @@ export default function AboutPage() {
       {/* Lightbox Pop-up Modal (Rendered at root level of AboutPage to avoid stacking context issues) */}
       <AnimatePresence>
         {activeIdx !== null && (
-          <div 
+          <div
             className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/35 backdrop-blur-2xl p-4 transition-all duration-300"
             onClick={() => setActiveIdx(null)}
           >
@@ -723,33 +722,33 @@ export default function AboutPage() {
               transition={{ duration: 0.4, ease: "easeOut" }}
               className="relative w-full max-w-4xl rounded-[28px] md:rounded-[36px] overflow-hidden p-5 md:p-7 flex flex-col z-[10000]"
               style={{
-                  background: COLORS.heading,
-                  boxShadow: '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: COLORS.heading,
+                boxShadow: '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
               }}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top Right Decorative Pattern — Stylized Grid */}
               <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-[0.08] translate-x-1/4 -translate-y-1/4 select-none"
-                  style={{
-                      backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
-                      backgroundSize: '20px 20px'
-                  }} />
+                style={{
+                  backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+                  backgroundSize: '20px 20px'
+                }} />
 
               {/* Bottom Left Decorative Pattern — Concentric Circles */}
               <div className="absolute bottom-0 left-0 w-80 h-80 pointer-events-none opacity-[0.06] -translate-x-1/3 translate-y-1/3 select-none">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="absolute inset-0 rounded-full border border-white"
-                          style={{ transform: `scale(${0.2 * i})` }} />
-                  ))}
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="absolute inset-0 rounded-full border border-white"
+                    style={{ transform: `scale(${0.2 * i})` }} />
+                ))}
               </div>
 
               {/* Subtle Gradient Overlay for Depth */}
               <div className="absolute inset-0 pointer-events-none"
-                  style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)' }} />
+                style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)' }} />
 
               {/* Close button */}
-              <button 
+              <button
                 onClick={() => setActiveIdx(null)}
                 className="absolute top-4 right-4 z-[10001] text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-all text-base border border-white/10 shadow-lg active:scale-95"
                 aria-label="Close Lightbox"
@@ -759,11 +758,11 @@ export default function AboutPage() {
 
               {/* Main Image Container */}
               <div className="relative w-full h-[40vh] md:h-[50vh] rounded-2xl overflow-hidden bg-black/40 border border-white/5 flex items-center justify-center">
-                <div 
+                <div
                   className="relative w-full h-full transition-transform duration-200 ease-out"
                   style={{ transform: `scale(${zoomScale})` }}
                 >
-                  <Image 
+                  <Image
                     src={GALLERY_IMAGES[activeIdx].url}
                     alt={GALLERY_IMAGES[activeIdx].alt}
                     fill
