@@ -76,7 +76,11 @@ export default function ShopPage() {
     useEffect(() => {
         fetch(API.PRODUCTS)
             .then(res => res.json())
-            .then(data => { setProducts(data); setLoading(false); })
+            .then(data => {
+                const productList = Array.isArray(data) ? data : (data?.products || data?.data || []);
+                setProducts(productList);
+                setLoading(false);
+            })
             .catch(err => { console.error('Failed to fetch products:', err); setLoading(false); });
     }, []);
 
@@ -94,7 +98,8 @@ export default function ShopPage() {
     // Extract unique tags from all products
     const availableTags = useMemo(() => {
         const tags = new Set<string>();
-        products.forEach(p => {
+        const list = Array.isArray(products) ? products : [];
+        list.forEach(p => {
             if (p.tags) p.tags.forEach(t => tags.add(t));
         });
         return Array.from(tags).sort();
@@ -102,8 +107,9 @@ export default function ShopPage() {
 
     const filtered = useMemo(() => {
         const { min, max } = PRICE_RANGES[priceRange];
+        const list = Array.isArray(products) ? products : [];
 
-        let result = products.map(p => {
+        let result = list.map(p => {
             // Pre-calculate prices for sorting and filtering
             const prices = p.variants?.map(v => v.price) || [(p as any).price || 0];
             const minPrice = Math.min(...prices);
@@ -138,8 +144,9 @@ export default function ShopPage() {
 
     const tempFilteredCount = useMemo(() => {
         const { min, max } = PRICE_RANGES[tempPriceRange];
+        const list = Array.isArray(products) ? products : [];
 
-        return products.filter(p => {
+        return list.filter(p => {
             const prices = p.variants?.map(v => v.price) || [(p as any).price || 0];
             const minPrice = Math.min(...prices);
             const maxPrice = Math.max(...prices);

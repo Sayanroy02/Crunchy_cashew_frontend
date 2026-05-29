@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
 import { logout } from '@/lib/store/features/authSlice';
 import { usePathname } from 'next/navigation';
+import { COLORS } from '@/constants/styles';
 
 
 const ANNOUNCEMENTS = [
@@ -18,7 +19,7 @@ const LEFT_LINKS = [
     { label: 'Home', href: '/' },
     { label: 'Shop', href: '/shop' },
     { label: 'B2B', href: '/bulk' },
-    { label: 'About', href: '/about' },
+    { label: 'About Us', href: '/about' },
     { label: 'Blog', href: '/blogs' },
     { label: 'Contact', href: '/contact' },
 ];
@@ -89,8 +90,9 @@ export default function Navbar() {
 
             {/* ─── Announcement Bar ─── */}
             <div
-                className="bg-[#00863D] text-white text-xs py-2 text-center overflow-hidden select-none"
+                className="text-white text-xs py-2 text-center overflow-hidden select-none"
                 style={{
+                    backgroundColor: COLORS.heading,
                     opacity: showAnnouncement ? 1 : 0,
                     maxHeight: showAnnouncement ? '40px' : '0px',
                     padding: showAnnouncement ? undefined : '0',
@@ -119,22 +121,24 @@ export default function Navbar() {
 
                     {/* LEFT — nav links */}
                     <nav className="flex flex-1 items-center gap-1 px-6">
-                        {LEFT_LINKS.map(link => (
-                            <Link
-                                key={link.href}
-                                href={link.href}
-                                className={`relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors
-                                    ${isActive(link.href)
-                                        ? 'text-[#00863D]'
-                                        : 'text-gray-600 hover:text-[#00863D] hover:bg-[#00863D]/10'
-                                    }`}
-                            >
-                                {link.label}
-                                {isActive(link.href) && (
-                                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-amber rounded-full" />
-                                )}
-                            </Link>
-                        ))}
+                        {LEFT_LINKS.map(link => {
+                            const active = isActive(link.href);
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors hover:bg-gray-50"
+                                    style={{
+                                        color: active ? COLORS.heading : '#4b5563',
+                                    }}
+                                >
+                                    {link.label}
+                                    {active && (
+                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-amber rounded-full" />
+                                    )}
+                                </Link>
+                            );
+                        })}
                     </nav>
 
                     {/* CENTER — Logo */}
@@ -157,11 +161,14 @@ export default function Navbar() {
                             href={isAuthenticated ? '/profile' : '/login'}
                             className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
                         >
-                            <i className={`text-lg ${isAuthenticated
-                                ? 'fa-solid fa-user text-[#00863D]'
-                                : 'fa-regular fa-user text-gray-500 group-hover:text-[#00863D]'
-                                }`} />
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">
+                            <i 
+                                className={`text-lg ${isAuthenticated ? 'fa-solid fa-user' : 'fa-regular fa-user'}`} 
+                                style={{ color: COLORS.heading }}
+                            />
+                            <span 
+                                className="text-[10px] font-semibold uppercase tracking-wide"
+                                style={{ color: COLORS.heading }}
+                            >
                                 {isAuthenticated ? 'Profile' : 'Login'}
                             </span>
                         </Link>
@@ -171,21 +178,21 @@ export default function Navbar() {
                             href="/profile?tab=wishlist"
                             className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
                         >
-                            <i className="fa-regular fa-heart text-lg text-gray-500 group-hover:text-[#00863D]" />
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">
+                            <i className="fa-regular fa-heart text-lg" style={{ color: COLORS.heading }} />
+                            <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: COLORS.heading }}>
                                 Wishlist
                             </span>
                         </Link>
 
                         {/* Cart */}
                         <Link href="/cart" className="relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50">
-                            <i className="fa-solid fa-cart-shopping text-lg text-gray-500 group-hover:text-[#00863D]" />
+                            <i className="fa-solid fa-cart-shopping text-lg" style={{ color: COLORS.heading }} />
                             {cartQty > 0 && (
                                 <span className="absolute top-1 right-2 bg-[#F6B000] text-white text-[9px] font-black w-[16px] h-[16px] flex items-center justify-center rounded-full shadow">
                                     {cartQty > 9 ? '9+' : cartQty}
                                 </span>
                             )}
-                            <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500 group-hover:text-[#00863D]">Cart</span>
+                            <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: COLORS.heading }}>Cart</span>
                         </Link>
                     </div>
                 </div>
@@ -250,7 +257,7 @@ export default function Navbar() {
                                 { href: '/', label: 'Home', icon: 'fa-house' },
                                 { href: '/shop', label: 'Shop', icon: 'fa-store' },
                                 { href: '/bulk', label: 'B2B', icon: 'fa-boxes-stacked' },
-                                { href: '/about', label: 'About', icon: 'fa-building' },
+                                { href: '/about', label: 'About Us', icon: 'fa-building' },
                                 { href: '/blogs', label: 'Blog', icon: 'fa-newspaper' },
                                 { href: '/contact', label: 'Contact', icon: 'fa-envelope' },
                             ].map(item => (
@@ -263,7 +270,7 @@ export default function Navbar() {
                                             : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
                                         }`}
                                 >
-                                    <i className={`fa-solid ${item.icon} w-4 text-primary text-sm`} />
+                                    <i className={`fa-solid ${item.icon} w-4 text-sm`} style={{ color: COLORS.heading }} />
                                     {item.label}
                                 </Link>
                             ))}
@@ -275,7 +282,7 @@ export default function Navbar() {
                                             href="/profile"
                                             className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-gray-50 font-semibold text-sm"
                                         >
-                                            <i className="fa-solid fa-user w-4 text-primary text-sm" /> My Profile
+                                            <i className="fa-solid fa-user w-4 text-sm" style={{ color: COLORS.heading }} /> My Profile
                                         </Link>
                                         <button
                                             onClick={() => dispatch(logout())}

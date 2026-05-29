@@ -233,3 +233,32 @@ body {
   color: #a8a29e;
   pointer-events: none;
 }
+
+/* ── Hanging/Swinging Animations for Cashew Trees ── */
+@keyframes swing-left {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes swing-right {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-4deg);
+  }
+}
+
+.animate-swing-left {
+  animation: swing-left 5s ease-in-out infinite;
+  transform-origin: top left;
+}
+
+.animate-swing-right {
+  animation: swing-right 5.5s ease-in-out infinite;
+  transform-origin: top right;
+}

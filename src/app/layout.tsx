@@ -41,6 +41,7 @@ export const metadata: Metadata = {
 };
 
 import SplashScreen from "@/components/common/SplashScreen";
+import OfflineHandler from "@/components/common/OfflineHandler";
 
 export default function RootLayout({
   children,
@@ -75,6 +76,7 @@ export default function RootLayout({
             <Footer />
             <CookieConsent />
             <MobileBottomNav />
+            <OfflineHandler />
           </SnackbarProvider>
         </StoreProvider>
       </body>

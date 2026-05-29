@@ -40,12 +40,21 @@ export default function BestSellers() {
     useEffect(() => {
         fetch(API.PRODUCTS)
             .then(res => res.json())
-            .then((data: Product[]) => { setProducts(data); setLoading(false); })
-            .catch(() => setLoading(false));
+            .then((data: any) => {
+                const productList = Array.isArray(data) ? data : (data?.products || data?.data || []);
+                setProducts(productList);
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.error("Failed to fetch bestsellers:", err);
+                setProducts([]);
+                setLoading(false);
+            });
     }, []);
 
     const filtered = useMemo(() => {
-        return products.filter(p => {
+        const list = Array.isArray(products) ? products : [];
+        return list.filter(p => {
             if (activeTag === 'all') return true;
             return (p.category || '').toLowerCase() === activeTag.toLowerCase();
         });

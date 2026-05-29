@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type Tab = 'story' | 'team' | 'gallery' | 'visit';
 
@@ -46,14 +47,12 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 const GALLERY_IMAGES = [
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088656/11_vst0e1.png', alt: 'Factory Process', span: 'col-span-2 row-span-2' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088656/10_ivq7i7.png', alt: 'Premium Cashews', span: 'col-span-1 row-span-1' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088656/9_f8f8f8.png', alt: 'Quality Control', span: 'col-span-1 row-span-2' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088655/8_g7g7g7.png', alt: 'Packaging', span: 'col-span-1 row-span-1' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088655/7_h8h8h8.png', alt: 'Storage', span: 'col-span-2 row-span-1' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088655/6_j9j9j9.png', alt: 'Expert Workforce', span: 'col-span-1 row-span-1' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088654/5_k0k0k0.png', alt: 'Modern Machinery', span: 'col-span-1 row-span-2' },
-  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/v1741088654/4_l1l1l1.png', alt: 'African Origins', span: 'col-span-1 row-span-1' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056001/1.jpg_tts2nh.jpg', alt: 'women empowerment', span: 'col-span-2 md:col-span-2 row-span-2' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056001/2.jpg_t4fbgm.jpg', alt: 'cashews W210', span: 'col-span-1 md:col-span-1 row-span-1' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056006/3.jpg_h0kocm.jpg', alt: 'cashew in maching', span: 'col-span-1 md:col-span-1 row-span-2' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056000/4.jpg_blds0t.jpg', alt: 'cashew peeling', span: 'col-span-1 md:col-span-1 row-span-1' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056000/5.jpg_aid2k6.jpg', alt: 'clean cashew processing', span: 'col-span-2 md:col-span-2 row-span-1' },
+  { url: 'https://res.cloudinary.com/da1acfqsn/image/upload/q_auto,f_auto/v1780056001/6.jpg_h5bkrw.jpg', alt: 'cashew packaging crunchy cashew', span: 'col-span-2 md:col-span-2 row-span-1' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -108,7 +107,9 @@ function AboutImageGrid() {
 // ─────────────────────────────────────────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────────────────────────────────────────
-function Gallery() {
+function Gallery({ onSelectImage }: { onSelectImage: (idx: number) => void }) {
+  const [loaded, setLoaded] = useState<Record<number, boolean>>({});
+
   return (
     <div className="about-animate">
       <div className="mb-10">
@@ -123,19 +124,34 @@ function Gallery() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 auto-rows-[160px] md:auto-rows-[220px] gap-4">
         {GALLERY_IMAGES.map((img, i) => (
           <div
             key={i}
-            className={`${img.span} rounded-2xl overflow-hidden group relative shadow-lg hover:shadow-2xl transition-all duration-500`}
+            onClick={() => onSelectImage(i)}
+            className={`${img.span} rounded-2xl overflow-hidden group relative shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer bg-gray-100 border border-gray-200/50`}
           >
-            <img
+            {/* Shimmer loading spinner */}
+            {!loaded[i] && (
+              <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center z-10">
+                <div className="w-8 h-8 border-4 border-amber-400/80 border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
+            
+            <Image
               src={img.url}
               alt={img.alt}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className={`object-cover transition-all duration-700 group-hover:scale-105 ${
+                loaded[i] ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-95 blur-md'
+              }`}
+              onLoadingComplete={() => setLoaded(prev => ({ ...prev, [i]: true }))}
+              priority={i < 3}
             />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-              <p className="text-white font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+            
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+              <p className="text-white font-bold text-sm transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 capitalize">
                 {img.alt}
               </p>
             </div>
@@ -165,6 +181,26 @@ export default function AboutPage() {
     const t = setTimeout(() => setIsLoading(false), 380);
     return () => clearTimeout(t);
   }, [activeTab]);
+
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const [zoomScale, setZoomScale] = useState(1);
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (activeIdx === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveIdx(null);
+      if (e.key === 'ArrowRight') setActiveIdx(prev => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : null));
+      if (e.key === 'ArrowLeft') setActiveIdx(prev => (prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : null));
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeIdx]);
+
+  // Reset zoom scale when changing images
+  useEffect(() => {
+    setZoomScale(1);
+  }, [activeIdx]);
 
   const handleVisitSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,10 +291,9 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* 3. Supply Chain & Sourcing: The Origin Story */}
+        {/* 3. Sourcing & Supply */}
         <div className="py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
-            {/* Desktop Image: On the left */}
             <div className="hidden md:block order-1 rounded-[2rem] overflow-hidden h-full relative group shadow-2xl">
               <img
                 src="/images/Rectangle-112.jpg"
@@ -278,7 +313,6 @@ export default function AboutPage() {
                 />
               </div>
 
-              {/* Mobile Image: After heading on mobile */}
               <div className="md:hidden w-full rounded-3xl overflow-hidden aspect-video shadow-xl">
                 <img
                   src="/images/Rectangle-112.jpg"
@@ -288,13 +322,13 @@ export default function AboutPage() {
               </div>
 
               <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-                Great cashews start long before they reach our facility. We ethically source our raw materials directly from top cashew-producing regions in Africa, including Tanzania, Ghana, and Benin. By working closely with origin markets, we ensure high crop yields and maintain complete transparency and traceability from the African soil directly to our Siliguri plant.
+                Great cashews start long before they reach our facility. We ethically source our raw materials directly from top cashew-producing regions in Africa, including Tanzania, Ghana, and Benin. Sourcing directly ensures complete transparency and traceability from the African soil directly to our Siliguri plant.
               </p>
             </div>
           </div>
         </div>
 
-        {/* 4. Processing & Scale: Proof of Capability */}
+        {/* 4. Infrastructure & Scale */}
         <div className="space-y-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="max-w-2xl">
@@ -368,9 +402,6 @@ export default function AboutPage() {
               <p>
                 Today, from personally overseeing our raw material sourcing from Africa to implementing data-driven production standards on our factory floor, my focus remains the same: ensuring that every batch of Crunchy Cashews that leaves our facility represents the pinnacle of taste, nutrition, and reliability.
               </p>
-              <p className="font-medium text-gray-800">
-                When you partner with us, you aren't just buying cashews; you are trusting my team's dedication to your business's success.
-              </p>
             </div>
 
             <div className="pt-6 border-t border-gray-200">
@@ -418,25 +449,14 @@ export default function AboutPage() {
             />
 
             <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-              Our workforce is the backbone of Crunchy Cashews. We employ over 150+ skilled workers, primarily from the local community in Siliguri, West Bengal. Every individual is trained in rigorous food safety standards and precise processing techniques, ensuring that every kernel is handled with the utmost care.
+              Our workforce is the backbone of Crunchy Cashews. We employ over 150+ skilled workers, primarily from the local community in Siliguri, West Bengal.
             </p>
-
-            <div className="grid grid-cols-2 gap-6">
-              <div className="p-6 bg-white rounded-[2rem] shadow-sm">
-                <p className="text-3xl font-black text-black mb-1">150+</p>
-                <p className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Skilled Artisans</p>
-              </div>
-              <div className="p-6 bg-white rounded-[2rem] shadow-sm">
-                <p className="text-3xl font-black text-black mb-1">90%</p>
-                <p className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Local Employment</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     );
 
-    if (activeTab === 'gallery') return <Gallery />;
+    if (activeTab === 'gallery') return <Gallery onSelectImage={(idx) => setActiveIdx(idx)} />;
 
     if (activeTab === 'visit') return (
       <div className="about-animate max-w-4xl mx-auto">
@@ -582,14 +602,17 @@ export default function AboutPage() {
 
         {/* ── TABS BELOW CTA (Segmented Control) ── */}
         <div id="about-tabs" className="w-full max-w-4xl px-2 pb-6" style={{ scrollMarginTop: '100px' }}>
-          <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm p-1.5 md:p-2 rounded-[10px] md:rounded-2xl flex items-center overflow-x-auto no-scrollbar relative w-full">
+          <div className="bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm p-1.5 md:p-2 rounded-[10px] md:rounded-2xl flex items-center justify-between overflow-x-auto no-scrollbar relative w-full gap-1">
             {TABS.map(tab => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex-1 min-w-[130px] md:min-w-0 flex items-center justify-center gap-2 px-3 md:px-5 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-colors duration-300 z-10 ${isActive ? 'text-white' : 'text-gray-500 hover:text-gray-800'
+                  className={`relative flex items-center justify-center gap-2 py-3 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black uppercase tracking-[0.1em] transition-all duration-300 z-10
+                    ${isActive 
+                      ? 'text-white px-4 md:px-5 flex-grow min-w-[120px] md:min-w-0 md:flex-1' 
+                      : 'text-gray-500 hover:text-gray-800 px-3 md:px-5 flex-shrink-0 min-w-[50px] md:min-w-0 md:flex-1'
                     }`}
                 >
                   {isActive && (
@@ -603,7 +626,9 @@ export default function AboutPage() {
                   <span className={`relative z-10 ${isActive ? 'text-white' : 'text-gray-400'}`}>
                     {Icons[tab.id]}
                   </span>
-                  <span className="relative z-10">{tab.label}</span>
+                  <span className={`relative z-10 ${isActive ? 'inline' : 'hidden md:inline'}`}>
+                    {tab.label}
+                  </span>
                 </button>
               );
             })}
@@ -683,6 +708,148 @@ export default function AboutPage() {
           </section>
         )}
       </main>
+
+      {/* Lightbox Pop-up Modal (Rendered at root level of AboutPage to avoid stacking context issues) */}
+      <AnimatePresence>
+        {activeIdx !== null && (
+          <div 
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/35 backdrop-blur-2xl p-4 transition-all duration-300"
+            onClick={() => setActiveIdx(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 24 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative w-full max-w-4xl rounded-[28px] md:rounded-[36px] overflow-hidden p-5 md:p-7 flex flex-col z-[10000]"
+              style={{
+                  background: COLORS.heading,
+                  boxShadow: '0 32px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top Right Decorative Pattern — Stylized Grid */}
+              <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-[0.08] translate-x-1/4 -translate-y-1/4 select-none"
+                  style={{
+                      backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+                      backgroundSize: '20px 20px'
+                  }} />
+
+              {/* Bottom Left Decorative Pattern — Concentric Circles */}
+              <div className="absolute bottom-0 left-0 w-80 h-80 pointer-events-none opacity-[0.06] -translate-x-1/3 translate-y-1/3 select-none">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="absolute inset-0 rounded-full border border-white"
+                          style={{ transform: `scale(${0.2 * i})` }} />
+                  ))}
+              </div>
+
+              {/* Subtle Gradient Overlay for Depth */}
+              <div className="absolute inset-0 pointer-events-none"
+                  style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)' }} />
+
+              {/* Close button */}
+              <button 
+                onClick={() => setActiveIdx(null)}
+                className="absolute top-4 right-4 z-[10001] text-white/80 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-all text-base border border-white/10 shadow-lg active:scale-95"
+                aria-label="Close Lightbox"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+
+              {/* Main Image Container */}
+              <div className="relative w-full h-[40vh] md:h-[50vh] rounded-2xl overflow-hidden bg-black/40 border border-white/5 flex items-center justify-center">
+                <div 
+                  className="relative w-full h-full transition-transform duration-200 ease-out"
+                  style={{ transform: `scale(${zoomScale})` }}
+                >
+                  <Image 
+                    src={GALLERY_IMAGES[activeIdx].url}
+                    alt={GALLERY_IMAGES[activeIdx].alt}
+                    fill
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Caption */}
+              <div className="mt-4 text-center md:hidden relative z-10">
+                <h4 className="text-white text-base font-bold tracking-wide capitalize">
+                  {GALLERY_IMAGES[activeIdx].alt}
+                </h4>
+              </div>
+
+              {/* Bottom Controls Bar */}
+              <div className="relative z-10 flex items-center justify-between gap-4 mt-4 w-full bg-white/5 border border-white/10 px-4 py-3 md:px-5 md:py-3.5 rounded-2xl backdrop-blur-md">
+                {/* Navigation controls */}
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIdx(prev => (prev !== null ? (prev - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length : null));
+                    }}
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all border border-white/15"
+                    aria-label="Previous image"
+                  >
+                    <i className="fa-solid fa-chevron-left text-xs md:text-sm" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveIdx(prev => (prev !== null ? (prev + 1) % GALLERY_IMAGES.length : null));
+                    }}
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all border border-white/15"
+                    aria-label="Next image"
+                  >
+                    <i className="fa-solid fa-chevron-right text-xs md:text-sm" />
+                  </button>
+                  <span className="text-white/60 text-[11px] md:text-xs font-bold px-2 select-none">
+                    {activeIdx + 1} / {GALLERY_IMAGES.length}
+                  </span>
+                </div>
+
+                {/* Desktop Caption */}
+                <div className="hidden md:block flex-1 text-center truncate px-2">
+                  <h4 className="text-white font-bold text-sm tracking-wide capitalize">
+                    {GALLERY_IMAGES[activeIdx].alt}
+                  </h4>
+                </div>
+
+                {/* Zoom Controls */}
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setZoomScale(prev => Math.max(prev - 0.25, 0.5));
+                    }}
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all border border-white/15 disabled:opacity-40"
+                    aria-label="Zoom Out"
+                    disabled={zoomScale <= 0.5}
+                  >
+                    <i className="fa-solid fa-magnifying-glass-minus text-xs md:text-sm" />
+                  </button>
+                  <span className="text-white text-[11px] md:text-xs font-bold w-12 text-center select-none bg-white/5 py-1.5 rounded-lg border border-white/5 hidden sm:inline-block">
+                    {Math.round(zoomScale * 100)}%
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setZoomScale(prev => Math.min(prev + 0.25, 3));
+                    }}
+                    className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all border border-white/15 disabled:opacity-40"
+                    aria-label="Zoom In"
+                    disabled={zoomScale >= 3}
+                  >
+                    <i className="fa-solid fa-magnifying-glass-plus text-xs md:text-sm" />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }

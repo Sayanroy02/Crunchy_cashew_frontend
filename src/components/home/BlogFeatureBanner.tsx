@@ -84,23 +84,22 @@ export default function BlogFeatureBanner() {
 
           {/* ── RIGHT: CTA Button ── */}
           <div className="relative z-10 flex-shrink-0">
-            <Link href="/profile?tab=blogs" passHref legacyBehavior>
-                <a
-                    id="blog-feature-banner-cta"
-                    className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
-                    style={{
-                        background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
-                        color: '#000',
-                    }}
-                >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-                    </svg>
-                    Write a Blog
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                    </svg>
-                </a>
+            <Link 
+                id="blog-feature-banner-cta"
+                href="/profile?tab=blogs"
+                className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                style={{
+                    background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
+                    color: '#000',
+                }}
+            >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                </svg>
+                Write a Blog
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
             </Link>
           </div>
         </div>

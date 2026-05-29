@@ -49,9 +49,8 @@ export default function HeroVideo() {
             <img
                 src="/images/animation-photo.png"
                 alt="Crunchy Cashews Premium Nuts"
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                    videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'
-                }`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded && !videoError ? 'opacity-0' : 'opacity-100'
+                    }`}
                 style={{ objectPosition: 'center center' }}
             />
 
@@ -71,7 +70,7 @@ export default function HeroVideo() {
             {/* ── Mobile Video ── */}
             <video
                 ref={mobileVideoRef}
-                src="https://res.cloudinary.com/dvhgznmk5/video/upload/q_auto,f_auto,w_720/v1774631519/Social_Media_Video_Ads_KqlKM4R3_kgnpez.mp4"
+                src="https://res.cloudinary.com/da1acfqsn/video/upload/v1780056625/Social_Media_Video_Ads_KqlKM4R3_kgnpez_eplmup.mp4"
                 muted
                 playsInline
                 preload="none"
@@ -215,14 +214,14 @@ export default function HeroVideo() {
             <div className="hidden md:flex absolute inset-0 items-center">
                 <div className="w-full max-w-screen-xl mx-auto px-10 lg:px-16">
                     <div className="flex flex-col items-start text-left max-w-[580px]">
- 
+
                         <div className="flex items-center gap-2 mb-4">
                             <span className="h-[2px] w-5 bg-amber rounded-full" />
                             <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
                                 Premium Cashews · Since 2018
                             </span>
                         </div>
- 
+
                         <h1
                             className="text-white font-black leading-[1.0] tracking-tight mb-4"
                             style={{ fontSize: 'clamp(2.0rem, 4vw, 4rem)' }}
@@ -230,7 +229,7 @@ export default function HeroVideo() {
                             Factory Fresh
                             <span className="block text-amber">Premium Cashews</span>
                         </h1>
- 
+
                         <p
                             className="text-white/80 font-medium leading-relaxed mb-5"
                             style={{ fontSize: 'clamp(0.88rem, 1.2vw, 1rem)', maxWidth: '360px' }}
@@ -238,7 +237,7 @@ export default function HeroVideo() {
                             Hand-picked, roasted to perfection.<br />
                             Delivered fresh from our factory in Siliguri to your door.
                         </p>
- 
+
                         <div className="flex items-center gap-5 mb-6">
                             {[
                                 { icon: 'fa-shield-halved', text: 'FSSAI' },
@@ -253,7 +252,7 @@ export default function HeroVideo() {
                                 </div>
                             ))}
                         </div>
- 
+
                         <div className="flex items-center gap-3">
                             <Link
                                 href="/shop"

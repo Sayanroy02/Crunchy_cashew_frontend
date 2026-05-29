@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 export default function MainContent({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isAdmin = pathname?.startsWith('/admin') ?? false;
+    const isMaintenanceOrOffline = pathname === '/maintenance' || pathname === '/offline';
 
     React.useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -33,7 +34,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
     }, []);
 
     return (
-        <main className={isAdmin ? "min-h-screen" : "min-h-screen pt-[56px] md:pt-[72px]"}>
+        <main className={(isAdmin || isMaintenanceOrOffline) ? "min-h-screen" : "min-h-screen pt-[56px] md:pt-[72px]"}>
             {children}
         </main>
     );

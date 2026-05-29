@@ -31,7 +31,7 @@ export default function MobileBottomNav() {
     }, [pathname]);
 
     // Hide on admin routes or specific pages
-    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer') return null;
+    if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance' || pathname === '/offline') return null;
 
     const navItems = [
         { label: 'Shop', href: '/shop', icon: 'fa-store' },

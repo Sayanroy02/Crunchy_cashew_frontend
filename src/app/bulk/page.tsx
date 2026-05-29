@@ -437,7 +437,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
     ];
 
     return (
-        <section id="industries-we-supply" className="max-w-7xl mx-auto px-6 py-10 md:py-10 relative" style={{ scrollMarginTop: '100px' }}>
+        <section id="industries-we-supply" className="max-w-7xl mx-auto px-6 py-8 md:py-10 relative" style={{ scrollMarginTop: '100px' }}>
             {/* Smaller Floating Parachute Cashew (desktop only) */}
             <motion.div
                 initial={{ y: 0, rotate: -5 }}
@@ -595,7 +595,7 @@ function OurGradesSection({
     };
 
     return (
-        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-10 md:py-10" style={{ scrollMarginTop: '100px' }}>
+        <section id="our-grades-section" className="max-w-7xl mx-auto px-6 py-8 md:py-10" style={{ scrollMarginTop: '100px' }}>
             {/* Section Title */}
             <div ref={ref} className="text-center mb-6 md:mb-8">
                 <SectionHeading
@@ -717,6 +717,8 @@ function OurGradesSection({
 
 // ─── Why Partner With Us ──────────────────────────────────────────────────────
 function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: string, grade?: string, customMessage?: string) => void }) {
+    const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
+
     const pillars = [
         {
             icon: (
@@ -776,12 +778,74 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
         }
     ];
 
+    const renderAccordion = () => (
+        <div className="flex flex-col gap-4 w-full">
+            {pillars.map((pillar, idx) => {
+                const isExpanded = expandedIdx === idx;
+                return (
+                    <div 
+                        key={idx} 
+                        className="bg-white rounded-2xl border border-gray-150 overflow-hidden shadow-sm transition-all duration-300"
+                        style={{ borderColor: isExpanded ? `${COLORS.heading}40` : '#f3f4f6' }}
+                    >
+                        {/* Header Row */}
+                        <button
+                            onClick={() => setExpandedIdx(isExpanded ? null : idx)}
+                            className="w-full flex items-center justify-between p-5 font-bold text-gray-900 text-left hover:bg-gray-50 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-gray-50 rounded-xl text-green-700 shrink-0">
+                                    {pillar.icon}
+                                </div>
+                                <span className="text-sm md:text-base font-extrabold text-gray-900">{pillar.title}</span>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center border border-gray-100 shrink-0">
+                                <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 text-xs ${isExpanded ? 'rotate-180 text-black' : ''}`} />
+                            </div>
+                        </button>
+                        
+                        {/* Expandable Content Container */}
+                        <AnimatePresence initial={false}>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.25, ease: 'easeInOut' }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="px-5 pb-5 pt-1 border-t border-gray-50 flex flex-col gap-3.5">
+                                        {/* Problem label and text in Red */}
+                                        <div className="bg-red-50/70 rounded-xl p-3.5 text-left border border-red-100/60 flex items-start gap-2.5">
+                                            <span className="text-red-500 font-bold mt-0.5">⚠️</span>
+                                            <div className="flex flex-col">
+                                                <span className="text-[9px] uppercase font-black tracking-widest text-red-500">Problem</span>
+                                                <p className="text-red-600 font-extrabold text-[12.5px] leading-snug mt-0.5">{pillar.pain}</p>
+                                            </div>
+                                        </div>
+                                        {/* Answer/Description in Black */}
+                                        <div className="pl-1">
+                                            <span className="text-[9px] uppercase font-black tracking-widest text-gray-400 block mb-1">Our Solution</span>
+                                            <p className="text-[13px] text-gray-700 font-medium leading-relaxed text-left">
+                                                {pillar.desc}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
     return (
-        <section className="max-w-7xl mx-auto px-6 py-10 md:py-10 my-10 relative overflow-hidden">
+        <section className="max-w-7xl mx-auto px-6 py-8 md:py-10 my-6 md:my-10 relative overflow-hidden">
 
             {/* 1. TABLET & DESKTOP VERSION (show on tablet and desktop, hidden on phone) */}
             <div className="hidden md:block">
-                <div className="grid grid-cols-1 xl:grid-cols-[1.35fr_2fr] gap-12 xl:gap-16 items-center">
+                <div className="grid grid-cols-1 xl:grid-cols-[1.2fr_2fr] gap-12 xl:gap-16 items-center">
 
                     {/* LEFT (Top on iPad): Branding & Main Headings */}
                     <motion.div
@@ -836,99 +900,9 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                         </div>
                     </motion.div>
 
-                    {/* RIGHT (Bottom on iPad): Symmetrical 2x2 Grid with green border lines */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-12 md:gap-y-16 relative xl:pl-6">
-                        {/* Symmetrical Vertical green line down the middle */}
-                        <div
-                            className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[1.5px]"
-                            style={{ backgroundColor: COLORS.heading, opacity: 0.3 }}
-                        />
-
-                        {/* Pillar 1 */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4 }}
-                            className="flex items-start gap-4 border-b pb-10 md:pb-12 md:pr-8"
-                            style={{ borderColor: `${COLORS.heading}30` }}
-                        >
-                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
-                                {pillars[0].icon}
-                            </div>
-                            <div className="flex flex-col gap-1.5 text-left">
-                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
-                                    {pillars[0].title}
-                                </h3>
-                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
-                                    {pillars[0].desc}
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Pillar 2 */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: 0.1 }}
-                            className="flex items-start gap-4 border-b pb-10 md:pb-12 md:pl-8"
-                            style={{ borderColor: `${COLORS.heading}30` }}
-                        >
-                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
-                                {pillars[1].icon}
-                            </div>
-                            <div className="flex flex-col gap-1.5 text-left">
-                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
-                                    {pillars[1].title}
-                                </h3>
-                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
-                                    {pillars[1].desc}
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Pillar 3 */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: 0.2 }}
-                            className="flex items-start gap-4 md:pt-4 md:pr-8"
-                        >
-                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
-                                {pillars[2].icon}
-                            </div>
-                            <div className="flex flex-col gap-1.5 text-left">
-                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
-                                    {pillars[2].title}
-                                </h3>
-                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
-                                    {pillars[2].desc}
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Pillar 4 */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 15 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.4, delay: 0.3 }}
-                            className="flex items-start gap-4 md:pt-4 md:pl-8"
-                        >
-                            <div className="p-2.5 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-gray-100 shrink-0">
-                                {pillars[3].icon}
-                            </div>
-                            <div className="flex flex-col gap-1.5 text-left">
-                                <h3 className="text-base md:text-[17px] font-bold text-gray-900 leading-snug" style={{ fontFamily: 'Georgia, serif' }}>
-                                    {pillars[3].title}
-                                </h3>
-                                <p className="text-gray-500 text-xs md:text-[13px] leading-relaxed">
-                                    {pillars[3].desc}
-                                </p>
-                            </div>
-                        </motion.div>
+                    {/* RIGHT: Accordion Layout */}
+                    <div className="relative xl:pl-6 w-full">
+                        {renderAccordion()}
                     </div>
 
                 </div>
@@ -982,60 +956,9 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                     </div>
                 </div>
 
-                {/* Card stack (as they were like before) */}
-                <div className="flex flex-col gap-4">
-                    {pillars.map((pillar, idx) => (
-                        <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="bg-white rounded-2xl border border-gray-100 flex flex-col overflow-hidden hover:border-gray-200 transition-colors duration-300"
-                        >
-                            <div className="h-1 w-full" style={{ backgroundColor: pillar.accent }} />
-
-                            <div className="p-5 flex flex-col gap-4 flex-grow">
-                                <div className="flex items-center gap-3">
-                                    <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                        style={{ backgroundColor: pillar.painBg }}
-                                    >
-                                        {pillar.icon}
-                                    </div>
-                                    <h3 className="text-[15px] font-bold text-gray-900 leading-snug">
-                                        {pillar.title}
-                                    </h3>
-                                </div>
-
-                                <div
-                                    className="rounded-xl px-3.5 py-3 flex gap-2.5 items-start"
-                                    style={{ backgroundColor: pillar.painBg }}
-                                >
-                                    <span className="text-base mt-0.5">⚠</span>
-                                    <div className="flex flex-col gap-1 text-left">
-                                        <span
-                                            className="text-[10px] font-semibold uppercase tracking-widest"
-                                            style={{ color: pillar.painLabelColor }}
-                                        >
-                                            Your problem
-                                        </span>
-                                        <p
-                                            className="text-[13px] font-semibold leading-snug"
-                                            style={{ color: pillar.painTextColor }}
-                                        >
-                                            {pillar.pain}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="border-t border-gray-100" />
-
-                                <p className="text-[13px] text-gray-500 leading-relaxed text-left flex-grow">
-                                    {pillar.desc}
-                                </p>
-                            </div>
-                        </motion.div>
-                    ))}
+                {/* Card stack (Accordion on mobile) */}
+                <div className="w-full">
+                    {renderAccordion()}
                 </div>
             </div>
 
