@@ -406,7 +406,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
 
                     <h3 className="text-[1.45rem] md:text-[1.75rem] font-black text-white leading-tight tracking-tight mb-2.5">
                         Looking for a reliable,{' '}
-                        <span style={{ color: COLORS.primary }}>factory-direct</span>{' '}
+                        <span style={{ color: COLORS.primary }}>Factory-direct</span>{' '}
                         supplier?
                     </h3>
 
@@ -435,7 +435,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                         whileTap={{ scale: 0.97 }}
                         href="/document/Cashew-Catalogue.pdf"
                         download
-                        className="font-bold px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap"
+                        className="font-bold tracking-wide px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                         style={{
                             background: 'linear-gradient(160deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 100%)',
                             color: 'rgba(255,255,255,0.92)',
@@ -454,7 +454,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                     {/* Bottom — Request Custom Quote — yellow solid */}
                     <button
                         onClick={onOpenPopup}
-                        className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                        className="group font-black tracking-wide px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
                         style={{
                             background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
                             color: '#000',

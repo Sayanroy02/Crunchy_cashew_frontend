@@ -395,8 +395,8 @@ function GradeCard({
                 className="relative z-10 -mt-3 md:-mt-10 transition-all duration-300 text-center"
             >
                 <span
-                    className={`text-[1.1rem] md:text-[1.2rem] font-extrabold tracking-tight transition-colors duration-300 block group-hover:text-[#F6B000] ${isSelected ? 'text-[#F6B000]' : 'text-gray-900'
-                        } ${isEnterpriseGrade ? 'normal-case' : 'uppercase'}`}
+                    className={`text-[1.1rem] md:text-[1.2rem] transition-colors duration-300 block group-hover:text-[#F6B000] ${isSelected ? 'text-[#F6B000]' : 'text-gray-900'
+                        } ${isEnterpriseGrade ? 'font-semibold tracking-wide normal-case' : 'font-extrabold tracking-tight uppercase'}`}
                     style={{
                         lineHeight: '1.1'
                     }}
@@ -693,7 +693,7 @@ function OurGradesSection({
                         undefined,
                         'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                     )}
-                    className="w-full sm:w-auto bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2.5"
+                    className="w-full sm:w-auto bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2.5"
                 >
                     <i className="fa-brands fa-whatsapp text-base md:text-lg text-white" />
                     Enquire Now
@@ -703,7 +703,7 @@ function OurGradesSection({
                 <a
                     href="/document/Cashew-Catalogue.pdf"
                     download="Cashew-Catalogue.pdf"
-                    className="w-full sm:w-auto bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2.5 border-2"
+                    className="w-full sm:w-auto bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2.5 border-2"
                     style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                 >
                     <i className="fa-solid fa-download text-sm md:text-base" />
@@ -883,7 +883,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                         'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                                     );
                                 }}
-                                className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 whitespace-nowrap"
+                                className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 whitespace-nowrap"
                             >
                                 <i className="fa-brands fa-whatsapp text-lg" />
                                 Request bulk pricing
@@ -892,7 +892,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                 onClick={() => {
                                     document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 whitespace-nowrap"
+                                className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 whitespace-nowrap"
                                 style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                             >
                                 Explore Our Grades
@@ -939,7 +939,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                     'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
                                 );
                             }}
-                            className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 text-xs whitespace-nowrap"
+                            className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 text-xs whitespace-nowrap"
                         >
                             <i className="fa-brands fa-whatsapp text-sm" />
                             Request bulk pricing
@@ -948,7 +948,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                             onClick={() => {
                                 document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 text-xs whitespace-nowrap"
+                            className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 text-xs whitespace-nowrap"
                             style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                         >
                             Explore Grades

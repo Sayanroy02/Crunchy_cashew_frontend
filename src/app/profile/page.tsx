@@ -107,6 +107,17 @@ function ProfileContent() {
     const [reviewStatus, setReviewStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
     useEffect(() => {
+        const tab = searchParams.get('tab');
+        if (tab && ['home', 'settings', 'orders', 'wishlist', 'blogs', 'reviews', 'support'].includes(tab)) {
+            setActiveTab(tab as TabKey);
+            setCurrentDesktopTab(tab as TabKey);
+        } else if (!tab) {
+            setActiveTab('home');
+            setCurrentDesktopTab('orders');
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
         if (!isAuthenticated) { router.push('/login'); return; }
         const fetchProfile = async () => {
             try {
@@ -114,7 +125,7 @@ function ProfileContent() {
                 const res = await fetch(API.AUTH_ME, {
                     headers: { 'Authorization': `Bearer ${token || localToken}` }
                 });
-                if (!res.ok) throw new Error('Failed');
+                if (!res.ok) throw new Error('Failed to fetch profile details');
                 const data = await res.json();
                 setProfile(data);
                 setEditForm({
@@ -123,10 +134,16 @@ function ProfileContent() {
                     address: data.address || ''
                 });
                 setReviewForm(prev => ({ ...prev, name: data.username || '' }));
-            } catch (err) { console.error(err); } finally { setLoading(false); }
+            } catch (err) {
+                console.error('Failed to load profile:', err);
+                dispatch(logout());
+                router.push('/login');
+            } finally {
+                setLoading(false);
+            }
         };
         fetchProfile();
-    }, [isAuthenticated, router, token]);
+    }, [isAuthenticated, router, token, dispatch]);
 
     useEffect(() => {
         const tab = window.innerWidth < 768 ? activeTab : currentDesktopTab;

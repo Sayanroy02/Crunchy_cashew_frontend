@@ -291,7 +291,7 @@ I’d like to know more about your white label options. Could you please share t
                                 <div className="relative z-20 hidden lg:flex items-center gap-4">
                                     <button
                                         onClick={handleCTA}
-                                        className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                        className="group font-black tracking-wide px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
                                         style={{
                                             background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
                                             color: '#000',
@@ -308,7 +308,7 @@ I’d like to know more about your white label options. Could you please share t
                                     {!isBulkPage && (
                                         <a
                                             href="/bulk"
-                                            className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                            className="h-11 px-7 rounded-xl border-2 border-white/20 text-white font-black tracking-wide text-[13px] flex items-center gap-2.5 backdrop-blur-sm transition-all hover:scale-105 active:scale-95 shadow-xl"
                                         >
                                             <BookOpen className="w-4 h-4" />
                                             Know More
@@ -338,7 +338,7 @@ I’d like to know more about your white label options. Could you please share t
                             <div className="relative z-20 lg:hidden w-full flex flex-col gap-2 mt-1">
                                 <button
                                     onClick={handleCTA}
-                                    className="group font-black w-full px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                    className="group font-black tracking-wide w-full px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl"
                                     style={{
                                         background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
                                         color: '#000',
@@ -355,7 +355,7 @@ I’d like to know more about your white label options. Could you please share t
                                 {!isBulkPage && (
                                     <a
                                         href="/bulk"
-                                        className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black text-[13px] flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl"
+                                        className="w-full h-11 rounded-xl border-2 border-white/20 text-white font-black tracking-wide text-[13px] flex items-center justify-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-xl"
                                     >
                                         <BookOpen className="w-4 h-4" />
                                         Know More

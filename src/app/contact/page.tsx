@@ -297,9 +297,8 @@ function ContactContent() {
                 </p>
             </section>
 
-            {/* ══ CARD ══ */}
             <section className="max-w-5xl mx-auto px-4 md:px-8 -mt-10 pb-20 relative z-10">
-                <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+                <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col-reverse lg:flex-row">
 
                     {/* ── Sidebar ── */}
                     <aside className="lg:w-80 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden" style={{ backgroundColor: COLORS.heading }}>

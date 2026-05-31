@@ -8,7 +8,35 @@ import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { motion, AnimatePresence } from 'framer-motion';
 
-type Tab = 'story' | 'team' | 'gallery' | 'visit';
+function ExpandableParagraph({ children, className = "" }: { children: string; className?: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  if (!isMobile || children.length <= 150) {
+    return <p className={className}>{children}</p>;
+  }
+
+  const truncated = children.slice(0, 150).trim() + '...';
+
+  return (
+    <p className={className}>
+      {isExpanded ? children : truncated}{' '}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="text-green-700 font-bold ml-1 hover:underline focus:outline-none inline-block whitespace-nowrap"
+      >
+        {isExpanded ? 'Read Less' : 'Read More'}
+      </button>
+    </p>
+  );
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LINE SVG ICONS
@@ -241,12 +269,12 @@ export default function AboutPage() {
     }
 
     if (activeTab === 'story') return (
-      <div className="about-animate space-y-20">
+      <div className="about-animate space-y-12 md:space-y-20">
         {/* 2. The Core Mission: Who You Are */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
-          <div className="flex flex-col space-y-6 md:space-y-8">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 bg-amber-100/30 px-3 py-1.5 rounded-full">
+          <div className="flex flex-col space-y-6 md:space-y-8 items-center md:items-start text-center md:text-left">
+            <div className="space-y-6 flex flex-col items-center md:items-start w-full">
+              <div className="inline-flex items-center gap-2 bg-amber-100/30 px-3 py-1.5 rounded-full w-fit">
                 <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
                 <span className="text-[10px] font-black tracking-[0.2em] text-amber-700 uppercase">The Core Mission</span>
               </div>
@@ -254,7 +282,7 @@ export default function AboutPage() {
                 text="Modern Infrastructure,"
                 highlight="Rooted in Tradition."
                 textColor={COLORS.heading}
-                className="text-3xl md:text-5xl"
+                className="text-3xl md:text-5xl text-center md:text-left"
               />
             </div>
 
@@ -271,9 +299,9 @@ export default function AboutPage() {
               </video>
             </div>
 
-            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+            <ExpandableParagraph className="text-gray-600 text-sm md:text-base leading-relaxed text-left">
               Located in the industrial hub of Siliguri, West Bengal, Yu Nut Processing Industry was built on a singular vision: to bridge the gap between premium global agriculture and domestic B2B demands. We operate a highly advanced, end-to-end processing facility dedicated to producing the finest cashew kernels. By combining rigorous food safety standards with scalable production methods, we ensure that every batch meets the precise specifications of our wholesale and retail partners.
-            </p>
+            </ExpandableParagraph>
           </div>
 
           {/* Desktop Video: On the right */}
@@ -291,7 +319,7 @@ export default function AboutPage() {
         </div>
 
         {/* 3. Sourcing & Supply */}
-        <div className="py-10">
+        <div className="py-6 md:py-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
             <div className="hidden md:block order-1 rounded-[2rem] overflow-hidden h-full relative group shadow-2xl">
               <img
@@ -301,14 +329,14 @@ export default function AboutPage() {
               />
             </div>
 
-            <div className="flex flex-col space-y-6 md:space-y-8 order-2">
-              <div className="space-y-6">
-                <span className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] block">Global Supply Chain</span>
+            <div className="flex flex-col space-y-6 md:space-y-8 order-2 items-center md:items-start text-center md:text-left">
+              <div className="space-y-6 flex flex-col items-center md:items-start w-full">
+                <span className="text-amber-600 text-[10px] font-black uppercase tracking-[0.3em] block w-fit">Global Supply Chain</span>
                 <SectionHeading
                   text="Ethically Sourced from the"
                   highlight="World’s Best."
                   textColor={COLORS.heading}
-                  className="text-3xl md:text-5xl"
+                  className="text-3xl md:text-5xl text-center md:text-left"
                 />
               </div>
 
@@ -320,33 +348,33 @@ export default function AboutPage() {
                 />
               </div>
 
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              <ExpandableParagraph className="text-gray-600 text-sm md:text-base leading-relaxed text-left">
                 Great cashews start long before they reach our facility. We ethically source our raw materials directly from top cashew-producing regions in Africa, including Tanzania, Ghana, and Benin. Sourcing directly ensures complete transparency and traceability from the African soil directly to our Siliguri plant.
-              </p>
+              </ExpandableParagraph>
             </div>
           </div>
         </div>
 
         {/* 4. Infrastructure & Scale */}
         <div className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="max-w-2xl">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 items-center md:items-start">
+            <div className="max-w-2xl flex flex-col items-center md:items-start w-full">
               <SectionHeading
                 text="Precision Manufacturing"
                 highlight="at Scale."
                 textColor={COLORS.heading}
-                className="text-3xl md:text-5xl"
+                className="text-3xl md:text-5xl text-center md:text-left"
               />
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed mt-4">
+              <ExpandableParagraph className="text-gray-600 text-sm md:text-base leading-relaxed mt-4 text-left w-full">
                 Our 28,800 sq. ft. facility is equipped to handle high-volume demands without compromising on grade or quality.
-              </p>
+              </ExpandableParagraph>
             </div>
-            <div className="flex items-center gap-3 bg-green-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl h-fit">
+            <div className="flex items-center gap-3 bg-green-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl h-fit mx-auto md:mx-0">
               <i className="fa-solid fa-industry text-base" /> 28,800 Sq. Ft.
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-4 px-4 gap-6 pb-6 md:pb-0 md:grid md:grid-cols-3 md:gap-8 md:mx-0 md:px-0 w-full">
             {[
               {
                 icon: 'fa-microchip',
@@ -364,7 +392,7 @@ export default function AboutPage() {
                 desc: 'Capable of producing over 25 precise cashew grades.'
               },
             ].map(point => (
-              <div key={point.title} className="p-8 rounded-3xl hover:bg-white/60 transition-all duration-300 group">
+              <div key={point.title} className="flex-shrink-0 w-[80vw] max-w-[320px] snap-center p-8 rounded-3xl bg-white/90 border border-amber-100/40 shadow-sm md:w-auto md:bg-transparent md:border-0 md:shadow-none hover:bg-white/60 transition-all duration-300 group">
                 <div className="w-14 h-14 bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#F6B000] group-hover:rotate-6 transition-all shadow-sm">
                   <i className={`fa-solid ${point.icon} text-xl`} />
                 </div>
@@ -378,10 +406,11 @@ export default function AboutPage() {
     );
 
     if (activeTab === 'team') return (
-      <div className="about-animate space-y-24">
+      <div className="about-animate space-y-12 md:space-y-24">
         {/* Founder Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+          {/* Eyebrow & Heading: Top on mobile, Left on desktop */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-6 md:col-start-1 md:row-start-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100/30 w-fit">
               <span className="w-2 h-2 rounded-full bg-black"></span>
               <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">Founder's Vision</span>
@@ -391,19 +420,31 @@ export default function AboutPage() {
               text="Quality,"
               highlight="Uncompromised."
               textColor={COLORS.heading}
-              className="text-3xl md:text-5xl"
+              className="text-3xl md:text-5xl text-center md:text-left"
             />
+          </div>
 
-            <div className="text-gray-600 text-sm md:text-base leading-relaxed space-y-6">
+          {/* Image: below heading on mobile, Right on desktop */}
+          <div className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl md:col-start-2 md:row-start-1 md:row-span-2">
+            <img
+              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780058888/nitesh_jindal_pem4gk.png"
+              alt="Nitesh Jindal - Founder"
+              className="w-full h-[320px] md:h-[80vh] object-cover object-top"
+            />
+          </div>
+
+          {/* Content: below image on mobile, Left below heading on desktop */}
+          <div className="text-gray-600 text-sm md:text-base leading-relaxed space-y-6 md:col-start-1 md:row-start-2 flex flex-col items-center md:items-start text-left">
+            <div className="w-full space-y-6">
               <p className="italic text-lg text-gray-800 border-l-4 border-[#F6B000] pl-6 py-2">
                 "When I established Yu Nut Processing Industry in Siliguri, my goal wasn't just to enter the cashew market—it was to elevate it."
               </p>
-              <p>
+              <ExpandableParagraph className="text-gray-600 text-sm md:text-base leading-relaxed text-left">
                 Today, from personally overseeing our raw material sourcing from Africa to implementing data-driven production standards on our factory floor, my focus remains the same: ensuring that every batch of Crunchy Cashews that leaves our facility represents the pinnacle of taste, nutrition, and reliability.
-              </p>
+              </ExpandableParagraph>
             </div>
 
-            <div className="pt-6 border-t border-gray-200">
+            <div className="w-full pt-6 border-t border-gray-200">
               <div className="mb-1" style={{ fontFamily: "'Brush Script MT', 'Great Vibes', cursive", fontSize: '2.5rem', color: '#111' }}>
                 Nitesh Jindal
               </div>
@@ -415,26 +456,12 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-
-          <div className="order-1 md:order-2 rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <img
-              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780058888/nitesh_jindal_pem4gk.png"
-              alt="Nitesh Jindal - Founder"
-              className="w-full h-[80vh] object-cover"
-            />
-          </div>
         </div>
 
         {/* Workforce Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center py-10">
-          <div className="rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <img
-              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780057811/cc-workforce_bhasay.jpg"
-              alt="Our Skilled Workforce"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-6 md:py-10">
+          {/* Eyebrow & Heading: Top on mobile, Right on desktop */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-6 md:col-start-2 md:row-start-1">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 w-fit">
               <span className="w-2 h-2 rounded-full bg-[#F6B000]"></span>
               <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">Our Workforce</span>
@@ -444,12 +471,24 @@ export default function AboutPage() {
               text="The Heart of"
               highlight="Our Industry."
               textColor={COLORS.heading}
-              className="text-3xl md:text-5xl"
+              className="text-3xl md:text-5xl text-center md:text-left"
             />
+          </div>
 
-            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+          {/* Image: below heading on mobile, Left on desktop */}
+          <div className="w-full rounded-[2.5rem] overflow-hidden shadow-2xl md:col-start-1 md:row-start-1 md:row-span-2">
+            <img
+              src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780057811/cc-workforce_bhasay.jpg"
+              alt="Our Skilled Workforce"
+              className="w-full h-[220px] md:h-[400px] object-cover"
+            />
+          </div>
+
+          {/* Content: below image on mobile, Right below heading on desktop */}
+          <div className="text-gray-600 text-sm md:text-base leading-relaxed md:col-start-2 md:row-start-2 flex flex-col items-center md:items-start text-left w-full">
+            <ExpandableParagraph className="text-gray-600 text-sm md:text-base leading-relaxed text-left w-full">
               Our workforce is the backbone of Crunchy Cashews. We employ over 150+ skilled workers, primarily from the local community in Siliguri, West Bengal.
-            </p>
+            </ExpandableParagraph>
           </div>
         </div>
       </div>
@@ -677,7 +716,7 @@ export default function AboutPage() {
                     id="bulk-quote-banner-cta"
                     onClick={handleWhatsAppClick}
                     href="#"
-                    className="group font-black px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+                    className="group font-black tracking-wide px-6 py-3.5 rounded-2xl text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
                     style={{
                       background: `linear-gradient(135deg, ${COLORS.primary} 0%, #FFD54F 100%)`,
                       color: '#000',

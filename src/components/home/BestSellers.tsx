@@ -98,7 +98,7 @@ export default function BestSellers() {
                 </div>
 
                 {/* Tag Filter Pills */}
-                <div className="flex items-center gap-2 mb-5 overflow-x-auto scrollbar-hide px-1 md:justify-center md:flex-wrap">
+                <div className="flex items-center gap-2 mb-5 overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:justify-center md:flex-wrap">
                     {CATEGORIES.map(tag => (
                         <button
                             key={tag.value}

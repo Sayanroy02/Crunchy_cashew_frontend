@@ -132,6 +132,15 @@ export default function BlogDetailPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 30);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     useEffect(() => {
         if (!id) return;
@@ -255,54 +264,84 @@ export default function BlogDetailPage() {
                 </div>
             )}
 
-            {/* Back Button, Title, Meta and Category at the top */}
-            <div className="pt-32 pb-8 px-6 max-w-4xl mx-auto">
-                <div className="text-center relative z-10">
-                    <Link href="/blogs" className="inline-flex items-center text-primary font-bold uppercase tracking-wider text-xs md:text-sm mb-6 hover:underline">
-                        <i className="fa-solid fa-arrow-left mr-2"></i> Back to all articles
-                    </Link>
-                    
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-extrabold text-[#006C35] mb-4 leading-tight">
-                        {blog.title}
-                    </h1>
+            {/* Top Spacer for the fixed main navbar */}
+            <div className="h-20 w-full" />
 
-                    {/* Category Pill directly below Heading */}
-                    {blog.category && (
-                        <div className="mb-6 flex justify-center">
-                            <span className="bg-[#006C35]/10 text-[#006C35] font-bold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider border border-[#006C35]/15">
-                                <i className="fa-solid fa-tags mr-1.5 text-[#F6B000]"></i>
-                                {blog.category}
-                            </span>
+            {/* Sticky Header Container */}
+            <div className="sticky top-[80px] z-30 bg-[#FFF9E7]/95 backdrop-blur-md border-b border-gray-200/60 shadow-sm pt-8 pb-4 mb-10 transition-all duration-300">
+                {/* Back Button and Title on top */}
+                <div className="px-6 max-w-7xl mx-auto mb-4">
+                    <div className="flex items-center gap-4 md:gap-6 relative z-10 text-left">
+                        <Link href="/blogs" className="flex-shrink-0 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-white border border-gray-200 text-[#006C35] hover:bg-[#006C35] hover:text-white transition-all shadow-sm active:scale-90" aria-label="Back to all articles">
+                            <i className="fa-solid fa-arrow-left text-sm md:text-base"></i>
+                        </Link>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-heading font-extrabold text-[#006C35] leading-tight">
+                            {blog.title}
+                        </h1>
+                    </div>
+                </div>
+
+                {/* Mobile-only Sticky Image (visible on mobile only, sticks under the header) */}
+                <div className="px-6 max-w-7xl mx-auto mb-4 md:hidden">
+                    <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-xl bg-yellow-100/50 border-2 border-[#006C35] transition-all">
+                        {blog.image_url ? (
+                            <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                <i className="fa-solid fa-image text-5xl"></i>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Metadata & Share Row (collapses when scrolled) */}
+                <div className={`px-6 max-w-7xl mx-auto overflow-hidden transition-all duration-300 ${scrolled ? 'max-h-0 opacity-0 pointer-events-none mt-0' : 'max-h-40 opacity-100 mt-2'}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        {/* Left: Category tag, date, minutes read */}
+                        <div className="flex flex-wrap items-center gap-3 text-xs md:text-sm text-gray-500 font-medium font-body">
+                            {blog.category && (
+                                <span className="bg-[#006C35]/10 text-[#006C35] font-bold text-xs px-4 py-1.5 rounded-full uppercase tracking-wider border border-[#006C35]/15 flex items-center gap-1.5">
+                                    <i className="fa-solid fa-tags text-[#F6B000]"></i>
+                                    {blog.category}
+                                </span>
+                            )}
+                            <span><i className="fa-regular fa-calendar mr-1.5"></i>{new Date(blog.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                            <span>•</span>
+                            <span><i className="fa-regular fa-clock mr-1.5"></i>{Math.max(1, Math.ceil(blog.content.length / 1000))} min read</span>
                         </div>
-                    )}
 
-                    <div className="flex items-center justify-center gap-4 text-gray-500 font-body text-xs md:text-sm font-medium">
-                        <span><i className="fa-regular fa-calendar mr-2"></i>{new Date(blog.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                        <span>•</span>
-                        <span><i className="fa-regular fa-clock mr-2"></i>{Math.max(1, Math.ceil(blog.content.length / 1000))} min read</span>
+                        {/* Right: WhatsApp Share Button */}
+                        <button
+                            onClick={shareOnWhatsApp}
+                            className="hidden sm:inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap self-start sm:self-auto"
+                        >
+                            <i className="fa-brands fa-whatsapp text-sm"></i> Share on WhatsApp
+                        </button>
                     </div>
                 </div>
             </div>
 
-            {/* Featured Image - Responsive Small Size on Desktop, Standard aspect ratio on Mobile */}
-            <div className="max-w-4xl mx-auto px-6 mb-12">
-                <div className="w-full md:max-w-2xl md:mx-auto aspect-video md:aspect-[16/10] md:max-h-[380px] rounded-3xl overflow-hidden shadow-2xl bg-yellow-100 backdrop-blur-sm border-4 border-[#006C35]">
-                    {blog.image_url ? (
-                        <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-300">
-                            <i className="fa-solid fa-image text-8xl"></i>
-                        </div>
-                    )}
+            {/* Main Content Layout */}
+            <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
+                {/* Left Column (Sticky Image on Desktop, hidden on Mobile because it's in the sticky header) */}
+                <div className="hidden md:block md:sticky md:top-[260px] z-20 w-full">
+                    <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl bg-yellow-100/50 border-4 border-[#006C35] transition-all">
+                        {blog.image_url ? (
+                            <img src={blog.image_url} alt={blog.title} className="w-full h-full object-cover" />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-300">
+                                <i className="fa-solid fa-image text-8xl"></i>
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            {/* Content Container */}
-            <div className="max-w-3xl mx-auto px-6">
-                <div
-                    className="prose prose-lg prose-green max-w-none prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-dark prose-p:font-body prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl"
-                    dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.content) }}
-                />
+                {/* Right Column (Scrollable Content) */}
+                <div className="w-full">
+                    <div
+                        className="prose prose-lg prose-green max-w-none prose-headings:font-heading prose-headings:font-bold prose-headings:text-text-dark prose-p:font-body prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl"
+                        dangerouslySetInnerHTML={{ __html: formatBlogContent(blog.content) }}
+                    />
 
                 {/* Hashtags and Share Row */}
                 <div className="mt-16 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -347,6 +386,7 @@ export default function BlogDetailPage() {
                         </button>
                     </div>
                 </div>
+            </div>
             </div>
 
             {/* CTA */}
