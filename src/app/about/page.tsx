@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+// ✅ Fix
+import { AnimatePresence, motion, type MotionProps } from 'framer-motion';
 type Tab = 'story' | 'team' | 'gallery' | 'visit';
 
 function ExpandableParagraph({ children, className = "" }: { children: string; className?: string }) {
