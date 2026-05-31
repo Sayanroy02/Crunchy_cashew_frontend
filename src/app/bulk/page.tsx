@@ -928,37 +928,37 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                     <p className="text-gray-500 text-xs leading-relaxed max-w-xs font-medium text-center">
                         We solve the most common B2B cashew supply chain headaches so you can focus entirely on growing your brand.
                     </p>
-
-                    {/* CTA Buttons - Side by Side */}
-                    <div className="flex flex-row flex-wrap items-center justify-center gap-3 mt-1 pt-3 border-t border-gray-100 w-full">
-                        <button
-                            onClick={() => {
-                                openWhatsApp(
-                                    'why choose Us Section',
-                                    undefined,
-                                    'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
-                                );
-                            }}
-                            className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 text-xs whitespace-nowrap"
-                        >
-                            <i className="fa-brands fa-whatsapp text-sm" />
-                            Request bulk pricing
-                        </button>
-                        <button
-                            onClick={() => {
-                                document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                            className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 text-xs whitespace-nowrap"
-                            style={{ borderColor: COLORS.heading, color: COLORS.heading }}
-                        >
-                            Explore Grades
-                        </button>
-                    </div>
                 </div>
 
                 {/* Card stack (Accordion on mobile) */}
                 <div className="w-full">
                     {renderAccordion()}
+                </div>
+
+                {/* CTA Buttons - Side by Side (Moved after the cards in mobile view) */}
+                <div className="flex flex-row flex-wrap items-center justify-center gap-3 mt-1 pt-3 border-t border-gray-100 w-full">
+                    <button
+                        onClick={() => {
+                            openWhatsApp(
+                                'why choose Us Section',
+                                undefined,
+                                'Hello 👋 I’m interested in learning more about your bulk pricing options. Could you please share details regarding pricing tiers, minimum order quantities, and any available discounts?'
+                            );
+                        }}
+                        className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 text-xs whitespace-nowrap"
+                    >
+                        <i className="fa-brands fa-whatsapp text-sm" />
+                        Request bulk pricing
+                    </button>
+                    <button
+                        onClick={() => {
+                            document.getElementById('our-grades-section')?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        className="bg-transparent p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold tracking-wide transition-all hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 border-2 text-xs whitespace-nowrap"
+                        style={{ borderColor: COLORS.heading, color: COLORS.heading }}
+                    >
+                        Explore Grades
+                    </button>
                 </div>
             </div>
 

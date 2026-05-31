@@ -51,10 +51,9 @@ const SplashScreen = () => {
                     initial={{ opacity: 1 }}
                     exit={{
                         opacity: 0,
-                        filter: 'blur(10px)',
-                        scale: 1.1
+                        scale: 0.98
                     }}
-                    transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
+                    transition={{ duration: 0.5, ease: [0.43, 0.13, 0.23, 0.96] }}
                     className="fixed inset-0 z-[9999] bg-white flex items-center justify-center overflow-hidden"
                 >
                     {/* Background overlay */}
@@ -65,10 +64,11 @@ const SplashScreen = () => {
                             autoPlay
                             muted
                             playsInline
+                            preload="auto"
                             onEnded={handleClose}
                             className="w-full h-auto max-h-[70vh] object-contain"
                         >
-                            <source src="/videos/min_1_1-transcode.webm" type="video/webm" />
+                            <source src="https://res.cloudinary.com/da1acfqsn/video/upload/v1780232762/min_1_1-transcode_uwxy62.webm" type="video/webm" />
                             Your browser does not support the video tag.
                         </video>
                     </div>

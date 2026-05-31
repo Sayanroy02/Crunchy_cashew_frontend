@@ -52,6 +52,68 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://crunchycashews.com/#website",
+                  "url": "https://crunchycashews.com",
+                  "name": "Crunchy Cashews",
+                  "description": "Best Cashew Factory & Distributor in India",
+                  "publisher": {
+                    "@type": "Organization",
+                    "name": "Crunchy Cashews",
+                    "logo": {
+                      "@type": "ImageObject",
+                      "url": "https://crunchycashews.com/images/cc-Logo-01-1.png"
+                    }
+                  }
+                },
+                {
+                  "@type": "ItemList",
+                  "@id": "https://crunchycashews.com/#sitenavigation",
+                  "name": "Main Navigation",
+                  "itemListElement": [
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 1,
+                      "name": "Shop",
+                      "url": "https://crunchycashews.com/shop"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 2,
+                      "name": "B2B",
+                      "url": "https://crunchycashews.com/bulk"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 3,
+                      "name": "About Us",
+                      "url": "https://crunchycashews.com/about"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 4,
+                      "name": "Blogs",
+                      "url": "https://crunchycashews.com/blogs"
+                    },
+                    {
+                      "@type": "SiteNavigationElement",
+                      "position": 5,
+                      "name": "Contact",
+                      "url": "https://crunchycashews.com/contact"
+                    }
+                  ]
+                }
+              ]
+            })
+          }}
+        />
       </head>
       <body suppressHydrationWarning
         className={`${montserrat.variable} font-sans antialiased`}
