@@ -421,7 +421,7 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
         },
         {
             title: 'Hotels & Restaurants',
-            image: '/images/horeca.png',
+            image: '/images/hotelsandrestro.png',
             message: "Hello,\nI’m interested in sourcing your products for our hotel/restaurant. Could you please provide details on bulk pricing, supply capacity, and delivery options?\nLooking forward to your response. Thank you!"
         },
         {
@@ -783,8 +783,8 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
             {pillars.map((pillar, idx) => {
                 const isExpanded = expandedIdx === idx;
                 return (
-                    <div 
-                        key={idx} 
+                    <div
+                        key={idx}
                         className="bg-white rounded-2xl border border-gray-150 overflow-hidden shadow-sm transition-all duration-300"
                         style={{ borderColor: isExpanded ? `${COLORS.heading}40` : '#f3f4f6' }}
                     >
@@ -803,7 +803,7 @@ function WhyPartnerWithUsSection({ openWhatsApp }: { openWhatsApp: (source: stri
                                 <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 text-xs ${isExpanded ? 'rotate-180 text-black' : ''}`} />
                             </div>
                         </button>
-                        
+
                         {/* Expandable Content Container */}
                         <AnimatePresence initial={false}>
                             {isExpanded && (
