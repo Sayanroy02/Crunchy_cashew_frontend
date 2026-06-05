@@ -155,7 +155,7 @@ export default function AboutFactory() {
                     {/* 3. Content Section */}
                     <div className="w-full lg:w-1/2 flex flex-col items-start text-left">
                         <p className="text-gray-700 text-lg md:text-xl mb-4 md:mb-6 leading-relaxed font-normal">
-                            <span style={{ color: COLORS.heading, fontSize: "1.55rem", }} className="font-bold block lg:inline">Quality isn't just a promise; it's a process.</span> We maintain rigorous control over every stage of premium cashew production.
+                            <span style={{ color: COLORS.heading }} className="font-bold inline">Quality isn't just a promise; it's a process.</span> We maintain rigorous control over every stage of premium cashew production.
                             {!readMore && (
                                 <button
                                     type="button"

@@ -445,9 +445,7 @@ function CTABanner({ onOpenPopup }: { onOpenPopup: () => void }) {
                             WebkitBackdropFilter: 'blur(12px)',
                         }}
                     >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3" />
-                        </svg>
+                        <i className="fa-regular fa-file-pdf text-lg" />
                         Download B2B Catalog
                     </motion.a>
 

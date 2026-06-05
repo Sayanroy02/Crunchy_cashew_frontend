@@ -268,7 +268,7 @@ export default function BlogDetailPage() {
             <div className="h-20 w-full" />
 
             {/* Sticky Header Container */}
-            <div className="sticky top-[80px] z-30 bg-[#FFF9E7]/95 backdrop-blur-md border-b border-gray-200/60 shadow-sm pt-8 pb-4 mb-10 transition-all duration-300">
+            <div className="lg:sticky lg:top-[80px] relative z-30 bg-[#FFF9E7]/95 backdrop-blur-md border-b border-gray-200/60 shadow-sm pt-8 pb-4 mb-10 transition-all duration-300">
                 {/* Back Button and Title on top */}
                 <div className="px-6 max-w-7xl mx-auto mb-4">
                     <div className="flex items-center gap-4 md:gap-6 relative z-10 text-left">
@@ -390,8 +390,8 @@ export default function BlogDetailPage() {
             </div>
 
             {/* CTA */}
-            <div className={`max-w-4xl mx-auto px-6 mt-24`}>
-                <div className="relative bg-[#006C35] rounded-3xl p-10 shadow-[0_20px_50px_rgba(0,108,53,0.25)] border border-[#008744]/20 overflow-hidden flex flex-col items-center text-center">
+            <div className={`max-w-7xl mx-auto px-6 mt-16`}>
+                <div className="relative bg-[#006C35] rounded-3xl p-6 md:py-4 md:px-10 shadow-[0_20px_50px_rgba(0,108,53,0.25)] border border-[#008744]/20 overflow-hidden flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4 md:gap-6">
                     {/* Dotted Grid Background */}
                     <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.8) 1.5px, transparent 1.5px)', backgroundSize: '20px 20px' }}></div>
 
@@ -400,24 +400,28 @@ export default function BlogDetailPage() {
                     <div className="absolute -left-24 -bottom-24 w-96 h-96 bg-[#008744]/30 rounded-full blur-3xl pointer-events-none"></div>
 
                     {/* Content Column */}
-                    <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
+                    <div className="relative z-10 flex flex-col items-center md:items-start">
                         {/* Premium Badge */}
-                        <div className="inline-flex items-center gap-2 bg-[#004d26]/80 border border-[#FFC72C]/40 text-[#FFC72C] text-[10px] md:text-xs px-3.5 py-1 rounded-full font-bold uppercase tracking-widest mb-4">
-                            <i className="fa-solid fa-award text-amber-400"></i> Premium Quality • Factory Direct
+                        <div className="flex items-center justify-center md:justify-start gap-3 text-[#FFC72C] text-[9px] md:text-[10px] font-bold uppercase tracking-widest mb-2">
+                            <div className="h-[1px] w-4 md:w-6 bg-[#FFC72C]/50" />
+                            <span>Premium Quality • Factory Direct</span>
+                            <div className="h-[1px] w-4 md:w-6 bg-[#FFC72C]/50" />
                         </div>
 
-                        <h2 className="text-2xl md:text-3xl font-heading font-extrabold text-white mb-2 leading-tight">
+                        <h2 className="text-xl md:text-2xl font-heading font-extrabold text-white mb-1 leading-tight">
                             Taste the <span className="text-[#FFC72C]">Quality Yourself</span>
                         </h2>
 
-                        <p className="text-white/80 font-body font-medium text-xs md:text-sm max-w-md mb-6">
-                            Order our premium, freshly roasted cashews direct from the factory.
+                        <p className="text-white/80 font-body font-medium text-xs">
+                            Buy Export-Quality Cashews Direct from Factory
                         </p>
+                    </div>
 
-                        <Link href="/shop" className="inline-flex items-center gap-2 bg-[#FFC72C] hover:bg-[#FFD15C] text-black font-extrabold uppercase tracking-wider px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_8px_20px_rgba(255,199,44,0.25)] group text-xs md:text-sm">
+                    <div className="relative z-10 flex-shrink-0">
+                        <Link href="/shop" className="inline-flex items-center gap-2 bg-[#FFC72C] hover:bg-[#FFD15C] text-black font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_8px_20px_rgba(255,199,44,0.25)] group text-xs">
                             <i className="fa-solid fa-cart-shopping transition-transform duration-300 group-hover:-translate-y-0.5 mr-1"></i>
                             Shop Now
-                            <i className="fa-solid fa-chevron-right text-[10px] font-black transition-transform duration-300 group-hover:translate-x-1 ml-1"></i>
+                            <i className="fa-solid fa-chevron-right text-[9px] font-black transition-transform duration-300 group-hover:translate-x-1 ml-1"></i>
                         </Link>
                     </div>
                 </div>

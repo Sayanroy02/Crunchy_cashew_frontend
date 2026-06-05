@@ -198,7 +198,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Mobile header — always white, black icons */}
-                <div className="md:hidden flex items-center justify-between px-4 py-3">
+                <div className="md:hidden flex items-center justify-between px-4 py-1.5">
                     {/* Hamburger */}
                     <button
                         onClick={() => setMobileOpen(true)}
@@ -213,7 +213,7 @@ export default function Navbar() {
                         <img
                             src="/images/cc-Logo-01-1.png"
                             alt="Crunchy Cashews"
-                            className="h-10 object-contain"
+                            className="h-[50px] object-contain"
                         />
                     </Link>
 
@@ -265,7 +265,7 @@ export default function Navbar() {
                                     key={item.href}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold text-sm transition-colors
-                                        ${isActive(item.href) && item.href !== '/'
+                                        ${isActive(item.href)
                                             ? 'bg-primary/10 text-primary'
                                             : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
                                         }`}

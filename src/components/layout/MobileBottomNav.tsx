@@ -42,10 +42,10 @@ export default function MobileBottomNav() {
     ];
 
     return (
-        <div 
+        <div
             className={`md:hidden fixed bottom-4 left-4 right-4 z-[90] transition-all duration-500 ease-out transform
-                ${isVisible 
-                    ? 'opacity-100 translate-y-0 pointer-events-auto' 
+                ${isVisible
+                    ? 'opacity-100 translate-y-0 pointer-events-auto'
                     : 'opacity-0 translate-y-10 pointer-events-none'
                 }`}
         >
@@ -66,7 +66,7 @@ export default function MobileBottomNav() {
                     }
 
                     return (
-                        <Link key={item.label} href={item.href} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-2xl transition-all ${isActive ? 'text-[#00863D]' : 'text-gray-400 hover:text-gray-900'}`}>
+                        <Link key={item.label} href={item.href} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-2xl transition-all ${isActive ? 'text-[#00863D]' : 'text-gray-700 hover:text-[#00863D] active:text-[#00863D]'}`}>
                             <i className={`fa-solid ${item.icon} text-[18px]`} />
                             <span className="text-[9px] font-bold tracking-wide uppercase mt-1 truncate w-full text-center px-1">{item.label}</span>
                         </Link>

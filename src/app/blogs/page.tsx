@@ -94,7 +94,7 @@ export default function BlogsDirectory() {
     return (
         <div className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
             {/* Hero Header */}
-            <section className="relative z-50 h-[450px] md:h-[550px] flex items-center justify-center">
+            <section className="relative z-50 h-[450px] md:h-[550px] flex items-center justify-center pt-10 md:pt-16">
                 {/* Background Image */}
                 <div className="absolute inset-0 z-0">
                     <img
