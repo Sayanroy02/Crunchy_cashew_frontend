@@ -152,7 +152,7 @@ export default function ProductGallery({ images, name, videoUrl }: ProductGaller
             )}
 
             {/* Main Display Container */}
-            <div className={`order-1 md:order-2 relative flex-1 flex justify-center bg-gray-50/50 rounded-3xl overflow-hidden min-h-[400px] md:min-h-[500px] ${activeItem.type === 'video' ? 'items-start pt-4 md:pt-8' : 'items-center'}`}>
+            <div className={`order-1 md:order-2 relative flex-1 flex justify-center bg-gray-50/50 rounded-3xl overflow-hidden min-h-[300px] md:min-h-[500px] items-center`}>
                 {activeItem.type === 'image' ? (
                     <Image
                         src={optimizeCloudinary(activeItem.url)}
@@ -167,10 +167,10 @@ export default function ProductGallery({ images, name, videoUrl }: ProductGaller
                         <iframe
                             src={activeItem.url}
                             title={`${name} product video`}
-                            className="aspect-[9/16] rounded-2xl shadow-lg border-0 bg-transparent"
+                            className="aspect-[16/9] md:aspect-[9/16] w-full md:w-auto h-auto md:h-[520px] rounded-2xl shadow-lg border-0 bg-black"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowFullScreen
-                            style={{ height: '440px', maxHeight: '85vh' }}
+                            style={{ maxHeight: '85vh' }}
                         ></iframe>
                     </div>
                 )}
