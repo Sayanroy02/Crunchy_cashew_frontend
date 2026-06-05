@@ -6,30 +6,21 @@ import Link from 'next/link';
 
 export default function HeroVideo() {
     const desktopVideoRef = useRef<HTMLVideoElement>(null);
-    const mobileVideoRef = useRef<HTMLVideoElement>(null);
 
-    // Desktop: always visible. Mobile: reveals after 5s.
+    // Desktop: always visible. Mobile: visible immediately now that it's a static image.
     const [mobileContentVisible, setMobileContentVisible] = useState(false);
     const [videoLoaded, setVideoLoaded] = useState(false);
     const [videoError, setVideoError] = useState(false);
 
     useEffect(() => {
-        const isMobile = window.matchMedia('(max-width: 767px)').matches;
-
-        // Play video immediately on both
+        // Play video immediately on desktop
         const desktopV = desktopVideoRef.current;
-        if (desktopV) { desktopV.muted = true; desktopV.play().catch(() => { }); }
-
-        const mobileV = mobileVideoRef.current;
-        if (mobileV) { mobileV.muted = true; mobileV.play().catch(() => { }); }
-
-        // Only delay content reveal on mobile
-        if (isMobile) {
-            const timer = setTimeout(() => setMobileContentVisible(true), 5000);
-            return () => clearTimeout(timer);
-        } else {
-            setMobileContentVisible(true);
+        if (desktopV) { 
+            desktopV.muted = true; 
+            desktopV.play().catch(() => { }); 
         }
+
+        setMobileContentVisible(true);
     }, []);
 
     // Shared stagger style helper
@@ -67,23 +58,22 @@ export default function HeroVideo() {
                 className="absolute inset-0 w-full h-full object-cover hidden md:block object-[100%_top] lg:object-[35%_top]"
             />
 
-            {/* ── Mobile Video ── */}
-            <video
-                ref={mobileVideoRef}
-                src="https://res.cloudinary.com/da1acfqsn/video/upload/v1780056625/Social_Media_Video_Ads_KqlKM4R3_kgnpez_eplmup.mp4"
-                muted
-                playsInline
-                preload="none"
-                onPlay={() => setVideoLoaded(true)}
-                onError={() => setVideoError(true)}
-                className="absolute inset-0 w-full h-full object-cover md:hidden"
-                style={{ objectPosition: 'center center' }}
-            />
+            {/* ── Mobile Background Image ── */}
+            <div className="absolute inset-0 md:hidden">
+                <Image
+                    src="https://res.cloudinary.com/da1acfqsn/image/upload/v1780641655/ChatGPT_Image_Jun_5_2026_12_10_35_PM_tkpnj7.png"
+                    alt="Crunchy Cashews Premium Nuts Mobile Hero"
+                    fill
+                    priority
+                    sizes="100vw"
+                    className="object-cover object-center"
+                />
+            </div>
 
             {/* ── Mobile overlay ── */}
             <div
                 className="absolute inset-0 md:hidden pointer-events-none"
-                style={{ background: 'rgba(10,4,0,0.60)' }}
+                style={{ background: 'rgba(10,4,0,0.40)' }}
             />
 
             {/* ── Desktop overlay ── */}
@@ -141,29 +131,16 @@ export default function HeroVideo() {
 
             {/* ════════════════════
                 MOBILE: Bottom block
-                Tagline + Badges + Buttons pinned below the packet (~bottom 10%)
+                Badges + Buttons pinned below the packet (~bottom 5%)
             ════════════════════ */}
             <div
                 className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
-                style={{ bottom: '10%' }}
+                style={{ bottom: '5%' }}
             >
-                {/* Tagline */}
-                <p
-                    className="text-white/80 font-medium leading-relaxed mb-4"
-                    style={{
-                        fontSize: 'clamp(0.82rem, 3.5vw, 0.95rem)',
-                        maxWidth: '300px',
-                        ...stagger(0.22, mobileContentVisible),
-                    }}
-                >
-                    Hand-picked, roasted to perfection.<br />
-                    Delivered fresh from our factory in Siliguri to your door.
-                </p>
-
                 {/* Trust badges */}
                 <div
                     className="flex items-center justify-center gap-5 mb-5"
-                    style={stagger(0.32, mobileContentVisible)}
+                    style={stagger(0.22, mobileContentVisible)}
                 >
                     {[
                         { icon: 'fa-shield-halved', text: 'FSSAI' },

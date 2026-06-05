@@ -584,6 +584,24 @@ function OurGradesSection({
 
     const activeCategory = gradeCategories.find(c => c.id === activeTab) || gradeCategories[0];
 
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                window.scrollBy({
+                    top: e.deltaY,
+                    behavior: 'auto'
+                });
+            }
+        };
+
+        el.addEventListener('wheel', handleWheel, { passive: false });
+        return () => el.removeEventListener('wheel', handleWheel);
+    }, [activeTab]);
+
     const scroll = (dir: 'left' | 'right') => {
         if (!scrollRef.current) return;
         const firstCard = scrollRef.current.firstElementChild as HTMLElement;
@@ -653,7 +671,7 @@ function OurGradesSection({
                     <div className="w-full">
                         <div
                             ref={scrollRef}
-                            className="flex gap-6 overflow-x-auto no-scrollbar pb-4"
+                            className="flex gap-6 overflow-x-auto md:overflow-x-hidden no-scrollbar pb-4"
                             style={{ scrollSnapType: 'x mandatory' }}
                         >
                             {activeCategory.items.map((item) => (

@@ -58,7 +58,7 @@ export default function AboutFactory() {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    el.src = 'https://res.cloudinary.com/da1acfqsn/video/upload/v1780233343/cashew-video_ozfhji.webm';
+                    el.src = 'https://res.cloudinary.com/da1acfqsn/video/upload/v1780639577/cashew-video_ozfhji_mqqjas.mp4';
                     el.play().catch(() => { });
                 } else {
                     el.pause();
