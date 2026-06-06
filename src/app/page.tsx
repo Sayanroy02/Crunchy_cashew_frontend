@@ -18,6 +18,8 @@ import AnimatedFlyingImage from "@/components/home/AnimatedFlyingImage";
 import SectionDecoration from "@/components/ui/SectionDecoration";
 import WhiteLabelBanner from "@/components/home/WhiteLabelBanner";
 import { COLORS } from "@/constants/styles";
+import SectionHeading from "@/components/ui/SectionHeading";
+import TrustedMarquee from "@/components/home/TrustedMarquee";
 // import SectionDivider from "@/components/ui/SectionDivider";
 
 
@@ -42,19 +44,34 @@ export default function Home() {
         {/* PriceComparison */}
         <PriceComparisonPreview />
 
-        <AnimatedFlyingImage />
+
+        <AboutFactory />
 
         {/* BulkOrder */}
         <BulkOrderCard />
 
+        <AnimatedFlyingImage />
+
         <InstaVideos />
-        <AboutFactory />
+        <section className={`w-full py-5 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
+          <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
+            <SectionHeading
+              text="Trusted by India's"
+              highlight="Leading Businesses"
+              className="mb-3 !text-[24px] md:!text-4xl"
+            />
+          </div>
+
+
+          {/* Infinite Marquee */}
+          <TrustedMarquee />
+        </section>
 
         {/* Testimonials */}
         <Testimonials />
 
         {/* White Labelling Banner */}
-        <WhiteLabelBanner />
+        {/* <WhiteLabelBanner /> */}
 
 
         <BlogsPreview />

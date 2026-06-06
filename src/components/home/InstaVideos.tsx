@@ -193,7 +193,7 @@ export default function InstaVideos() {
         <section className="py-10 md:py-12 bg-bg-cream overflow-hidden relative">
 
             {/* Flying Parachute Decoration */}
-            <motion.div
+            {/* <motion.div
                 initial={{ y: 0, x: 0 }}
                 animate={{
                     y: [0, -10, 0],
@@ -212,7 +212,7 @@ export default function InstaVideos() {
                     alt=""
                     className="w-full h-auto drop-shadow-2xl opacity-90"
                 />
-            </motion.div>
+            </motion.div> */}
 
             <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
                 <div className="text-center mb-8 flex flex-col items-center">
@@ -227,7 +227,7 @@ export default function InstaVideos() {
 
                 <div
                     ref={scrollRef}
-                    className="flex md:grid md:grid-cols-4 gap-3 overflow-x-auto pb-3 snap-x snap-mandatory no-scrollbar"
+                    className="flex md:grid md:grid-cols-4 gap-6 overflow-x-auto pb-3 snap-x snap-mandatory no-scrollbar"
                 >
                     {videos.map((video) => (
                         <VideoItem
