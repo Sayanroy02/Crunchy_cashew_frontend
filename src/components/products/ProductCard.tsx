@@ -131,7 +131,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100 h-full">
             <Link
-                href={`/shop/${product.id || product._id}`}
+                href={`/our-product/${product.id || product._id}`}
                 className="relative w-full aspect-square bg-[#f8faf9] py-4 px-3 flex justify-center items-center overflow-hidden"
             >
                 <Image
@@ -171,7 +171,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </Link>
 
             <div className="p-3 md:p-5 flex flex-col flex-grow bg-white">
-                <Link href={`/shop/${product.id || product._id}`}>
+                <Link href={`/our-product/${product.id || product._id}`}>
                     <div className="text-[9px] md:text-xs font-bold text-black opacity-60 uppercase tracking-wider mb-0.5 md:mb-1">{product.category}</div>
                     <h3 className="text-sm md:text-base font-heading font-bold text-black mb-2 md:mb-3 line-clamp-2 leading-tight hover:text-primary transition-colors">
                         {product.name.length > 20 ? `${product.name.slice(0, 20)}...` : product.name} <span className="ml-1 font-black shrink-0" style={{ color: COLORS.heading }}>({selectedVariant.size})</span>

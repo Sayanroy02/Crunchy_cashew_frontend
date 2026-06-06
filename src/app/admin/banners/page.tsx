@@ -139,7 +139,7 @@ export default function AdminBanners() {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Redirect Link (Optional)</label>
-                                <input type="text" value={link} onChange={e => setLink(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:border-primary outline-none" placeholder="/shop?category=sale" />
+                                <input type="text" value={link} onChange={e => setLink(e.target.value)} className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:border-primary outline-none" placeholder="/our-product?category=sale" />
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Image Bundle</label>
