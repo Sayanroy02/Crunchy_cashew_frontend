@@ -201,6 +201,22 @@ export default function AboutPage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('id') || params.get('tab');
+      if (tabParam === 'gallery') {
+        setActiveTab('gallery');
+      } else if (tabParam === 'team') {
+        setActiveTab('team');
+      } else if (tabParam === 'visit') {
+        setActiveTab('visit');
+      } else if (tabParam === 'story') {
+        setActiveTab('story');
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const t = setTimeout(() => setIsLoading(false), 700);
     return () => clearTimeout(t);
   }, []);

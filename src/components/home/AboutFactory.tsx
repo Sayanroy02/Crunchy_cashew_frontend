@@ -193,11 +193,11 @@ export default function AboutFactory() {
                                 Schedule a Visit
                             </button>
                             <Link
-                                href="/about"
+                                href="/about?id=gallery"
                                 className="bg-transparent border-2 p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 hover:bg-black/5"
                                 style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                             >
-                                Our Story
+                                Gallery
                             </Link>
                         </div>
 
