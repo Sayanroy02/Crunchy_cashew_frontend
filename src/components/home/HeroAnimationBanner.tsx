@@ -15,9 +15,9 @@ export default function HeroVideo() {
     useEffect(() => {
         // Play video immediately on desktop
         const desktopV = desktopVideoRef.current;
-        if (desktopV) { 
-            desktopV.muted = true; 
-            desktopV.play().catch(() => { }); 
+        if (desktopV) {
+            desktopV.muted = true;
+            desktopV.play().catch(() => { });
         }
 
         setMobileContentVisible(true);
@@ -102,25 +102,25 @@ export default function HeroVideo() {
             ════════════════════ */}
             <div
                 className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
-                style={{ top: '13%' }}
+                style={{ top: '14px' }}
             >
                 {/* Eyebrow */}
                 <div
-                    className="flex items-center gap-2 mb-3"
+                    className="flex items-center gap-2 mb-2"
                     style={stagger(0.05, mobileContentVisible)}
                 >
-                    <span className="h-[2px] w-5 bg-amber rounded-full" />
-                    <span className="text-amber text-[10px] font-black uppercase tracking-[.18em]">
+                    <span className="h-[2px] w-4 bg-amber rounded-full" />
+                    <span className="text-amber text-[9px] min-[360px]:text-[10px] font-black uppercase tracking-[.18em]">
                         Premium Cashews · Since 2018
                     </span>
-                    <span className="h-[2px] w-5 bg-amber rounded-full" />
+                    <span className="h-[2px] w-4 bg-amber rounded-full" />
                 </div>
 
                 {/* H1 */}
                 <h1
                     className="text-white font-black leading-[1.0] tracking-tight"
                     style={{
-                        fontSize: 'clamp(2.0rem, 4vw, 4rem)',
+                        fontSize: 'clamp(1.4rem, 8.5vw, 2.4rem)',
                         ...stagger(0.14, mobileContentVisible),
                     }}
                 >
@@ -131,38 +131,19 @@ export default function HeroVideo() {
 
             {/* ════════════════════
                 MOBILE: Bottom block
-                Badges + Buttons pinned below the packet (~bottom 5%)
+                Buttons pinned below the packet (~bottom 5%)
             ════════════════════ */}
             <div
                 className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
                 style={{ bottom: '5%' }}
             >
-                {/* Trust badges */}
-                <div
-                    className="flex items-center justify-center gap-5 mb-5"
-                    style={stagger(0.22, mobileContentVisible)}
-                >
-                    {[
-                        { icon: 'fa-shield-halved', text: 'FSSAI' },
-                        { icon: 'fa-truck-fast', text: 'Pan India' },
-                        { icon: 'fa-leaf', text: 'Natural' },
-                    ].map(b => (
-                        <div key={b.text} className="flex items-center gap-1.5">
-                            <i className={`fa-solid ${b.icon} text-amber text-xs`} />
-                            <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">
-                                {b.text}
-                            </span>
-                        </div>
-                    ))}
-                </div>
-
                 {/* CTA buttons */}
                 <div
                     className="flex items-center justify-center w-full"
                     style={{
                         opacity: mobileContentVisible ? 1 : 0,
                         transform: mobileContentVisible ? 'translateY(0px) scale(1)' : 'translateY(12px) scale(0.95)',
-                        transition: 'opacity 0.7s 0.42s ease, transform 0.7s 0.42s cubic-bezier(0.34,1.56,0.64,1)',
+                        transition: 'opacity 0.7s 0.22s ease, transform 0.7s 0.22s cubic-bezier(0.34,1.56,0.64,1)',
                     }}
                 >
                     <Link

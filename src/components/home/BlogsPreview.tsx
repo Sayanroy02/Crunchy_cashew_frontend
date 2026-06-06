@@ -46,12 +46,12 @@ export default function BlogsPreview() {
                 </div>
 
                 {/* Cards Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogs.map((blog, index) => (
+                <div className="flex overflow-x-auto pb-6 -mx-6 px-6 gap-6 md:mx-0 md:px-0 md:pb-0 scrollbar-hide snap-x md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+                    {blogs.map((blog) => (
                         <BlogCard
                             key={blog._id}
                             blog={blog}
-                            className={index !== 0 ? 'hidden md:flex' : ''}
+                            className="min-w-[85%] sm:min-w-[350px] md:min-w-0 snap-center"
                         />
                     ))}
                 </div>
@@ -60,7 +60,7 @@ export default function BlogsPreview() {
                 <div className="flex md:hidden justify-center mt-8">
                     <Link
                         href="/blogs"
-                        className="bg-green-700 text-white p-4 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap animate-pulse"
+                        className="bg-green-700 text-white p-4 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap"
                     >
                         View All Articles
                         <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />

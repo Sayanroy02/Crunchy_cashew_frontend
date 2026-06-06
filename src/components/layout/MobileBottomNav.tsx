@@ -57,7 +57,7 @@ export default function MobileBottomNav() {
                         return (
                             <div key={item.label} className="flex-1 flex justify-center">
                                 <Link href={item.href} className="relative -top-6 flex flex-col items-center justify-center">
-                                    <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-[4px] border-[#FFF9E7] transition-transform active:scale-95 ${isActive ? 'bg-[#00863D] text-white shadow-[#00863D]/40' : 'bg-[#F6B000] text-black shadow-[#F6B000]/40'}`}>
+                                    <div className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg border-[4px] border-[#FFF9E7] transition-transform active:scale-95 bg-[#00863D] text-white shadow-[#00863D]/40">
                                         <i className={`fa-solid ${item.icon} text-xl`} />
                                     </div>
                                 </Link>

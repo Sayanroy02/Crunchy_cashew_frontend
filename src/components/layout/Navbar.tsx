@@ -161,11 +161,11 @@ export default function Navbar() {
                             href={isAuthenticated ? '/profile' : '/login'}
                             className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
                         >
-                            <i 
-                                className={`text-lg ${isAuthenticated ? 'fa-solid fa-user' : 'fa-regular fa-user'}`} 
+                            <i
+                                className={`text-lg ${isAuthenticated ? 'fa-solid fa-user' : 'fa-regular fa-user'}`}
                                 style={{ color: COLORS.heading }}
                             />
-                            <span 
+                            <span
                                 className="text-[10px] font-semibold uppercase tracking-wide"
                                 style={{ color: COLORS.heading }}
                             >
@@ -295,13 +295,15 @@ export default function Navbar() {
                                     <>
                                         <Link
                                             href="/login"
-                                            className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl bg-primary text-white font-bold text-sm"
+                                            className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-white font-bold text-sm"
+                                            style={{ backgroundColor: COLORS.heading }}
                                         >
                                             <i className="fa-solid fa-right-to-bracket" /> Sign In
                                         </Link>
                                         <Link
                                             href="/register"
-                                            className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border-2 border-primary text-primary font-bold text-sm"
+                                            className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border-2 font-bold text-sm"
+                                            style={{ borderColor: COLORS.heading, color: COLORS.heading }}
                                         >
                                             <i className="fa-solid fa-user-plus" /> Create Account
                                         </Link>
