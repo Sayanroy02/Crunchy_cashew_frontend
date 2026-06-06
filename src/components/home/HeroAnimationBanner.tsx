@@ -147,7 +147,7 @@ export default function HeroVideo() {
                     }}
                 >
                     <Link
-                        href="/shop"
+                        href="/our-product"
                         aria-label="Shop premium cashews online"
                         className="group inline-flex items-center justify-center gap-2
                             bg-amber hover:bg-yellow active:scale-[0.97]
@@ -213,7 +213,7 @@ export default function HeroVideo() {
 
                         <div className="flex items-center gap-3">
                             <Link
-                                href="/shop"
+                                href="/our-product"
                                 aria-label="Shop premium cashews online"
                                 className="group inline-flex items-center justify-center gap-2
                                     bg-amber hover:bg-yellow active:scale-[0.97]

@@ -96,7 +96,7 @@ export default function RootLayout({
                       "@type": "SiteNavigationElement",
                       "position": 1,
                       "name": "Shop",
-                      "url": "https://crunchycashews.com/shop"
+                      "url": "https://crunchycashews.com/our-product"
                     },
                     {
                       "@type": "SiteNavigationElement",
@@ -120,7 +120,7 @@ export default function RootLayout({
                       "@type": "SiteNavigationElement",
                       "position": 5,
                       "name": "Contact",
-                      "url": "https://crunchycashews.com/contact"
+                      "url": "https://crunchycashews.com/contact-us"
                     }
                   ]
                 }

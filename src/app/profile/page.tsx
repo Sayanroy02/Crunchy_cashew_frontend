@@ -768,7 +768,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                        <button onClick={() => router.push('/shop')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
+                        <button onClick={() => router.push('/our-product')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
                             <i className="fa-solid fa-basket-shopping" /> Continue Shopping
                         </button>
                         <div className="flex gap-2 justify-stretch sm:justify-end sm:flex-1">

@@ -21,7 +21,7 @@ export default function ParallaxHero() {
                     We are the leading cashew factory and wholesale distributor in West Bengal, India. Sourcing premium farm-wild nuts worldwide since 2010.
                 </p>
                 <Link
-                    href="/shop"
+                    href="/our-product"
                     className="inline-block bg-gradient-to-r from-primary to-green-700 text-white font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:shadow-green-900/50 hover:-translate-y-1 transition-all duration-300"
                 >
                     Shop Now

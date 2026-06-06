@@ -32,7 +32,7 @@ function OrderSuccessContent() {
                         className="block border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary/5 transition flex items-center justify-center gap-2 text-sm">
                         <i className="fa-solid fa-file-pdf"></i> Download Bill (PDF)
                     </Link>
-                    <Link href="/shop"
+                    <Link href="/our-product"
                         className="block bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition text-sm">
                         Continue Shopping
                     </Link>

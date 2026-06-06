@@ -17,7 +17,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <i className="fa-solid fa-cookie-bite text-6xl text-gray-400 mb-6"></i>
                 <h1 className="text-4xl font-heading font-black text-text-dark mb-4">Product Not Found</h1>
                 <p className="text-gray-500 mb-8">Oops! We couldn't find the cashew variety you're looking for.</p>
-                <a href="/shop" className="bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-black transition-colors">
+                <a href="/our-product" className="bg-primary text-white font-bold px-8 py-3 rounded-full hover:bg-black transition-colors">
                     Return to Shop
                 </a>
             </div>
@@ -35,7 +35,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center gap-2 text-sm text-gray-500">
                     <Link href="/" className="hover:text-primary">Home</Link>
                     <span>/</span>
-                    <Link href="/shop" className="hover:text-primary">Shop</Link>
+                    <Link href="/our-product" className="hover:text-primary">Shop</Link>
                     <span>/</span>
                     <span className="text-gray-800 font-medium truncate max-w-[200px]">{product.name}</span>
                 </div>
@@ -52,7 +52,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                             <h2 className="text-2xl md:text-3xl font-heading font-black text-gray-900">
                                 You May Also Love 🥜
                             </h2>
-                            <Link href="/shop" className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
+                            <Link href="/our-product" className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
                                 View All <i className="fa-solid fa-arrow-right"></i>
                             </Link>
                         </div>
@@ -63,7 +63,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                                  const hasPDiscount = p.discount > 0;
                                 const originalPPrice = hasPDiscount ? p.price / (1 - p.discount / 100) : p.price;
                                 return (
-                                    <Link key={pid} href={`/shop/${pid}`}
+                                    <Link key={pid} href={`/our-product/${pid}`}
                                         className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group flex flex-col"
                                     >
                                         <div className="relative bg-gray-50 h-40 flex items-center justify-center overflow-hidden">

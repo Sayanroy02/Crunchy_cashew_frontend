@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Shop Now | Crunchy Cashews | Best Cashews in India',
     description: 'Buy premium, farm-fresh cashews online in India. Highest quality raw, roasted, salted, and flavored cashews.',
-    url: 'https://crunchycashews.com/shop',
+    url: 'https://crunchycashews.com/our-product',
     siteName: 'Crunchy Cashews',
     images: [{ url: '/images/cc-Logo-01-1.png', width: 800, height: 600 }],
     locale: 'en_US',

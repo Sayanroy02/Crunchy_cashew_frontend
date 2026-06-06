@@ -34,7 +34,7 @@ export default function MobileBottomNav() {
     if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance' || pathname === '/offline') return null;
 
     const navItems = [
-        { label: 'Shop', href: '/shop', icon: 'fa-store' },
+        { label: 'Shop', href: '/our-product', icon: 'fa-store' },
         { label: 'B2B', href: '/bulk', icon: 'fa-boxes-stacked' },
         { label: 'Home', href: '/', icon: 'fa-house', isMiddle: true },
         { label: 'Blogs', href: '/blogs', icon: 'fa-newspaper' },

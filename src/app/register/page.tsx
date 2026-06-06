@@ -65,7 +65,7 @@ export default function RegisterPage() {
 
             const data = await loginRes.json();
             dispatch(login(data.access_token));
-            router.push('/shop');
+            router.push('/our-product');
         } catch (err: any) {
             setError(err.message || 'Failed to register account');
             setIsLoading(false);
@@ -84,7 +84,7 @@ export default function RegisterPage() {
             if (!res.ok) throw new Error('Google Registration Failed');
             const data = await res.json();
             dispatch(login(data.access_token));
-            router.push('/shop');
+            router.push('/our-product');
         } catch (e: any) {
             setError(e.message || 'Google Registration Failed');
         } finally {

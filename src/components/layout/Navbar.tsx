@@ -17,11 +17,11 @@ const ANNOUNCEMENTS = [
 
 const LEFT_LINKS = [
     { label: 'Home', href: '/' },
-    { label: 'Shop', href: '/shop' },
+    { label: 'Shop', href: '/our-product' },
     { label: 'B2B', href: '/bulk' },
     { label: 'About Us', href: '/about' },
     { label: 'Blog', href: '/blogs' },
-    { label: 'Contact', href: '/contact' },
+    { label: 'Contact', href: '/contact-us' },
 ];
 
 export default function Navbar() {
@@ -76,7 +76,7 @@ export default function Navbar() {
     if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance') return null;
 
     const isActive = (href: string) =>
-        href === '/' || href === '/shop' ? pathname === href : pathname.startsWith(href);
+        href === '/' || href === '/our-product' ? pathname === href : pathname.startsWith(href);
 
     /*
      * showAnnouncement:
@@ -109,7 +109,7 @@ export default function Navbar() {
                     className="inline-block font-medium tracking-wide"
                 >
                     {ANNOUNCEMENTS[annoIdx]}
-                    <Link href="/shop" className="ml-3 text-amber font-bold underline underline-offset-2">Shop →</Link>
+                    <Link href="/our-product" className="ml-3 text-amber font-bold underline underline-offset-2">Shop →</Link>
                 </span>
             </div>
 
@@ -255,11 +255,11 @@ export default function Navbar() {
                         <div className="flex-1 overflow-y-auto p-4 space-y-1">
                             {[
                                 { href: '/', label: 'Home', icon: 'fa-house' },
-                                { href: '/shop', label: 'Shop', icon: 'fa-store' },
+                                { href: '/our-product', label: 'Shop', icon: 'fa-store' },
                                 { href: '/bulk', label: 'B2B', icon: 'fa-boxes-stacked' },
                                 { href: '/about', label: 'About Us', icon: 'fa-building' },
                                 { href: '/blogs', label: 'Blog', icon: 'fa-newspaper' },
-                                { href: '/contact', label: 'Contact', icon: 'fa-envelope' },
+                                { href: '/contact-us', label: 'Contact', icon: 'fa-envelope' },
                             ].map(item => (
                                 <Link
                                     key={item.href}

@@ -214,7 +214,7 @@ export default function OrderConfirmationPage() {
             </button>
 
             <Link
-              href="/shop"
+              href="/our-product"
               className="flex-1 font-black py-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg"
               style={{ backgroundColor: COLORS.heading, color: COLORS.white }}
             >

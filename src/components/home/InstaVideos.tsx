@@ -130,7 +130,7 @@ const VideoPopup = ({
                     {/* Shop Now Button (Centered) */}
                     <div className="absolute bottom-16 left-1/2 -translate-x-1/2">
                         <Link
-                            href="/shop"
+                            href="/our-product"
                             className="bg-white/15 hover:bg-white/25 backdrop-blur-lg text-white border border-white/30 px-8 py-3.5 rounded-full font-bold text-sm shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2.5 whitespace-nowrap"
                         >
                             <i className="fa-solid fa-cart-shopping text-xs"></i>

@@ -418,7 +418,7 @@ export default function BlogDetailPage() {
                     </div>
 
                     <div className="relative z-10 flex-shrink-0">
-                        <Link href="/shop" className="inline-flex items-center gap-2 bg-[#FFC72C] hover:bg-[#FFD15C] text-black font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_8px_20px_rgba(255,199,44,0.25)] group text-xs">
+                        <Link href="/our-product" className="inline-flex items-center gap-2 bg-[#FFC72C] hover:bg-[#FFD15C] text-black font-extrabold uppercase tracking-wider px-5 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_8px_20px_rgba(255,199,44,0.25)] group text-xs">
                             <i className="fa-solid fa-cart-shopping transition-transform duration-300 group-hover:-translate-y-0.5 mr-1"></i>
                             Shop Now
                             <i className="fa-solid fa-chevron-right text-[9px] font-black transition-transform duration-300 group-hover:translate-x-1 ml-1"></i>

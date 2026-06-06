@@ -49,7 +49,7 @@ export default function CartPage() {
                 <i className="fa-solid fa-cart-arrow-down text-6xl text-gray-400/50 mb-6 animate-bounce"></i>
                 <h1 className="text-3xl font-heading font-black text-black mb-4">Your Cart is Empty</h1>
                 <p className="text-black/40 mb-8 text-center max-w-md">Looks like you haven't added any of our delicious cashews to your cart yet.</p>
-                <Link href="/shop" className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
+                <Link href="/our-product" className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2"
                     style={{ backgroundColor: '#00863D' }}>
                     <i className="fa-solid fa-store text-sm md:text-xs" />
                     <span>Start Shopping</span>

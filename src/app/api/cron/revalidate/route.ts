@@ -5,10 +5,10 @@ import { NextRequest, NextResponse } from 'next/server';
 const ROUTES = [
   '/',
   '/about',
-  '/shop',
+  '/our-product',
   '/bulk',
   '/blogs',
-  '/contact',
+  '/contact-us',
   '/track',
   '/privacy',
   '/terms',

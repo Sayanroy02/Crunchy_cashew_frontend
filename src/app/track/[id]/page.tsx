@@ -72,7 +72,7 @@ export default function PublicOrderTracking() {
                 <h2 className="text-2xl font-black text-gray-800 mb-2">Order Not Found</h2>
                 <p className="text-gray-500 mb-8 leading-relaxed font-medium">The tracking link you used is invalid or the order has been archived.</p>
                 <Link 
-                    href="/shop"
+                    href="/our-product"
                     className="block w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all"
                 >
                     Back to Shop
@@ -161,7 +161,7 @@ export default function PublicOrderTracking() {
                         Login to View Full Details
                     </Link>
                     <Link 
-                        href="/shop"
+                        href="/our-product"
                         className="text-center text-gray-400 font-bold hover:text-gray-600 transition-colors text-xs uppercase tracking-widest"
                     >
                         ← Continue Shopping

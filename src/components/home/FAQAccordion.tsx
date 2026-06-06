@@ -79,7 +79,7 @@ export default function FAQAccordion() {
                         <h3 className="text-white font-black text-xl md:text-2xl font-heading uppercase">100% Satisfaction Guarantee</h3>
                         <p className="text-white/60 text-sm mt-1 mb-4">If you're not happy with your purchase, contact us within 30 days and we'll assist you fully — no questions asked.</p>
                         <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                            <Link href="/shop" className="bg-amber text-[#2c1a0e] font-black px-5 py-2.5 rounded-full text-sm hover:bg-yellow transition uppercase tracking-wider">
+                            <Link href="/our-product" className="bg-amber text-[#2c1a0e] font-black px-5 py-2.5 rounded-full text-sm hover:bg-yellow transition uppercase tracking-wider">
                                 Order Now
                             </Link>
                             <a href="tel:+919876543210" className="flex items-center gap-2 text-white border border-white/20 px-5 py-2.5 rounded-full text-sm hover:bg-white/10 transition">

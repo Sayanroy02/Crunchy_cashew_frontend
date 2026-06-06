@@ -177,7 +177,7 @@ export default function BestSellers() {
                 {/* CTA */}
                 <div className="mt-7 text-center">
                     <Link
-                        href="/shop"
+                        href="/our-product"
                         className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2"
                     >
                         View All Products <i className="fa-solid fa-arrow-right" />

@@ -13,10 +13,10 @@ interface Banner {
 
 // ─── Fallback banners (same as original) ─────────────────────────
 const DEFAULTS: Banner[] = [
-    { _id: 'd1', title: 'Premium Quality Tea', image_url: '', link: '/shop' },
-    { _id: 'd2', title: 'Factory Direct Prices', image_url: '', link: '/shop' },
-    { _id: 'd3', title: '🚚 Free Shipping on Orders Above ₹999', image_url: '', link: '/shop' },
-    { _id: 'd4', title: 'Best Deals Today', image_url: '', link: '/shop' },
+    { _id: 'd1', title: 'Premium Quality Tea', image_url: '', link: '/our-product' },
+    { _id: 'd2', title: 'Factory Direct Prices', image_url: '', link: '/our-product' },
+    { _id: 'd3', title: '🚚 Free Shipping on Orders Above ₹999', image_url: '', link: '/our-product' },
+    { _id: 'd4', title: 'Best Deals Today', image_url: '', link: '/our-product' },
 ];
 
 // ─── Card fallback configs ────────────────────────────────────────
@@ -61,7 +61,7 @@ function BannerCard({ banner, idx }: { banner: Banner; idx: number }) {
 
     return (
         <a
-            href={banner.link || '/shop'}
+            href={banner.link || '/our-product'}
             draggable={false}
             className="relative w-full h-full overflow-hidden rounded-xl block group select-none"
         >
