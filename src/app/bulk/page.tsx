@@ -439,28 +439,6 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
 
     return (
         <section id="industries-we-supply" className="max-w-7xl mx-auto px-6 py-8 md:py-10 relative" style={{ scrollMarginTop: '100px' }}>
-            {/* Smaller Floating Parachute Cashew (desktop only) */}
-            <motion.div
-                initial={{ y: 0, rotate: -5 }}
-                animate={{
-                    y: [0, -20, 0],
-                    rotate: [-6, 6, -6],
-                    x: [0, 6, 0]
-                }}
-                transition={{
-                    duration: 7,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute right-[-2%] xl:right-[-4%] top-0 w-[90px] lg:w-[110px] pointer-events-none select-none z-10 hidden xl:block"
-            >
-                <img
-                    src="/images/Cashew-parachute-03-p-800.png"
-                    alt="Parachute Cashew"
-                    className="w-full h-auto drop-shadow-2xl"
-                />
-            </motion.div>
-
             <div className="text-center mb-12 md:mb-16">
                 <SectionHeading
                     text="Industries"
@@ -510,7 +488,8 @@ function BusinessesCateredSection({ openWhatsApp }: { openWhatsApp: (source: str
                                             e.stopPropagation();
                                             openWhatsApp('Industry Supply', undefined, cat.message);
                                         }}
-                                        className="w-full h-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold rounded-lg lg:rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 shadow-md"
+                                        style={{ backgroundColor: COLORS.heading }}
+                                        className="w-full h-full text-white font-bold rounded-lg lg:rounded-xl flex items-center justify-center gap-1.5 transition-all duration-300 active:scale-95 shadow-md hover:brightness-110"
                                     >
                                         <i className="fa-brands fa-whatsapp text-white text-sm" />
                                         <span className="text-[10px] sm:text-[11px] md:text-[9.5px] lg:text-xs uppercase tracking-[0.1em]">Enquire</span>
@@ -1066,7 +1045,7 @@ export default function BulkOrderPage() {
     return (
         <div className={`min-h-screen bg-[#FFF9E7]`}>
             {/* ── Hero ── */}
-            <section className="relative w-full pt-16 pb-10 md:pt-10 md:pb-10 overflow-hidden">
+            <section className="relative w-full pt-12 pb-10 md:pt-16 lg:pt-20 overflow-hidden">
 
                 {/* Background Image */}
                 <div className="absolute top-0 left-0 z-0 w-full h-[60%]">

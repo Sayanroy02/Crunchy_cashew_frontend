@@ -25,7 +25,7 @@ export default function BlogsPreview() {
     if (blogs.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-14 bg-bg-cream relative">
+        <section className="py-4 md:py-8 bg-bg-cream relative">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* Section Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between items-center md:items-start mb-10 gap-6">

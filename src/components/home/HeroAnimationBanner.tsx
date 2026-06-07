@@ -33,8 +33,7 @@ export default function HeroVideo() {
     return (
         <section
             aria-label="Crunchy Cashews – Premium Cashew Nuts from Factory to Doorstep"
-            className="relative w-full overflow-hidden bg-[#1a0a04]"
-            style={{ height: 'calc(100svh - var(--navbar-h, 72px))' }}
+            className="relative w-full overflow-hidden bg-[#1a0a04] h-[calc(100svh-var(--navbar-h,72px))] md:h-auto md:aspect-video"
         >
             {/* Fallback image shown behind/instead of video if it fails or while loading */}
             <img
@@ -48,14 +47,14 @@ export default function HeroVideo() {
             {/* ── Desktop Video ── */}
             <video
                 ref={desktopVideoRef}
-                src="https://res.cloudinary.com/da1acfqsn/video/upload/v1776770965/Crunchy_Cashew_Product_Animation_Updated_V2_tskkbx.mp4"
+                src="https://res.cloudinary.com/da1acfqsn/video/upload/f_auto,q_auto,vc_auto/v1776770965/Crunchy_Cashew_Product_Animation_Updated_V2_tskkbx.mp4"
                 muted
                 loop
                 playsInline
                 preload="metadata"
                 onPlay={() => setVideoLoaded(true)}
                 onError={() => setVideoError(true)}
-                className="absolute inset-0 w-full h-full object-cover hidden md:block object-[100%_top] lg:object-[35%_top]"
+                className="absolute inset-0 w-full h-full object-cover hidden md:block"
             />
 
             {/* ── Mobile Background Image ── */}
@@ -102,7 +101,7 @@ export default function HeroVideo() {
             ════════════════════ */}
             <div
                 className="md:hidden absolute left-0 right-0 flex flex-col items-center text-center px-6"
-                style={{ top: '14px' }}
+                style={{ top: '48px' }}
             >
                 {/* Eyebrow */}
                 <div
@@ -169,7 +168,7 @@ export default function HeroVideo() {
                 Original left-aligned, always visible (no delay)
             ════════════════════ */}
             {/* Desktop: hero already starts below navbar, no extra padding needed */}
-            <div className="hidden md:flex absolute inset-0 items-center">
+            <div className="hidden md:flex absolute inset-0 items-center transform md:-translate-y-8 lg:-translate-y-14">
                 <div className="w-full max-w-screen-xl mx-auto px-10 lg:px-16">
                     <div className="flex flex-col items-start text-left max-w-[580px]">
 

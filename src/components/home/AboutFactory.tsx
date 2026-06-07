@@ -111,7 +111,7 @@ export default function AboutFactory() {
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { x.set(0); y.set(0); }}
-            className="py-10 md:py-20 bg-bg-cream relative z-20 overflow-hidden"
+            className="py-4 md:py-8 bg-bg-cream relative z-20 overflow-hidden"
         >
             {/* ── Left corner fruit ── */}
             {/* <motion.div

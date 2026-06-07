@@ -5,6 +5,10 @@ export interface CartItem {
     variant_size: string;
     name: string;
     price: number;
+    original_price?: number;
+    discount_type?: string;
+    coupon_code?: string;
+    coupon_amount?: number;
     quantity: number;
     image_url?: string;
 }

@@ -38,6 +38,10 @@ export interface Product {
     };
     salesCount?: number;
     createdAt?: string;
+    coupon_enabled?: boolean;
+    coupon_code?: string;
+    coupon_discount?: number;
+    discount_type?: string;
 }
 
 interface ProductCardProps {
@@ -101,19 +105,34 @@ export default function ProductCard({ product }: ProductCardProps) {
         e.preventDefault();
         if (!selectedVariant) return;
 
+        const isCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || (selectedVariant as any).coupon_code));
+        const isDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && selectedVariant.discount > 0);
+
+        const couponAmount = isCouponType ? (Number((selectedVariant as any).coupon_amount) || Number(product.coupon_discount) || 0) : 0;
+        const couponCode = isCouponType ? ((selectedVariant as any).coupon_code || product.coupon_code || 'COUPON') : '';
+        const finalCartPrice = isCouponType ? (selectedVariant.original_price - couponAmount) : (isDiscountType ? selectedVariant.price : selectedVariant.original_price);
+
         dispatch(addToCart({
             product_id: product.id || product._id || '',
             variant_size: selectedVariant.size,
             name: `${product.name} (${selectedVariant.size})`,
-            price: selectedVariant.price,
+            price: finalCartPrice,
+            original_price: selectedVariant.original_price,
+            discount_type: product.discount_type || (isCouponType ? 'coupon' : (isDiscountType ? 'discount' : '')),
+            coupon_code: couponCode,
+            coupon_amount: couponAmount,
             quantity: 1,
             image_url: product.image_url
         }));
         showSnackbar(`${product.name} (${selectedVariant.size}) added to cart`, 'success');
     };
 
-    const hasDiscount = selectedVariant.discount > 0;
-    const originalPrice = selectedVariant.original_price || (selectedVariant.price / (1 - selectedVariant.discount / 100));
+    const isCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || (selectedVariant as any).coupon_code));
+    const isDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && selectedVariant.discount > 0);
+
+    const finalPrice = isDiscountType ? selectedVariant.price : selectedVariant.original_price;
+    const originalPrice = selectedVariant.original_price;
+    const hasDiscount = isDiscountType && selectedVariant.discount > 0;
 
     // Smart Badges calculation
     const tags = product.tags?.map(t => t.toLowerCase()) || [];
@@ -145,7 +164,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 />
 
                 <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-                    {hasDiscount && selectedVariant.stock > 0 && (
+                    {isDiscountType && selectedVariant.discount > 0 && selectedVariant.stock > 0 && (
                         <div className="bg-[#F6B000] text-black text-[10px] font-extrabold px-2.5 py-1 rounded-md shadow-md tracking-wide">
                             {selectedVariant.discount}% OFF
                         </div>
@@ -235,7 +254,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <div className="pt-1.5 flex flex-col gap-2 border-t border-gray-50 md:flex-row md:items-center md:justify-between md:gap-0">
                     <div className="flex flex-col">
                         <div className="flex items-baseline gap-1.5">
-                            <span className="text-black font-black text-lg md:text-xl">₹{selectedVariant.price.toFixed(0)}</span>
+                            <span className="text-black font-black text-lg md:text-xl">₹{finalPrice.toFixed(0)}</span>
                             {hasDiscount && (
                                 <span className="text-gray-400 text-xs line-through font-medium">₹{originalPrice.toFixed(0)}</span>
                             )}

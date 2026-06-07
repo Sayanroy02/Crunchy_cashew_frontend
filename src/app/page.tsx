@@ -53,7 +53,7 @@ export default function Home() {
         <AnimatedFlyingImage />
 
         <InstaVideos />
-        <section className={`w-full py-5 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
+        <section className={`w-full py-4 md:py-8 ${COLORS.bg} border-y border-gray-100/50 overflow-hidden relative z-20`}>
           <div className="max-w-7xl mx-auto px-6 mb-10 text-center">
             <SectionHeading
               text="Trusted by India's"

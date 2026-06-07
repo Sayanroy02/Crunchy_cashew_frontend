@@ -36,7 +36,7 @@ const ALL_GRADE_SUGGESTIONS = [
 
 const TRUST_BADGES = [
     {
-        text: 'Minimum Order Quantity',
+        text: 'Minimum Order Quantity 50kg',
         icon: (
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="7" width="20" height="14" rx="2" />
@@ -504,7 +504,7 @@ export default function BulkOrderCard() {
             ref={sectionRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => { x.set(0); y.set(0); }}
-            className="py-4 md:py-6 bg-bg-cream relative overflow-hidden"
+            className="py-4 md:py-8 bg-bg-cream relative overflow-hidden"
         >
             {/* Decorative Fruits with Parallax */}
             {/* <motion.div

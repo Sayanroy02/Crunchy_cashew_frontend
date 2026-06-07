@@ -54,14 +54,29 @@ export default function BestSellers() {
 
     const filtered = useMemo(() => {
         const list = Array.isArray(products) ? products : [];
-        return list.filter(p => {
+        // First filter by active category tab
+        let result = list.filter(p => {
             if (activeTag === 'all') return true;
             return (p.category || '').toLowerCase() === activeTag.toLowerCase();
         });
+        
+        // Filter to best sellers (p.isBestSeller === true or has popular/bestseller tags)
+        const bestSellers = result.filter(p => 
+            p.isBestSeller || 
+            p.tags?.some(t => ['best seller', 'bestseller', 'popular', 'trending'].includes(t.toLowerCase()))
+        );
+        
+        // Fallback to general list if no products are explicitly marked as bestseller/popular
+        if (bestSellers.length > 0) {
+            result = bestSellers;
+        }
+        
+        // Limit to 8 products for optimal rendering performance
+        return result.slice(0, 8);
     }, [products, activeTag]);
 
     return (
-        <section data-bestsellers className="pt-[48px] pb-4 md:pb-6 bg-bg relative overflow-hidden">
+        <section data-bestsellers className="pt-12 md:pt-14 pb-8 md:pb-10 bg-bg relative overflow-hidden">
             {/* Floating Parachute Cashew (desktop only) */}
             {/* <motion.div
                 initial={{ y: 0, rotate: -5 }}

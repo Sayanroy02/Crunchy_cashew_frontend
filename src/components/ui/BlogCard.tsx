@@ -27,6 +27,7 @@ const CATEGORY_ICONS: Record<string, string> = {
     'Recipes': 'fa-solid fa-utensils',
     'Recipes Blog': 'fa-solid fa-utensils',
     'Sustainability': 'fa-solid fa-leaf',
+    'Newsroom': 'fa-solid fa-newspaper',
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -35,6 +36,7 @@ const CATEGORY_COLORS: Record<string, string> = {
     'Recipes': 'bg-[#bb3e00] text-white',
     'Recipes Blog': 'bg-[#bb3e00] text-white',
     'Sustainability': 'bg-sky-400 text-white',
+    'Newsroom': 'bg-indigo-600 text-white',
     'Uncategorised': 'bg-gray-100 text-gray-600',
 };
 

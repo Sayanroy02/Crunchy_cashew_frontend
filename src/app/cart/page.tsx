@@ -43,6 +43,9 @@ export default function CartPage() {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
 
+    const totalMRP = items.reduce((sum, item) => sum + ((item.original_price || item.price) * item.quantity), 0);
+    const totalDiscount = items.reduce((sum, item) => sum + (((item.original_price || item.price) - item.price) * item.quantity), 0);
+
     if (items.length === 0) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-[#FFF9E7] px-6 py-16">
@@ -131,9 +134,15 @@ export default function CartPage() {
 
                             <div className="flex flex-col gap-4 mb-8">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-white/80 font-medium">Subtotal</span>
-                                    <span className="font-bold text-white">₹{totalAmount.toFixed(2)}</span>
+                                    <span className="text-white/80 font-medium">MRP Total</span>
+                                    <span className="font-bold text-white">₹{totalMRP.toFixed(2)}</span>
                                 </div>
+                                {totalDiscount > 0 && (
+                                    <div className="flex justify-between items-center text-green-400 font-medium">
+                                        <span>Discounts</span>
+                                        <span>-₹{totalDiscount.toFixed(2)}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between items-center text-white/80 font-medium">
                                     <span>Shipping</span>
                                     <span className="text-xs text-white/65">Calculated at checkout</span>

@@ -11,7 +11,7 @@ const defaultForm = {
     name: '',
     description: '',
     variants: [
-        { size: '200g', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true }
+        { size: '200g', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true, coupon_code: '', coupon_amount: 0 }
     ],
     category: 'Value Packs',
     is_available: true,
@@ -31,7 +31,11 @@ const defaultForm = {
         blinkit: { price: 0, link: '' },
         swiggy: { price: 0, link: '' }
     },
-    video_url: ''
+    video_url: '',
+    coupon_enabled: false,
+    coupon_code: '',
+    coupon_discount: 0,
+    discount_type: ''
 };
 
 export default function AdminProducts() {
@@ -77,7 +81,9 @@ export default function AdminProducts() {
                 original_price: Number(v.original_price) || 0,
                 discount: Number(v.discount) || 0,
                 stock: Number(v.stock) || 0,
-                is_available: v.is_available !== false
+                is_available: v.is_available !== false,
+                coupon_code: v.coupon_code || '',
+                coupon_amount: Number(v.coupon_amount) || 0
             }))
             : [{ 
                 size: 'Standard', 
@@ -85,8 +91,19 @@ export default function AdminProducts() {
                 original_price: p.price ? Math.round(p.price / (1 - (p.discount || 0) / 100)) : 0,
                 discount: p.discount || 0, 
                 stock: p.stock || 0, 
-                is_available: p.is_available !== false 
+                is_available: p.is_available !== false,
+                coupon_code: '',
+                coupon_amount: 0
               }];
+
+        let discount_type = p.discount_type || '';
+        if (!discount_type) {
+            if (p.coupon_enabled || variants.some((v: any) => v.coupon_code || v.coupon_amount > 0)) {
+                discount_type = 'coupon';
+            } else if (variants.some((v: any) => v.discount > 0)) {
+                discount_type = 'discount';
+            }
+        }
 
         setFormData({
             name: p.name || '',
@@ -105,7 +122,11 @@ export default function AdminProducts() {
             event: p.event || { type: '', label: '' },
             marketplace_prices: p.marketplace_prices || defaultForm.marketplace_prices,
             image_urls: p.image_urls || (p.image_url ? [p.image_url] : []),
-            video_url: p.video_url || ''
+            video_url: p.video_url || '',
+            coupon_enabled: discount_type === 'coupon',
+            coupon_code: p.coupon_code || '',
+            coupon_discount: Number(p.coupon_discount) || 0,
+            discount_type: discount_type
         });
         setFiles([]);
         setError('');
@@ -154,6 +175,10 @@ export default function AdminProducts() {
         fd.append('variants', JSON.stringify(formData.variants));
         fd.append('image_urls', JSON.stringify(formData.image_urls));
         fd.append('video_url', formData.video_url);
+        fd.append('coupon_enabled', (formData.discount_type === 'coupon').toString());
+        fd.append('coupon_code', formData.coupon_code);
+        fd.append('coupon_discount', formData.coupon_discount.toString());
+        fd.append('discount_type', formData.discount_type || '');
         
         files.forEach(f => fd.append('files', f));
 
@@ -222,7 +247,7 @@ export default function AdminProducts() {
     const handleAddVariant = () => {
         setFormData(prev => ({
             ...prev,
-            variants: [...prev.variants, { size: '', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true }]
+            variants: [...prev.variants, { size: '', price: 0, original_price: 0, discount: 0, stock: 0, is_available: true, coupon_code: '', coupon_amount: 0 }]
         }));
     };
 
@@ -239,28 +264,66 @@ export default function AdminProducts() {
         const v = { ...newVariants[index] } as any;
         v[field] = value;
         
-        // 3-Way Auto-calculation Logic
-        if (field === 'price') {
-            // Price changed: Recalculate Discount %
-            if (v.original_price > 0) {
-                v.discount = Math.round(((v.original_price - v.price) / v.original_price) * 100);
+        const mode = formData.discount_type;
+
+        if (mode === 'discount') {
+            if (field === 'discount_amount') {
+                const amt = Number(value) || 0;
+                v.price = Math.max(0, v.original_price - amt);
+                v.discount = v.original_price > 0 ? Math.round((amt / v.original_price) * 100) : 0;
+            } else if (field === 'discount') {
+                const pct = Number(value) || 0;
+                v.price = Math.max(0, Math.round(v.original_price * (1 - pct / 100)));
+                v.discount = pct;
+            } else if (field === 'original_price') {
+                const mrp = Number(value) || 0;
+                if (v.discount > 0) {
+                    v.price = Math.max(0, Math.round(mrp * (1 - v.discount / 100)));
+                } else {
+                    const discountAmt = mrp - v.price;
+                    v.discount = mrp > 0 ? Math.round((discountAmt / mrp) * 100) : 0;
+                }
             }
-        } else if (field === 'original_price') {
-            // MRP changed: Recalculate Discount % (if Price set) or Price (if Discount set)
-            if (v.price > 0 && v.discount === 0) {
-                v.discount = Math.round(((v.original_price - v.price) / v.original_price) * 100);
-            } else if (v.discount > 0) {
-                v.price = Math.round(v.original_price * (1 - v.discount / 100));
+        } else if (mode === 'coupon') {
+            if (field === 'original_price') {
+                v.price = Number(value) || 0;
             }
-        } else if (field === 'discount') {
-            // Discount % changed: Recalculate Price
-            if (v.original_price > 0) {
-                v.price = Math.round(v.original_price * (1 - v.discount / 100));
+            v.discount = 0;
+        } else {
+            if (field === 'original_price') {
+                v.price = Number(value) || 0;
             }
+            v.discount = 0;
         }
         
         newVariants[index] = v;
         setFormData(prev => ({ ...prev, variants: newVariants }));
+    };
+
+    const handleDiscountTypeChange = (type: string) => {
+        setFormData(prev => {
+            const nextType = prev.discount_type === type ? '' : type;
+            const updatedVariants = prev.variants.map(v => {
+                const newV = { ...v };
+                if (nextType === 'coupon') {
+                    newV.price = newV.original_price;
+                    newV.discount = 0;
+                } else if (nextType === 'discount') {
+                    if (newV.discount > 0) {
+                        newV.price = Math.round(newV.original_price * (1 - newV.discount / 100));
+                    }
+                } else {
+                    newV.price = newV.original_price;
+                    newV.discount = 0;
+                }
+                return newV;
+            });
+            return {
+                ...prev,
+                discount_type: nextType,
+                variants: updatedVariants
+            };
+        });
     };
 
     return (
@@ -413,46 +476,117 @@ export default function AdminProducts() {
                                             + Add size
                                         </button>
                                     </div>
+
+                                    {/* Selection type checkboxes */}
+                                    <div className="flex flex-wrap gap-6 items-center p-3 bg-white/60 rounded-xl border border-gray-100">
+                                        <span className="text-xs font-bold text-gray-700">Promotion Type:</span>
+                                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.discount_type === 'coupon'}
+                                                onChange={() => handleDiscountTypeChange('coupon')}
+                                                className="w-4 h-4 text-[#00863D] border-gray-300 rounded focus:ring-primary"
+                                            />
+                                            <span className="text-xs font-bold text-gray-800 flex items-center gap-1">
+                                                <i className="fa-solid fa-ticket text-[#F6B000]"></i> Coupon
+                                            </span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.discount_type === 'discount'}
+                                                onChange={() => handleDiscountTypeChange('discount')}
+                                                className="w-4 h-4 text-[#00863D] border-gray-300 rounded focus:ring-primary"
+                                            />
+                                            <span className="text-xs font-bold text-gray-800 flex items-center gap-1">
+                                                <i className="fa-solid fa-percent text-blue-600"></i> Discount
+                                            </span>
+                                        </label>
+                                    </div>
                                     
                                     <div className="space-y-3">
-                                        {formData.variants.map((v, idx) => (
-                                            <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm relative animate-slide-in">
-                                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                                                    <div className="space-y-1">
-                                                        <label htmlFor={`v-${idx}-size`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Size</label>
-                                                        <input id={`v-${idx}-size`} type="text" placeholder="e.g. 200g" value={v.size} onChange={e => handleVariantChange(idx, 'size', e.target.value)} required
-                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <label htmlFor={`v-${idx}-price`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Price (₹)</label>
-                                                        <input id={`v-${idx}-price`} type="number" value={v.price} onChange={e => handleVariantChange(idx, 'price', Number(e.target.value))} required
-                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold" />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <label htmlFor={`v-${idx}-mrp`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MRP (₹)</label>
-                                                        <input id={`v-${idx}-mrp`} type="number" value={v.original_price} onChange={e => handleVariantChange(idx, 'original_price', Number(e.target.value))} required
-                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <label htmlFor={`v-${idx}-stock`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Stock</label>
-                                                        <input id={`v-${idx}-stock`} type="number" value={v.stock} onChange={e => handleVariantChange(idx, 'stock', Number(e.target.value))} required
-                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
-                                                    </div>
-                                                    <div className="space-y-1">
-                                                        <label htmlFor={`v-${idx}-discount`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>
-                                                        <div className="flex items-center gap-2">
-                                                            <input id={`v-${idx}-discount`} type="number" value={v.discount} onChange={e => handleVariantChange(idx, 'discount', Number(e.target.value))}
-                                                                className="w-full px-3 py-2 border border-blue-100 bg-white rounded-lg text-xs text-blue-600 font-bold outline-none focus:border-primary" />
-                                                            {formData.variants.length > 1 && (
-                                                                <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-1">
-                                                                    <i className="fa-solid fa-trash-can text-sm"></i>
-                                                                </button>
-                                                            )}
+                                        {formData.variants.map((v: any, idx: number) => {
+                                            const discount_amount = Math.max(0, v.original_price - v.price);
+                                            return (
+                                                <div key={idx} className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm relative animate-slide-in">
+                                                    <div className={`grid gap-3 ${
+                                                        formData.discount_type === 'discount' 
+                                                            ? 'grid-cols-2 sm:grid-cols-5' 
+                                                            : formData.discount_type === 'coupon' 
+                                                                ? 'grid-cols-2 sm:grid-cols-5' 
+                                                                : 'grid-cols-2 sm:grid-cols-3'
+                                                    }`}>
+                                                        <div className="space-y-1">
+                                                            <label htmlFor={`v-${idx}-size`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Size</label>
+                                                            <input id={`v-${idx}-size`} type="text" placeholder="e.g. 200g" value={v.size} onChange={e => handleVariantChange(idx, 'size', e.target.value)} required
+                                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
                                                         </div>
+                                                        <div className="space-y-1">
+                                                            <label htmlFor={`v-${idx}-mrp`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">MRP (₹)</label>
+                                                            <input id={`v-${idx}-mrp`} type="number" value={v.original_price || ''} onChange={e => handleVariantChange(idx, 'original_price', Number(e.target.value))} required
+                                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold" />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <label htmlFor={`v-${idx}-stock`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Stock</label>
+                                                            <input id={`v-${idx}-stock`} type="number" value={v.stock || ''} onChange={e => handleVariantChange(idx, 'stock', Number(e.target.value))} required
+                                                                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                        </div>
+
+                                                        {formData.discount_type === 'discount' && (
+                                                            <>
+                                                                <div className="space-y-1">
+                                                                    <label htmlFor={`v-${idx}-discount-amt`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc Amount (₹)</label>
+                                                                    <input id={`v-${idx}-discount-amt`} type="number" value={discount_amount || ''} onChange={e => handleVariantChange(idx, 'discount_amount', Number(e.target.value))}
+                                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <label htmlFor={`v-${idx}-discount`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <input id={`v-${idx}-discount`} type="number" value={v.discount || ''} onChange={e => handleVariantChange(idx, 'discount', Number(e.target.value))}
+                                                                            className="w-full px-3 py-2 border border-blue-100 bg-white rounded-lg text-xs text-blue-600 font-bold outline-none focus:border-primary" />
+                                                                        {formData.variants.length > 1 && (
+                                                                            <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-1">
+                                                                                <i className="fa-solid fa-trash-can text-sm"></i>
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        {formData.discount_type === 'coupon' && (
+                                                            <>
+                                                                <div className="space-y-1">
+                                                                    <label htmlFor={`v-${idx}-coupon-code`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Coupon Code</label>
+                                                                    <input id={`v-${idx}-coupon-code`} type="text" placeholder="e.g. SAVE20" value={v.coupon_code || ''} onChange={e => handleVariantChange(idx, 'coupon_code', e.target.value)} required={formData.discount_type === 'coupon'}
+                                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <label htmlFor={`v-${idx}-coupon-amount`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Coupon Amount (₹)</label>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <input id={`v-${idx}-coupon-amount`} type="number" value={v.coupon_amount || ''} onChange={e => handleVariantChange(idx, 'coupon_amount', Number(e.target.value))} required={formData.discount_type === 'coupon'}
+                                                                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold text-green-700" />
+                                                                        {formData.variants.length > 1 && (
+                                                                            <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-1">
+                                                                                <i className="fa-solid fa-trash-can text-sm"></i>
+                                                                            </button>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        )}
+
+                                                        {!formData.discount_type && formData.variants.length > 1 && (
+                                                            <div className="flex items-end justify-end pb-1 sm:col-span-1">
+                                                                <button type="button" onClick={() => handleRemoveVariant(idx)} className="text-red-400 hover:text-red-600 transition p-2">
+                                                                    <i className="fa-solid fa-trash-can text-sm"></i> Remove
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
@@ -728,6 +862,8 @@ export default function AdminProducts() {
                                         </div>
                                     </div>
                                 </div>
+
+
 
                                 {/* Video URL Section */}
                                 <div className="space-y-1 md:col-span-2">

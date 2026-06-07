@@ -16,6 +16,10 @@ export default function AddToCartButton({ product, selectedVariant }: { product:
             variant_size: selectedVariant.size,
             name: `${product.name} (${selectedVariant.size})`,
             price: selectedVariant.price,
+            original_price: selectedVariant.original_price,
+            discount_type: selectedVariant.discount_type,
+            coupon_code: selectedVariant.coupon_code,
+            coupon_amount: selectedVariant.coupon_amount,
             quantity: quantity,
             image_url: product.image_url
         }));

@@ -244,7 +244,7 @@ export default function PriceComparisonPreview() {
                 <div className="relative w-52 h-52 bg-white rounded-3xl p-4 shadow-sm border border-black/5 overflow-hidden">
                   <Image
                     src={product.image_url || '/images/crunchy-cashews-product.png'}
-                    alt={product.name}
+                    alt={product.name || 'Product Image'}
                     fill
                     sizes="(max-width: 768px) 100vw, 400px"
                     className="object-contain p-2"

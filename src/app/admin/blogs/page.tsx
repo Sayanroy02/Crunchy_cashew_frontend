@@ -8,7 +8,7 @@ function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
 }
 
-const CATEGORIES = ['Health', 'Recipes', 'Sustainability'] as const;
+const CATEGORIES = ['Health', 'Recipes', 'Sustainability', 'Newsroom'] as const;
 type Category = typeof CATEGORIES[number];
 const EMPTY_FORM = { title: '', author: '', slug: '', content: '', tags: '', category: 'Health' as Category };
 
@@ -191,6 +191,7 @@ export default function AdminBlogs() {
                                         <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
                                             (b.category === 'Health' || b.category === 'Health Articles') ? 'bg-green-100 text-green-700' :
                                             (b.category === 'Recipes' || b.category === 'Recipes Blog') ? 'bg-amber-100 text-amber-700' :
+                                            (b.category === 'Newsroom') ? 'bg-indigo-100 text-indigo-700' :
                                             'bg-blue-100 text-blue-700'
                                         }`}>{b.category}</span>
                                     )}

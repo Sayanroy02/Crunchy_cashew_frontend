@@ -115,7 +115,7 @@ export default function Testimonials() {
     };
 
     return (
-        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden">
+        <section className="py-4 md:py-8 bg-bg-cream overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 md:px-6">
 
                 {/* Header - Redesigned to be "Heading Left, Buttons Right" and compact on mobile */}

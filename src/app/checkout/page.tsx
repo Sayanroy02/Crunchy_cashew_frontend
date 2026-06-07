@@ -25,6 +25,10 @@ export default function CheckoutPage() {
     const dispatch = useDispatch();
     const router = useRouter();
 
+    const totalMRP = items.reduce((sum, item) => sum + ((item.original_price || item.price) * item.quantity), 0);
+    const totalDiscount = items.reduce((sum, item) => sum + (((item.original_price || item.price) - item.price) * item.quantity), 0);
+    const couponItems = items.filter(item => item.discount_type === 'coupon' && item.coupon_code);
+
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
@@ -387,9 +391,25 @@ export default function CheckoutPage() {
 
                             <div className="flex flex-col gap-3 mb-8 text-sm">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-white/80">Subtotal</span>
-                                    <span className="font-semibold">₹{totalAmount.toFixed(2)}</span>
+                                    <span className="text-white/80">MRP Total</span>
+                                    <span className="font-semibold">₹{totalMRP.toFixed(2)}</span>
                                 </div>
+                                {totalDiscount > 0 && (
+                                    <div className="flex justify-between items-center text-green-300">
+                                        <span>Discounts</span>
+                                        <span className="font-semibold">-₹{totalDiscount.toFixed(2)}</span>
+                                    </div>
+                                )}
+                                {couponItems.map((item, idx) => {
+                                    const disc = ((item.original_price || item.price) - item.price) * item.quantity;
+                                    if (disc <= 0) return null;
+                                    return (
+                                        <div key={idx} className="flex justify-between items-center text-xs text-green-300 pl-4 border-l border-green-300/30">
+                                            <span>🎫 Coupon ({item.coupon_code})</span>
+                                            <span>-₹{disc.toFixed(2)}</span>
+                                        </div>
+                                    );
+                                })}
                                 <div className="flex justify-between items-center">
                                     <span className="text-white/80">Shipping</span>
                                     <span className={`font-semibold ${shippingFee === 0 ? 'text-[#86efac]' : ''}`}>

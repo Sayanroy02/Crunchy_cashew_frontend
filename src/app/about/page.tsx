@@ -410,8 +410,8 @@ export default function AboutPage() {
                 desc: 'Capable of producing over 25 precise cashew grades.'
               },
             ].map(point => (
-              <div key={point.title} className="flex-shrink-0 w-[80vw] max-w-[320px] snap-center p-8 rounded-3xl bg-white/90 border border-amber-100/40 shadow-sm md:w-auto md:bg-transparent md:border-0 md:shadow-none hover:bg-white/60 transition-all duration-300 group">
-                <div className="w-14 h-14 bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#F6B000] group-hover:rotate-6 transition-all shadow-sm">
+              <div key={point.title} className="flex-shrink-0 w-[80vw] max-w-[320px] snap-center p-8 rounded-3xl bg-white/90 border border-amber-100/40 shadow-sm md:w-auto md:bg-transparent md:border-0 md:shadow-none transition-all duration-300">
+                <div className="w-14 h-14 bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                   <i className={`fa-solid ${point.icon} text-xl`} />
                 </div>
                 <h3 className="font-black text-gray-900 mb-3 text-lg">{point.title}</h3>

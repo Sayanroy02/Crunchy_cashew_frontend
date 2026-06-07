@@ -71,7 +71,7 @@ export default function LoginPage() {
          * ─────────────────────────────────────────────────────────
          */
         <div
-            className={`w-full flex items-center justify-center p-4 sm:p-5 lg:p-8 ${COLORS.bg}`}
+            className={`w-full flex items-center justify-center pt-16 pb-12 px-4 sm:pt-20 sm:pb-16 sm:px-5 lg:pt-24 lg:pb-20 lg:px-8 ${COLORS.bg}`}
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
             {/* ── Floating card with margin on all sides ── */}
@@ -81,9 +81,11 @@ export default function LoginPage() {
                     BRAND PANEL
                     top strip on mobile · left col on desktop
                 ════════════════════════════════ */}
-                <div className="relative flex flex-col items-center justify-center overflow-hidden bg-[#0f1410]
+                <div className="relative flex flex-col items-center justify-center overflow-hidden
                     w-full py-8 px-5
-                    lg:w-[42%] lg:py-12 lg:px-8 lg:min-h-[540px]">
+                    lg:w-[42%] lg:py-12 lg:px-8 lg:min-h-[540px]"
+                    style={{ backgroundColor: COLORS.heading }}
+                >
 
                     {/* Green radial glow */}
                     <div className="absolute inset-0 pointer-events-none"
@@ -119,13 +121,6 @@ export default function LoginPage() {
                             <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[200px] mx-auto leading-relaxed">
                                 Farm-fresh cashews delivered straight to your doorstep.
                             </p>
-                        </div>
-
-                        {/* Pill dots */}
-                        <div className="flex gap-1.5 mt-4 lg:mt-6">
-                            <span className="w-5 h-1.5 rounded-full bg-[#c8a96e]" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
                         </div>
                     </div>
                 </div>
@@ -202,11 +197,9 @@ export default function LoginPage() {
 
                             {/* Sign In button */}
                             <button type="submit" disabled={isLoading}
-                                className="w-full bg-primary hover:bg-[#0a4f25] active:scale-[0.98]
-                                    text-white font-bold text-sm py-3.5 rounded-xl
-                                    shadow-md hover:shadow-lg hover:-translate-y-0.5
-                                    transition-all disabled:opacity-60 disabled:hover:translate-y-0
-                                    tracking-wide mt-1">
+                                className="text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 w-full disabled:opacity-60"
+                                style={{ backgroundColor: COLORS.heading }}
+                            >
                                 {isLoading
                                     ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
                                     : <span className="flex items-center justify-center gap-2">

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 export default function RegisterPage() {
     const [formData, setFormData] = useState({
@@ -94,7 +95,7 @@ export default function RegisterPage() {
 
     return (
         <div
-            className={`w-full bg-[#FFF9E7] flex items-center justify-center p-4 sm:p-5 lg:p-8`}
+            className={`w-full flex items-center justify-center pt-8 pb-12 px-4 sm:pt-10 sm:pb-16 sm:px-5 lg:pt-12 lg:pb-20 lg:px-8 ${COLORS.bg}`}
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
             {/* Floating card */}
@@ -103,9 +104,11 @@ export default function RegisterPage() {
                 {/* ════════════════════════════════
                     BRAND PANEL
                 ════════════════════════════════ */}
-                <div className="relative flex flex-col items-center justify-center overflow-hidden bg-[#0f1410]
+                <div className="relative flex flex-col items-center justify-center overflow-hidden
                     w-full py-8 px-5
-                    lg:w-[42%] lg:py-12 lg:px-8 lg:min-h-[600px]">
+                    lg:w-[42%] lg:py-12 lg:px-8 lg:min-h-[600px]"
+                    style={{ backgroundColor: COLORS.heading }}
+                >
 
                     {/* Green radial glow */}
                     <div className="absolute inset-0 pointer-events-none"
@@ -133,20 +136,16 @@ export default function RegisterPage() {
                         />
 
                         <div className="mt-4 lg:mt-6 text-center px-2">
-                            <h2 className="text-white font-bold leading-snug tracking-tight text-lg sm:text-xl lg:text-[1.45rem]">
-                                Join Crunchy Cashews,<br />
-                                <span className="text-[#c8a96e]">Taste the Difference</span>
-                            </h2>
+                            <SectionHeading 
+                                text="Join Crunchy Cashews,"
+                                highlight="Taste the Difference"
+                                className="text-white !text-lg !sm:text-xl !lg:text-[1.45rem] font-bold leading-snug tracking-tight text-center mb-3"
+                                textColor="#ffffff"
+                                highlightColor="#c8a96e"
+                            />
                             <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[210px] mx-auto leading-relaxed">
                                 Create an account for faster checkouts and order tracking.
                             </p>
-                        </div>
-
-                        {/* Pill dots */}
-                        <div className="flex gap-1.5 mt-4 lg:mt-6">
-                            <span className="w-5 h-1.5 rounded-full bg-[#c8a96e]" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-600" />
                         </div>
                     </div>
                 </div>
@@ -265,11 +264,9 @@ export default function RegisterPage() {
 
                             {/* Submit */}
                             <button type="submit" disabled={isLoading}
-                                className="w-full bg-primary hover:bg-[#0a4f25] active:scale-[0.98]
-                                    text-white font-bold text-sm py-3.5 rounded-xl
-                                    shadow-md hover:shadow-lg hover:-translate-y-0.5
-                                    transition-all disabled:opacity-60 disabled:hover:translate-y-0
-                                    tracking-wide mt-1">
+                                className="text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 w-full disabled:opacity-60"
+                                style={{ backgroundColor: COLORS.heading }}
+                            >
                                 {isLoading
                                     ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
                                     : <span className="flex items-center justify-center gap-2">

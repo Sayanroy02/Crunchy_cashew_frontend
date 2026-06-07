@@ -40,8 +40,8 @@ const VideoItem = ({ video, onClick }: { video: InstaVideo; onClick: () => void 
 
     return (
         <div
-            className="flex-shrink-0 w-[200px] md:w-auto h-[340px] md:h-[380px] relative rounded-2xl overflow-hidden snap-center group cursor-pointer bg-black"
-            style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}
+            className="flex-shrink-0 w-[230px] md:w-auto h-[390px] md:h-[440px] relative rounded-3xl overflow-hidden snap-center group cursor-pointer bg-black"
+            style={{ boxShadow: "0 8px 30px rgba(0,0,0,0.16)" }}
             onClick={onClick}
         >
             <video
@@ -190,7 +190,7 @@ export default function InstaVideos() {
     if (videos.length === 0) return null;
 
     return (
-        <section className="py-10 md:py-12 bg-bg-cream overflow-hidden relative">
+        <section className="py-4 md:py-8 bg-bg-cream overflow-hidden relative">
 
             {/* Flying Parachute Decoration */}
             {/* <motion.div
@@ -214,7 +214,7 @@ export default function InstaVideos() {
                 />
             </motion.div> */}
 
-            <div className="max-w-6xl mx-auto px-4 md:px-6 relative z-10">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
                 <div className="text-center mb-8 flex flex-col items-center">
                     <span
                         className="font-bold tracking-[4px] uppercase text-[10px] mb-1.5 block"

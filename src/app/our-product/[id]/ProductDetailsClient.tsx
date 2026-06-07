@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import AddToCartButton from './AddToCartButton';
 import ProductGallery from './ProductGallery';
 import PincodeWidget from '@/components/PincodeWidget';
@@ -22,7 +23,15 @@ export default function ProductDetailsClient({ product }: { product: any }) {
         };
     });
 
-    const hasDiscount = selectedVariant.discount > 0;
+    const isCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || selectedVariant.coupon_code));
+    const isDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && selectedVariant.discount > 0);
+
+    const hasDiscount = isDiscountType && selectedVariant.discount > 0;
+    const hasCoupon = isCouponType && selectedVariant.coupon_code && selectedVariant.coupon_amount > 0;
+
+    const finalPrice = hasCoupon
+        ? (selectedVariant.original_price - (selectedVariant.coupon_amount || 0))
+        : (isDiscountType ? selectedVariant.price : selectedVariant.original_price);
     const originalPrice = selectedVariant.original_price;
 
     return (
@@ -30,7 +39,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
             {/* Main Product Info Card */}
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col lg:flex-row">
                 {/* Image Gallery */}
-                <div className="lg:w-[45%] bg-gray-50 border-r border-gray-100">
+                <div className="lg:w-[45%] bg-gray-50 border-r border-gray-100 p-6 md:p-8">
                     <ProductGallery 
                         images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
                         name={product.name} 
@@ -56,15 +65,24 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             {product.name} <span style={{ color: '#00863D' }} className="font-black">({selectedVariant.size})</span>
                         </h1>
 
-                        <div className="flex items-baseline gap-3 mb-5">
+                        <div className="flex items-baseline gap-3 mb-5 flex-wrap">
                             <span className="text-3xl md:text-4xl font-black text-gray-900">
-                                ₹{selectedVariant.price.toFixed(0)}
+                                ₹{finalPrice.toFixed(0)}
                             </span>
-                            {hasDiscount && (
+                            {hasCoupon ? (
                                 <>
-                                    <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(0)}</span>
-                                    <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{selectedVariant.discount}% OFF</span>
+                                    <span className="text-lg text-gray-400 line-through">₹{selectedVariant.original_price.toFixed(0)}</span>
+                                    <span className="bg-green-700 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                        <i className="fa-solid fa-ticket"></i> {selectedVariant.coupon_code} Offer
+                                    </span>
                                 </>
+                            ) : (
+                                hasDiscount && (
+                                    <>
+                                        <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(0)}</span>
+                                        <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{selectedVariant.discount}% OFF</span>
+                                    </>
+                                )
                             )}
                         </div>
 
@@ -72,25 +90,56 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             {product.description}
                         </p>
 
+                        {/* Coupon Info Section (Zomato District Style) */}
+                        {hasCoupon && (
+                            <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50/30 rounded-3xl border-2 border-green-200/60 flex items-center justify-between shadow-sm animate-slide-in">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-11 h-11 relative rounded-full bg-white border border-green-100 flex items-center justify-center p-1.5 shrink-0 shadow-sm">
+                                        <Image
+                                            src="/images/cc-Logo-01-1.png"
+                                            alt="CC Logo"
+                                            fill
+                                            sizes="44px"
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-sm font-black text-green-800 uppercase tracking-wide">{selectedVariant.coupon_code}</span>
+                                        <span className="text-xs text-gray-500 font-bold">You got a discount</span>
+                                    </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1 shrink-0">
+                                    <span className="bg-[#00863D] text-white text-[9px] font-extrabold px-3 py-1 rounded-full tracking-wider uppercase flex items-center gap-0.5 shadow-sm">
+                                        <i className="fa-solid fa-check text-[8px]" /> Applied
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Variant Selector */}
                         {product.variants && product.variants.length > 0 && (
                             <div className="mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-100">
                                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Select Pack Size</p>
                                 <div className="flex flex-wrap gap-3">
-                                    {product.variants.map((v: any, idx: number) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setSelectedVariant(v)}
-                                            className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${
-                                                selectedVariant.size === v.size
-                                                    ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
-                                                    : 'border-white bg-white text-gray-500 hover:border-gray-200'
-                                            }`}
-                                        >
-                                            <span>{v.size}</span>
-                                            <span className={`text-[10px] ${selectedVariant.size === v.size ? 'text-primary' : 'text-gray-400'}`}>₹{v.price}</span>
-                                        </button>
-                                    ))}
+                                    {product.variants.map((v: any, idx: number) => {
+                                        const vPrice = isCouponType
+                                            ? (v.original_price - (v.coupon_amount || 0))
+                                            : (isDiscountType ? v.price : v.original_price);
+                                        return (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setSelectedVariant(v)}
+                                                className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${
+                                                    selectedVariant.size === v.size
+                                                        ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
+                                                        : 'border-white bg-white text-gray-500 hover:border-gray-200'
+                                                }`}
+                                            >
+                                                <span>{v.size}</span>
+                                                <span className={`text-[10px] ${selectedVariant.size === v.size ? 'text-primary' : 'text-gray-400'}`}>₹{vPrice}</span>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
@@ -110,7 +159,17 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             ))}
                         </div>
 
-                        <AddToCartButton product={product} selectedVariant={selectedVariant} />
+                        <AddToCartButton 
+                            product={product} 
+                            selectedVariant={{
+                                ...selectedVariant,
+                                price: finalPrice,
+                                original_price: selectedVariant.original_price,
+                                discount_type: product.discount_type || (isCouponType ? 'coupon' : (isDiscountType ? 'discount' : '')),
+                                coupon_code: selectedVariant.coupon_code || product.coupon_code || '',
+                                coupon_amount: selectedVariant.coupon_amount || product.coupon_discount || 0
+                            }} 
+                        />
 
                         {/* Pincode delivery check */}
                         <div className="mt-8">
@@ -131,7 +190,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
             {/* Price Comparison - Passing selected variant's price */}
             <ProductComparison product={{ 
                 ...product, 
-                price: selectedVariant.price 
+                price: finalPrice 
             }} />
         </div>
     );

@@ -12,7 +12,7 @@ interface BlogFormProps {
     onSuccess: () => void;
 }
 
-const CATEGORIES = ['Health', 'Recipes', 'Sustainability'];
+const CATEGORIES = ['Health', 'Recipes', 'Sustainability', 'Newsroom'];
 
 export default function BlogForm({ blog, onClose, onSuccess }: BlogFormProps) {
     const [title, setTitle] = useState(blog?.title || '');

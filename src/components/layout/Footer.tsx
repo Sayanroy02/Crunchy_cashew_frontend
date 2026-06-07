@@ -104,8 +104,8 @@ export default function Footer() {
                         {[
                             { icon: 'fa-brands fa-instagram', href: 'https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ==' },
                             { icon: 'fa-brands fa-facebook-f', href: '#' },
-                            { icon: 'fa-brands fa-whatsapp', href: '#' },
-                            { icon: 'fa-brands fa-youtube', href: '#' },
+                            { icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/917847996343' },
+                            { icon: 'fa-brands fa-youtube', href: 'https://www.youtube.com/@crunchycashews2402' },
                         ].map((s, i) => (
                             <a
                                 key={i}

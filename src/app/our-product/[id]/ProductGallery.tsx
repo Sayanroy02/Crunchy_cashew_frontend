@@ -98,10 +98,10 @@ export default function ProductGallery({ images, name, videoUrl }: ProductGaller
     const activeItem = galleryItems[activeIndex] || galleryItems[0];
 
     return (
-        <div className="flex flex-col md:flex-row h-full gap-4">
+        <div className="flex flex-col md:flex-row gap-6 lg:sticky lg:top-8 h-fit w-full">
             {/* Thumbnails (Left for Desktop, Bottom for Mobile) */}
             {galleryItems.length > 1 && (
-                <div className="order-2 md:order-1 md:w-24">
+                <div className="order-2 md:order-1 md:w-24 shrink-0">
                     <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto pb-2 md:pb-0 scrollbar-hide snap-x">
                         {galleryItems.map((item, idx) => (
                             <button

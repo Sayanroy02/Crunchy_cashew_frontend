@@ -8,7 +8,7 @@ import type { BlogCardData } from '@/components/ui/BlogCard';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { motion } from 'framer-motion';
 
-const CATEGORIES = ['All', 'Health', 'Recipes', 'Sustainability'] as const;
+const CATEGORIES = ['All', 'Health', 'Recipes', 'Sustainability', 'Newsroom'] as const;
 type CategoryFilter = typeof CATEGORIES[number];
 
 const CATEGORY_DISPLAY_NAMES: Record<CategoryFilter, string> = {
@@ -16,6 +16,7 @@ const CATEGORY_DISPLAY_NAMES: Record<CategoryFilter, string> = {
     'Health': 'Health',
     'Recipes': 'Recipes',
     'Sustainability': 'Sustainability',
+    'Newsroom': 'Newsroom',
 };
 
 export default function BlogsDirectory() {
@@ -26,6 +27,7 @@ export default function BlogsDirectory() {
     const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
     const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const filterRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +43,11 @@ export default function BlogsDirectory() {
                 setLoading(false);
             });
     }, []);
+
+    // Reset to page 1 when filters or search change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [activeCategory, searchTerm, showFeaturedOnly, sortOrder]);
 
     // Close filter dropdown on click outside
     useEffect(() => {
@@ -91,29 +98,29 @@ export default function BlogsDirectory() {
         return result;
     }, [blogs, activeCategory, searchTerm, sortOrder, showFeaturedOnly]);
 
+    const ITEMS_PER_PAGE = 10;
+    const totalPages = Math.ceil(filteredBlogs.length / ITEMS_PER_PAGE);
+
+    const paginatedBlogs = useMemo(() => {
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        return filteredBlogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+    }, [filteredBlogs, currentPage]);
+
     return (
-        <div className={`min-h-screen pb-24 bg-[#FFF9E7]`}>
-            {/* Hero Header */}
-            <section className="relative z-50 h-[450px] md:h-[550px] flex items-center justify-center pt-10 md:pt-16">
-                {/* Background Image */}
-                <div className="absolute inset-0 z-0">
-                    <img
-                        src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777967174/ChatGPT_Image_May_5_2026_01_16_00_PM_s0vfn3.png"
-                        alt="Blog Hero"
-                        className="w-full h-full object-cover"
-                    />
-                </div>
+        <div className={`min-h-screen pb-24 bg-[#FFF9E7] relative`}>
+            {/* Seamless Background Image */}
+            <div className="absolute top-0 left-0 z-0 w-full h-[35vh] md:h-[45vh] lg:h-[55vh]">
+                <img
+                    src="https://res.cloudinary.com/da1acfqsn/image/upload/v1777967174/ChatGPT_Image_May_5_2026_01_16_00_PM_s0vfn3.png"
+                    alt="Blog Hero"
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-gradient-to-t from-[#FFF9E7] to-transparent pointer-events-none" />
+            </div>
 
-                {/* Floating Cashew Decoration
-                <div className="absolute top-[20%] left-0 w-[140px] pointer-events-none z-[5] hidden xl:block rotate-[-15deg]">
-                    <img
-                        src="/images/Fruit-3-1.png"
-                        alt=""
-                        className="w-full h-auto drop-shadow-2xl brightness-110"
-                    />
-                </div> */}
-
-                <div className="relative z-10 max-w-5xl mx-auto text-center px-6">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 pt-12 md:pt-16 lg:pt-20">
+                {/* Heading placed naturally over the background */}
+                <div className="text-center mb-10 md:mb-16 relative z-20">
                     {/* Eyebrow tag */}
                     <motion.div
                         initial={{ opacity: 0, y: 8 }}
@@ -232,7 +239,7 @@ export default function BlogsDirectory() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
             {/* Blogs Grid */}
             <section className="max-w-7xl mx-auto px-6 py-6">
@@ -292,11 +299,48 @@ export default function BlogsDirectory() {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                        {filteredBlogs.map(blog => (
-                            <BlogCard key={blog._id} blog={blog} searchTerm={searchTerm} />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+                            {paginatedBlogs.map(blog => (
+                                <BlogCard key={blog._id} blog={blog} searchTerm={searchTerm} />
+                            ))}
+                        </div>
+
+                        {/* Pagination Controls */}
+                        {totalPages > 1 && (
+                            <div className="mt-16 flex items-center justify-center gap-2">
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                    disabled={currentPage === 1}
+                                    className="w-12 h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center font-bold text-gray-700 hover:border-black transition-colors disabled:opacity-40 disabled:hover:border-gray-200 cursor-pointer disabled:cursor-not-allowed"
+                                >
+                                    <i className="fa-solid fa-chevron-left text-sm" />
+                                </button>
+                                
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                                    <button
+                                        key={page}
+                                        onClick={() => setCurrentPage(page)}
+                                        className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold transition-all cursor-pointer ${
+                                            currentPage === page
+                                                ? 'bg-[#1b4332] text-white shadow-md'
+                                                : 'bg-white border border-gray-200 text-gray-700 hover:border-black'
+                                        }`}
+                                    >
+                                        {page}
+                                    </button>
+                                ))}
+
+                                <button
+                                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    disabled={currentPage === totalPages}
+                                    className="w-12 h-12 rounded-2xl border border-gray-200 bg-white flex items-center justify-center font-bold text-gray-700 hover:border-black transition-colors disabled:opacity-40 disabled:hover:border-gray-200 cursor-pointer disabled:cursor-not-allowed"
+                                >
+                                    <i className="fa-solid fa-chevron-right text-sm" />
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </section>
         </div>
