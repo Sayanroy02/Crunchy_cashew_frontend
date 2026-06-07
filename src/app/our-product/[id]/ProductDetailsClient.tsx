@@ -220,11 +220,8 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                 </div>
             </div>
 
-            {/* Price Comparison - Passing selected variant's price */}
-            <ProductComparison product={{ 
-                ...product, 
-                price: finalPrice 
-            }} />
+            {/* Price Comparison */}
+            <ProductComparison product={product} />
         </div>
     );
 }

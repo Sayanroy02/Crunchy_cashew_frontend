@@ -52,6 +52,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  if (!sessionStorage.getItem('has-seen-splash')) {
+                    document.documentElement.classList.add('splash-active');
+                  }
+                } catch (e) {}
+              })();
+            `
+          }}
+        />
         {/* Google Analytics Tag */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1ZRV8VXCZE"

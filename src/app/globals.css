@@ -262,3 +262,8 @@ body {
   animation: swing-right 5.5s ease-in-out infinite;
   transform-origin: top right;
 }
+
+/* ── Splash Screen Active Hiding ── */
+.splash-active body > :not(#splash-screen-container) {
+  display: none !important;
+}

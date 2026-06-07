@@ -11,165 +11,287 @@ interface Product {
   _id: string;
   name: string;
   price: number;
+  image_url?: string;
+  variants?: Array<{
+    size: string;
+    price: number;
+    original_price: number;
+    discount: number;
+    stock: number;
+    is_available: boolean;
+  }>;
   marketplace_prices?: {
     amazon?: { price?: number; link?: string };
     flipkart?: { price?: number; link?: string };
-    blinkit?: { price?: number };
-    swiggy?: { price?: number };
+    blinkit?: { price?: number; link?: string };
+    swiggy?: { price?: number; link?: string };
   };
 }
 
 export default function ProductComparison({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
 
+  // Extract the first variant (usually 200g) as the baseline for comparison
+  const variants = product.variants || [];
+  const firstVariant = variants.length > 0 ? variants[0] : null;
+  const compareSize = firstVariant ? firstVariant.size : '200g';
+
+  // Base price for comparison (always the 200g variant)
+  const basePrice = firstVariant ? firstVariant.price : product.price;
+
   const mp = product.marketplace_prices || {};
+
+  // Calculate fallback marketplace prices (e.g. 15% and 25% markup) if database values are missing
+  const amazonPrice = mp.amazon?.price || Math.round(basePrice * 1.15);
+  const flipkartPrice = mp.flipkart?.price || Math.round(basePrice * 1.15);
+  const blinkitPrice = mp.blinkit?.price || Math.round(basePrice * 1.25);
+  const jioPrice = mp.swiggy?.price || Math.round(basePrice * 1.25);
+
   const platforms = [
     {
-      name: 'Our Website',
-      logo: '/images/crunchy-cashews-product.png',
-      price: product.price,
+      name: 'OUR WEBSITE',
+      logo: product.image_url || '/images/crunchy-cashews-product.png',
+      price: basePrice,
       link: '#',
-      isBest: true
+      isBest: true,
+      label: 'FACTORY PRICE'
     },
     {
-      name: 'Amazon',
+      name: 'AMAZON',
       logo: '/images/partners/amazon.jpg',
-      price: mp.amazon?.price,
+      price: amazonPrice,
       link: mp.amazon?.link
     },
     {
-      name: 'Flipkart',
+      name: 'FLIPKART',
       logo: '/images/partners/flipkart.png',
-      price: mp.flipkart?.price,
+      price: flipkartPrice,
       link: mp.flipkart?.link
     },
     {
-      name: 'Blinkit',
+      name: 'BLINKIT',
       logo: '/images/partners/blinkit.png',
-      price: mp.blinkit?.price,
-      link: null
+      price: blinkitPrice,
+      link: mp.blinkit?.link
     },
     {
-      name: 'Jio Mart',
+      name: 'JIO MART',
       logo: '/images/partners/JioMart_logo.png',
-      price: mp.swiggy?.price,
-      link: null
+      price: jioPrice,
+      link: mp.swiggy?.link
     },
-  ].filter(p => p.price);
+  ];
 
-  const otherMarketplaces = platforms.filter(p => !p.isBest && p.price !== undefined && p.price !== null);
-  const marketplacePrices = otherMarketplaces.map(p => p.price as number);
-  const avgMpPrice = marketplacePrices.length > 0 ? (marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length) : product.price * 1.15;
-  const savingsPercent = Math.round(((avgMpPrice - product.price) / avgMpPrice) * 100);
+  const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice];
+  const avgMpPrice = marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length;
+  const savingsPercent = Math.round(((avgMpPrice - basePrice) / avgMpPrice) * 100);
 
   return (
     <div className="mt-16 space-y-12">
-      <div className="text-center space-y-2">
-        <SectionHeading text="Price" highlight="Comparison" className="text-3xl md:text-4xl" />
-        <p className="text-slate-500 font-medium italic text-center">See how much you save by buying direct</p>
+      <div className="text-center space-y-4">
+        <SectionHeading 
+          text="Price Comparison" 
+          highlight={`for ${product.name} (${compareSize})`} 
+          className="text-2xl md:text-4xl" 
+        />
+        <p className="text-slate-500 font-medium italic text-center">
+          See how much you save by buying direct
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Comparison Table */}
-        <div className="lg:col-span-8 bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-100">
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Rate Difference</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Link</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                {platforms.map((p) => (
-                  <tr key={p.name} className={`${p.isBest ? 'bg-white shadow-[inset_0_0_0_1px_rgba(246,176,0,0.1)]' : 'hover:bg-slate-50/50'} transition-colors`}>
-                    <td className="px-6 py-5 flex items-center gap-3">
-                      <div className="w-10 h-10 relative bg-white rounded-lg p-1 border border-slate-100">
-                        <Image src={p.logo} alt={p.name} fill className="object-contain p-1" />
-                      </div>
-                      <div>
-                        <span className={`font-bold text-sm`} style={{ color: p.isBest ? COLORS.primary : '#475569' }}>{p.name}</span>
-                        {p.isBest && <span className="block text-[8px] font-black uppercase tracking-tighter" style={{ color: COLORS.primary }}>Best Price</span>}
-                      </div>
-                    </td>
-                    <td className="px-6 py-5 text-center">
-                      <span className={`text-sm font-black`} style={{ color: p.isBest ? '#00863D' : '#ef4444' }}>
-                        {p.isBest ? 'Lowest Price' : `+${Math.round(((p.price! - product.price) / product.price) * 100)}%`}
+      {/* Desktop view (HOMEPAGE style cards) */}
+      <div className="hidden md:block relative">
+        <div className="grid md:grid-cols-5 gap-6 px-2">
+          {platforms.map((platform, idx) => (
+            <motion.div
+              key={platform.name}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              whileHover={{ y: -8 }}
+              className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${
+                platform.isBest
+                  ? 'bg-white z-10 scale-105 border border-slate-200'
+                  : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
+              }`}
+              style={
+                platform.isBest
+                  ? {
+                      boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
+                    }
+                  : {}
+              }
+            >
+              {platform.isBest && (
+                <div
+                  className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
+                  style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
+                >
+                  Best Price
+                </div>
+              )}
+
+              <div className="w-24 h-24 relative mb-6">
+                <Image
+                  src={platform.logo}
+                  alt={platform.name}
+                  fill
+                  sizes="96px"
+                  className="object-contain"
+                />
+              </div>
+
+              <div className="text-center space-y-4 w-full">
+                <p
+                  className="text-[10px] font-black uppercase tracking-[0.2em]"
+                  style={{ color: platform.isBest ? COLORS.primary : '#94a3b8' }}
+                >
+                  {platform.name}
+                </p>
+                <div className="flex flex-col items-center gap-1">
+                  {platform.isBest ? (
+                    <div className="flex flex-col items-center">
+                      <span className="text-[20px] font-black text-[#00863D]">Lowest Price</span>
+                      <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">Factory Price</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <span className="text-3xl font-black text-red-500">
+                        +{Math.round(((platform.price - basePrice) / basePrice) * 100)}%
                       </span>
-                    </td>
-                    <td className="px-6 py-5 text-right">
-                      {p.link && p.link !== '#' ? (
-                        <a href={p.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline">
-                          View Store <ExternalLink size={12} />
-                        </a>
-                      ) : p.isBest ? (
-                        <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: COLORS.button }}>Cheapest Here</span>
-                      ) : (
-                        <span className="text-[10px] font-bold text-slate-300 uppercase italic tracking-tighter">Link unavailable</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                      <span className="text-[10px] font-bold opacity-45 uppercase tracking-tighter">Higher Rate</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {platform.isBest ? (
+                <div
+                  className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
+                  style={{
+                    color: COLORS.primary,
+                    backgroundColor: `${COLORS.primaryLight}33`,
+                    borderColor: `${COLORS.primaryLight}4D`,
+                  }}
+                >
+                  <span className="text-[10px] font-black tracking-widest uppercase truncate">
+                    Save {savingsPercent}% Per Order
+                  </span>
+                </div>
+              ) : platform.link ? (
+                <a
+                  href={platform.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                >
+                  View Store <ExternalLink size={10} />
+                </a>
+              ) : (
+                <span className="mt-6 text-[10px] font-bold text-slate-300 uppercase italic tracking-tighter">
+                  Link unavailable
+                </span>
+              )}
+            </motion.div>
+          ))}
         </div>
+      </div>
 
-        {/* Savings Calculator */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="rounded-3xl p-8 text-white shadow-xl relative overflow-hidden" style={{ backgroundColor: COLORS.heading, boxShadow: `0 20px 25px -5px ${COLORS.heading}4D` }}>
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16" />
-
-            <div className="relative space-y-6">
-              <div className="flex items-center gap-2" style={{ color: 'rgb(17, 17, 17)' }}>
-                <i className="fa-solid fa-calculator text-base animate-pulse" style={{ color: 'rgba(255, 255, 255, 1)' }}></i>
-                <h3 className="text-sm font-black uppercase tracking-widest" style={{ color: 'rgba(255, 254, 254, 1)' }}>Savings Calculator</h3>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                    <Minus size={18} />
-                  </button>
-                  <div className="text-center">
-                    <span className="text-3xl font-black block leading-none">{quantity}</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Packs</span>
-                  </div>
-                  <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-lg" style={{ backgroundColor: COLORS.button, color: COLORS.buttonText }}>
-                    <Plus size={18} />
-                  </button>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-white/10 text-center">
-                <p className="font-black uppercase tracking-[0.2em] text-[9px] mb-1" style={{ color: COLORS.highlight }}>Estimated Savings</p>
-                <div className="overflow-hidden h-14 flex items-center justify-center">
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={savingsPercent}
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -20, opacity: 0 }}
-                      transition={{ type: "spring", damping: 10, stiffness: 100 }}
-                      className="text-5xl font-black"
-                    >
-                      {savingsPercent}%
-                    </motion.span>
-                  </AnimatePresence>
-                </div>
-                <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mt-2">Per Order</p>
-              </div>
-            </div>
+      {/* Mobile view (HOMEPAGE style bubbles, fully responsive) */}
+      <div className="md:hidden space-y-6">
+        <div className="rounded-[3rem] p-6 shadow-sm border border-black/5 relative" style={{ backgroundColor: `${COLORS.black}05` }}>
+          <div className="absolute top-6 right-8 opacity-10">
+            <Zap size={64} style={{ color: COLORS.primary }} />
           </div>
 
-          <div className="bg-white border rounded-3xl p-6 flex items-center gap-4 shadow-sm group transition-colors" style={{ borderColor: `${COLORS.heading}1A` }}>
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${COLORS.heading}1A`, color: COLORS.heading }}>
-              <ShieldCheck size={24} />
+          <div className="space-y-6">
+            <div className="flex justify-between items-end pb-3" style={{ borderBottom: `1px solid ${COLORS.black}1A` }}>
+              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Platform</span>
+              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Rate Difference</span>
             </div>
-            <div>
-              <p className="text-xs font-black uppercase tracking-widest" style={{ color: COLORS.heading }}>Factory Direct Price</p>
-              <p className="text-[10px] text-slate-500 font-medium">No marketplace commissions.</p>
+
+            <div className="space-y-3">
+              {platforms.map((p) => (
+                <div
+                  key={p.name}
+                  className={`flex items-center justify-between p-4 rounded-[2.5rem] transition-all duration-300 ${
+                    p.isBest
+                      ? 'bg-white shadow-xl border border-black/5'
+                      : 'bg-black/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {p.isBest ? (
+                      <div className="w-10 h-10 relative rounded-full bg-white border border-black/5 overflow-hidden shadow-sm shrink-0 flex items-center justify-center">
+                        <Image
+                          src="/images/cc-Logo-01-1.png"
+                          alt="Our Website"
+                          fill
+                          sizes="40px"
+                          className="object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 relative rounded-xl bg-white border border-black/5 p-2 overflow-hidden shadow-sm shrink-0">
+                        <Image
+                          src={p.logo}
+                          alt={p.name}
+                          fill
+                          sizes="40px"
+                          className="object-contain p-0.5"
+                        />
+                      </div>
+                    )}
+                    <span className="text-sm font-black text-black">
+                      {p.isBest ? 'Our Website' : p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <div
+                        className={`${p.isBest ? 'text-[15px]' : 'text-[16px]'} font-black`}
+                        style={{ color: p.isBest ? '#00863D' : '#ef4444' }}
+                      >
+                        {p.isBest ? 'Lowest Price' : `+${Math.round(((p.price - basePrice) / basePrice) * 100)}%`}
+                      </div>
+                      {p.isBest ? (
+                        <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">
+                          Factory Direct
+                        </div>
+                      ) : (
+                        <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">
+                          Higher Rate
+                        </div>
+                      )}
+                    </div>
+
+                    {!p.isBest && p.link && (
+                      <a
+                        href={p.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-7 h-7 rounded-full bg-white border border-black/5 flex items-center justify-center text-primary shadow-sm active:scale-95 transition-transform shrink-0"
+                      >
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-6 flex flex-col items-center gap-4" style={{ borderTop: `1px solid ${COLORS.black}1A` }}>
+              <div className="flex flex-col items-center">
+                <span className="text-xs font-black text-black/30 uppercase tracking-[0.2em] mb-1">
+                  Estimated Savings
+                </span>
+                <span className="text-4xl font-black text-black">Save {savingsPercent}%</span>
+                <span className="text-[10px] font-black text-black/30 uppercase tracking-widest mt-1">
+                  Per Order
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -177,4 +299,3 @@ export default function ProductComparison({ product }: { product: Product }) {
     </div>
   );
 }
-

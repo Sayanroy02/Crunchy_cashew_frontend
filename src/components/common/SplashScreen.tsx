@@ -24,17 +24,22 @@ const SplashScreen = () => {
             setIsVisible(true);
             // Lock background scrolling while splash is active
             document.body.style.overflow = 'hidden';
+        } else {
+            // Clean up class if user has already seen splash screen
+            document.documentElement.classList.remove('splash-active');
         }
 
         return () => {
             // Ensure scroll is restored if component unmounts unexpectedly
             document.body.style.overflow = 'unset';
+            document.documentElement.classList.remove('splash-active');
         };
     }, []);
 
     const handleClose = () => {
         setIsVisible(false);
         sessionStorage.setItem('has-seen-splash', 'true');
+        document.documentElement.classList.remove('splash-active');
         // Restore background scrolling after a slight delay to match fade animation
         setTimeout(() => {
             document.body.style.overflow = 'unset';
@@ -48,6 +53,7 @@ const SplashScreen = () => {
             {isVisible && (
                 <motion.div
                     key="splash-screen"
+                    id="splash-screen-container"
                     initial={{ opacity: 1 }}
                     exit={{
                         opacity: 0,
