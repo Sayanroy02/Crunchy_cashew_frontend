@@ -1157,7 +1157,7 @@ export default function BulkOrderPage() {
                         className="w-full relative rounded-[2rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.12)] bg-white border-[6px] md:border-8 border-white aspect-[4/3] sm:aspect-video md:aspect-[21/9]"
                     >
                         <video
-                            src="https://res.cloudinary.com/da1acfqsn/video/upload/v1777747446/VN20260503_001215_u2yinn.mp4"
+                            src="https://res.cloudinary.com/da1acfqsn/video/upload/f_auto,q_auto,w_960/v1780842395/WhatsApp_Video_2026-06-07_at_7.53.48_PM_jr7cd7.mp4"
                             autoPlay
                             muted
                             loop

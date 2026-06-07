@@ -1,65 +1,53 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 export default function TrustedMarquee() {
-    const trackRef = useRef<HTMLDivElement>(null);
-    const animRef = useRef<number>(0);
-    const xRef = useRef<number>(0);
-
-    useEffect(() => {
-        const track = trackRef.current;
-        if (!track) return;
-
-        const singleSetWidth = track.scrollWidth / 5;
-        const speed = 0.8; // increase for faster
-
-        const tick = () => {
-            xRef.current -= speed;
-            if (Math.abs(xRef.current) >= singleSetWidth) {
-                xRef.current = 0;
-            }
-            track.style.transform = `translateX(${xRef.current}px)`;
-            animRef.current = requestAnimationFrame(tick);
-        };
-
-        animRef.current = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(animRef.current);
-    }, []);
+    const logos = [
+        { src: "/images/partners/reliance-logo.png", alt: "Smart Bazaar", className: "h-20 md:h-30" },
+        { src: "/images/partners/Global-nuts.png", alt: "Global Nuts", className: "h-12 md:h-16" },
+        { src: "/images/partners/9to10-logo.png", alt: "9to10", className: "h-16 md:h-24" },
+        { src: "/images/partners/natures-nut.png", alt: "Nature's Nut", className: "h-12 md:h-16" },
+        { src: "/images/partners/SPENCERS%20Logo.png", alt: "Spencers", className: "h-12 md:h-16" },
+        { src: "/images/partners/half-full-logo.png", alt: "Half Full", className: "h-20 md:h-28" },
+        { src: "/images/partners/Marriott_Logo.png", alt: "Marriott", className: "h-12 md:h-16" },
+        { src: "/images/partners/whole-farms.png", alt: "Whole Farms", className: "h-20 md:h-28" }
+    ];
 
     return (
-        <div className="flex overflow-hidden w-full select-none">
-            <div
-                ref={trackRef}
-                className="flex w-max items-center gap-16 md:gap-24 whitespace-nowrap px-8 will-change-transform"
-            >
-                {[...Array(5)].map((_, idx) => (
-                    <div key={idx} className="flex items-center gap-16 md:gap-24 shrink-0">
-                        <img 
-                            src="/images/partners/reliance-logo.png" 
-                            alt="Smart Bazaar" 
-                            className="h-20 md:h-30 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
-                        />
-                        <img 
-                            src="/images/partners/Global-nuts.png" 
-                            alt="Global Nuts" 
-                            className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
-                        />
-                        <img 
-                            src="/images/partners/9to10-logo.png" 
-                            alt="9to10" 
-                            className="h-16 md:h-24 w-auto object-contain grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
-                        />
-                        <img 
-                            src="/images/partners/natures-nut.png" 
-                            alt="Nature's Nut" 
-                            className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
-                        />
-                        <img 
-                            src="/images/partners/SPENCERS%20Logo.png" 
-                            alt="Spencers" 
-                            className="h-12 md:h-16 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
-                        />
+        <div className="flex overflow-hidden w-full select-none relative">
+            <style dangerouslySetInnerHTML={{__html: `
+                @keyframes marquee-scroll {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-50%);
+                    }
+                }
+                .marquee-track-css {
+                    display: flex;
+                    width: max-content;
+                    animation: marquee-scroll 22s linear infinite;
+                    will-change: transform;
+                }
+                .marquee-track-css:hover {
+                    animation-play-state: paused;
+                }
+            `}} />
+            
+            <div className="marquee-track-css flex items-center gap-16 md:gap-24 whitespace-nowrap px-8">
+                {/* Render two identical sets of logos for seamless continuous scrolling */}
+                {[...Array(2)].map((_, setIdx) => (
+                    <div key={setIdx} className="flex items-center gap-16 md:gap-24 shrink-0">
+                        {logos.map((logo, logoIdx) => (
+                            <img
+                                key={`${setIdx}-${logoIdx}`}
+                                src={logo.src}
+                                alt={logo.alt}
+                                className={`${logo.className} w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300`}
+                            />
+                        ))}
                     </div>
                 ))}
             </div>

@@ -6,6 +6,7 @@ import AddToCartButton from './AddToCartButton';
 import ProductGallery from './ProductGallery';
 import PincodeWidget from '@/components/PincodeWidget';
 import ProductComparison from '@/components/products/ProductComparison';
+import { useSnackbar } from '@/context/SnackbarContext';
 
 export default function ProductDetailsClient({ product }: { product: any }) {
     // Initialize with first available variant or legacy data
@@ -23,16 +24,29 @@ export default function ProductDetailsClient({ product }: { product: any }) {
         };
     });
 
+    const [isCouponApplied, setIsCouponApplied] = useState(false);
+    const { showSnackbar } = useSnackbar();
+
     const isCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || selectedVariant.coupon_code));
     const isDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && selectedVariant.discount > 0);
 
     const hasDiscount = isDiscountType && selectedVariant.discount > 0;
     const hasCoupon = isCouponType && selectedVariant.coupon_code && selectedVariant.coupon_amount > 0;
 
-    const finalPrice = hasCoupon
+    const finalPrice = (hasCoupon && isCouponApplied)
         ? (selectedVariant.original_price - (selectedVariant.coupon_amount || 0))
         : (isDiscountType ? selectedVariant.price : selectedVariant.original_price);
     const originalPrice = selectedVariant.original_price;
+
+    const handleToggleCoupon = () => {
+        if (isCouponApplied) {
+            setIsCouponApplied(false);
+            showSnackbar('Coupon removed', 'info');
+        } else {
+            setIsCouponApplied(true);
+            showSnackbar('Coupon applied successfully!', 'success');
+        }
+    };
 
     return (
         <div className="space-y-12">
@@ -69,7 +83,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             <span className="text-3xl md:text-4xl font-black text-gray-900">
                                 ₹{finalPrice.toFixed(0)}
                             </span>
-                            {hasCoupon ? (
+                            {hasCoupon && isCouponApplied ? (
                                 <>
                                     <span className="text-lg text-gray-400 line-through">₹{selectedVariant.original_price.toFixed(0)}</span>
                                     <span className="bg-green-700 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
@@ -92,9 +106,16 @@ export default function ProductDetailsClient({ product }: { product: any }) {
 
                         {/* Coupon Info Section (Zomato District Style) */}
                         {hasCoupon && (
-                            <div className="mb-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50/30 rounded-3xl border-2 border-green-200/60 flex items-center justify-between shadow-sm animate-slide-in">
+                            <div 
+                                onClick={handleToggleCoupon}
+                                className={`mb-8 p-4 rounded-3xl border-2 cursor-pointer flex items-center justify-between shadow-sm transition-all duration-300 ${
+                                    isCouponApplied
+                                        ? 'bg-gradient-to-r from-green-50 to-emerald-50/35 border-green-500 shadow-green-100/50'
+                                        : 'bg-white border-dashed border-gray-300 hover:border-green-400 hover:bg-green-50/20'
+                                }`}
+                            >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-11 h-11 relative rounded-full bg-white border border-green-100 flex items-center justify-center p-1.5 shrink-0 shadow-sm">
+                                    <div className="w-11 h-11 relative rounded-full bg-white border border-gray-100 flex items-center justify-center p-1.5 shrink-0 shadow-sm">
                                         <Image
                                             src="/images/cc-Logo-01-1.png"
                                             alt="CC Logo"
@@ -104,14 +125,24 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                         />
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-sm font-black text-green-800 uppercase tracking-wide">{selectedVariant.coupon_code}</span>
-                                        <span className="text-xs text-gray-500 font-bold">You got a discount</span>
+                                        <span className={`text-sm font-black uppercase tracking-wide transition-colors duration-200 ${
+                                            isCouponApplied ? 'text-green-800' : 'text-gray-700'
+                                        }`}>{selectedVariant.coupon_code}</span>
+                                        <span className="text-xs text-gray-500 font-bold">
+                                            {isCouponApplied ? 'Coupon applied successfully!' : `Save ₹${selectedVariant.coupon_amount || product.coupon_discount || 0} with this coupon`}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-end gap-1 shrink-0">
-                                    <span className="bg-[#00863D] text-white text-[9px] font-extrabold px-3 py-1 rounded-full tracking-wider uppercase flex items-center gap-0.5 shadow-sm">
-                                        <i className="fa-solid fa-check text-[8px]" /> Applied
-                                    </span>
+                                    {isCouponApplied ? (
+                                        <span className="bg-[#00863D] text-white text-[10px] font-extrabold px-3 py-1.5 rounded-full tracking-wider uppercase flex items-center gap-1 shadow-sm transition-all duration-200">
+                                            <i className="fa-solid fa-check text-[9px]" /> Applied
+                                        </span>
+                                    ) : (
+                                        <span className="bg-gray-100 text-gray-700 group-hover:bg-green-600 group-hover:text-white border border-gray-200 text-[10px] font-extrabold px-3 py-1.5 rounded-full tracking-wider uppercase flex items-center gap-1 transition-all duration-200">
+                                            Apply
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         )}
@@ -122,7 +153,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Select Pack Size</p>
                                 <div className="flex flex-wrap gap-3">
                                     {product.variants.map((v: any, idx: number) => {
-                                        const vPrice = isCouponType
+                                        const vPrice = (isCouponType && isCouponApplied)
                                             ? (v.original_price - (v.coupon_amount || 0))
                                             : (isDiscountType ? v.price : v.original_price);
                                         return (
@@ -165,9 +196,11 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 ...selectedVariant,
                                 price: finalPrice,
                                 original_price: selectedVariant.original_price,
-                                discount_type: product.discount_type || (isCouponType ? 'coupon' : (isDiscountType ? 'discount' : '')),
-                                coupon_code: selectedVariant.coupon_code || product.coupon_code || '',
-                                coupon_amount: selectedVariant.coupon_amount || product.coupon_discount || 0
+                                discount_type: product.discount_type || ((hasCoupon && isCouponApplied) ? 'coupon' : (isDiscountType ? 'discount' : '')),
+                                coupon_code: (hasCoupon && isCouponApplied) ? (selectedVariant.coupon_code || product.coupon_code || '') : '',
+                                coupon_amount: (hasCoupon && isCouponApplied) ? (selectedVariant.coupon_amount || product.coupon_discount || 0) : 0,
+                                available_coupon_code: hasCoupon ? (selectedVariant.coupon_code || product.coupon_code || '') : '',
+                                available_coupon_amount: hasCoupon ? (selectedVariant.coupon_amount || product.coupon_discount || 0) : 0
                             }} 
                         />
 

@@ -4,11 +4,12 @@ import React from 'react';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/lib/store/store';
-import { removeFromCart, updateQuantity, clearCart } from '@/lib/store/features/cartSlice';
+import { removeFromCart, updateQuantity, clearCart, autoApplyCoupons } from '@/lib/store/features/cartSlice';
 import ProductCard, { Product } from '@/components/products/ProductCard';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { useSnackbar } from '@/context/SnackbarContext';
 
 function RecommendedProducts() {
     const [products, setProducts] = React.useState<Product[]>([]);
@@ -42,6 +43,15 @@ export default function CartPage() {
     const { items, totalAmount } = useSelector((state: RootState) => state.cart);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
+    const { showSnackbar } = useSnackbar();
+
+    React.useEffect(() => {
+        const hasUnappliedCoupons = items.some(item => item.available_coupon_code && !item.coupon_code);
+        if (hasUnappliedCoupons) {
+            dispatch(autoApplyCoupons());
+            showSnackbar('Your offer has been applied.', 'success');
+        }
+    }, [items, dispatch, showSnackbar]);
 
     const totalMRP = items.reduce((sum, item) => sum + ((item.original_price || item.price) * item.quantity), 0);
     const totalDiscount = items.reduce((sum, item) => sum + (((item.original_price || item.price) - item.price) * item.quantity), 0);

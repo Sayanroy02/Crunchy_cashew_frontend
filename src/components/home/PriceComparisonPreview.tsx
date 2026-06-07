@@ -94,9 +94,9 @@ export default function PriceComparisonPreview() {
     },
   ];
 
-  const marketplacePrices = [mp.amazon?.price, mp.flipkart?.price, mp.blinkit?.price, mp.swiggy?.price].filter(p => p) as number[];
-  const avgMpPrice = marketplacePrices.length > 0 ? marketplacePrices[0] : 499;
-  const savings = avgMpPrice - product.price;
+  const marketplacePrices = [mp.amazon?.price || 219, mp.flipkart?.price || 219, mp.blinkit?.price || 249, mp.swiggy?.price || 249];
+  const avgMpPrice = marketplacePrices.reduce((sum, p) => sum + p, 0) / marketplacePrices.length;
+  const savingsPercent = Math.round(((avgMpPrice - product.price) / avgMpPrice) * 100);
 
   return (
     <section
@@ -105,46 +105,10 @@ export default function PriceComparisonPreview() {
       onMouseLeave={() => { x.set(0); y.set(0); }}
       className="py-4 md:py-6 px-4 bg-bg-cream overflow-hidden relative"
     >
-
-      {/* ── Left corner fruit — desktop only, anchored to heading area ── */}
-      {/* <motion.div
-        style={{ x: moveX, y: moveY }}
-        animate={{
-          y: [0, -12, 0],
-          rotate: [0, 2, -2, 0]
-        }}
-        transition={{
-          y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-          rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-        }}
-        className="hidden md:block absolute left-[-2%] top-[-2%] w-[140px] lg:w-[180px] pointer-events-none select-none z-10"
-      >
-        <Image
-          src="/images/Fruit-3.png"
-          alt=""
-          width={220}
-          height={300}
-          className="object-contain object-top w-full h-auto brightness-110 drop-shadow-2xl rotate-[-5deg]"
-          aria-hidden="true"
-        />
-      </motion.div> */}
-
-      <div className="max-w-7xl mx-auto space-y-16">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-12">
         {/* 1. HEADER */}
         <div className="text-center space-y-4">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-[3px]"
-            style={{ backgroundColor: `${COLORS.primary}0D`, color: COLORS.primary }}
-          >
-            {/* <Zap size={14} className="fill-[#0A5246]" /> */}
-            {/* The Price Difference */}
-          </motion.div>
-
           <SectionHeading text="Buy Direct." highlight="Save More." />
-
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -179,7 +143,7 @@ export default function PriceComparisonPreview() {
                 {platform.isBest && (
                   <div
                     className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
-                    style={{ backgroundColor: COLORS.black, color: COLORS.primary }}
+                    style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
                   >
                     Best Price
                   </div>
@@ -205,13 +169,13 @@ export default function PriceComparisonPreview() {
                   <div className="flex flex-col items-center gap-1">
                     {platform.isBest ? (
                       <div className="flex flex-col items-center">
-                        <span className="text-4xl font-black" style={{ color: COLORS.black }}>₹{platform.price}</span>
+                        <span className="text-[20px] font-black text-[#00863D]">Lowest Price</span>
                         <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">Factory Price</span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center">
-                        <span className="text-2xl font-black opacity-20 line-through decoration-black/50 decoration-2">₹{platform.price}</span>
-                        <span className="text-[10px] font-bold opacity-30 uppercase tracking-tighter">Marketplace Markup</span>
+                        <span className="text-3xl font-black text-red-500">+{Math.round(((platform.price - product.price) / product.price) * 100)}%</span>
+                        <span className="text-[10px] font-bold opacity-45 uppercase tracking-tighter">Higher Rate</span>
                       </div>
                     )}
                   </div>
@@ -222,7 +186,7 @@ export default function PriceComparisonPreview() {
                     className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
                     style={{ color: COLORS.primary, backgroundColor: `${COLORS.primaryLight}33`, borderColor: `${COLORS.primaryLight}4D` }}
                   >
-                    <span className="text-[10px] font-black tracking-widest uppercase truncate">Save ₹{savings} per pack</span>
+                    <span className="text-[10px] font-black tracking-widest uppercase truncate">Save {savingsPercent}% Per Order</span>
                   </div>
                 )}
               </motion.div>
@@ -232,47 +196,21 @@ export default function PriceComparisonPreview() {
 
         {/* Mobile Layout (Image 2 style) */}
         <div className="md:hidden space-y-6">
-
           <div className="rounded-[3rem] p-8 shadow-sm border border-black/5 relative" style={{ backgroundColor: `${COLORS.black}05` }}>
             <div className="absolute top-6 right-8 opacity-10">
               <Zap size={64} style={{ color: COLORS.primary }} />
             </div>
 
             <div className="space-y-10">
-              {/* Product Info */}
-              <div className="flex flex-col items-center text-center space-y-5">
-                <div className="relative w-52 h-52 bg-white rounded-3xl p-4 shadow-sm border border-black/5 overflow-hidden">
-                  <Image
-                    src={product.image_url || '/images/crunchy-cashews-product.png'}
-                    alt={product.name || 'Product Image'}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-contain p-2"
-                  />
-                </div>
-                <h3
-                  className="text-2xl font-extrabold max-w-[240px] leading-tight px-2"
-                  style={{ color: COLORS.black }}
-                >
-                  {product.name}
-                </h3>
-                <div
-                  className="text-[10px] font-black px-8 py-2.5 rounded-full uppercase tracking-[0.2em] shadow-sm"
-                  style={{ backgroundColor: COLORS.primary, color: COLORS.black }}
-                >
-                  Best Price Found
-                </div>
-              </div>
-
               {/* Pricing List */}
               <div className="space-y-8">
                 <div className="flex justify-between items-end pb-3" style={{ borderBottom: `1px solid ${COLORS.black}1A` }}>
                   <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: COLORS.black, opacity: 0.5 }}>Platform</span>
-                  <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: COLORS.black, opacity: 0.5 }}>Price</span>
+                  <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: COLORS.black, opacity: 0.5 }}>Rate Difference</span>
                 </div>
 
                 <div className="space-y-2">
-                  {platforms.slice(0, 4).map((p) => (
+                  {platforms.slice(0, 5).map((p) => (
                     <div
                       key={p.name}
                       className={`flex items-center justify-between p-5 rounded-[2.5rem] transition-all duration-300 ${p.isBest
@@ -305,13 +243,15 @@ export default function PriceComparisonPreview() {
                       </div>
                       <div className="text-right">
                         <div
-                          className={`text-xl font-black`}
-                          style={{ color: COLORS.black }}
+                          className={`${p.isBest ? 'text-[16px]' : 'text-lg'} font-black`}
+                          style={{ color: p.isBest ? '#00863D' : '#ef4444' }}
                         >
-                          ₹{p.price}
+                          {p.isBest ? 'Lowest Price' : `+${Math.round(((p.price - product.price) / product.price) * 100)}%`}
                         </div>
-                        {p.isBest && (
+                        {p.isBest ? (
                           <div className="text-[9px] font-black uppercase tracking-tighter opacity-30" style={{ color: COLORS.black }}>Factory Direct</div>
+                        ) : (
+                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">Higher Rate</div>
                         )}
                       </div>
                     </div>
@@ -321,8 +261,8 @@ export default function PriceComparisonPreview() {
                 <div className="pt-6 flex flex-col items-center gap-8" style={{ borderTop: `1px solid ${COLORS.black}1A` }}>
                   <div className="flex flex-col items-center">
                     <span className="text-xs font-black text-black opacity-30 uppercase tracking-[0.2em] mb-1">Estimated Savings</span>
-                    <span className="text-4xl font-black" style={{ color: COLORS.black }}>Save ₹{savings}</span>
-                    <span className="text-[10px] font-black text-black opacity-30 uppercase tracking-widest mt-1">Per Pack</span>
+                    <span className="text-4xl font-black" style={{ color: COLORS.black }}>Save {savingsPercent}%</span>
+                    <span className="text-[10px] font-black text-black opacity-30 uppercase tracking-widest mt-1">Per Order</span>
                   </div>
 
                   <Link

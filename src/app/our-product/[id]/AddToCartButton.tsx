@@ -20,6 +20,8 @@ export default function AddToCartButton({ product, selectedVariant }: { product:
             discount_type: selectedVariant.discount_type,
             coupon_code: selectedVariant.coupon_code,
             coupon_amount: selectedVariant.coupon_amount,
+            available_coupon_code: selectedVariant.available_coupon_code,
+            available_coupon_amount: selectedVariant.available_coupon_amount,
             quantity: quantity,
             image_url: product.image_url
         }));

@@ -9,6 +9,8 @@ export interface CartItem {
     discount_type?: string;
     coupon_code?: string;
     coupon_amount?: number;
+    available_coupon_code?: string;
+    available_coupon_amount?: number;
     quantity: number;
     image_url?: string;
 }
@@ -106,9 +108,30 @@ export const cartSlice = createSlice({
                     state.totalAmount = parsedCart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 }
             }
+        },
+        autoApplyCoupons: (state) => {
+            let appliedAny = false;
+            state.items = state.items.map(item => {
+                if (item.available_coupon_code && !item.coupon_code) {
+                    item.coupon_code = item.available_coupon_code;
+                    item.coupon_amount = item.available_coupon_amount || 0;
+                    item.discount_type = 'coupon';
+                    const orig = item.original_price || item.price;
+                    item.price = orig - (item.available_coupon_amount || 0);
+                    appliedAny = true;
+                }
+                return item;
+            });
+            if (appliedAny) {
+                state.totalQuantity = state.items.reduce((sum, item) => sum + item.quantity, 0);
+                state.totalAmount = state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('cart', JSON.stringify(state.items));
+                }
+            }
         }
     }
 });
 
-export const { addToCart, removeFromCart, updateQuantity, clearCart, hydrateCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, updateQuantity, clearCart, hydrateCart, autoApplyCoupons } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -57,16 +57,10 @@ export default function ProductComparison({ product }: { product: Product }) {
     },
   ].filter(p => p.price);
 
-  // Get other marketplaces with pricing (excluding "Our Website" / isBest)
   const otherMarketplaces = platforms.filter(p => !p.isBest && p.price !== undefined && p.price !== null);
-
-  // Find the lowest price among them
-  const lowestMarketplacePrice = otherMarketplaces.length > 0
-    ? Math.min(...otherMarketplaces.map(p => p.price as number))
-    : product.price;
-
-  const savingsPerPack = Math.max(0, Math.round(lowestMarketplacePrice - product.price));
-  const totalSavings = savingsPerPack * quantity;
+  const marketplacePrices = otherMarketplaces.map(p => p.price as number);
+  const avgMpPrice = marketplacePrices.length > 0 ? (marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length) : product.price * 1.15;
+  const savingsPercent = Math.round(((avgMpPrice - product.price) / avgMpPrice) * 100);
 
   return (
     <div className="mt-16 space-y-12">
@@ -83,7 +77,7 @@ export default function ProductComparison({ product }: { product: Product }) {
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100">
                   <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform</th>
-                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Price</th>
+                  <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Rate Difference</th>
                   <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Link</th>
                 </tr>
               </thead>
@@ -100,7 +94,9 @@ export default function ProductComparison({ product }: { product: Product }) {
                       </div>
                     </td>
                     <td className="px-6 py-5 text-center">
-                      <span className={`text-lg font-black`} style={{ color: p.isBest ? COLORS.primary : '#94a3b8' }}>₹{p.price}</span>
+                      <span className={`text-sm font-black`} style={{ color: p.isBest ? '#00863D' : '#ef4444' }}>
+                        {p.isBest ? 'Lowest Price' : `+${Math.round(((p.price! - product.price) / product.price) * 100)}%`}
+                      </span>
                     </td>
                     <td className="px-6 py-5 text-right">
                       {p.link && p.link !== '#' ? (
@@ -147,22 +143,22 @@ export default function ProductComparison({ product }: { product: Product }) {
               </div>
 
               <div className="pt-6 border-t border-white/10 text-center">
-                <p className="font-black uppercase tracking-[0.2em] text-[9px] mb-1" style={{ color: COLORS.highlight }}>Total Savings</p>
+                <p className="font-black uppercase tracking-[0.2em] text-[9px] mb-1" style={{ color: COLORS.highlight }}>Estimated Savings</p>
                 <div className="overflow-hidden h-14 flex items-center justify-center">
                   <AnimatePresence mode="wait">
                     <motion.span
-                      key={totalSavings}
+                      key={savingsPercent}
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       exit={{ y: -20, opacity: 0 }}
                       transition={{ type: "spring", damping: 10, stiffness: 100 }}
                       className="text-5xl font-black"
                     >
-                      ₹{totalSavings}
+                      {savingsPercent}%
                     </motion.span>
                   </AnimatePresence>
                 </div>
-                <p className="text-white/50 text-[10px] font-medium mt-2 italic px-4 leading-relaxed">Compared to buying from marketplaces at higher prices.</p>
+                <p className="text-white/50 text-[10px] font-black uppercase tracking-widest mt-2">Per Order</p>
               </div>
             </div>
           </div>

@@ -121,6 +121,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             discount_type: product.discount_type || (isCouponType ? 'coupon' : (isDiscountType ? 'discount' : '')),
             coupon_code: couponCode,
             coupon_amount: couponAmount,
+            available_coupon_code: isCouponType ? couponCode : '',
+            available_coupon_amount: isCouponType ? couponAmount : 0,
             quantity: 1,
             image_url: product.image_url
         }));
