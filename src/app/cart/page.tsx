@@ -30,8 +30,8 @@ function RecommendedProducts() {
         <div className="mt-16 bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
             <h2 className="text-2xl font-black font-heading text-black mb-6">Customers Also Bought</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {products.map(product => (
-                    <ProductCard key={product.id} product={product} />
+                {products.map((product, idx) => (
+                    <ProductCard key={product.id || product._id || idx} product={product} />
                 ))}
             </div>
         </div>
