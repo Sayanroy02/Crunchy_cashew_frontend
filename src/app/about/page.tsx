@@ -724,7 +724,7 @@ export default function AboutPage() {
               {/* LEFT side content */}
               <div className="relative z-10 flex-1 text-center md:text-left flex flex-col items-center md:items-start">
                 <h2 className="text-xl md:text-2xl font-black text-white leading-tight">
-                  Ready to Elevate <span style={{ color: COLORS.primary }}>Your Supply Chain ?</span>
+                  Ready to Elevate <span style={{ color: COLORS.primary }}>Your Supply Chain?</span>
                 </h2>
                 <p className="text-white/80 text-sm md:text-base max-w-xl mt-3 mb-6 leading-relaxed font-medium">
                   Whether you need consistent bulk orders of premium grades or white-label solutions for your brand, we have the capacity and the quality to be your trusted manufacturing partner.

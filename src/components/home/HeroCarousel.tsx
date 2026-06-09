@@ -15,7 +15,7 @@ interface Banner {
 const DEFAULTS: Banner[] = [
     { _id: 'd1', title: 'Premium Quality Tea', image_url: '', link: '/our-product' },
     { _id: 'd2', title: 'Factory Direct Prices', image_url: '', link: '/our-product' },
-    { _id: 'd3', title: '🚚 Free Shipping on Orders Above ₹999', image_url: '', link: '/our-product' },
+    { _id: 'd3', title: '🚚 Free Shipping on Orders Above ₹1499', image_url: '', link: '/our-product' },
     { _id: 'd4', title: 'Best Deals Today', image_url: '', link: '/our-product' },
 ];
 
@@ -43,7 +43,7 @@ const CARD_CONFIG = [
         bg: 'linear-gradient(135deg, #0d1117 0%, #161b22 60%, #1c2432 100%)',
         accentColor: '#38bdf8',
         logoColor: '#0ea5e9',
-        subtitle: 'Orders Above ₹999',
+        subtitle: 'Orders Above ₹1499',
     },
     {
         badge: 'Best Price',

@@ -262,7 +262,7 @@ I’d like to know more about your white label options. Could you please share t
                     </div>
 
                     <div className="relative z-10 px-6 py-6 md:px-12 md:py-8">
-                        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-6 lg:gap-10">
+                        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-1 md:gap-6 lg:gap-10">
 
                             {/* Left Side: Content */}
                             <div className="flex-1 text-center lg:text-left">
@@ -283,7 +283,7 @@ I’d like to know more about your white label options. Could you please share t
                                     Launch Your Own <span style={{ color: COLORS.primary }}>Cashew Brand.</span>
                                 </motion.h2>
 
-                                <p className="text-white/80 text-[16px] leading-snug max-w-[500px] mb-5 font-medium">
+                                <p className="text-white/80 text-[16px] leading-snug max-w-[500px] mb-2 lg:mb-5 font-medium">
                                     Leverage our state-of-the-art processing facility to sell premium, factory-direct cashews under your own label. We handle the grading, roasting, and custom packaging so you can focus on selling.
                                 </p>
 
@@ -318,13 +318,13 @@ I’d like to know more about your white label options. Could you please share t
                             </div>
 
                             {/* Right Side: Visual Mockup */}
-                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[260px] -mt-2 lg:mt-0 pointer-events-none">
+                            <div className="flex-1 w-full max-w-[320px] lg:max-w-none relative lg:h-[260px] -mt-4 lg:mt-0 pointer-events-none">
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.9 }}
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     className="relative w-full h-full flex items-center justify-center lg:justify-end"
                                 >
-                                    <div className="relative w-full h-[220px] md:h-[260px] lg:h-[320px] lg:w-[150%] lg:absolute lg:right-[-8%] lg:bottom-[-15%] drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
+                                    <div className="relative w-full h-[180px] md:h-[260px] lg:h-[320px] lg:w-[150%] lg:absolute lg:right-[-8%] lg:bottom-[-15%] drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
                                         <img
                                             src="/images/YOUR_LOGO.png"
                                             alt="Custom Branding Packaging"
@@ -335,7 +335,7 @@ I’d like to know more about your white label options. Could you please share t
                             </div>
 
                             {/* Mobile Buttons */}
-                            <div className="relative z-20 lg:hidden w-full flex flex-col gap-2 mt-1">
+                            <div className="relative z-20 lg:hidden w-full flex flex-col gap-2 mt-0">
                                 <button
                                     onClick={handleCTA}
                                     className="group font-black tracking-wide w-full px-6 py-3.5 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-xl whitespace-normal min-[380px]:whitespace-nowrap"

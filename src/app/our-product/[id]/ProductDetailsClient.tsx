@@ -182,7 +182,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 { icon: '🏭', label: 'Direct from factory' },
                                 { icon: '🌱', label: '100% Natural' },
                                 { icon: '📦', label: 'Hygienic packaging' },
-                                { icon: '🚚', label: 'Free ship on ₹999+' },
+                                { icon: '🚚', label: 'Free ship on ₹1499+' },
                             ].map(f => (
                                 <div key={f.label} className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-3 py-2">
                                     <span>{f.icon}</span>

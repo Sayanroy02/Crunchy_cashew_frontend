@@ -201,7 +201,7 @@ export default function CheckoutPage() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    const shippingThreshold = 600;
+    const shippingThreshold = 1499;
     const shippingFee = totalAmount >= shippingThreshold ? 0 : 45;
     const finalTotal = totalAmount + shippingFee;
 

@@ -304,7 +304,7 @@ function ContactContent() {
             </section>
 
             <section className="max-w-5xl mx-auto px-4 md:px-8 -mt-10 pb-20 relative z-10">
-                <div className="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col-reverse lg:flex-row">
+                <div className="bg-white rounded-[32px] overflow-hidden flex flex-col-reverse lg:flex-row">
 
                     {/* ── Sidebar ── */}
                     <aside className="lg:w-80 shrink-0 flex flex-col p-8 md:p-10 gap-8 relative overflow-hidden" style={{ backgroundColor: COLORS.heading }}>
@@ -320,7 +320,11 @@ function ContactContent() {
                         {/* info rows */}
                         <div className="relative z-10 flex flex-col gap-6">
                             <InfoRow icon={<IconLocation />} title="Location"
-                                lines={['YU NUT PROCESSING INDUSTRY,Gram Panchayat Fulbari-II, Dist. - Jalpaiguri Siliguri (W.B) - 734015']}
+                                lines={[
+                                    'YU NUT PROCESSING INDUSTRY',
+                                    'Gram Panchayat Fulbari-II,',
+                                    'Dist. Jalpaiguri, Siliguri (W.B) - 734015'
+                                ]}
                                 href="https://maps.app.goo.gl/GaLaWva2mpKMxbVT7"
                                 external
                             />
@@ -336,13 +340,19 @@ function ContactContent() {
 
                         {/* socials */}
                         <div className="relative z-10 border-t border-white/10 pt-6 mt-auto">
-                            <p style={{ color: COLORS.button }} className="text-[10px] font-bold tracking-widest uppercase mb-3">Follow Us</p>
+                            <h2 className="text-white text-[10px] font-bold tracking-widest uppercase mb-2">Follow Us</h2>
+                            <div className="w-6 h-0.5 rounded-full mb-4" style={{ backgroundColor: COLORS.button }} />
                             <div className="flex gap-3">
-                                {['fa-instagram', 'fa-facebook-f', 'fa-whatsapp', 'fa-youtube'].map(ic => (
-                                    <a key={ic} href="https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ=="
+                                {[
+                                    { icon: 'fa-instagram', href: 'https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ%3D%3D' },
+                                    { icon: 'fa-facebook-f', href: 'https://www.facebook.com/people/Crunchy-Cashews/61590609004737/' },
+                                    { icon: 'fa-whatsapp', href: 'https://wa.me/917847996343' },
+                                    { icon: 'fa-youtube', href: 'https://www.youtube.com/@crunchycashews2402' },
+                                ].map(social => (
+                                    <a key={social.icon} href={social.href} target="_blank" rel="noopener noreferrer"
                                         className="w-11 h-11 rounded-[14px] bg-transparent border border-white/30 flex items-center justify-center text-white transition-all duration-300 hover:bg-[#F6B000] hover:border-[#F6B000] hover:-translate-y-1"
                                     >
-                                        <i className={`fa-brands ${ic} text-lg`} />
+                                        <i className={`fa-brands ${social.icon} text-lg`} />
                                     </a>
                                 ))}
                             </div>
@@ -468,15 +478,15 @@ function ContactContent() {
                 </div>
 
                 {/* ══ STAT STRIP ══ */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                     {[
-                        { value: '24h', label: 'Response Time' },
-                        { value: '500+', label: 'Wholesale Clients' },
-                        { value: '15+', label: 'Years in Business' },
+                        { value: '24 - 48 hrs', label: 'Response Time' },
+                        { value: '250+', label: 'Wholesale Clients' },
+                        { value: '10+', label: 'Years in Business' },
                         { value: '100%', label: 'Premium Quality' },
                     ].map(s => (
-                        <div key={s.label} className="bg-white rounded-2xl p-5 text-center shadow-sm border" style={{ borderColor: `${COLORS.primary}0D` }}>
-                            <p className="text-2xl font-black" style={{ color: COLORS.primary }}>{s.value}</p>
+                        <div key={s.label} className="bg-white rounded-2xl p-5 text-center shadow-lg border" style={{ borderColor: `${COLORS.heading}1A` }}>
+                            <p className="text-xl md:text-2xl font-black" style={{ color: COLORS.heading }}>{s.value}</p>
                             <p className="text-gray-400 text-[10px] font-bold tracking-widest uppercase mt-1">{s.label}</p>
                         </div>
                     ))}

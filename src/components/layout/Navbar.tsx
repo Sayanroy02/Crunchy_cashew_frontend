@@ -11,7 +11,7 @@ import { COLORS } from '@/constants/styles';
 
 
 const ANNOUNCEMENTS = [
-    '🚚 Free Shipping on orders above ₹599',
+    '🚚 Free Shipping on orders above ₹1499+',
     '🌟 Delivered in 5–7 Business Days Pan India',
 ];
 

@@ -487,7 +487,7 @@ function ProfileContent() {
                         </div>
                         <div>
                             <h4 className="font-bold text-gray-800">Free Shipping</h4>
-                            <p className="text-xs text-gray-400 font-medium">Free shipping for order above ₹599</p>
+                            <p className="text-xs text-gray-400 font-medium">Free shipping for order above ₹1499</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
