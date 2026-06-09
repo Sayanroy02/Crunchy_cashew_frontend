@@ -29,6 +29,7 @@ export default function Navbar() {
     const [annoFade, setAnnoFade] = useState(true);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [hoveredLink, setHoveredLink] = useState<string | null>(null);
     // true once user has scrolled past 100vh (1 screen height)
     const [scrolledPast, setScrolledPast] = useState(false);
 
@@ -123,13 +124,16 @@ export default function Navbar() {
                     <nav className="flex flex-1 items-center gap-1 px-6">
                         {LEFT_LINKS.map(link => {
                             const active = isActive(link.href);
+                            const isHovered = hoveredLink === link.href;
                             return (
                                 <Link
                                     key={link.href}
                                     href={link.href}
+                                    onMouseEnter={() => setHoveredLink(link.href)}
+                                    onMouseLeave={() => setHoveredLink(null)}
                                     className="relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors hover:bg-gray-50"
                                     style={{
-                                        color: active ? COLORS.heading : '#4b5563',
+                                        color: active || isHovered ? COLORS.heading : '#4b5563',
                                     }}
                                 >
                                     {link.label}

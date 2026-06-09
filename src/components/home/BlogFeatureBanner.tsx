@@ -14,7 +14,7 @@ export default function BlogFeatureBanner() {
   return (
     <section
       className="py-4 md:py-8 px-4 md:px-6 bg-transparent"
-      aria-label="Write a Blog Contest Banner"
+      aria-label="Share a Recipe & Win a Gift Hamper Banner"
     >
       <div className="max-w-7xl mx-auto">
         {/* ── Thin Banner Card ── */}
@@ -50,12 +50,12 @@ export default function BlogFeatureBanner() {
           {/* ── LEFT: Illustration ── */}
           <div className="relative z-10 flex-shrink-0 hidden sm:flex items-center justify-center">
             <Image
-              src="/images/iLLUSTARTION-1.png"
-              alt="Blog illustration"
-              width={90}
-              height={90}
-              className="h-[72px] w-auto object-contain drop-shadow-lg"
-              style={{ filter: 'drop-shadow(0 4px 12px rgba(253,199,0,0.25))' }}
+              src="/images/chef-cook.png"
+              alt="Chef sharing recipe"
+              width={100}
+              height={100}
+              className="h-[88px] w-auto object-contain drop-shadow-lg"
+              style={{ filter: 'drop-shadow(0 4px 16px rgba(253,199,0,0.3))' }}
               priority={false}
             />
           </div>
@@ -69,15 +69,15 @@ export default function BlogFeatureBanner() {
                   className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full border"
                   style={{ color: '#FDC700', borderColor: 'rgba(253,199,0,0.4)', backgroundColor: 'rgba(253,199,0,0.1)' }}
                 >
-                  🎁 Featured + Win a Gift Hamper
+                  🎁 Share a Recipe + Win a Gift Hamper
                 </span>
               </div>
               <p className="text-white font-bold text-base md:text-lg leading-tight">
-                Write a Blog. Get Featured.{' '}
-                <span style={{ color: '#FDC700' }}>Win a Hamper!</span>
+                Made Something Delicious?{' '}
+                <span style={{ color: '#FDC700' }}>Share Your Recipe & Win!</span>
               </p>
               <p className="text-white/50 text-xs leading-relaxed max-w-xs sm:max-w-sm">
-                Share your knowledge on recipes, health, or sustainability — we'll feature your blog on our site.
+                Did you create a mouth-watering dish using Crunchy Cashews? Share your recipe with us to get featured on our site and win an exclusive gift hamper!
               </p>
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function BlogFeatureBanner() {
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
               </svg>
-              Write a Blog
+              Submit Your Recipe
               <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" className="group-hover:translate-x-0.5 transition-transform">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>

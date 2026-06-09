@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Minus, Plus, ExternalLink, Zap, ShieldCheck } from 'lucide-react';
 import { COLORS } from '@/constants/styles';
 import SectionHeading from '@/components/ui/SectionHeading';
+import { TrendingUp } from 'lucide-react';
 
 interface Product {
   _id: string;
@@ -30,6 +31,7 @@ interface Product {
 
 export default function ProductComparison({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   // Extract the first variant (usually 200g) as the baseline for comparison
   const variants = product.variants || [];
@@ -102,99 +104,128 @@ export default function ProductComparison({ product }: { product: Product }) {
       {/* Desktop view (HOMEPAGE style cards) */}
       <div className="hidden md:block relative">
         <div className="grid md:grid-cols-5 gap-6 px-2">
-          {platforms.map((platform, idx) => (
-            <motion.div
-              key={platform.name}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: idx * 0.1 }}
-              whileHover={{ y: -8 }}
-              className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${
-                platform.isBest
-                  ? 'bg-white z-10 scale-105 border border-slate-200'
-                  : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
-              }`}
-              style={
-                platform.isBest
-                  ? {
-                      boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
-                    }
-                  : {}
-              }
-            >
-              {platform.isBest && (
-                <div
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
-                  style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
-                >
-                  Best Price
+          {platforms.map((platform, idx) => {
+            const isHovered = hoveredIdx === idx && !platform.isBest;
+            const rupeesSaved = !platform.isBest ? platform.price - basePrice : 0;
+            return (
+              <motion.div
+                key={platform.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ y: -8 }}
+                onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
+                onHoverEnd={() => setHoveredIdx(null)}
+                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${
+                  platform.isBest
+                    ? 'bg-white z-10 scale-105 border border-slate-200'
+                    : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
+                }`}
+                style={
+                  platform.isBest
+                    ? {
+                        boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
+                      }
+                    : isHovered
+                    ? {
+                        boxShadow: `0 20px 40px -10px ${COLORS.heading}30, 0 0 0 2px ${COLORS.heading}`,
+                        borderColor: COLORS.heading,
+                      }
+                    : {}
+                }
+              >
+                {platform.isBest && (
+                  <div
+                    className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
+                    style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
+                  >
+                    Best Price
+                  </div>
+                )}
+
+                <div className="w-24 h-24 relative mb-6">
+                  <Image
+                    src={platform.logo}
+                    alt={platform.name}
+                    fill
+                    sizes="96px"
+                    className="object-contain"
+                  />
                 </div>
-              )}
 
-              <div className="w-24 h-24 relative mb-6">
-                <Image
-                  src={platform.logo}
-                  alt={platform.name}
-                  fill
-                  sizes="96px"
-                  className="object-contain"
-                />
-              </div>
-
-              <div className="text-center space-y-4 w-full">
-                <p
-                  className="text-[10px] font-black uppercase tracking-[0.2em]"
-                  style={{ color: platform.isBest ? COLORS.primary : '#94a3b8' }}
-                >
-                  {platform.name}
-                </p>
-                <div className="flex flex-col items-center gap-1">
-                  {platform.isBest ? (
-                    <div className="flex flex-col items-center">
-                      <span className="text-[20px] font-black text-[#00863D]">Lowest Price</span>
-                      <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">Factory Price</span>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center">
-                      <span className="text-3xl font-black text-red-500">
-                        +{Math.round(((platform.price - basePrice) / basePrice) * 100)}%
-                      </span>
-                      <span className="text-[10px] font-bold opacity-45 uppercase tracking-tighter">Higher Rate</span>
-                    </div>
-                  )}
+                <div className="text-center space-y-3 w-full">
+                  <p
+                    className="text-[10px] font-black uppercase tracking-[0.2em]"
+                    style={{
+                      color: platform.isBest
+                        ? COLORS.primary
+                        : isHovered
+                        ? '#000000'
+                        : '#94a3b8',
+                    }}
+                  >
+                    {platform.name}
+                  </p>
+                  <div className="flex flex-col items-center gap-1">
+                    {platform.isBest ? (
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-[28px] font-black" style={{ color: COLORS.heading }}>₹{basePrice}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">Factory Price</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-1">
+                        {/* Actual marketplace price */}
+                        <span
+                          className="text-[28px] font-black"
+                          style={{ color: '#ef4444' }}
+                        >
+                          ₹{platform.price}
+                        </span>
+                        <span
+                          className="text-[10px] font-bold uppercase tracking-tighter"
+                          style={{ color: isHovered ? '#000000' : '#ef4444', opacity: 0.7 }}
+                        >
+                          You save ₹{rupeesSaved} with us
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              {platform.isBest ? (
-                <div
-                  className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
-                  style={{
-                    color: COLORS.primary,
-                    backgroundColor: `${COLORS.primaryLight}33`,
-                    borderColor: `${COLORS.primaryLight}4D`,
-                  }}
-                >
-                  <span className="text-[10px] font-black tracking-widest uppercase truncate">
-                    Save {savingsPercent}% Per Order
+                {platform.isBest ? (
+                  <div
+                    className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
+                    style={{
+                      color: COLORS.heading,
+                      backgroundColor: `${COLORS.heading}18`,
+                      borderColor: `${COLORS.heading}40`,
+                    }}
+                  >
+                    <span
+                      className="text-[10px] font-black tracking-widest uppercase truncate"
+                      style={{ color: COLORS.heading }}
+                    >
+                      Save 15% to 25% Per Order
+                    </span>
+                  </div>
+                ) : platform.link ? (
+                  <a
+                    href={platform.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                  >
+                    View Store <ExternalLink size={10} />
+                  </a>
+                ) : (
+                  <span className="mt-6 text-[10px] font-bold text-slate-300 uppercase italic tracking-tighter">
+                    Link unavailable
                   </span>
-                </div>
-              ) : platform.link ? (
-                <a
-                  href={platform.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
-                >
-                  View Store <ExternalLink size={10} />
-                </a>
-              ) : (
-                <span className="mt-6 text-[10px] font-bold text-slate-300 uppercase italic tracking-tighter">
-                  Link unavailable
-                </span>
-              )}
-            </motion.div>
-          ))}
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
 
@@ -208,7 +239,7 @@ export default function ProductComparison({ product }: { product: Product }) {
           <div className="space-y-6">
             <div className="flex justify-between items-end pb-3" style={{ borderBottom: `1px solid ${COLORS.black}1A` }}>
               <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Platform</span>
-              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Rate Difference</span>
+              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Their Price</span>
             </div>
 
             <div className="space-y-3">
@@ -250,20 +281,18 @@ export default function ProductComparison({ product }: { product: Product }) {
 
                   <div className="flex items-center gap-3">
                     <div className="text-right">
-                      <div
-                        className={`${p.isBest ? 'text-[15px]' : 'text-[16px]'} font-black`}
-                        style={{ color: p.isBest ? '#00863D' : '#ef4444' }}
-                      >
-                        {p.isBest ? 'Lowest Price' : `+${Math.round(((p.price - basePrice) / basePrice) * 100)}%`}
-                      </div>
                       {p.isBest ? (
-                        <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">
-                          Factory Direct
-                        </div>
+                        <>
+                          <div className="text-[18px] font-black" style={{ color: COLORS.heading }}>₹{p.price}</div>
+                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">Factory Direct</div>
+                        </>
                       ) : (
-                        <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">
-                          Higher Rate
-                        </div>
+                        <>
+                          <div className="text-[18px] font-black" style={{ color: '#ef4444' }}>₹{p.price}</div>
+                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">
+                            save ₹{p.price - basePrice} with us
+                          </div>
+                        </>
                       )}
                     </div>
 
@@ -283,13 +312,14 @@ export default function ProductComparison({ product }: { product: Product }) {
             </div>
 
             <div className="pt-6 flex flex-col items-center gap-4" style={{ borderTop: `1px solid ${COLORS.black}1A` }}>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center gap-1">
                 <span className="text-xs font-black text-black/30 uppercase tracking-[0.2em] mb-1">
-                  Estimated Savings
+                  Our Price vs Avg Marketplace
                 </span>
-                <span className="text-4xl font-black text-black">Save {savingsPercent}%</span>
-                <span className="text-[10px] font-black text-black/30 uppercase tracking-widest mt-1">
-                  Per Order
+                <span className="text-[28px] font-black" style={{ color: COLORS.heading }}>₹{basePrice}</span>
+                <span className="text-sm font-bold text-red-400 line-through">₹{Math.round(avgMpPrice)} avg elsewhere</span>
+                <span className="text-[11px] font-black uppercase tracking-widest mt-1" style={{ color: COLORS.heading }}>
+                  You save ₹{Math.round(avgMpPrice - basePrice)} per order
                 </span>
               </div>
             </div>

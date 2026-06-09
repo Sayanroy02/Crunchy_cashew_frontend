@@ -38,10 +38,10 @@ export default function BlogsPreview() {
 
                     <Link
                         href="/blogs"
-                        className="hidden md:inline-flex bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl items-center justify-center gap-2 group whitespace-nowrap"
+                        className="hidden md:inline-flex bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl items-center justify-center gap-2 group whitespace-nowrap -translate-x-[5px]"
                     >
-                        View All Articles
-                        <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />
+                        View All Blogs
+                        <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform mr-2" />
                     </Link>
                 </div>
 
@@ -62,7 +62,7 @@ export default function BlogsPreview() {
                         href="/blogs"
                         className="bg-green-700 text-white p-4 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl inline-flex items-center justify-center gap-2 group whitespace-nowrap"
                     >
-                        View All Articles
+                        View All Blogs
                         <i className="fa-solid fa-arrow-right-long group-hover:translate-x-1 transition-transform" />
                     </Link>
                 </div>

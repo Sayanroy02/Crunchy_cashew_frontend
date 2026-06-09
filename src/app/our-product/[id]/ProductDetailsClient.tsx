@@ -51,9 +51,9 @@ export default function ProductDetailsClient({ product }: { product: any }) {
     return (
         <div className="space-y-12">
             {/* Main Product Info Card */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col lg:flex-row">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start relative">
                 {/* Image Gallery */}
-                <div className="lg:w-[45%] bg-gray-50 border-r border-gray-100 p-6 md:p-8">
+                <div className="lg:w-[45%] w-full bg-gray-50 lg:border-r border-b lg:border-b-0 border-gray-100 p-6 md:p-8 lg:sticky lg:top-24 lg:rounded-l-2xl rounded-t-2xl overflow-hidden z-10">
                     <ProductGallery 
                         images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
                         name={product.name} 
@@ -62,7 +62,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                 </div>
 
                 {/* Details Section */}
-                <div className="lg:w-[55%] p-8 md:p-12 flex flex-col justify-between">
+                <div className="lg:w-[55%] w-full p-8 md:p-12 flex flex-col justify-between lg:rounded-r-2xl rounded-b-2xl bg-white">
                     <div>
                         <div className="flex items-center gap-3 mb-3">
                             <span className="text-xs font-bold tracking-widest text-primary uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
@@ -153,13 +153,14 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Select Pack Size</p>
                                 <div className="flex flex-wrap gap-3">
                                     {product.variants.map((v: any, idx: number) => {
-                                        const vPrice = (isCouponType && isCouponApplied)
-                                            ? (v.original_price - (v.coupon_amount || 0))
-                                            : (isDiscountType ? v.price : v.original_price);
+                                        const vPrice = isDiscountType ? v.price : v.original_price;
                                         return (
                                             <button
                                                 key={idx}
-                                                onClick={() => setSelectedVariant(v)}
+                                                onClick={() => {
+                                                    setSelectedVariant(v);
+                                                    setIsCouponApplied(false); // reset coupon on variant switch
+                                                }}
                                                 className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${
                                                     selectedVariant.size === v.size
                                                         ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
