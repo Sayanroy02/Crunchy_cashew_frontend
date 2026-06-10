@@ -5,7 +5,7 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import { COLORS } from '@/constants/styles';
 
 const platforms = [
-    { name: 'Amazon', url: 'https://amazon.in', imgSrc: '/images/partners/amazon.jpg', containerBg: 'transparent', shadow: 'rgba(255,153,0,0.5)' },
+    { name: 'Amazon', url: 'https://amazon.in', imgSrc: '/images/partners/amazon.png', containerBg: 'transparent', shadow: 'rgba(255,153,0,0.5)' },
     { name: 'Flipkart', url: 'https://flipkart.com', imgSrc: '/images/partners/flipkart.png', containerBg: '#2874F0', shadow: 'rgba(40,116,240,0.5)' },
     { name: 'blinkit', url: 'https://blinkit.com', imgSrc: '/images/partners/blinkit.png', containerBg: 'transparent', shadow: 'rgba(248,203,0,0.6)' },
     { name: 'Swiggy Instamart', url: 'https://swiggy.com/instamart', imgSrc: '/images/partners/swiggy-instamart.png', containerBg: '#0050FF', shadow: 'rgba(252,128,25,0.5)' },

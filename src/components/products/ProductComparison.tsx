@@ -63,7 +63,7 @@ export default function ProductComparison({ product }: { product: Product }) {
     },
     {
       name: 'AMAZON',
-      logo: '/images/partners/amazon.jpg',
+      logo: '/images/partners/amazon.png',
       price: amazonPrice,
       link: mp.amazon?.link
     },
@@ -121,8 +121,8 @@ export default function ProductComparison({ product }: { product: Product }) {
                 onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
                 onHoverEnd={() => setHoveredIdx(null)}
                 className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${platform.isBest
-                    ? 'bg-white z-10 scale-105 border border-slate-200'
-                    : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
+                  ? 'bg-white z-10 scale-105 border border-slate-200'
+                  : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
                   }`}
                 style={
                   platform.isBest
@@ -184,11 +184,8 @@ export default function ProductComparison({ product }: { product: Product }) {
                         >
                           ₹{platform.price}
                         </span>
-                        <span
-                          className="text-[10px] font-bold uppercase tracking-tighter"
-                          style={{ color: isHovered ? '#000000' : '#ef4444', opacity: 0.7 }}
-                        >
-                          You save ₹{rupeesSaved} with us
+                        <span className="text-[10px] font-bold uppercase tracking-tighter text-black flex items-center gap-1 justify-center mt-1">
+                          You save <span className="bg-green-600 text-white px-2 py-0.5 rounded-[4px] text-xs font-black">{Math.round((rupeesSaved / platform.price) * 100)}%</span> with us
                         </span>
                       </div>
                     )}
@@ -216,7 +213,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                     href={platform.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-6 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+                    className="mt-6 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-[#] hover:underline"
                   >
                     View Store <ExternalLink size={10} />
                   </a>
@@ -249,8 +246,8 @@ export default function ProductComparison({ product }: { product: Product }) {
                 <div
                   key={p.name}
                   className={`flex items-center justify-between p-4 rounded-[2.5rem] transition-all duration-300 ${p.isBest
-                      ? 'bg-white shadow-xl border border-black/5'
-                      : 'bg-black/5'
+                    ? 'bg-white shadow-xl border border-black/5'
+                    : 'bg-black/5'
                     }`}
                 >
                   <div className="flex items-center gap-3">
@@ -290,8 +287,8 @@ export default function ProductComparison({ product }: { product: Product }) {
                       ) : (
                         <>
                           <div className="text-[18px] font-black" style={{ color: '#ef4444' }}>₹{p.price}</div>
-                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">
-                            save ₹{p.price - basePrice} with us
+                          <div className="text-[9px] font-black uppercase tracking-tighter text-black flex items-center gap-1 justify-end mt-1">
+                            save <span className="bg-green-600 text-white px-1.5 py-[2px] rounded-[3px] text-[11px]">{Math.round(((p.price - basePrice) / p.price) * 100)}%</span> with us
                           </div>
                         </>
                       )}

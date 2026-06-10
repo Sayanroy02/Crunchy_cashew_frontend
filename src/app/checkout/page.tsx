@@ -37,7 +37,7 @@ export default function CheckoutPage() {
         city: '',
         state: '',
         pincode: '',
-        paymentMethod: 'COD' as 'COD' | 'Razorpay'
+        paymentMethod: 'Razorpay' as 'COD' | 'Razorpay'
     });
 
     const [pincodeValid, setPincodeValid] = useState<boolean | null>(null);
@@ -337,7 +337,8 @@ export default function CheckoutPage() {
                                 <i className="fa-solid fa-credit-card text-primary-light"></i> Payment Method
                             </h2>
                             <div className="flex flex-col gap-4">
-                                <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'bg-black/5' : 'border-gray-200 hover:border-gray-300'}`} style={formData.paymentMethod === 'COD' ? { borderColor: '#F6B000' } : {}}>
+                                {/* COD temporarily disabled */}
+                                {/* <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'COD' ? 'bg-black/5' : 'border-gray-200 hover:border-gray-300'}`} style={formData.paymentMethod === 'COD' ? { borderColor: '#F6B000' } : {}}>
                                     <input type="radio" name="paymentMethod" value="COD"
                                         checked={formData.paymentMethod === 'COD'} onChange={handleInputChange}
                                         className="w-5 h-5 focus:ring-0" style={{ color: '#F6B000' }} />
@@ -345,7 +346,7 @@ export default function CheckoutPage() {
                                         <div className="font-bold text-gray-800">Cash on Delivery (COD)</div>
                                         <div className="text-sm text-gray-500">Pay when your order arrives.</div>
                                     </div>
-                                </label>
+                                </label> */}
                                 <label className={`flex items-center gap-4 p-4 border rounded-xl cursor-pointer transition-colors ${formData.paymentMethod === 'Razorpay' ? 'bg-black/5' : 'border-gray-200 hover:border-gray-300'}`} style={formData.paymentMethod === 'Razorpay' ? { borderColor: '#F6B000' } : {}}>
                                     <input type="radio" name="paymentMethod" value="Razorpay"
                                         checked={formData.paymentMethod === 'Razorpay'} onChange={handleInputChange}

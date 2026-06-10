@@ -123,7 +123,7 @@ export default function CheckoutButton({
           contact: orderPayload.customer.phone,
         },
         theme: {
-          color: '#F6B000',
+          color: COLORS.heading,
         },
 
         // ── On successful payment ──────────────────────────────────────────

@@ -6,12 +6,12 @@ export default function TrustedMarquee() {
     const logos = [
         { src: "/images/partners/reliance-logo.png", alt: "Smart Bazaar", h: "h-20 md:h-28" },
         { src: "/images/partners/Global-nuts.png", alt: "Global Nuts", h: "h-12 md:h-16" },
-        { src: "/images/partners/9to10-logo.png", alt: "9to10", h: "h-16 md:h-24" },
-        { src: "/images/partners/natures-nut.png", alt: "Nature's Nut", h: "h-12 md:h-16" },
         { src: "/images/partners/SPENCERS%20Logo.png", alt: "Spencers", h: "h-12 md:h-16" },
-        { src: "/images/partners/half-full-logo.png", alt: "Half Full", h: "h-20 md:h-28" },
         { src: "/images/partners/Marriott_Logo.png", alt: "Marriott", h: "h-12 md:h-16" },
         { src: "/images/partners/whole-farms.png", alt: "Whole Farms", h: "h-20 md:h-28" },
+        { src: "/images/partners/9to10-logo.png", alt: "9to10", h: "h-16 md:h-24" },
+        { src: "/images/partners/natures-nut.png", alt: "Nature's Nut", h: "h-12 md:h-16" },
+        { src: "/images/partners/half-full-logo.png", alt: "Half Full", h: "h-20 md:h-28" },
     ];
 
     const GAP_CLASS = "mr-16 md:mr-24";

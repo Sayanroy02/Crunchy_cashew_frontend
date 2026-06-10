@@ -20,7 +20,7 @@ const STATIC_PLATFORMS = [
   },
   {
     name: 'AMAZON',
-    logo: '/images/partners/amazon.jpg',
+    logo: '/images/partners/amazon.png',
     higherPct: 20,   // +15% more expensive
     label: 'MARKETPLACE FEES',
   },

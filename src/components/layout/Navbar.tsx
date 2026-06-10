@@ -131,15 +131,15 @@ export default function Navbar() {
                                     href={link.href}
                                     onMouseEnter={() => setHoveredLink(link.href)}
                                     onMouseLeave={() => setHoveredLink(null)}
-                                    className="relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors hover:bg-gray-50"
+                                    className="relative px-4 py-2 text-sm font-semibold tracking-wide rounded-lg transition-colors hover:text-[#F6B000]"
                                     style={{
                                         color: active || isHovered ? COLORS.heading : '#4b5563',
                                     }}
                                 >
                                     {link.label}
-                                    {active && (
-                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-amber rounded-full" />
-                                    )}
+                                    <span 
+                                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-amber rounded-full transition-all duration-300 ${active || isHovered ? 'w-4 opacity-100' : 'w-0 opacity-0'}`} 
+                                    />
                                 </Link>
                             );
                         })}
@@ -163,10 +163,10 @@ export default function Navbar() {
                         {/* Profile */}
                         <Link
                             href={isAuthenticated ? '/profile' : '/login'}
-                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
+                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-300 group"
                         >
                             <i
-                                className={`text-lg ${isAuthenticated ? 'fa-solid fa-user' : 'fa-regular fa-user'}`}
+                                className={`text-lg transition-transform group-hover:scale-110 ${isAuthenticated ? 'fa-solid fa-user' : 'fa-regular fa-user'}`}
                                 style={{ color: COLORS.heading }}
                             />
                             <span
@@ -180,17 +180,17 @@ export default function Navbar() {
                         {/* Wishlist */}
                         <Link
                             href="/profile?tab=wishlist"
-                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50"
+                            className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-300 group"
                         >
-                            <i className="fa-regular fa-heart text-lg" style={{ color: COLORS.heading }} />
+                            <i className="fa-solid fa-heart text-lg transition-transform group-hover:scale-110" style={{ color: COLORS.heading }} />
                             <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: COLORS.heading }}>
                                 Wishlist
                             </span>
                         </Link>
 
                         {/* Cart */}
-                        <Link href="/cart" className="relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-colors group hover:bg-gray-50">
-                            <i className="fa-solid fa-cart-shopping text-lg" style={{ color: COLORS.heading }} />
+                        <Link href="/cart" className="relative flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-300 group">
+                            <i className="fa-solid fa-cart-shopping text-lg transition-transform group-hover:scale-110" style={{ color: COLORS.heading }} />
                             {cartQty > 0 && (
                                 <span className="absolute top-1 right-2 bg-[#F6B000] text-white text-[9px] font-black w-[16px] h-[16px] flex items-center justify-center rounded-full shadow">
                                     {cartQty > 9 ? '9+' : cartQty}
