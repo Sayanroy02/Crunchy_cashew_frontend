@@ -51,7 +51,7 @@ export default function ProductComparison({ product }: { product: Product }) {
 
   const platforms = [
     {
-      name: 'OUR WEBSITE',
+      name: 'OFFICIAL WEBSITE',
       logo: product.image_url || '/images/crunchy-cashews-product.png',
       price: basePrice,
       link: '#',
@@ -91,10 +91,10 @@ export default function ProductComparison({ product }: { product: Product }) {
   return (
     <div className="mt-16 space-y-12">
       <div className="text-center space-y-4">
-        <SectionHeading 
-          text="Price Comparison" 
-          highlight={`for ${product.name} (${compareSize})`} 
-          className="text-2xl md:text-4xl" 
+        <SectionHeading
+          text="Price Comparison"
+          highlight={`for ${product.name} (${compareSize})`}
+          className="text-2xl md:text-4xl"
         />
         <p className="text-slate-500 font-medium italic text-center">
           See how much you save by buying direct
@@ -117,22 +117,21 @@ export default function ProductComparison({ product }: { product: Product }) {
                 whileHover={{ y: -8 }}
                 onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
                 onHoverEnd={() => setHoveredIdx(null)}
-                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${
-                  platform.isBest
+                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${platform.isBest
                     ? 'bg-white z-10 scale-105 border border-slate-200'
                     : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
-                }`}
+                  }`}
                 style={
                   platform.isBest
                     ? {
-                        boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
-                      }
+                      boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
+                    }
                     : isHovered
-                    ? {
+                      ? {
                         boxShadow: `0 20px 40px -10px ${COLORS.heading}30, 0 0 0 2px ${COLORS.heading}`,
                         borderColor: COLORS.heading,
                       }
-                    : {}
+                      : {}
                 }
               >
                 {platform.isBest && (
@@ -161,8 +160,8 @@ export default function ProductComparison({ product }: { product: Product }) {
                       color: platform.isBest
                         ? COLORS.primary
                         : isHovered
-                        ? '#000000'
-                        : '#94a3b8',
+                          ? '#000000'
+                          : '#94a3b8',
                     }}
                   >
                     {platform.name}
@@ -195,7 +194,7 @@ export default function ProductComparison({ product }: { product: Product }) {
 
                 {platform.isBest ? (
                   <div
-                    className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
+                    className="mt-6 flex items-center justify-center w-full px-2 py-1.5 rounded-[10px] border"
                     style={{
                       color: COLORS.heading,
                       backgroundColor: `${COLORS.heading}18`,
@@ -203,10 +202,10 @@ export default function ProductComparison({ product }: { product: Product }) {
                     }}
                   >
                     <span
-                      className="text-[10px] font-black tracking-widest uppercase truncate"
+                      className="text-[9px] font-black tracking-tight uppercase text-center"
                       style={{ color: COLORS.heading }}
                     >
-                      Save 15% to 25% Per Order
+                      SAVE 20% TO 30% PER ORDER
                     </span>
                   </div>
                 ) : platform.link ? (
@@ -246,11 +245,10 @@ export default function ProductComparison({ product }: { product: Product }) {
               {platforms.map((p) => (
                 <div
                   key={p.name}
-                  className={`flex items-center justify-between p-4 rounded-[2.5rem] transition-all duration-300 ${
-                    p.isBest
+                  className={`flex items-center justify-between p-4 rounded-[2.5rem] transition-all duration-300 ${p.isBest
                       ? 'bg-white shadow-xl border border-black/5'
                       : 'bg-black/5'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     {p.isBest ? (
@@ -275,7 +273,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                       </div>
                     )}
                     <span className="text-sm font-black text-black">
-                      {p.isBest ? 'Our Website' : p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}
+                      {p.isBest ? 'Official Website' : p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}
                     </span>
                   </div>
 

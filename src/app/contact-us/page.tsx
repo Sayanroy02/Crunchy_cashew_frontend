@@ -137,7 +137,7 @@ function InfoRow({ icon, title, lines, href, external }: { icon: React.ReactNode
                 {icon}
             </div>
             <div>
-                <p className="text-xs text-white/60 mb-0.5">{title}</p>
+                <p className="text-xs text-white mb-0.5 font-bold">{title}</p>
                 {lines.map((l, i) => (
                     <p key={i} className="text-white text-sm leading-relaxed transition-colors group-hover:text-white/80">
                         {l}
@@ -321,15 +321,13 @@ function ContactContent() {
                         <div className="relative z-10 flex flex-col gap-6">
                             <InfoRow icon={<IconLocation />} title="Location"
                                 lines={[
-                                    'YU NUT PROCESSING INDUSTRY',
-                                    'Gram Panchayat Fulbari-II,',
-                                    'Dist. Jalpaiguri, Siliguri (W.B) - 734015'
+                                    'Yu Nut Processing Industry, Fulbari-II, Dist. Jalpaiguri, Siliguri (W.B) - 734015'
                                 ]}
                                 href="https://maps.app.goo.gl/GaLaWva2mpKMxbVT7"
                                 external
                             />
                             <InfoRow icon={<IconPhone />} title="Call Us"
-                                lines={['+91 7847996343', 'Mon – Fri · 9am – 6pm IST']}
+                                lines={['+91 7847996343', 'Mon – Sat', '8am – 6pm IST']}
                                 href="tel:+917847996343"
                             />
                             <InfoRow icon={<IconEmail />} title="Email"

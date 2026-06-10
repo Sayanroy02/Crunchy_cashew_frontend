@@ -52,7 +52,7 @@ function ContactItem({ item }: { item: typeof contactItems[number] }) {
                     <i className={`${item.icon} text-xs text-white transition-colors`} />
                 </div>
                 <div>
-                    <p className="text-xs text-white/60 mb-0.5">{item.label}</p>
+                    <p className="text-xs text-white font-bold mb-0.5">{item.label}</p>
                     <p className="text-sm text-white">{item.value}</p>
                 </div>
             </a>
@@ -86,7 +86,7 @@ export default function Footer() {
                             <img src="/images/cc-Logo-01-1.png" alt="Crunchy Cashews Logo" className="w-10 h-10 object-contain" />
                             <h2 className="text-xl font-black text-white tracking-tight">Crunchy Cashews</h2>
                         </div>
-                        <p className="text-white/80 text-sm leading-relaxed mb-4">
+                        <p className="text-white text-sm leading-relaxed mb-4">
                             Premium cashew manufacturer & supplier based in Siliguri, India. Farm-fresh quality, delivered with care.
                         </p>
 
@@ -102,14 +102,16 @@ export default function Footer() {
                     {/* Social Links */}
                     <div className="flex gap-3">
                         {[
-                            { icon: 'fa-brands fa-instagram', href: 'https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ==' },
-                            { icon: 'fa-brands fa-facebook-f', href: '#' },
+                            { icon: 'fa-brands fa-instagram', href: 'https://www.instagram.com/crunchycashews?igsh=MTdkdGRzY212eTE3MQ%3D%3D' },
+                            { icon: 'fa-brands fa-facebook-f', href: 'https://www.facebook.com/people/Crunchy-Cashews/61590609004737/' },
                             { icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/917847996343' },
                             { icon: 'fa-brands fa-youtube', href: 'https://www.youtube.com/@crunchycashews2402' },
                         ].map((s, i) => (
                             <a
                                 key={i}
                                 href={s.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.backgroundColor = COLORS.primary;

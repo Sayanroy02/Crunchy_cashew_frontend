@@ -13,7 +13,7 @@ const OUR_PRICE = 199; // Our website price (reference)
 
 const STATIC_PLATFORMS = [
   {
-    name: 'OUR WEBSITE',
+    name: 'OFFICIAL WEBSITE',
     logo: '/images/crunchy-cashews-product.png',
     isBest: true,
     label: 'FACTORY PRICE',
@@ -21,26 +21,27 @@ const STATIC_PLATFORMS = [
   {
     name: 'AMAZON',
     logo: '/images/partners/amazon.jpg',
-    higherPct: 15,   // +15% more expensive
-    label: 'HIGHER RATE',
+    higherPct: 20,   // +15% more expensive
+    label: 'MARKETPLACE FEES',
+  },
+
+  {
+    name: 'BLINKIT',
+    logo: '/images/partners/blinkit.png',
+    higherPct: 30,
+    label: 'QUICK DELIVERY MARKUP',
   },
   {
     name: 'FLIPKART',
     logo: '/images/partners/flipkart.png',
-    higherPct: 15,
-    label: 'HIGHER RATE',
-  },
-  {
-    name: 'BLINKIT',
-    logo: '/images/partners/blinkit.png',
     higherPct: 20,
-    label: 'HIGHER RATE',
+    label: 'MARKETPLACE FEES',
   },
   {
     name: 'JIO MART',
     logo: '/images/partners/JioMart_logo.png',
-    higherPct: 20,
-    label: 'HIGHER RATE',
+    higherPct: 30,
+    label: 'RETAILER MARGIN',
   },
 ];
 
@@ -99,22 +100,21 @@ export default function PriceComparisonPreview() {
                   whileHover={{ y: -8 }}
                   onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
                   onHoverEnd={() => setHoveredIdx(null)}
-                  className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${
-                    platform.isBest
-                      ? 'bg-white z-10 scale-105'
-                      : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
-                  }`}
+                  className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${platform.isBest
+                    ? 'bg-white z-10 scale-105'
+                    : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
+                    }`}
                   style={
                     platform.isBest
                       ? {
-                          boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
-                        }
+                        boxShadow: `0 30px 60px -15px ${COLORS.primary}40, 0 0 0 4px ${COLORS.primary}`,
+                      }
                       : isHovered
-                      ? {
+                        ? {
                           boxShadow: `0 20px 40px -10px ${COLORS.heading}30, 0 0 0 2px ${COLORS.heading}`,
                           borderColor: COLORS.heading,
                         }
-                      : {}
+                        : {}
                   }
                 >
                   {platform.isBest && (
@@ -126,35 +126,38 @@ export default function PriceComparisonPreview() {
                     </div>
                   )}
 
-                  <div className="w-32 h-32 relative mb-6">
+                  <div className={`${platform.isBest ? 'w-40 h-40' : 'w-32 h-32'} relative mb-6`}>
                     <Image
                       src={platform.logo}
                       alt={platform.name}
                       fill
                       sizes="128px"
-                      className="object-contain"
+                      className={`object-contain ${platform.name === 'AMAZON' ? 'scale-125' : platform.name === 'FLIPKART' ? 'scale-[1.4]' : ''}`}
                     />
                   </div>
 
                   <div className="text-center space-y-4 w-full">
                     <p
-                      className="text-[10px] font-black uppercase tracking-[0.2em]"
+                      className={`text-[10px] font-black uppercase tracking-[0.2em] ${platform.isBest ? 'mt-2' : ''}`}
                       style={{
                         color: platform.isBest
-                          ? COLORS.primary
+                          ? '#F6B000'
                           : isHovered
-                          ? '#000000'
-                          : '#94a3b8',
+                            ? '#000000'
+                            : '#94a3b8',
                       }}
                     >
                       {platform.name}
                     </p>
                     <div className="flex flex-col items-center gap-1">
                       {platform.isBest ? (
-                        <div className="flex flex-col items-center">
-                          <span className="text-[20px] font-black text-[#00863D]">Lowest Price</span>
-                          <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">
-                            Factory Price
+                        <div className="flex flex-col items-center mt-4">
+                          <div className="bg-[#00863D] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-1">
+                            Save
+                          </div>
+                          <span className="text-[24px] font-black text-[#00863D] leading-none">20% - 30%</span>
+                          <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">
+                            Per Order
                           </span>
                         </div>
                       ) : (
@@ -165,31 +168,16 @@ export default function PriceComparisonPreview() {
                           >
                             {platform.higherPct}%
                           </span>
-                          <span className="text-[10px] font-bold opacity-45 uppercase tracking-tighter">
-                            Higher Rate
+                          <span className={`text-[10px] font-bold uppercase tracking-tighter transition-colors duration-300 ${isHovered ? 'text-red-500 opacity-100' : 'text-black opacity-45'
+                            }`}>
+                            {platform.label}
                           </span>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {platform.isBest && (
-                    <div
-                      className="mt-6 flex items-center gap-2 px-4 py-1.5 rounded-full border"
-                      style={{
-                        color: COLORS.heading,
-                        backgroundColor: `${COLORS.heading}18`,
-                        borderColor: `${COLORS.heading}40`,
-                      }}
-                    >
-                      <span
-                        className="text-[10px] font-black tracking-widest uppercase truncate"
-                        style={{ color: COLORS.heading }}
-                      >
-                        Save 15% to 25% Per Order
-                      </span>
-                    </div>
-                  )}
+                  {/* Badge removed as requested */}
                 </motion.div>
               );
             })}
@@ -199,7 +187,7 @@ export default function PriceComparisonPreview() {
         {/* Mobile Layout */}
         <div className="md:hidden space-y-6">
           <div
-            className="rounded-[3rem] p-8 shadow-sm border border-black/5 relative"
+            className="rounded-3xl px-3 py-8 shadow-sm border border-black/5 relative"
             style={{ backgroundColor: `${COLORS.black}05` }}
           >
             <div className="absolute top-6 right-8 opacity-10">
@@ -230,11 +218,10 @@ export default function PriceComparisonPreview() {
                   {STATIC_PLATFORMS.map((p) => (
                     <div
                       key={p.name}
-                      className={`flex items-center justify-between p-5 rounded-[2.5rem] transition-all duration-300 ${
-                        p.isBest
-                          ? 'bg-white shadow-xl border border-black/5'
-                          : 'bg-black/5'
-                      }`}
+                      className={`flex items-center justify-between p-5 rounded-2xl transition-all duration-300 ${p.isBest
+                        ? 'bg-white shadow-xl border border-black/5'
+                        : 'bg-black/5'
+                        }`}
                     >
                       <div className="flex items-center gap-4">
                         {p.isBest ? (
@@ -248,40 +235,49 @@ export default function PriceComparisonPreview() {
                             />
                           </div>
                         ) : (
-                          <div className="w-10 h-10 relative rounded-xl bg-white border border-black/5 p-2 overflow-hidden shadow-sm shrink-0">
+                          <div className="w-10 h-10 relative shrink-0 flex items-center justify-center">
                             <Image
                               src={p.logo}
                               alt={p.name}
                               fill
                               sizes="40px"
-                              className="object-contain p-0.5"
+                              className={`object-contain ${p.name === 'FLIPKART' ? 'scale-[1.4]' : ''}`}
                             />
                           </div>
                         )}
-                        <span className="text-base font-black" style={{ color: COLORS.black }}>
-                          {p.isBest
-                            ? 'Our Website'
-                            : p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <div
-                          className={`${p.isBest ? 'text-[16px]' : 'text-lg'} font-black`}
-                          style={{ color: p.isBest ? '#00863D' : '#ef4444' }}
-                        >
-                          {p.isBest ? 'Lowest Price' : `${p.higherPct}%`}
+                        <div className="text-base font-black leading-tight flex flex-col" style={{ color: COLORS.black }}>
+                          {p.isBest ? (
+                            <>
+                              <span>Official</span>
+                              <span>Website</span>
+                            </>
+                          ) : (
+                            <span>{p.name.charAt(0) + p.name.slice(1).toLowerCase().split(' ')[0]}</span>
+                          )}
                         </div>
+                      </div>
+                      <div className="text-right flex flex-col items-end">
                         {p.isBest ? (
-                          <div
-                            className="text-[9px] font-black uppercase tracking-tighter opacity-30"
-                            style={{ color: COLORS.black }}
-                          >
-                            Factory Direct
-                          </div>
+                          <>
+                            <div className="bg-[#00863D] text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-1">
+                              Save
+                            </div>
+                            <div className="text-[16px] font-black leading-none text-[#00863D]">
+                              20% - 30%
+                            </div>
+                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black mt-1">
+                              Per Order
+                            </div>
+                          </>
                         ) : (
-                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500">
-                            Higher Rate
-                          </div>
+                          <>
+                            <div className="text-lg font-black text-[#ef4444]">
+                              {p.higherPct}%
+                            </div>
+                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500 mt-1">
+                              {p.label}
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>
@@ -297,7 +293,7 @@ export default function PriceComparisonPreview() {
                       Estimated Savings
                     </span>
                     <span className="text-4xl font-black" style={{ color: COLORS.heading }}>
-                      Save 15%–25%
+                      15%–25%
                     </span>
                     <span className="text-[10px] font-black text-black opacity-30 uppercase tracking-widest mt-1">
                       Per Order
