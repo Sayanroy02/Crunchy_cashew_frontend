@@ -95,33 +95,33 @@ export default function CartPage() {
                             {items.map(item => (
                                 <div key={`${item.product_id}-${item.variant_size}`} className="flex flex-col sm:flex-row items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-primary/30 transition-colors">
                                     <div className="flex items-center gap-4 w-full sm:w-1/2 mb-4 sm:mb-0">
-                                        <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-                                            <i className="fa-solid fa-box text-xl" style={{ color: '#F6B000' }}></i>
+                                        <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+                                            <img src={item.image_url || (item as any).image || '/images/products/placeholder.jpg'} alt={item.name} className="w-full h-full object-cover" />
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-black text-lg line-clamp-1">{item.name}</h3>
-                                            <p className="font-black" style={{ color: '#F6B000' }}>₹{item.price.toFixed(2)}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-bold text-black text-base sm:text-lg leading-tight">{item.name}</h3>
+                                            <p className="font-black mt-1" style={{ color: '#F6B000' }}>₹{item.price.toFixed(2)}</p>
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-between w-full sm:w-1/2 sm:justify-end gap-6">
-                                        <div className="flex items-center bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                                    <div className="flex items-center justify-between w-full sm:w-1/2 sm:justify-end gap-2 sm:gap-6 mt-2 sm:mt-0">
+                                        <div className="flex items-center bg-white border border-gray-200 rounded-lg shadow-sm shrink-0">
                                             <button
                                                 onClick={() => dispatch(updateQuantity({ id: item.product_id, size: item.variant_size, change: -1 }))}
-                                                className="px-3 py-1 text-gray-500 hover:bg-black hover:text-white transition-all"
+                                                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white transition-all rounded-l-lg"
                                             >
-                                                <i className="fa-solid fa-minus text-xs"></i>
+                                                <i className="fa-solid fa-minus text-[10px] sm:text-xs"></i>
                                             </button>
-                                            <span className="px-4 font-bold text-black">{item.quantity}</span>
+                                            <span className="w-6 sm:w-8 text-center font-bold text-black text-sm">{item.quantity}</span>
                                             <button
                                                 onClick={() => dispatch(updateQuantity({ id: item.product_id, size: item.variant_size, change: 1 }))}
-                                                className="px-3 py-1 text-gray-500 hover:bg-black hover:text-white transition-all"
+                                                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-black hover:text-white transition-all rounded-r-lg"
                                             >
-                                                <i className="fa-solid fa-plus text-xs"></i>
+                                                <i className="fa-solid fa-plus text-[10px] sm:text-xs"></i>
                                             </button>
                                         </div>
 
-                                        <div className="font-bold text-black w-24 text-right">
+                                        <div className="font-bold text-black flex-1 text-center sm:text-right sm:w-24">
                                             ₹{(item.price * item.quantity).toFixed(2)}
                                         </div>
 
