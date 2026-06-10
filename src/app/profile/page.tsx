@@ -11,6 +11,15 @@ import { API } from '@/constants/api';
 import { ORDER_STATUS_CLASSES, PAYMENT_STATUS_CLASSES, CANCELLABLE_STATUSES, COLORS } from '@/constants/styles';
 import CustomerBlogs from '@/components/profile/CustomerBlogs';
 
+const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+};
+
 interface UserProfile {
     username: string;
     email: string;
@@ -317,8 +326,8 @@ function ProfileContent() {
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                             {/* Profile Info Card */}
                             <div className="p-6 border-b border-gray-100 flex items-center gap-4">
-                                <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white shadow-md shrink-0" style={{ backgroundColor: COLORS.heading }}>
-                                    <i className="fa-solid fa-user"></i>
+                                <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl text-white shadow-md shrink-0 font-black tracking-widest" style={{ backgroundColor: COLORS.heading }}>
+                                    {getInitials(profile?.username)}
                                 </div>
                                 <div className="overflow-hidden">
                                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Hello</p>
@@ -354,8 +363,8 @@ function ProfileContent() {
                                 
                                 <div className="flex gap-10">
                                     {/* Profile Picture */}
-                                    <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl text-white shadow-lg border-4 border-white ring-1 ring-gray-100 shrink-0" style={{ backgroundColor: COLORS.heading }}>
-                                        <i className="fa-solid fa-user"></i>
+                                    <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl text-white shadow-lg border-4 border-white ring-1 ring-gray-100 shrink-0 font-black tracking-widest" style={{ backgroundColor: COLORS.heading }}>
+                                        {getInitials(profile?.username)}
                                     </div>
                                     
                                     {/* Form */}
@@ -523,8 +532,8 @@ function ProfileContent() {
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
                             
                             <div className="relative z-10 flex flex-col items-center">
-                                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl text-white shadow-xl border-4 border-white/20 mb-3 bg-white/10 backdrop-blur-sm">
-                                    <i className="fa-solid fa-user"></i>
+                                <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl text-white shadow-xl border-4 border-white/20 mb-3 bg-white/10 backdrop-blur-sm font-black tracking-widest">
+                                    {getInitials(profile?.username)}
                                 </div>
                                 <h2 className="text-2xl font-black text-white">{profile?.username}</h2>
                                 <p className="text-sm font-medium text-white/80 capitalize">{profile?.role}</p>
@@ -612,8 +621,8 @@ function ProfileContent() {
                                         <div className="space-y-5 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                                             <div className="flex justify-between items-center pb-4 border-b border-gray-50">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white shrink-0" style={{ backgroundColor: COLORS.heading }}>
-                                                        <i className="fa-solid fa-user"></i>
+                                                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white shrink-0 font-black tracking-widest" style={{ backgroundColor: COLORS.heading }}>
+                                                        {getInitials(profile?.username)}
                                                     </div>
                                                     <div>
                                                         <h3 className="font-black text-sm text-gray-800">{profile?.username}</h3>
@@ -708,8 +717,12 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all">
             <div onClick={() => setExpanded(!expanded)} className="p-4 md:p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors select-none">
                 <div className="flex gap-4 items-center">
-                    <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 text-gray-400">
-                        <i className="fa-solid fa-box text-xl" />
+                    <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center shrink-0 border border-gray-100 text-gray-400 overflow-hidden">
+                        {order.items?.[0] && (order.items[0].product_image || order.items[0].image || order.items[0].product?.images?.[0]) ? (
+                            <img src={order.items[0].product_image || order.items[0].image || order.items[0].product?.images?.[0]} alt="Order" className="w-full h-full object-cover" />
+                        ) : (
+                            <i className="fa-solid fa-box text-xl" />
+                        )}
                     </div>
                     <div>
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Order #{order._id.slice(-6)}</p>
@@ -770,6 +783,9 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                         <button onClick={() => router.push('/our-product')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
                             <i className="fa-solid fa-basket-shopping" /> Continue Shopping
+                        </button>
+                        <button onClick={() => router.push(`/profile/orders/${order._id}`)} className="px-5 py-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 sm:flex-none">
+                            <i className="fa-solid fa-circle-info" /> Details
                         </button>
                         <div className="flex gap-2 justify-stretch sm:justify-end sm:flex-1">
                             <Link href={`/profile/orders/${order._id}?download=true`} className="flex-1 sm:flex-none text-center px-4 py-3 bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 font-bold text-xs rounded-xl transition-colors">

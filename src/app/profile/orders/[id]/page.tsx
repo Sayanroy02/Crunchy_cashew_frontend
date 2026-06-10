@@ -232,10 +232,13 @@ export default function OrderDetailPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-black text-white flex-shrink-0"
-                      style={{ backgroundColor: COLORS.primary }}
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xs font-black text-gray-400 flex-shrink-0 bg-gray-50 border border-gray-100 overflow-hidden"
                     >
-                      {idx + 1}
+                      {item.product_image || item.image || item.product?.images?.[0] ? (
+                        <img src={item.product_image || item.image || item.product?.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <i className="fa-solid fa-box text-gray-300 text-lg"></i>
+                      )}
                     </div>
                     <div>
                       <p className="font-bold text-sm text-gray-800">{item.name || item.product_name || 'Item'}</p>

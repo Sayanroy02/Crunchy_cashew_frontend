@@ -164,8 +164,16 @@ export default function CheckoutButton({
 
         modal: {
           // Called when user closes the popup without paying
-          ondismiss: () => {
+          ondismiss: async () => {
             setLoading(false);
+            try {
+              await fetch(API.ORDER_CANCEL(orderId), {
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${token}` }
+              });
+            } catch (e) { console.error('Failed to cancel order on dismiss', e); }
+            alert('payment failed Order canceled');
+            onError('payment failed Order canceled');
           },
         },
       };
@@ -173,9 +181,16 @@ export default function CheckoutButton({
       const razorpay = new (window as any).Razorpay(options);
 
       // Handle payment failure inside checkout popup
-      razorpay.on('payment.failed', (response: any) => {
+      razorpay.on('payment.failed', async (response: any) => {
         setLoading(false);
-        onError(response.error?.description || 'Payment failed. Please try again.');
+        try {
+          await fetch(API.ORDER_CANCEL(orderId), {
+            method: 'PUT',
+            headers: { Authorization: `Bearer ${token}` }
+          });
+        } catch (e) { console.error('Failed to cancel order on payment failure', e); }
+        alert('payment failed Order canceled');
+        onError('payment failed Order canceled');
       });
 
       razorpay.open();

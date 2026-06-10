@@ -75,15 +75,20 @@ export default function CheckoutPage() {
                     let parsedCity = data.city || '';
                     let parsedState = data.state || '';
                     let parsedPincode = data.pincode || '';
-                    const cleanAddress = data.address || '';
+                    let cleanAddress = data.address || '';
 
-                    // Fallback to parsing if individual fields aren't present but address is
-                    if (!parsedCity && data.address && data.address.includes(',')) {
-                        const parts = data.address.split(',').map((p: string) => p.trim());
+                    // If the address was saved with city/state/pincode appended, extract them and clean the address
+                    if (cleanAddress && cleanAddress.includes(',')) {
+                        const parts = cleanAddress.split(',').map((p: string) => p.trim());
                         if (parts.length >= 3) {
-                            parsedPincode = parts[parts.length - 1].replace(/[^0-9]/g, '') || parsedPincode;
-                            parsedState = parts[parts.length - 2] || parsedState;
-                            parsedCity = parts[parts.length - 3] || parsedCity;
+                            const lastPart = parts[parts.length - 1];
+                            const numsInLast = lastPart.replace(/[^0-9]/g, '');
+                            if (numsInLast.length >= 5) { // Looks like a pincode
+                                parsedPincode = numsInLast;
+                                parsedState = parts[parts.length - 2];
+                                parsedCity = parts[parts.length - 3];
+                                cleanAddress = parts.slice(0, parts.length - 3).join(', ');
+                            }
                         }
                     }
 
@@ -217,7 +222,8 @@ export default function CheckoutPage() {
             variant_id: i.variant_size,
             name: i.name,
             quantity: i.quantity,
-            price: i.price
+            price: i.price,
+            product_image: i.image_url || i.image || ''
         })),
         total_amount: finalTotal,
         shipping_fee: shippingFee,

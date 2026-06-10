@@ -18,6 +18,17 @@ interface OrderTrackingProps {
   isCancelled?: boolean;
 }
 
+const getStepColor = (idx: number) => {
+  switch (idx) {
+    case 0: return COLORS.primary; // Yellow
+    case 1: return '#3b82f6'; // Blue
+    case 2: return '#f97316'; // Orange
+    case 3: return '#a855f7'; // Purple
+    case 4: return COLORS.heading; // Green
+    default: return COLORS.primary;
+  }
+};
+
 export default function OrderTracking({ currentStatus, isCancelled }: OrderTrackingProps) {
   if (isCancelled) {
     return (
@@ -45,6 +56,7 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
           const done = idx <= currentIdx;
           const isCurrent = idx === currentIdx;
           const isLast = idx === ORDER_STATUS_FLOW.length - 1;
+          const stepColor = getStepColor(idx);
 
           return (
             <React.Fragment key={step}>
@@ -53,18 +65,18 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 text-xs font-bold
                     ${done ? 'shadow-md' : ''}
-                    ${isCurrent ? 'ring-4 ring-offset-1' : ''}
                   `}
                   style={{
-                    backgroundColor: done ? COLORS.primary : '#f3f4f6',
+                    backgroundColor: done ? stepColor : '#f3f4f6',
                     color: done ? '#fff' : '#9ca3af',
+                    boxShadow: isCurrent ? `0 0 0 2px white, 0 0 0 4px ${stepColor}` : 'none'
                   }}
                 >
                   {done ? <i className="fa-solid fa-check text-[10px]" /> : idx + 1}
                 </div>
                 <p
                   className="text-[9px] mt-1.5 font-bold text-center leading-tight max-w-[52px]"
-                  style={{ color: done ? COLORS.primary : '#d1d5db' }}
+                  style={{ color: done ? stepColor : '#d1d5db' }}
                 >
                   {step}
                 </p>
@@ -74,7 +86,7 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
               {!isLast && (
                 <div
                   className="flex-1 h-1 rounded-full mx-1 mb-4 transition-all duration-300"
-                  style={{ backgroundColor: idx < currentIdx ? COLORS.primary : '#f3f4f6' }}
+                  style={{ backgroundColor: idx < currentIdx ? stepColor : '#f3f4f6' }}
                 />
               )}
             </React.Fragment>
@@ -88,16 +100,18 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
           const done = idx <= currentIdx;
           const isCurrent = idx === currentIdx;
           const isLast = idx === ORDER_STATUS_FLOW.length - 1;
+          const stepColor = getStepColor(idx);
 
           return (
             <div key={step} className="flex items-stretch gap-4">
               {/* Left: dot + line */}
               <div className="flex flex-col items-center w-6">
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all ${isCurrent ? 'ring-2 ring-offset-1 ring-primary-light' : ''}`}
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 transition-all"
                   style={{
-                    backgroundColor: done ? COLORS.primary : '#f3f4f6',
+                    backgroundColor: done ? stepColor : '#f3f4f6',
                     color: done ? '#fff' : '#9ca3af',
+                    boxShadow: isCurrent ? `0 0 0 2px white, 0 0 0 4px ${stepColor}` : 'none'
                   }}
                 >
                   {done ? <i className="fa-solid fa-check text-[8px]" /> : idx + 1}
@@ -105,7 +119,7 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
                 {!isLast && (
                   <div
                     className="w-0.5 flex-1 my-1 rounded-full"
-                    style={{ backgroundColor: idx < currentIdx ? COLORS.primary : '#e5e7eb', minHeight: '20px' }}
+                    style={{ backgroundColor: idx < currentIdx ? stepColor : '#e5e7eb', minHeight: '20px' }}
                   />
                 )}
               </div>
@@ -118,7 +132,7 @@ export default function OrderTracking({ currentStatus, isCancelled }: OrderTrack
                   {step}
                 </p>
                 {isCurrent && (
-                  <p className="text-[10px] mt-1 font-semibold" style={{ color: COLORS.primaryLight }}>
+                  <p className="text-[10px] mt-1 font-semibold" style={{ color: stepColor }}>
                     Current status
                   </p>
                 )}
