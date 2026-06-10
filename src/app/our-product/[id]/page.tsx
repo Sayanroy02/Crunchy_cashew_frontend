@@ -2,6 +2,8 @@ import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { API } from '@/constants/api';
 import ProductDetailsClient from './ProductDetailsClient';
+import ProductCard from '@/components/products/ProductCard';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -49,45 +51,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 {relatedProducts.length > 0 && (
                     <div className="mt-14">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl md:text-3xl font-heading font-black text-gray-900">
-                                You May Also Love 🥜
-                            </h2>
+                            <SectionHeading 
+                                text="You May Also"
+                                highlight="Love"
+                                className="text-2xl md:text-3xl"
+                            />
                             <Link href="/our-product" className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
                                 View All <i className="fa-solid fa-arrow-right"></i>
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                            {relatedProducts.map((p: any) => {
-                                const pid = p._id || p.id;
-                                 const hasPDiscount = p.discount > 0;
-                                const originalPPrice = hasPDiscount ? p.price / (1 - p.discount / 100) : p.price;
-                                return (
-                                    <Link key={pid} href={`/our-product/${pid}`}
-                                        className="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group flex flex-col"
-                                    >
-                                        <div className="relative bg-gray-50 h-40 flex items-center justify-center overflow-hidden">
-                                            {p.discount > 0 && (
-                                                <span className="absolute top-2 left-2 bg-yellow text-gray-900 text-[10px] font-black px-2 py-0.5 rounded z-10">
-                                                    {p.discount}% OFF
-                                                </span>
-                                            )}
-                                            <img
-                                                src={p.image_url || '/images/products/placeholder.jpg'}
-                                                alt={p.name}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                            />
-                                        </div>
-                                        <div className="p-3 flex flex-col flex-1">
-                                            <h3 className="font-bold text-sm text-gray-800 mb-1 line-clamp-2">{p.name}</h3>
-                                            <div className="flex items-center gap-2 mt-auto">
-                                                <span className="font-black text-gray-900 text-sm">₹{p.price.toFixed(0)}</span>
-                                                {hasPDiscount && <span className="text-xs text-gray-400 line-through">₹{originalPPrice.toFixed(0)}</span>}
-                                            </div>
-                                        </div>
-                                    </Link>
-                                );
-                            })}
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            {relatedProducts.map((p: any) => (
+                                <ProductCard key={p._id || p.id} product={p} />
+                            ))}
                         </div>
                     </div>
                 )}

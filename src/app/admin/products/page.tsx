@@ -267,10 +267,11 @@ export default function AdminProducts() {
         const mode = formData.discount_type;
 
         if (mode === 'discount') {
-            if (field === 'discount_amount') {
-                const amt = Number(value) || 0;
-                v.price = Math.max(0, v.original_price - amt);
-                v.discount = v.original_price > 0 ? Math.round((amt / v.original_price) * 100) : 0;
+            if (field === 'price') {
+                const sp = Number(value) || 0;
+                v.price = sp;
+                const discountAmt = v.original_price - sp;
+                v.discount = (v.original_price > 0 && discountAmt > 0) ? Number(((discountAmt / v.original_price) * 100).toFixed(1)) : 0;
             } else if (field === 'discount') {
                 const pct = Number(value) || 0;
                 v.price = Math.max(0, Math.round(v.original_price * (1 - pct / 100)));
@@ -281,7 +282,7 @@ export default function AdminProducts() {
                     v.price = Math.max(0, Math.round(mrp * (1 - v.discount / 100)));
                 } else {
                     const discountAmt = mrp - v.price;
-                    v.discount = mrp > 0 ? Math.round((discountAmt / mrp) * 100) : 0;
+                    v.discount = (mrp > 0 && discountAmt > 0) ? Number(((discountAmt / mrp) * 100).toFixed(1)) : 0;
                 }
             }
         } else if (mode === 'coupon') {
@@ -535,9 +536,9 @@ export default function AdminProducts() {
                                                         {formData.discount_type === 'discount' && (
                                                             <>
                                                                 <div className="space-y-1">
-                                                                    <label htmlFor={`v-${idx}-discount-amt`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc Amount (₹)</label>
-                                                                    <input id={`v-${idx}-discount-amt`} type="number" value={discount_amount || ''} onChange={e => handleVariantChange(idx, 'discount_amount', Number(e.target.value))}
-                                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary" />
+                                                                    <label htmlFor={`v-${idx}-price`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Selling Price (₹)</label>
+                                                                    <input id={`v-${idx}-price`} type="number" value={v.price || ''} onChange={e => handleVariantChange(idx, 'price', Number(e.target.value))}
+                                                                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs outline-none focus:border-primary font-bold text-green-700" />
                                                                 </div>
                                                                 <div className="space-y-1">
                                                                     <label htmlFor={`v-${idx}-discount`} className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Disc %</label>

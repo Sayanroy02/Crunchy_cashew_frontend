@@ -43,11 +43,14 @@ export default function ProductComparison({ product }: { product: Product }) {
 
   const mp = product.marketplace_prices || {};
 
-  // Calculate fallback marketplace prices (e.g. 15% and 25% markup) if database values are missing
-  const amazonPrice = mp.amazon?.price || Math.round(basePrice * 1.15);
-  const flipkartPrice = mp.flipkart?.price || Math.round(basePrice * 1.15);
-  const blinkitPrice = mp.blinkit?.price || Math.round(basePrice * 1.25);
-  const jioPrice = mp.swiggy?.price || Math.round(basePrice * 1.25);
+  const amazonPrice = mp.amazon?.price || 0;
+  const flipkartPrice = mp.flipkart?.price || 0;
+  const blinkitPrice = mp.blinkit?.price || 0;
+  const jioPrice = mp.swiggy?.price || 0;
+
+  if (amazonPrice === 0 && flipkartPrice === 0 && blinkitPrice === 0 && jioPrice === 0) {
+    return null;
+  }
 
   const platforms = [
     {
@@ -84,9 +87,9 @@ export default function ProductComparison({ product }: { product: Product }) {
     },
   ];
 
-  const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice];
-  const avgMpPrice = marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length;
-  const savingsPercent = Math.round(((avgMpPrice - basePrice) / avgMpPrice) * 100);
+  const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice].filter(p => p > 0);
+  const avgMpPrice = marketplacePrices.length > 0 ? marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length : basePrice;
+  const savingsPercent = avgMpPrice > basePrice ? Math.round(((avgMpPrice - basePrice) / avgMpPrice) * 100) : 0;
 
   return (
     <div className="mt-16 space-y-12">
@@ -309,18 +312,7 @@ export default function ProductComparison({ product }: { product: Product }) {
               ))}
             </div>
 
-            <div className="pt-6 flex flex-col items-center gap-4" style={{ borderTop: `1px solid ${COLORS.black}1A` }}>
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-xs font-black text-black/30 uppercase tracking-[0.2em] mb-1">
-                  Our Price vs Avg Marketplace
-                </span>
-                <span className="text-[28px] font-black" style={{ color: COLORS.heading }}>₹{basePrice}</span>
-                <span className="text-sm font-bold text-red-400 line-through">₹{Math.round(avgMpPrice)} avg elsewhere</span>
-                <span className="text-[11px] font-black uppercase tracking-widest mt-1" style={{ color: COLORS.heading }}>
-                  You save ₹{Math.round(avgMpPrice - basePrice)} per order
-                </span>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

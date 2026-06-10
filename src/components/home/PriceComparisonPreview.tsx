@@ -274,7 +274,7 @@ export default function PriceComparisonPreview() {
                             <div className="text-lg font-black text-[#ef4444]">
                               {p.higherPct}%
                             </div>
-                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-40 text-red-500 mt-1">
+                            <div className="text-[9px] font-black uppercase tracking-tighter text-[#ef4444] mt-1">
                               {p.label}
                             </div>
                           </>
