@@ -223,7 +223,7 @@ export default function CheckoutPage() {
             name: i.name,
             quantity: i.quantity,
             price: i.price,
-            product_image: i.image_url || i.image || ''
+            product_image: i.image_url || (i as any).image || ''
         })),
         total_amount: finalTotal,
         shipping_fee: shippingFee,
