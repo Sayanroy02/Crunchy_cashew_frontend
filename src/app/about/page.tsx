@@ -754,7 +754,7 @@ export default function AboutPage() {
               {/* RIGHT side illustration */}
               <div className="relative z-10 flex-shrink-0 hidden md:block">
                 <img
-                  src="/images/supply-chain-img.webp"
+                  src="/images/about-page-banner.png"
                   alt="Bulk quote illustration"
                   className="w-80 h-auto object-contain drop-shadow-2xl animate-pulse-subtle"
                   style={{ filter: 'drop-shadow(0 12px 24px rgba(253,199,0,0.2))' }}
