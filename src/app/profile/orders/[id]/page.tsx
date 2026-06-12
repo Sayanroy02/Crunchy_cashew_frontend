@@ -209,7 +209,34 @@ export default function OrderDetailPage() {
             )}
           </div>
 
-          {/* Shipping Details */}
+          {/* Tracking Details */}
+          {order.tracking_id && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shipping Details</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Delivery Service</p>
+                  <p className="text-sm font-semibold text-gray-800">{order.delivery_service_name || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Tracking ID</p>
+                  <p className="text-sm font-semibold text-gray-800">{order.tracking_id}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Estimated Delivery</p>
+                  <p className="text-sm font-semibold text-gray-800">{order.estimated_delivery_date || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Track Online</p>
+                  <a href={order.tracking_link} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 hover:underline">
+                    Track Order &rarr;
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Shipping To */}
           {order.customer && (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shipping To</p>

@@ -55,6 +55,59 @@ function StatusConfirmModal({ isOpen, onConfirm, onCancel, status, loading }: an
     );
 }
 
+function ShippingDetailsModal({ isOpen, onConfirm, onCancel, loading }: any) {
+    const [trackingId, setTrackingId] = useState('');
+    const [trackingLink, setTrackingLink] = useState('');
+    const [estimatedDelivery, setEstimatedDelivery] = useState('');
+    const [deliveryService, setDeliveryService] = useState('');
+
+    if (!isOpen) return null;
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onConfirm({
+            tracking_id: trackingId,
+            tracking_link: trackingLink,
+            estimated_delivery_date: estimatedDelivery,
+            delivery_service_name: deliveryService
+        });
+    };
+
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl scale-in-center overflow-hidden border-2" style={{ borderColor: COLORS.primary }}>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Shipping Details</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">Delivery Service Name</label>
+                        <input required type="text" value={deliveryService} onChange={e => setDeliveryService(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. BlueDart, Delhivery" />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">Tracking ID</label>
+                        <input required type="text" value={trackingId} onChange={e => setTrackingId(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. 1234567890" />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">Tracking Link</label>
+                        <input required type="url" value={trackingLink} onChange={e => setTrackingLink(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="https://..." />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">Estimated Delivery Date</label>
+                        <input required type="text" value={estimatedDelivery} onChange={e => setEstimatedDelivery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. 15 June 2026" />
+                    </div>
+                    
+                    <div className="flex gap-3 mt-8">
+                        <button type="button" onClick={onCancel} disabled={loading} className="flex-1 py-3.5 rounded-2xl font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors disabled:opacity-50">Cancel</button>
+                        <button type="submit" disabled={loading} className="flex-1 py-3.5 rounded-2xl font-bold text-white shadow-lg transition-all hover:opacity-90 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2" style={{ backgroundColor: COLORS.primary }}>
+                            {loading && <i className="fa-solid fa-spinner animate-spin"></i>}
+                            Save & Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
 export default function AdminOrders() {
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -93,16 +146,23 @@ export default function AdminOrders() {
 
     useEffect(() => { fetchOrders(); }, []);
 
-    const updateStatus = async (orderId: string, status: string) => {
+    const updateStatus = async (orderId: string, status: string, trackingData: any = null) => {
         setUpdating(orderId);
         const token = getToken();
         try {
-            const res = await fetch(`${API.ADMIN_ORDERS}/${orderId}/status?status=${encodeURIComponent(status)}`, {
+            const fetchOptions: any = {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` }
-            });
+            };
+
+            if (trackingData) {
+                fetchOptions.headers['Content-Type'] = 'application/json';
+                fetchOptions.body = JSON.stringify(trackingData);
+            }
+
+            const res = await fetch(`${API.ADMIN_ORDERS}/${orderId}/status?status=${encodeURIComponent(status)}`, fetchOptions);
             if (res.ok) {
-                setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status } : o));
+                setOrders(prev => prev.map(o => o._id === orderId ? { ...o, status, ...trackingData } : o));
                 setConfirmUpdate(null);
             } else {
                 const err = await res.json().catch(() => ({}));
@@ -431,14 +491,23 @@ export default function AdminOrders() {
                 </div>
             </div>
 
-            {/* Confirmation Modal - Compact */}
-            <StatusConfirmModal 
-                isOpen={!!confirmUpdate}
-                status={confirmUpdate?.status}
-                onConfirm={() => updateStatus(confirmUpdate!.id, confirmUpdate!.status)}
-                onCancel={() => setConfirmUpdate(null)}
-                loading={updating === confirmUpdate?.id}
-            />
+            {/* Confirmation Modals - Compact */}
+            {confirmUpdate?.status === 'Shipped' ? (
+                <ShippingDetailsModal 
+                    isOpen={!!confirmUpdate}
+                    onConfirm={(data: any) => updateStatus(confirmUpdate!.id, confirmUpdate!.status, data)}
+                    onCancel={() => setConfirmUpdate(null)}
+                    loading={updating === confirmUpdate?.id}
+                />
+            ) : (
+                <StatusConfirmModal 
+                    isOpen={!!confirmUpdate}
+                    status={confirmUpdate?.status}
+                    onConfirm={() => updateStatus(confirmUpdate!.id, confirmUpdate!.status)}
+                    onCancel={() => setConfirmUpdate(null)}
+                    loading={updating === confirmUpdate?.id}
+                />
+            )}
 
             <style jsx global>{`
                 .custom-scrollbar::-webkit-scrollbar { width: 3px; }
