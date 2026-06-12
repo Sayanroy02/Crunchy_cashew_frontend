@@ -264,19 +264,10 @@ export default function LoginPage() {
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <div className="flex items-center justify-between">
-                                            <label htmlFor="password"
-                                                className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
-                                                Password
-                                            </label>
-                                            <button 
-                                                type="button" 
-                                                onClick={() => { setError(''); setView('forgot_email'); }}
-                                                className="text-[10px] text-primary font-bold hover:underline uppercase tracking-widest"
-                                            >
-                                                Forgot?
-                                            </button>
-                                        </div>
+                                        <label htmlFor="password"
+                                            className="block text-[10px] font-semibold text-gray-500 uppercase tracking-widest">
+                                            Password
+                                        </label>
                                         <div className="relative">
                                             <i className="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                                             <input
@@ -291,6 +282,15 @@ export default function LoginPage() {
                                                 onClick={() => setShowPassword(v => !v)}
                                                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
                                                 <i className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'} text-sm`} />
+                                            </button>
+                                        </div>
+                                        <div className="flex justify-end mt-1">
+                                            <button 
+                                                type="button" 
+                                                onClick={() => { setError(''); setView('forgot_email'); }}
+                                                className="text-[11px] text-blue-600 font-bold hover:underline"
+                                            >
+                                                Forgot password?
                                             </button>
                                         </div>
                                     </div>
