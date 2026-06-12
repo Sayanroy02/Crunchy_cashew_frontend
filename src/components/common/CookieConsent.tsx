@@ -16,18 +16,7 @@ export default function CookieConsent() {
     }, []);
 
     const recordVisit = async () => {
-        try {
-            const deviceType = window.innerWidth < 768 ? 'Mobile' : 'Desktop';
-            await fetch(API.TRAFFIC_VISIT || '/api/traffic/visit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    path: window.location.pathname,
-                    device_type: deviceType,
-                    consent_given: true
-                })
-            });
-        } catch (e) { /* ignore */ }
+        // Traffic tracking removed as requested
     };
 
     const handleAccept = () => {

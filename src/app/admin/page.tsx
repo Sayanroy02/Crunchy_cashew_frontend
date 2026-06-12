@@ -9,9 +9,10 @@ import {
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ArcElement
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
@@ -19,12 +20,18 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    ArcElement
 );
 
 export default function AdminDashboard() {
-    const [stats, setStats] = useState({ total_orders: 0, pending_orders: 0, todays_collection: 0, total_revenue: 0 });
-    const [traffic, setTraffic] = useState({ unique_visitors: 0, popular_pages: [] as any[] });
+    const [stats, setStats] = useState({ 
+        total_orders: 0, 
+        pending_orders: 0, 
+        todays_collection: 0, 
+        total_revenue: 0,
+        last_5_days_orders: [] as {date: string, count: number}[] 
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -40,12 +47,6 @@ export default function AdminDashboard() {
                     setStats(await statsRes.json());
                 }
 
-                // Traffic Stats
-                const trafficRes = await fetch(API.TRAFFIC_STATS, { headers });
-                if (trafficRes.ok) {
-                    setTraffic(await trafficRes.json());
-                }
-
                 setLoading(false);
             } catch (err) {
                 console.error("Dashboard Load Error", err);
@@ -55,14 +56,32 @@ export default function AdminDashboard() {
         fetchData();
     }, []);
 
-    const chartData = {
-        labels: traffic.popular_pages.map(p => p.path),
+    const pieData = {
+        labels: ["Today's Revenue", 'Previous Revenue'],
         datasets: [
             {
-                label: 'Page Hits',
-                data: traffic.popular_pages.map(p => p.hits),
-                backgroundColor: traffic.popular_pages.map((_, i) => i % 2 === 0 ? 'rgba(246, 215, 15, 0.8)' : 'rgba(12, 92, 43, 0.8)'),
-                borderColor: traffic.popular_pages.map((_, i) => i % 2 === 0 ? 'rgba(246, 215, 15, 1)' : 'rgba(12, 92, 43, 1)'),
+                data: [
+                    stats.todays_collection,
+                    Math.max(0, stats.total_revenue - stats.todays_collection)
+                ],
+                backgroundColor: ['rgba(12, 92, 43, 0.8)', 'rgba(246, 215, 15, 0.8)'],
+                borderColor: ['rgba(12, 92, 43, 1)', 'rgba(246, 215, 15, 1)'],
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const barData = {
+        labels: stats.last_5_days_orders.map(d => {
+            const date = new Date(d.date);
+            return date.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+        }),
+        datasets: [
+            {
+                label: 'Orders',
+                data: stats.last_5_days_orders.map(d => d.count),
+                backgroundColor: 'rgba(246, 215, 15, 0.8)',
+                borderColor: 'rgba(246, 215, 15, 1)',
                 borderWidth: 1,
                 borderRadius: 4
             }
@@ -115,19 +134,34 @@ export default function AdminDashboard() {
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col justify-center relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-24 h-24 bg-yellow/20 rounded-bl-full"></div>
                     <p className="text-gray-500 font-medium text-sm relative z-10">Live Unique Visitors</p>
-                    <h2 className="text-4xl font-bold text-primary mt-2 relative z-10">{traffic.unique_visitors}</h2>
+                    <h2 className="text-4xl font-bold text-primary mt-2 relative z-10">--</h2>
                 </div>
             </div>
 
-            {/* Traffic Chart */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 w-full">
-                <h3 className="text-xl font-bold text-gray-800 mb-6">Live Site Traffic Routes</h3>
-                <div className="h-[400px] w-full relative">
-                    {traffic.popular_pages.length > 0 ? (
-                        <Bar data={chartData} options={chartOptions} />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">Not enough traffic data available.</div>
-                    )}
+            {/* Charts Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Revenue Pie Chart */}
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i className="fa-solid fa-chart-pie text-primary"></i> Revenue Overview
+                    </h3>
+                    <div className="h-[300px] w-full relative flex justify-center">
+                        <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
+                    </div>
+                </div>
+
+                {/* Orders Bar Chart */}
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <i className="fa-solid fa-chart-column text-primary"></i> Orders (Last 5 Days)
+                    </h3>
+                    <div className="h-[300px] w-full relative">
+                        {stats.last_5_days_orders.length > 0 ? (
+                            <Bar data={barData} options={chartOptions} />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">No recent orders.</div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
