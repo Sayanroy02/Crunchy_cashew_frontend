@@ -61,14 +61,14 @@ export const ORDER_STATUS_CLASSES: Record<string, string> = {
   'Order placed': 'bg-black text-white border-black',
   Pending: 'bg-[#F6B000] text-black border-[#F6B000]',
   Accepted: 'bg-[#F6B000] text-black border-[#F6B000]',
-  Dispatched: 'bg-[#F6B000] text-black border-[#F6B000]',
+  Packed: 'bg-[#F6B000] text-black border-[#F6B000]',
   Shipped: 'bg-[#F6B000] text-black border-[#F6B000]',
   Delivered: 'bg-black text-white border-black',
   Cancelled: 'bg-red-500 text-white border-red-500',
   // Admin variant (border style used in admin panel)
   Pending_admin: 'bg-yellow-100 text-yellow-700 border border-yellow-300',
   Accepted_admin: 'bg-blue-100 text-blue-700 border border-blue-300',
-  Dispatched_admin: 'bg-purple-100 text-purple-700 border border-purple-300',
+  Packed_admin: 'bg-purple-100 text-purple-700 border border-purple-300',
   Shipped_admin: 'bg-indigo-100 text-indigo-700 border border-indigo-300',
   Delivered_admin: 'bg-green-100 text-green-700 border border-green-300',
   Cancelled_admin: 'bg-red-100 text-red-700 border border-red-300',
@@ -89,7 +89,7 @@ export const PAYMENT_STATUS_CLASSES: Record<string, string> = {
 export const ORDER_STATUS_FLOW = [
   'Order placed',
   'Accepted',
-  'Dispatched',
+  'Packed',
   'Shipped',
   'Delivered',
 ] as const;

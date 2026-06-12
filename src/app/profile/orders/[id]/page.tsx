@@ -83,7 +83,7 @@ export default function OrderDetailPage() {
   };
 
   const handleCancelClick = () => {
-    if (order.status === 'Dispatched') {
+    if (order.status === 'Packed') {
         setSnackbar({ show: true, msg: `Cannot cancel, order is already ${order.status}` });
         setTimeout(() => setSnackbar({ show: false, msg: '' }), 4000);
         return;
@@ -133,7 +133,7 @@ export default function OrderDetailPage() {
 
   // Derived values
   const isCancelled = order.status === 'Cancelled';
-  const canCancel = CANCELLABLE_STATUSES.includes(order.status) || order.status === 'Dispatched'; // Check logic inside handleCancelClick
+  const canCancel = CANCELLABLE_STATUSES.includes(order.status) || order.status === 'Packed'; // Check logic inside handleCancelClick
   const statusClass = ORDER_STATUS_CLASSES[order.status] || 'bg-gray-50 text-gray-600 border-gray-200';
   const paymentStatus = order.payment_status || (order.payment_mode === 'COD' ? 'COD' : 'Pending');
   const paymentStatusClass = PAYMENT_STATUS_CLASSES[paymentStatus] || PAYMENT_STATUS_CLASSES.Pending;

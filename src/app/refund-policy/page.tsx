@@ -27,7 +27,7 @@ export default function RefundPolicyPage() {
             <div className="max-w-4xl mx-auto px-6 py-16">
                 <Section title="1. Cancellation Policy">
                     <p>Orders once placed can only be cancelled within <strong>2 hours</strong> of placement or before the status is updated to 'Accepted' by our team, whichever is earlier.</p>
-                    <p>Once the product has been dispatched, we cannot accept any cancellations.</p>
+                    <p>Once the product has been packed, we cannot accept any cancellations.</p>
                 </Section>
 
                 <Section title="2. Returns & Replacements">

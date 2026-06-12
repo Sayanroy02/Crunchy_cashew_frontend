@@ -190,7 +190,7 @@ function ProfileContent() {
 
     const cancelOrder = async (orderId: string) => {
         const order = orders.find(o => o._id === orderId);
-        if (order?.status === 'Dispatched') {
+        if (order?.status === 'Packed') {
             alert(`Cannot cancel, order is already ${order.status}`);
             return;
         }

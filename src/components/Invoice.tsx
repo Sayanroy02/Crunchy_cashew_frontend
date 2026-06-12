@@ -156,7 +156,7 @@ export default function Invoice({ order, onClose }: InvoiceProps) {
                 <div className="bg-gray-50 border border-gray-200 p-4 max-w-lg mx-auto rounded-tl-xl rounded-br-xl">
                     <p className="text-[10px] text-gray-500 leading-snug">
                         <strong>Terms:</strong> This is a computer-generated invoice. No signature is required. 
-                        Cancellations are strictly disabled once the order has been <strong>dispatched</strong> from our store.
+                        Cancellations are strictly disabled once the order has been <strong>packed</strong> from our store.
                     </p>
                 </div>
             </div>
