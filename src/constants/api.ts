@@ -13,6 +13,9 @@ export const API = {
   AUTH_GOOGLE: `${API_BASE}/api/auth/google`,
   AUTH_ME: `${API_BASE}/api/auth/me`,
   AUTH_PROFILE: `${API_BASE}/api/auth/profile`,
+  AUTH_FORGOT_PASSWORD: `${API_BASE}/api/auth/forgot-password`,
+  AUTH_VERIFY_OTP: `${API_BASE}/api/auth/verify-otp`,
+  AUTH_RESET_PASSWORD: `${API_BASE}/api/auth/reset-password`,
 
   // ── Products ──────────────────────────────────────────────────────────────
   PRODUCTS: `${API_BASE}/api/products/`,
