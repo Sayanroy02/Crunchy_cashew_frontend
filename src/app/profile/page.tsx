@@ -94,7 +94,7 @@ function ProfileContent() {
     const [mobileOrderFilter, setMobileOrderFilter] = useState<string>('All');
 
     const [isEditing, setIsEditing] = useState(false);
-    const [editForm, setEditForm] = useState({ username: '', phone: '', address: '' });
+    const [editForm, setEditForm] = useState({ username: '', phone: '', address: '', city: '', state: '', pincode: '' });
     const [locating, setLocating] = useState(false);
 
     const dispatch = useDispatch();
@@ -137,10 +137,32 @@ function ProfileContent() {
                 if (!res.ok) throw new Error('Failed to fetch profile details');
                 const data = await res.json();
                 setProfile(data);
+                let parsedCity = '';
+                let parsedState = '';
+                let parsedPincode = '';
+                let cleanAddress = data.address || '';
+
+                if (cleanAddress && cleanAddress.includes(',')) {
+                    const parts = cleanAddress.split(',').map((p: string) => p.trim());
+                    if (parts.length >= 3) {
+                        const lastPart = parts[parts.length - 1];
+                        const numsInLast = lastPart.replace(/[^0-9]/g, '');
+                        if (numsInLast.length >= 5) {
+                            parsedPincode = numsInLast;
+                            parsedState = parts[parts.length - 2];
+                            parsedCity = parts[parts.length - 3];
+                            cleanAddress = parts.slice(0, parts.length - 3).join(', ');
+                        }
+                    }
+                }
+
                 setEditForm({
                     username: data.username || '',
                     phone: data.phone || '',
-                    address: data.address || ''
+                    address: cleanAddress,
+                    city: parsedCity,
+                    state: parsedState,
+                    pincode: parsedPincode
                 });
                 setReviewForm(prev => ({ ...prev, name: data.username || '' }));
             } catch (err) {
@@ -226,10 +248,16 @@ function ProfileContent() {
     const handleUpdateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
+            const fullAddress = `${editForm.address}, ${editForm.city}, ${editForm.state}, ${editForm.pincode}`;
+            const submitData = {
+                username: editForm.username,
+                phone: editForm.phone,
+                address: fullAddress
+            };
             const res = await fetch(API.AUTH_PROFILE, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(editForm)
+                body: JSON.stringify(submitData)
             });
             if (res.ok) {
                 const data = await res.json();
@@ -418,16 +446,40 @@ function ProfileContent() {
                                                     </div>
                                                     <div className="col-span-2">
                                                         <div className="flex justify-between items-center mb-2">
-                                                            <label className="text-xs font-bold text-gray-800">Complete Address</label>
+                                                            <label className="text-xs font-bold text-gray-800">Street Address</label>
                                                             <button type="button" onClick={handleGetLocation}
                                                                 className="text-[10px] bg-gray-100 text-gray-600 font-bold px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors uppercase tracking-widest flex items-center gap-1">
                                                                 <i className="fa-solid fa-location-crosshairs"></i> Auto-locate
                                                             </button>
                                                         </div>
-                                                        <textarea rows={4} value={editForm.address}
+                                                        <textarea rows={3} value={editForm.address}
                                                             onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
-                                                            className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black"
-                                                            placeholder="Enter complete address" />
+                                                            className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black mb-4"
+                                                            placeholder="Enter street address" />
+                                                        
+                                                        <div className="grid grid-cols-3 gap-4">
+                                                            <div>
+                                                                <label className="text-xs font-bold text-gray-800 mb-2 block">City</label>
+                                                                <input type="text" value={editForm.city}
+                                                                    onChange={e => setEditForm(r => ({ ...r, city: e.target.value }))}
+                                                                    className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                                    placeholder="City" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-xs font-bold text-gray-800 mb-2 block">State</label>
+                                                                <input type="text" value={editForm.state}
+                                                                    onChange={e => setEditForm(r => ({ ...r, state: e.target.value }))}
+                                                                    className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                                    placeholder="State" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="text-xs font-bold text-gray-800 mb-2 block">PIN Code</label>
+                                                                <input type="text" value={editForm.pincode}
+                                                                    onChange={e => setEditForm(r => ({ ...r, pincode: e.target.value }))}
+                                                                    className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors font-semibold focus:border-black"
+                                                                    placeholder="PIN Code" maxLength={6} />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-4">
@@ -651,11 +703,28 @@ function ProfileContent() {
                                                 <input type="text" value={editForm.phone} onChange={e => setEditForm(r => ({ ...r, phone: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold" />
                                             </div>
                                             <div>
-                                                <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">Address</label>
-                                                <textarea rows={3} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold resize-none" />
-                                                <button type="button" onClick={handleGetLocation} className="mt-2 text-[10px] font-bold px-4 py-2 rounded-full inline-flex items-center gap-1.5 bg-gray-100 text-gray-600">
-                                                    <i className="fa-solid fa-location-crosshairs"></i> Auto Locate
-                                                </button>
+                                                <div className="flex justify-between items-center mb-1.5">
+                                                    <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block">Street Address</label>
+                                                    <button type="button" onClick={handleGetLocation} className="text-[10px] font-bold px-3 py-1 rounded-full inline-flex items-center gap-1 bg-gray-100 text-gray-600">
+                                                        <i className="fa-solid fa-location-crosshairs"></i> Auto Locate
+                                                    </button>
+                                                </div>
+                                                <textarea rows={2} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold resize-none mb-4" placeholder="Street address" />
+                                                
+                                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                                    <div>
+                                                        <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">City</label>
+                                                        <input type="text" value={editForm.city} onChange={e => setEditForm(r => ({ ...r, city: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold" placeholder="City" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">State</label>
+                                                        <input type="text" value={editForm.state} onChange={e => setEditForm(r => ({ ...r, state: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold" placeholder="State" />
+                                                    </div>
+                                                    <div className="col-span-2">
+                                                        <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">PIN Code</label>
+                                                        <input type="text" value={editForm.pincode} onChange={e => setEditForm(r => ({ ...r, pincode: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold" placeholder="PIN Code" maxLength={6} />
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div className="flex gap-3 pt-2">
                                                 <button type="submit" className="bg-green-700 text-white py-3.5 rounded-xl font-bold text-sm shadow-xl flex items-center justify-center gap-2 flex-1">

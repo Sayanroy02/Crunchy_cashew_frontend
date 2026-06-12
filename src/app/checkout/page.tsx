@@ -132,6 +132,35 @@ export default function CheckoutPage() {
         );
     };
 
+    // Real-time pincode check
+    useEffect(() => {
+        if (formData.pincode && formData.pincode.length === 6) {
+            const verify = async () => {
+                setCheckingPin(true);
+                try {
+                    const res = await fetch(API.PINCODES_CHECK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pincode: formData.pincode })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        setPincodeValid(data.available);
+                    } else {
+                        setPincodeValid(null);
+                    }
+                } catch (e) {
+                    setPincodeValid(null);
+                } finally {
+                    setCheckingPin(false);
+                }
+            };
+            verify();
+        } else {
+            setPincodeValid(null);
+        }
+    }, [formData.pincode]);
+
     // Check pincode serviceability before building the order payload
     const checkPincode = async (): Promise<boolean> => {
         if (!formData.pincode) return true; // let backend validate
@@ -145,8 +174,11 @@ export default function CheckoutPage() {
             if (res.ok) {
                 const data = await res.json();
                 if (!data.available) {
+                    setPincodeValid(false);
                     alert('We are not delivering to your location yet.');
                     return false;
+                } else {
+                    setPincodeValid(true);
                 }
             }
         } catch (e) {
@@ -161,7 +193,11 @@ export default function CheckoutPage() {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setPaymentError(null);
-        const ok = await checkPincode();
+        if (pincodeValid === false) {
+            alert('We are not delivering to your location yet.');
+            return;
+        }
+        const ok = pincodeValid === true ? true : await checkPincode();
         if (ok) setFormSubmitted(true);
     };
 
@@ -314,11 +350,21 @@ export default function CheckoutPage() {
                                         placeholder="West Bengal" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">PIN Code</label>
+                                    <label className="flex items-center justify-between text-sm font-bold text-gray-700 mb-2">
+                                        <span>PIN Code</span>
+                                        {formData.pincode.length === 6 && (
+                                            <span className="text-xs">
+                                                {checkingPin ? <i className="fa-solid fa-spinner fa-spin text-gray-400"></i> :
+                                                pincodeValid === true ? <i className="fa-solid fa-circle-check text-green-500"></i> :
+                                                pincodeValid === false ? <i className="fa-solid fa-circle-xmark text-red-500"></i> : null}
+                                            </span>
+                                        )}
+                                    </label>
                                     <input required type="text" name="pincode" value={formData.pincode} onChange={handleInputChange}
-                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black"
+                                        className={`w-full border-2 ${pincodeValid === false ? 'border-red-400' : 'border-gray-200'} rounded-xl px-4 py-3 outline-none transition-colors font-semibold text-gray-800 focus:border-black`}
                                         style={{ '--tw-ring-color': '#F6B000' } as any}
                                         placeholder="734001" maxLength={6} />
+                                    {pincodeValid === false && <p className="text-red-500 text-[10px] mt-1 font-bold">Delivery not available</p>}
                                 </div>
                             </div>
 
