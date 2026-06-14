@@ -9,6 +9,15 @@ import ProductComparison from '@/components/products/ProductComparison';
 import { useSnackbar } from '@/context/SnackbarContext';
 
 export default function ProductDetailsClient({ product }: { product: any }) {
+    const getCategoryColors = (category: string) => {
+        const cat = category?.toLowerCase() || '';
+        if (cat.includes('value')) return 'bg-[#F97316]/10 text-[#F97316] border-[#F97316]/20';
+        if (cat.includes('premium')) return 'bg-[#7C3AED]/10 text-[#7C3AED] border-[#7C3AED]/20';
+        if (cat.includes('flavor')) return 'bg-[#92400E]/10 text-[#92400E] border-[#92400E]/20';
+        if (cat.includes('gift')) return 'bg-[#2563EB]/10 text-[#2563EB] border-[#2563EB]/20';
+        return 'bg-[#F6B000]/10 text-[#F6B000] border-[#F6B000]/20';
+    };
+
     // Initialize with first available variant or legacy data
     const [selectedVariant, setSelectedVariant] = useState(() => {
         if (product.variants && product.variants.length > 0) {
@@ -65,7 +74,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                 <div className="lg:w-[55%] w-full p-8 md:p-12 flex flex-col justify-between lg:rounded-r-2xl rounded-b-2xl bg-white">
                     <div>
                         <div className="flex items-center gap-3 mb-3">
-                            <span className="text-xs font-bold tracking-widest text-primary uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                            <span className={`text-xs font-bold tracking-widest uppercase px-3 py-1 rounded-full border ${getCategoryColors(product.category)}`}>
                                 {product.category}
                             </span>
                             {selectedVariant.stock > 0 ? (

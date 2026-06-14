@@ -52,40 +52,49 @@ export default function ProductComparison({ product }: { product: Product }) {
     return null;
   }
 
-  const platforms = [
-    {
-      name: 'OFFICIAL WEBSITE',
-      logo: product.image_url || '/images/crunchy-cashews-product.png',
-      price: basePrice,
-      link: '#',
-      isBest: true,
-      label: 'FACTORY PRICE'
-    },
-    {
-      name: 'AMAZON',
-      logo: '/images/partners/amazon.png',
-      price: amazonPrice,
-      link: mp.amazon?.link
-    },
-    {
-      name: 'FLIPKART',
-      logo: '/images/partners/flipkart.png',
-      price: flipkartPrice,
-      link: mp.flipkart?.link
-    },
-    {
-      name: 'BLINKIT',
-      logo: '/images/partners/blinkit.png',
-      price: blinkitPrice,
-      link: mp.blinkit?.link
-    },
-    {
-      name: 'JIO MART',
-      logo: '/images/partners/JioMart_logo.png',
-      price: jioPrice,
-      link: mp.swiggy?.link
-    },
-  ];
+  const platforms: Array<{
+    name: string;
+    logo: string;
+    price: number;
+    link?: string;
+    isBest?: boolean;
+    label?: string;
+    logoClassName?: string;
+  }> = [
+      {
+        name: 'OFFICIAL WEBSITE',
+        logo: product.image_url || '/images/crunchy-cashews-product.png',
+        price: basePrice,
+        link: '#',
+        isBest: true,
+        label: 'FACTORY PRICE'
+      },
+      {
+        name: 'AMAZON',
+        logo: '/images/partners/amazon.png',
+        price: amazonPrice,
+        link: mp.amazon?.link
+      },
+      {
+        name: 'BLINKIT',
+        logo: '/images/partners/blinkit.png',
+        price: blinkitPrice,
+        link: mp.blinkit?.link
+      },
+      {
+        name: 'FLIPKART',
+        logo: '/images/partners/flipkart-logo.png',
+        price: flipkartPrice,
+        link: mp.flipkart?.link,
+        logoClassName: 'scale-140'
+      },
+      {
+        name: 'JIO MART',
+        logo: '/images/partners/JioMart_logo.png',
+        price: jioPrice,
+        link: mp.swiggy?.link
+      },
+    ];
 
   const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice].filter(p => p > 0);
   const avgMpPrice = marketplacePrices.length > 0 ? marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length : basePrice;
@@ -117,10 +126,10 @@ export default function ProductComparison({ product }: { product: Product }) {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                whileHover={{ y: -8 }}
+                whileHover={{ y: -8, transition: { duration: 0.1 } }}
                 onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
                 onHoverEnd={() => setHoveredIdx(null)}
-                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-300 ${platform.isBest
+                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-75 ${platform.isBest
                   ? 'bg-white z-10 scale-105 border border-slate-200'
                   : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
                   }`}
@@ -152,7 +161,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                     alt={platform.name}
                     fill
                     sizes="96px"
-                    className="object-contain"
+                    className={`object-contain ${platform.logoClassName || ''}`}
                   />
                 </div>
 
@@ -268,7 +277,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                           alt={p.name}
                           fill
                           sizes="40px"
-                          className="object-contain p-0.5"
+                          className={`object-contain p-0.5 ${p.logoClassName || ''}`}
                         />
                       </div>
                     )}

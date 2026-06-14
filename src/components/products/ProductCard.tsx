@@ -147,7 +147,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     
     // Custom tags that aren't already represented by a category badge
     const categoryKeywords = ['premium', 'flavors', 'flavor', 'flavour', 'flavours', 'pepper', 'masala', 'spices', 'spicy', 'value pack', 'valuepack', 'bulk', 'wholesale', 'gifting', 'gift', 'hamper', 'hampers', 'new', 'new arrival', 'newest', 'best seller', 'bestseller', 'popular', 'trending', 'event'];
-    const customTags = product.tags?.filter(t => !categoryKeywords.includes(t.toLowerCase())) || [];
+    const customTags = product.tags?.filter(t => !categoryKeywords.includes(t.toLowerCase()) && t.toLowerCase() !== product.event?.label?.toLowerCase()) || [];
 
     return (
         <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-xl transition-all duration-300 flex flex-col group border border-gray-100 h-full">
@@ -247,9 +247,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                     {isGift && (
                         <span className="text-[9px] font-black bg-[#2563EB]/10 text-[#2563EB] border border-[#2563EB]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">Gift Hamper</span>
                     )}
+                    {product.event?.label && (
+                        <span className="text-[9px] font-black bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/20 px-2 py-0.5 rounded-md uppercase tracking-tighter">{product.event.label}</span>
+                    )}
                     {/* Render other custom tags */}
                     {customTags.map((tag, idx) => (
-                        <span key={idx} className="text-[9px] font-black bg-gray-100 text-gray-500 border border-gray-200 px-2 py-0.5 rounded-md uppercase tracking-tighter">{tag}</span>
+                        <span key={idx} className="text-[9px] font-black bg-purple-100 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-md uppercase tracking-tighter">{tag}</span>
                     ))}
                 </div>
 

@@ -52,9 +52,9 @@ export default function BlogFeatureBanner() {
             <Image
               src="/images/chef-cook.png"
               alt="Chef sharing recipe"
-              width={100}
-              height={100}
-              className="h-[88px] w-auto object-contain drop-shadow-lg"
+              width={120}
+              height={120}
+              className="h-[120px] w-auto object-contain drop-shadow-lg"
               style={{ filter: 'drop-shadow(0 4px 16px rgba(253,199,0,0.3))' }}
               priority={false}
             />

@@ -76,8 +76,10 @@ export default function Navbar() {
 
     if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance') return null;
 
-    const isActive = (href: string) =>
-        href === '/' || href === '/our-product' ? pathname === href : pathname.startsWith(href);
+    const isActive = (href: string) => {
+        const p = pathname || '/';
+        return href === '/' || href === '/our-product' ? p === href : p.startsWith(href);
+    };
 
     /*
      * showAnnouncement:
@@ -138,7 +140,7 @@ export default function Navbar() {
                                 >
                                     {link.label}
                                     <span 
-                                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-amber rounded-full transition-all duration-300 ${active || isHovered ? 'w-4 opacity-100' : 'w-0 opacity-0'}`} 
+                                        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-[#F6B000] rounded-full transition-all duration-300 ${active || isHovered ? 'w-4 opacity-100' : 'w-0 opacity-0'}`} 
                                     />
                                 </Link>
                             );

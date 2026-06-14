@@ -33,7 +33,7 @@ const STATIC_PLATFORMS = [
   },
   {
     name: 'FLIPKART',
-    logo: '/images/partners/flipkart.png',
+    logo: '/images/partners/flipkart-logo.png',
     higherPct: 20,
     label: 'MARKETPLACE FEES',
   },
@@ -132,7 +132,7 @@ export default function PriceComparisonPreview() {
                       alt={platform.name}
                       fill
                       sizes="128px"
-                      className={`object-contain ${platform.name === 'AMAZON' ? 'scale-125' : platform.name === 'FLIPKART' ? 'scale-[1.4]' : ''}`}
+                      className={`object-contain ${platform.name === 'AMAZON' ? 'scale-125' : platform.name === 'FLIPKART' ? 'scale-110' : platform.name === 'JIO MART' ? 'scale-90' : ''}`}
                     />
                   </div>
 
@@ -241,7 +241,7 @@ export default function PriceComparisonPreview() {
                               alt={p.name}
                               fill
                               sizes="40px"
-                              className={`object-contain ${p.name === 'FLIPKART' ? 'scale-[1.4]' : ''}`}
+                              className={`object-contain ${p.name === 'FLIPKART' ? 'scale-110' : p.name === 'JIO MART' ? 'scale-90' : ''}`}
                             />
                           </div>
                         )}

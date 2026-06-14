@@ -644,13 +644,9 @@ export default function AdminProducts() {
 
                                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
                                         {[
-                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-[#00863D] text-white border-[#00863D]', tag: 'new' },
-                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-[#F6B000] text-black border-[#F6B000]', tag: 'bestseller' },
-                                            { id: 'isGift', label: 'Gift Hamper', icon: 'fa-gift', color: 'bg-[#2563EB] text-white border-[#2563EB]', tag: 'gifting' },
-                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-[#EF4444] text-white border-[#EF4444]', tag: 'event' },
-                                            { id: 'isValuePack', label: 'Value Pack', icon: 'fa-box-open', color: 'bg-[#F97316] text-white border-[#F97316]', tag: 'valuepack' },
-                                            { id: 'isPremium', label: 'Premium', icon: 'fa-crown', color: 'bg-[#7C3AED] text-white border-[#7C3AED]', tag: 'premium' },
-                                            { id: 'isFlavors', label: 'Flavors', icon: 'fa-pepper-hot', color: 'bg-[#92400E] text-white border-[#92400E]', tag: 'flavors' }
+                                            { id: 'isNew', label: 'New Arrival', icon: 'fa-sparkles', color: 'bg-[#00863D] text-white border-[#00863D]', tag: 'New Arrival' },
+                                            { id: 'isBestSeller', label: 'Best Seller', icon: 'fa-fire', color: 'bg-[#F6B000] text-black border-[#F6B000]', tag: 'Best Seller' },
+                                            { id: 'isEvent', label: 'Event Special', icon: 'fa-calendar-star', color: 'bg-[#EF4444] text-white border-[#EF4444]', tag: 'event' }
                                         ].map(tag => (
                                             <label key={tag.id} className={`flex items-center gap-2 p-2 border rounded-xl cursor-pointer transition-all hover:shadow-sm ${tag.id === 'isEvent' ? (formData.event?.type ? tag.color : 'bg-white border-gray-200') : ((formData as any)[tag.id] ? tag.color : 'bg-white border-gray-200')}`}>
                                                 <input
@@ -659,10 +655,24 @@ export default function AdminProducts() {
                                                     checked={tag.id === 'isEvent' ? !!formData.event?.type : !!(formData as any)[tag.id]}
                                                     onChange={e => {
                                                         if (tag.id === 'isEvent') {
-                                                            setFormData({ ...formData, event: e.target.checked ? { type: 'holi', label: 'Holi Special' } : { type: '', label: '' } });
-                                                            if (e.target.checked && !formData.tags.includes('event')) {
-                                                                setFormData(prev => ({ ...prev, tags: [...prev.tags, 'event'] }));
-                                                            }
+                                                            const isChecked = e.target.checked;
+                                                            const defaultEvent = { type: 'holi', label: 'Holi Special' };
+                                                            setFormData(prev => {
+                                                                const oldLabel = prev.event?.label;
+                                                                let newTags = [...prev.tags];
+                                                                if (!isChecked) {
+                                                                    if (oldLabel) newTags = newTags.filter(t => t !== oldLabel);
+                                                                    newTags = newTags.filter(t => t !== 'event');
+                                                                } else {
+                                                                    if (!newTags.includes(defaultEvent.label)) newTags.push(defaultEvent.label);
+                                                                    newTags = newTags.filter(t => t !== 'event');
+                                                                }
+                                                                return { 
+                                                                    ...prev, 
+                                                                    event: isChecked ? defaultEvent : { type: '', label: '' },
+                                                                    tags: newTags
+                                                                };
+                                                            });
                                                         } else {
                                                             const newTags = e.target.checked
                                                                 ? (formData.tags.includes(tag.tag) ? formData.tags : [...formData.tags, tag.tag])
@@ -686,8 +696,18 @@ export default function AdminProducts() {
                                                     value={formData.event?.type}
                                                     onChange={e => {
                                                         const val = e.target.value;
-                                                        const label = val === 'custom' ? '' : `${val.charAt(0).toUpperCase() + val.slice(1)} Special`;
-                                                        setFormData({ ...formData, event: { type: val, label: label } });
+                                                        const newLabel = val === 'custom' ? '' : `${val.charAt(0).toUpperCase() + val.slice(1)} Special`;
+                                                        setFormData(prev => {
+                                                            const oldLabel = prev.event?.label;
+                                                            let newTags = [...prev.tags];
+                                                            if (oldLabel && newTags.includes(oldLabel)) {
+                                                                newTags = newTags.filter(t => t !== oldLabel);
+                                                            }
+                                                            if (newLabel && !newTags.includes(newLabel)) {
+                                                                newTags.push(newLabel);
+                                                            }
+                                                            return { ...prev, event: { type: val, label: newLabel }, tags: newTags };
+                                                        });
                                                     }}
                                                     className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-xs outline-none focus:border-primary"
                                                 >
@@ -703,7 +723,19 @@ export default function AdminProducts() {
                                                     type="text"
                                                     placeholder="e.g. DIWALI SPECIAL"
                                                     value={formData.event?.label}
-                                                    onChange={e => setFormData({ ...formData, event: { ...formData.event!, label: e.target.value } })}
+                                                    onChange={e => {
+                                                        const newLabel = e.target.value;
+                                                        setFormData(prev => {
+                                                            const oldLabel = prev.event?.label;
+                                                            let newTags = [...prev.tags];
+                                                            if (oldLabel && newTags.includes(oldLabel)) {
+                                                                newTags = newTags.map(t => t === oldLabel ? newLabel : t);
+                                                            } else if (newLabel && !newTags.includes(newLabel)) {
+                                                                newTags.push(newLabel);
+                                                            }
+                                                            return { ...prev, event: { ...prev.event!, label: newLabel }, tags: newTags };
+                                                        });
+                                                    }}
                                                     className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg text-xs outline-none focus:border-primary"
                                                 />
                                             </div>

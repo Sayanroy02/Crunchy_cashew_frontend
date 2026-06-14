@@ -31,9 +31,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     const relatedProducts = allProducts.filter((p: any) => (p._id || p.id) !== id).slice(0, 8);
 
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="bg-[#FFF9E7] min-h-screen">
             {/* Breadcrumb */}
-            <div className="bg-white border-b border-gray-100">
+            <div className="bg-transparent">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center gap-2 text-sm text-gray-500">
                     <Link href="/" className="hover:text-primary">Home</Link>
                     <span>/</span>
