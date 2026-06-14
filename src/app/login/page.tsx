@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { GoogleLogin } from '@react-oauth/google';
 import { API } from '@/constants/api';
 import { COLORS } from '@/constants/styles';
+import SectionHeading from '@/components/ui/SectionHeading';
 
 type ViewState = 'login' | 'forgot_email' | 'forgot_otp' | 'forgot_reset';
 
@@ -189,30 +190,25 @@ export default function LoginPage() {
                         style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 72%, rgba(12,92,43,0.38) 0%, transparent 68%)' }} />
                     <div className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
                         style={{ background: 'linear-gradient(to top, rgba(200,169,110,0.1), transparent)' }} />
-                    
-                    <div className="absolute top-4 left-4 lg:top-5 lg:left-5 z-10">
-                        <img
-                            src="/images/cc-Logo-01-1.png"
-                            alt="Crunchy Cashews"
-                            className="h-9 lg:h-10 w-auto object-contain"
-                        />
-                    </div>
 
-                    <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0">
+                    <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0 w-full">
                         <img
-                            src="/images/iLLUSTARTION-1.png"
+                            src="/images/login-page-img-new.png"
                             alt="Crunchy Cashews illustration"
-                            className="object-contain w-[130px] sm:w-[170px] lg:w-[250px] xl:w-[270px]"
+                            className="object-contain w-[85%] max-w-[380px] h-full"
                             style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.6))' }}
                         />
 
                         <div className="mt-4 lg:mt-6 text-center px-2">
-                            <h2 className="text-white font-bold leading-snug tracking-tight text-lg sm:text-xl lg:text-[1.45rem]">
-                                Premium Cashews,<br />
-                                <span className="text-[#c8a96e]">Delivered Fresh</span>
-                            </h2>
-                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[200px] mx-auto leading-relaxed">
-                                Farm-fresh cashews delivered straight to your doorstep.
+                            <SectionHeading
+                                text="Experience the"
+                                highlight="Perfect Crunch"
+                                className="text-white !text-lg !sm:text-xl !lg:text-[1.45rem] font-bold leading-snug tracking-tight text-center mb-3"
+                                textColor="#ffffff"
+                                highlightColor="#F6B000"
+                            />
+                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
+                                Sign in for faster checkout, easy reordering, and real-time shipment tracking.
                             </p>
                         </div>
                     </div>
@@ -225,7 +221,7 @@ export default function LoginPage() {
                     px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-14">
 
                     <div className="w-full max-w-[320px]">
-                        
+
                         {/* Error Alert */}
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 rounded-xl p-3 mb-6 text-sm font-medium flex items-center gap-2">
@@ -285,8 +281,8 @@ export default function LoginPage() {
                                             </button>
                                         </div>
                                         <div className="flex justify-end mt-1">
-                                            <button 
-                                                type="button" 
+                                            <button
+                                                type="button"
                                                 onClick={() => { setError(''); setView('forgot_email'); }}
                                                 className="text-[11px] text-blue-600 font-bold hover:underline"
                                             >
@@ -339,7 +335,7 @@ export default function LoginPage() {
                         {view === 'forgot_email' && (
                             <>
                                 <div className="mb-6">
-                                    <button 
+                                    <button
                                         onClick={() => { setError(''); setView('login'); }}
                                         className="mb-4 text-xs font-semibold text-gray-400 hover:text-primary flex items-center gap-1 transition-colors"
                                     >
@@ -389,7 +385,7 @@ export default function LoginPage() {
                         {view === 'forgot_otp' && (
                             <>
                                 <div className="mb-6">
-                                    <button 
+                                    <button
                                         onClick={() => { setError(''); setView('forgot_email'); }}
                                         className="mb-4 text-xs font-semibold text-gray-400 hover:text-primary flex items-center gap-1 transition-colors"
                                     >
@@ -426,9 +422,9 @@ export default function LoginPage() {
                                         ) : (
                                             <p className="text-xs font-semibold text-red-500">OTP has expired</p>
                                         )}
-                                        
-                                        <button 
-                                            type="button" 
+
+                                        <button
+                                            type="button"
                                             onClick={handleForgotEmailSubmit}
                                             disabled={timer > 0 || isLoading}
                                             className={`text-xs font-bold transition-colors ${timer > 0 ? 'text-gray-300' : 'text-primary hover:underline'}`}

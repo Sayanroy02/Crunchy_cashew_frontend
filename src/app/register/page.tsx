@@ -117,34 +117,24 @@ export default function RegisterPage() {
                     <div className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none"
                         style={{ background: 'linear-gradient(to top, rgba(200,169,110,0.1), transparent)' }} />
 
-                    {/* Real logo */}
-                    <div className="absolute top-4 left-4 lg:top-5 lg:left-5 z-10">
+                    <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0 w-full">
                         <img
-                            src="/images/cc-Logo-01-1.png"
-                            alt="Crunchy Cashews"
-                            className="h-9 lg:h-10 w-auto object-contain"
-                        />
-                    </div>
-
-                    {/* Illustration + copy */}
-                    <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0">
-                        <img
-                            src="/images/iLLUSTARTION-1.png"
+                            src="/images/login-page-img-new.png"
                             alt="Crunchy Cashews illustration"
-                            className="object-contain w-[130px] sm:w-[170px] lg:w-[250px] xl:w-[270px]"
+                            className="object-contain w-[85%] max-w-[380px]"
                             style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.6))' }}
                         />
 
                         <div className="mt-4 lg:mt-6 text-center px-2">
-                            <SectionHeading 
-                                text="Join Crunchy Cashews,"
-                                highlight="Taste the Difference"
+                            <SectionHeading
+                                text="Experience the"
+                                highlight="Perfect Crunch"
                                 className="text-white !text-lg !sm:text-xl !lg:text-[1.45rem] font-bold leading-snug tracking-tight text-center mb-3"
                                 textColor="#ffffff"
-                                highlightColor="#c8a96e"
+                                highlightColor="#F6B000"
                             />
-                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[210px] mx-auto leading-relaxed">
-                                Create an account for faster checkouts and order tracking.
+                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
+                                Sign in for faster checkout, easy reordering, and real-time shipment tracking.
                             </p>
                         </div>
                     </div>

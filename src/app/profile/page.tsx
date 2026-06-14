@@ -362,7 +362,7 @@ function ProfileContent() {
                                     <h2 className="text-base font-black text-gray-800 line-clamp-1">{profile?.username}</h2>
                                 </div>
                             </div>
-                            
+
                             {/* Sidebar Navigation */}
                             <div className="flex flex-col p-3 gap-1">
                                 {SIDEBAR_TABS.map(tab => (
@@ -388,13 +388,13 @@ function ProfileContent() {
                         {currentDesktopTab === 'settings' && (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Personal Information</h2>
-                                
+
                                 <div className="flex gap-10">
                                     {/* Profile Picture */}
                                     <div className="w-32 h-32 rounded-full flex items-center justify-center text-4xl text-white shadow-lg border-4 border-white ring-1 ring-gray-100 shrink-0 font-black tracking-widest" style={{ backgroundColor: COLORS.heading }}>
                                         {getInitials(profile?.username)}
                                     </div>
-                                    
+
                                     {/* Form */}
                                     <div className="flex-1 max-w-xl">
                                         {!isEditing ? (
@@ -456,7 +456,7 @@ function ProfileContent() {
                                                             onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))}
                                                             className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 outline-none text-sm transition-colors resize-none font-semibold focus:border-black mb-4"
                                                             placeholder="Enter street address" />
-                                                        
+
                                                         <div className="grid grid-cols-3 gap-4">
                                                             <div>
                                                                 <label className="text-xs font-bold text-gray-800 mb-2 block">City</label>
@@ -501,28 +501,28 @@ function ProfileContent() {
                                 </div>
                             </div>
                         )}
-                        
+
                         {currentDesktopTab === 'orders' && (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Orders</h2>
                                 <OrderListRenderer orders={orders} tabLoading={tabLoading} cancelOrder={cancelOrder} />
                             </div>
                         )}
-                        
+
                         {currentDesktopTab === 'wishlist' && (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Wishlist</h2>
                                 <WishlistRenderer wishlistProducts={wishlistProducts} tabLoading={tabLoading} />
                             </div>
                         )}
-                        
+
                         {currentDesktopTab === 'blogs' && (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">My Blogs</h2>
                                 <CustomerBlogs />
                             </div>
                         )}
-                        
+
                         {currentDesktopTab === 'reviews' && (
                             <div className="animate-in slide-in-from-right-4 duration-300 max-w-2xl">
                                 <h2 className="text-xl font-black text-gray-800 mb-2">My Ratings & Reviews</h2>
@@ -530,7 +530,7 @@ function ProfileContent() {
                                 <ReviewFormRenderer reviewForm={reviewForm} setReviewForm={setReviewForm} reviewStatus={reviewStatus} handleReviewSubmit={handleReviewSubmit} profile={profile} />
                             </div>
                         )}
-                        
+
                         {currentDesktopTab === 'support' && (
                             <div className="animate-in slide-in-from-right-4 duration-300">
                                 <h2 className="text-xl font-black text-gray-800 mb-6 border-b border-gray-100 pb-4">Support & Queries</h2>
@@ -539,7 +539,7 @@ function ProfileContent() {
                         )}
                     </div>
                 </div>
-                
+
                 {/* Desktop Bottom Highlights */}
                 <div className="flex items-center justify-around bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div className="flex items-center gap-4">
@@ -582,7 +582,7 @@ function ProfileContent() {
                         <div className="relative pt-12 pb-24 px-6 rounded-b-[40px] shadow-sm overflow-hidden" style={{ backgroundColor: COLORS.heading }}>
                             {/* Decorative background shapes */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full translate-x-1/2 -translate-y-1/2 blur-2xl"></div>
-                            
+
                             <div className="relative z-10 flex flex-col items-center">
                                 <div className="w-20 h-20 rounded-full flex items-center justify-center text-3xl text-white shadow-xl border-4 border-white/20 mb-3 bg-white/10 backdrop-blur-sm font-black tracking-widest">
                                     {getInitials(profile?.username)}
@@ -628,9 +628,9 @@ function ProfileContent() {
                                 ))}
                             </div>
                         </div>
-                        
+
                         <div className="px-5 mt-10">
-                             <button onClick={() => { dispatch(logout()); router.push('/'); }}
+                            <button onClick={() => { dispatch(logout()); router.push('/'); }}
                                 className="w-full bg-white rounded-2xl p-4 flex items-center justify-center gap-3 shadow-sm border border-gray-100 text-red-500 font-bold active:bg-gray-50">
                                 <i className="fa-solid fa-right-from-bracket" /> Logout
                             </button>
@@ -638,12 +638,12 @@ function ProfileContent() {
                     </div>
                 ) : (
                     /* Mobile Detail Screen */
-                    <div className="animate-in slide-in-from-right-8 duration-300 bg-[#FFF9E7] min-h-screen pt-20">
+                    <div className="animate-in slide-in-from-right-8 duration-300 bg-[#FFF9E7] min-h-screen pt-8">
                         {/* Detail Header */}
-                        <div className="flex items-center justify-between bg-white px-5 py-4 sticky top-[65px] sm:top-[75px] md:top-[85px] z-30 shadow-sm border-b border-gray-100" style={{ top: '60px' }}>
+                        <div className="flex items-center justify-between bg-[#FFF9E7] px-5 py-4">
                             <div className="flex items-center gap-4">
                                 <button onClick={() => { setActiveTab('home'); setMobileOrderFilter('All'); }}
-                                    className="w-10 h-10 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform">
+                                    className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-600 active:scale-95 transition-transform shadow-sm">
                                     <i className="fa-solid fa-chevron-left text-sm"></i>
                                 </button>
                                 <h2 className="text-xl font-black text-gray-800 tracking-tight">
@@ -654,10 +654,10 @@ function ProfileContent() {
 
                         {/* Order Filters */}
                         {activeTab === 'orders' && (
-                            <div className="flex gap-2 overflow-x-auto px-5 py-3 border-b border-gray-100 scrollbar-hide bg-white sticky z-20" style={{ top: '125px' }}>
+                            <div className="flex gap-2 overflow-x-auto px-5 py-3 scrollbar-hide bg-[#FFF9E7]">
                                 {['All', 'Pending', 'Processing', 'Delivered', 'Cancelled'].map(f => (
                                     <button key={f} onClick={() => setMobileOrderFilter(f)}
-                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'text-white shadow-md' : 'bg-gray-100 text-gray-500'}`}
+                                        className={`px-4 py-1.5 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0 transition-colors ${mobileOrderFilter === f ? 'text-white shadow-md' : 'bg-white text-gray-500 shadow-sm border border-gray-100'}`}
                                         style={mobileOrderFilter === f ? { backgroundColor: COLORS.heading } : {}}>
                                         {f}
                                     </button>
@@ -710,7 +710,7 @@ function ProfileContent() {
                                                     </button>
                                                 </div>
                                                 <textarea rows={2} value={editForm.address} onChange={e => setEditForm(r => ({ ...r, address: e.target.value }))} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 outline-none text-sm font-semibold resize-none mb-4" placeholder="Street address" />
-                                                
+
                                                 <div className="grid grid-cols-2 gap-3 mb-4">
                                                     <div>
                                                         <label className="text-[10px] text-gray-400 uppercase tracking-widest font-bold block mb-1.5">City</label>
@@ -755,24 +755,55 @@ function ProfileContent() {
 // ── Renderers ──
 
 function OrderListRenderer({ orders, tabLoading, cancelOrder, isMobile }: any) {
+    const [searchTerm, setSearchTerm] = useState('');
+
     if (tabLoading) return (
         <div className="space-y-4">
             {[1, 2].map(i => <div key={i} className="h-32 bg-gray-100 rounded-2xl animate-pulse" />)}
         </div>
     );
-    if (orders.length === 0) return (
-        <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="fa-solid fa-box-open text-3xl text-gray-300" />
-            </div>
-            <h3 className="text-lg font-black text-gray-800 mb-2">No Orders Yet</h3>
-            <p className="text-sm text-gray-400 max-w-xs mx-auto">You haven't placed any orders.</p>
-        </div>
-    );
-    
+
+    const filteredOrders = orders.filter((o: any) => {
+        if (!searchTerm) return true;
+        const term = searchTerm.toLowerCase();
+        if (o._id?.toLowerCase().includes(term)) return true;
+        const amount = String(o.total_amount || o.totalAmount || '');
+        if (amount.includes(term)) return true;
+        if (o.items?.some((item: any) => {
+            const name = item.product_name || item.product?.name || item.name || '';
+            return name.toLowerCase().includes(term);
+        })) return true;
+        return false;
+    });
+
     return (
         <div className="space-y-4">
-            {orders.map((o: any) => <ExpandableOrderCard key={o._id} order={o} cancelOrder={cancelOrder} isMobile={isMobile} />)}
+            <div className="relative mb-6">
+                <i className="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input
+                    type="text"
+                    placeholder="Search by Order ID, Amount, or Item Name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full bg-white border border-gray-200 rounded-xl py-3.5 pl-11 pr-4 outline-none text-sm font-semibold shadow-sm focus:border-black transition-colors"
+                />
+            </div>
+
+            {orders.length === 0 ? (
+                <div className="text-center py-16 bg-transparent">
+                    <div className="w-20 h-20 bg-white/60 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-white/50">
+                        <i className="fa-solid fa-box-open text-3xl text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-black text-gray-800 mb-2">No Orders Yet</h3>
+                    <p className="text-sm text-gray-500 max-w-xs mx-auto">You haven't placed any orders.</p>
+                </div>
+            ) : filteredOrders.length === 0 ? (
+                <div className="text-center py-12 bg-transparent">
+                    <p className="text-sm text-gray-500 font-semibold">We couldn't find any orders matching your search.</p>
+                </div>
+            ) : (
+                filteredOrders.map((o: any) => <ExpandableOrderCard key={o._id} order={o} cancelOrder={cancelOrder} isMobile={isMobile} />)
+            )}
         </div>
     );
 }
@@ -781,7 +812,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
     const [expanded, setExpanded] = useState(false);
     const router = useRouter();
     const canCancel = CANCELLABLE_STATUSES.includes(order.status);
-    
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all">
             <div onClick={() => setExpanded(!expanded)} className="p-4 md:p-5 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors select-none">
@@ -805,7 +836,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                     <i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform ${expanded ? 'rotate-180' : ''}`} />
                 </div>
             </div>
-            
+
             {expanded && (
                 <div className="border-t border-gray-100 bg-gray-50/30 p-4 md:p-5 animate-in fade-in duration-300">
                     <div className="grid grid-cols-2 gap-4 mb-5 pb-5 border-b border-gray-100">
@@ -826,7 +857,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md inline-block ${PAYMENT_STATUS_CLASSES[order.payment_status || order.paymentStatus] || 'bg-gray-100 text-gray-600'}`}>{order.payment_status || order.paymentStatus || '-'}</span>
                         </div>
                     </div>
-                    
+
                     <div className="space-y-3 mb-5">
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Order Items</p>
                         {order.items?.map((item: any, i: number) => (
@@ -848,7 +879,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                             </div>
                         ))}
                     </div>
-                    
+
                     <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
                         <button onClick={() => router.push('/our-product')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
                             <i className="fa-solid fa-basket-shopping" /> Continue Shopping
@@ -916,7 +947,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading }: any) {
                     ) : <p className="text-sm text-gray-400 p-4 text-center">No enquiries found.</p>}
                 </div>
             </div>
-            
+
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div className="bg-gray-50 px-5 py-3 border-b border-gray-100 flex items-center justify-between">
                     <h3 className="font-bold text-gray-800 flex items-center gap-2"><i className="fa-solid fa-building text-gray-400" /> Factory Visits</h3>
@@ -944,7 +975,7 @@ function QueriesRenderer({ enquiries, visits, tabLoading }: any) {
 
 function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleReviewSubmit, profile }: any) {
     const [myReviews, setMyReviews] = useState<any[]>([]);
-    
+
     useEffect(() => {
         if (profile?.username) {
             fetch(API.TESTIMONIALS)
@@ -979,7 +1010,7 @@ function ReviewFormRenderer({ reviewForm, setReviewForm, reviewStatus, handleRev
                 {reviewStatus === 'success' && <p className="text-green-600 text-xs font-bold mt-2 bg-green-50 p-2 rounded-lg"><i className="fa-solid fa-circle-check" /> Submitted successfully!</p>}
                 {reviewStatus === 'error' && <p className="text-red-500 text-xs font-bold mt-2 bg-red-50 p-2 rounded-lg"><i className="fa-solid fa-circle-exclamation" /> Failed to submit review.</p>}
             </form>
-            
+
             {myReviews.length > 0 && (
                 <div className="space-y-4">
                     <h3 className="font-black text-gray-800 text-lg border-b border-gray-100 pb-2">Your Previous Reviews</h3>

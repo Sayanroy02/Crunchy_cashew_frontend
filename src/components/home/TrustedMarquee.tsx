@@ -4,17 +4,17 @@ import React, { useEffect, useRef } from 'react';
 
 export default function TrustedMarquee() {
     const logos = [
-        { src: "/images/partners/reliance-logo.png", alt: "Smart Bazaar", h: "h-20 md:h-28" },
-        { src: "/images/partners/Global-nuts.png", alt: "Global Nuts", h: "h-12 md:h-16" },
-        { src: "/images/partners/SPENCERS%20Logo.png", alt: "Spencers", h: "h-12 md:h-16" },
-        { src: "/images/partners/Marriott_Logo.png", alt: "Marriott", h: "h-12 md:h-16" },
-        { src: "/images/partners/whole-farms.png", alt: "Whole Farms", h: "h-20 md:h-28" },
-        { src: "/images/partners/9to10-logo.png", alt: "9to10", h: "h-16 md:h-24" },
-        { src: "/images/partners/natures-nut.png", alt: "Nature's Nut", h: "h-12 md:h-16" },
-        { src: "/images/partners/half-full-logo.png", alt: "Half Full", h: "h-20 md:h-28" },
+        { src: "/images/partners/reliance-logo.png", alt: "Smart Bazaar" },
+        { src: "/images/partners/Global-nuts.png", alt: "Global Nuts" },
+        { src: "/images/partners/SPENCERS%20Logo.png", alt: "Spencers" },
+        { src: "/images/partners/Marriott_Logo.png", alt: "Marriott" },
+        { src: "/images/partners/whole-farms.png", alt: "Whole Farms" },
+        { src: "/images/partners/9to10-logo.png", alt: "9to10" },
+        { src: "/images/partners/natures-nut.png", alt: "Nature's Nut" },
+        { src: "/images/partners/half-full-logo.png", alt: "Half Full" },
     ];
 
-    const GAP_CLASS = "mr-16 md:mr-24";
+    const GAP_CLASS = "gap-8 md:gap-12";
     const SPEED = 0.6; // px per frame — tune this
 
     const trackRef = useRef<HTMLDivElement>(null);
@@ -52,15 +52,16 @@ export default function TrustedMarquee() {
     }, []);
 
     const logoList = (ref?: React.RefObject<HTMLDivElement | null>) => (
-        <div ref={ref} className="flex items-center shrink-0">
+        <div ref={ref} className={`flex items-center shrink-0 ${GAP_CLASS} pr-8 md:pr-12`}>
             {logos.map((logo, i) => (
-                <img
-                    key={i}
-                    src={logo.src}
-                    alt={logo.alt}
-                    className={`${logo.h} ${GAP_CLASS} w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 shrink-0`}
-                    draggable={false}
-                />
+                <div key={i} className="flex items-center justify-center w-28 h-16 md:w-40 md:h-20 shrink-0">
+                    <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="max-w-full max-h-full object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                        draggable={false}
+                    />
+                </div>
             ))}
         </div>
     );
