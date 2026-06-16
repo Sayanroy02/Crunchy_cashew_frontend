@@ -392,7 +392,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-4 px-4 gap-6 pb-6 md:pb-0 md:grid md:grid-cols-3 md:gap-8 md:mx-0 md:px-0 w-full">
+          <div className="flex overflow-x-auto snap-x snap-mandatory no-scrollbar pb-8 pt-4 w-full md:grid md:grid-cols-3 md:gap-8 items-stretch px-[calc(50vw-130px)] md:px-0 gap-4 md:gap-0">
             {[
               {
                 icon: 'fa-microchip',
@@ -410,13 +410,20 @@ export default function AboutPage() {
                 desc: 'Capable of producing over 25 precise cashew grades.'
               },
             ].map(point => (
-              <div key={point.title} className="flex-shrink-0 w-[80vw] max-w-[320px] snap-center p-8 rounded-3xl bg-white/90 border border-amber-100/40 shadow-sm md:w-auto md:bg-transparent md:border-0 md:shadow-none transition-all duration-300">
+              <motion.div 
+                key={point.title} 
+                initial={{ scale: 0.9, opacity: 0.7 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ amount: 0.7 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                className="flex-shrink-0 w-[260px] snap-center p-8 rounded-[2rem] bg-white border border-amber-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)] md:w-auto md:bg-transparent md:border-0 md:shadow-none flex flex-col justify-between"
+              >
                 <div className="w-14 h-14 bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                   <i className={`fa-solid ${point.icon} text-xl`} />
                 </div>
                 <h3 className="font-black text-gray-900 mb-3 text-lg">{point.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{point.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

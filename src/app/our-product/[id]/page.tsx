@@ -55,10 +55,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                             <SectionHeading 
                                 text="You May Also"
                                 highlight="Love"
-                                className="text-2xl md:text-3xl"
+                                className="text-[18px] md:text-3xl"
                             />
-                            <Link href="/our-product" className="text-primary font-bold text-sm hover:underline flex items-center gap-1">
-                                View All <i className="fa-solid fa-arrow-right"></i>
+                            <Link href="/our-product" className="bg-[#00863D] w-8 h-8 md:w-auto md:h-auto md:bg-transparent rounded-full flex items-center justify-center text-white md:text-primary font-bold text-sm hover:underline md:gap-1 shadow-md md:shadow-none transition-all">
+                                <span className="hidden md:inline">View All</span>
+                                <i className="fa-solid fa-arrow-right text-[12px] md:text-[14px]"></i>
                             </Link>
                         </div>
 
@@ -71,8 +72,15 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 )}
                 
                 {/* FAQ Section */}
-                <div className="mt-14">
-                    <FAQAccordion />
+                <div className="mt-16 max-w-4xl mx-auto">
+                    <div className="text-center mb-8">
+                        <SectionHeading 
+                            text="Frequently Asked"
+                            highlight="Questions"
+                            className="text-[22px] md:text-4xl"
+                        />
+                    </div>
+                    <FAQAccordion minimal />
                 </div>
             </div>
         </div>

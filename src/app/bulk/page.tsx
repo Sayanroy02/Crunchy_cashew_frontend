@@ -1083,7 +1083,7 @@ export default function BulkOrderPage() {
                     >
                         <SectionHeading
                             text="Premium Factory-Direct Cashews for"
-                            highlight="India's Top Businesses."
+                            highlight="India's Top Businesses"
                             className="text-3xl md:text-4xl lg:text-5xl drop-shadow-sm max-w-3xl mx-auto"
                         />
                     </motion.div>

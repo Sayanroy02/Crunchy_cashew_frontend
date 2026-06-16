@@ -31,8 +31,38 @@ const faqs = [
     },
 ];
 
-export default function FAQAccordion() {
+export default function FAQAccordion({ minimal = false }: { minimal?: boolean }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+    const accordionContent = (
+        <div className="flex flex-col gap-3">
+            {faqs.map((faq, index) => {
+                const isOpen = openIndex === index;
+                return (
+                    <div key={index} className="rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                        <button
+                            className={`w-full text-left px-5 py-4 flex items-center justify-between font-bold text-sm md:text-base transition-colors ${isOpen ? 'bg-white text-[#2c1a0e]' : 'bg-white/90 text-[#2c1a0e] hover:bg-white'}`}
+                            onClick={() => setOpenIndex(isOpen ? null : index)}
+                        >
+                            <span className="pr-4 font-heading">{faq.question}</span>
+                            <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-[#00863D] text-white rotate-180' : 'bg-gray-100 text-gray-500'}`}>
+                                <i className="fa-solid fa-chevron-down text-xs"></i>
+                            </span>
+                        </button>
+                        <div className={`overflow-hidden transition-all duration-400 ease-in-out ${isOpen ? 'max-h-48' : 'max-h-0'}`}>
+                            <div className="bg-white px-5 py-4 text-sm text-[#2c1a0e]/80 leading-relaxed border-t border-gray-50">
+                                {faq.answer}
+                            </div>
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+
+    if (minimal) {
+        return accordionContent;
+    }
 
     return (
         <section className="relative bg-amber py-16 md:py-24 overflow-hidden">
@@ -48,29 +78,7 @@ export default function FAQAccordion() {
                 </div>
 
                 {/* Accordion */}
-                <div className="flex flex-col gap-3">
-                    {faqs.map((faq, index) => {
-                        const isOpen = openIndex === index;
-                        return (
-                            <div key={index} className="rounded-xl overflow-hidden shadow-sm">
-                                <button
-                                    className={`w-full text-left px-5 py-4 flex items-center justify-between font-bold text-sm md:text-base transition-colors ${isOpen ? 'bg-white text-[#2c1a0e]' : 'bg-white/90 text-[#2c1a0e] hover:bg-white'}`}
-                                    onClick={() => setOpenIndex(isOpen ? null : index)}
-                                >
-                                    <span className="pr-4 font-heading">{faq.question}</span>
-                                    <span className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-amber text-[#2c1a0e] rotate-180' : 'bg-gray-100 text-gray-500'}`}>
-                                        <i className="fa-solid fa-chevron-down text-xs"></i>
-                                    </span>
-                                </button>
-                                <div className={`overflow-hidden transition-all duration-400 ease-in-out ${isOpen ? 'max-h-48' : 'max-h-0'}`}>
-                                    <div className="bg-[#fff8e7] px-5 py-4 text-sm text-[#2c1a0e]/80 leading-relaxed border-t-2 border-amber/30">
-                                        {faq.answer}
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                {accordionContent}
 
                 {/* Money back guarantee card */}
                 <div className="mt-12 bg-[#2c1a0e] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-xl">

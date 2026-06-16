@@ -33,8 +33,10 @@ export default function ProductDetailsClient({ product }: { product: any }) {
         };
     });
 
-    const [isCouponApplied, setIsCouponApplied] = useState(false);
+    const [appliedCoupons, setAppliedCoupons] = useState<Record<string, boolean>>({});
     const { showSnackbar } = useSnackbar();
+
+    const isCouponApplied = appliedCoupons[String(selectedVariant.size)] || false;
 
     const isCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || selectedVariant.coupon_code));
     const isDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && selectedVariant.discount > 0);
@@ -48,14 +50,28 @@ export default function ProductDetailsClient({ product }: { product: any }) {
     const originalPrice = selectedVariant.original_price;
 
     const handleToggleCoupon = () => {
-        if (isCouponApplied) {
-            setIsCouponApplied(false);
-            showSnackbar('Coupon removed', 'info');
-        } else {
-            setIsCouponApplied(true);
-            showSnackbar('Coupon applied successfully!', 'success');
-        }
+        setAppliedCoupons(prev => {
+            const sizeKey = String(selectedVariant.size);
+            const next = { ...prev, [sizeKey]: !prev[sizeKey] };
+            if (next[sizeKey]) {
+                showSnackbar('Coupon applied successfully!', 'success');
+            } else {
+                showSnackbar('Coupon removed', 'info');
+            }
+            return next;
+        });
     };
+
+    const ratingValue = React.useMemo(() => {
+        let hash = 0;
+        const str = `${product._id || product.id || 'prod'}-${selectedVariant.size}`;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) - hash) + str.charCodeAt(i);
+            hash |= 0; 
+        }
+        const pseudoRandom = Math.abs(hash) / 2147483648;
+        return (4.4 + (pseudoRandom * 0.5)).toFixed(1);
+    }, [product._id, product.id, selectedVariant.size]);
 
     return (
         <div className="space-y-12">
@@ -88,25 +104,37 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             {product.name} <span style={{ color: '#00863D' }} className="font-black">({selectedVariant.size})</span>
                         </h1>
 
-                        <div className="flex items-baseline gap-3 mb-5 flex-wrap">
-                            <span className="text-3xl md:text-4xl font-black text-gray-900">
-                                ₹{finalPrice.toFixed(0)}
-                            </span>
-                            {hasCoupon && isCouponApplied ? (
-                                <>
-                                    <span className="text-lg text-gray-400 line-through">₹{selectedVariant.original_price.toFixed(0)}</span>
-                                    <span className="bg-green-700 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
-                                        <i className="fa-solid fa-ticket"></i> {selectedVariant.coupon_code} Offer
-                                    </span>
-                                </>
-                            ) : (
-                                hasDiscount && (
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 mb-5">
+                            <div className="flex items-baseline gap-3 flex-wrap">
+                                <span className="text-3xl md:text-4xl font-black text-gray-900">
+                                    ₹{finalPrice.toFixed(0)}
+                                </span>
+                                {hasCoupon && isCouponApplied ? (
                                     <>
-                                        <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(0)}</span>
-                                        <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{selectedVariant.discount}% OFF</span>
+                                        <span className="text-lg text-gray-400 line-through">₹{selectedVariant.original_price.toFixed(0)}</span>
+                                        <span className="bg-green-700 text-white text-xs font-black px-2.5 py-1 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                                            <i className="fa-solid fa-ticket"></i> {selectedVariant.coupon_code} Offer
+                                        </span>
                                     </>
-                                )
-                            )}
+                                ) : (
+                                    hasDiscount && (
+                                        <>
+                                            <span className="text-lg text-gray-400 line-through">₹{originalPrice.toFixed(0)}</span>
+                                            <span className="bg-yellow text-gray-900 text-xs font-black px-2 py-1 rounded">{selectedVariant.discount}% OFF</span>
+                                        </>
+                                    )
+                                )}
+                            </div>
+                            
+                            {/* Stars Rating */}
+                            <div className="flex items-center gap-1 text-[#F6B000] text-sm bg-gray-50 px-3 py-1.5 rounded-full w-fit border border-amber-100">
+                                <i className="fa-solid fa-star"></i>
+                                <i className="fa-solid fa-star"></i>
+                                <i className="fa-solid fa-star"></i>
+                                <i className="fa-solid fa-star"></i>
+                                <i className="fa-solid fa-star-half-stroke"></i>
+                                <span className="text-gray-800 font-bold ml-1">{ratingValue}</span>
+                            </div>
                         </div>
 
                         <p className="text-gray-600 text-base leading-relaxed mb-8">
@@ -160,17 +188,20 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Select Pack Size</p>
                                 <div className="flex flex-wrap gap-3">
                                     {product.variants.map((v: any, idx: number) => {
+                                        const isCurrentVariant = selectedVariant.size === v.size;
                                         const vIsCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || v.coupon_code));
                                         const vIsDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && v.discount > 0);
                                         const vHasCoupon = vIsCouponType && v.coupon_code && v.coupon_amount > 0;
-                                        const vPrice = (vHasCoupon && isCouponApplied) 
+                                        const vPrice = (vHasCoupon && isCouponApplied && isCurrentVariant) 
                                             ? (v.original_price - (v.coupon_amount || 0))
                                             : (vIsDiscountType ? v.price : v.original_price);
                                         return (
                                             <button
                                                 key={idx}
                                                 onClick={() => {
-                                                    setSelectedVariant(v);
+                                                    if (selectedVariant.size !== v.size) {
+                                                        setSelectedVariant(v);
+                                                    }
                                                 }}
                                                 className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${selectedVariant.size === v.size
                                                     ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
@@ -217,6 +248,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
 
                         {/* Pincode delivery check */}
                         <div className="mt-8">
+                            <WatchingLive />
                             <p className="text-sm font-semibold text-gray-700 mb-2">🚚 Check Delivery at Your Pincode</p>
                             <PincodeWidget />
                         </div>
@@ -233,6 +265,39 @@ export default function ProductDetailsClient({ product }: { product: any }) {
 
             {/* Price Comparison */}
             <ProductComparison product={product} />
+        </div>
+    );
+}
+
+function WatchingLive() {
+    const [viewers, setViewers] = useState(0);
+
+    React.useEffect(() => {
+        // Initial random number between 7 and 50
+        setViewers(Math.floor(Math.random() * (50 - 7 + 1)) + 7);
+
+        const interval = setInterval(() => {
+            setViewers(prev => {
+                // Change by -3 to +3, but stay within 7 and 50
+                const change = Math.floor(Math.random() * 7) - 3;
+                let next = prev + change;
+                if (next < 7) next = 7 + Math.floor(Math.random() * 3);
+                if (next > 50) next = 50 - Math.floor(Math.random() * 3);
+                return next;
+            });
+        }, 10000); // 10 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
+    if (viewers === 0) return null;
+
+    return (
+        <div className="mb-6 bg-red-50 border border-red-100 rounded-xl p-3 flex items-center gap-3 animate-pulse shadow-sm">
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping shrink-0" />
+            <p className="text-red-700 text-sm font-medium m-0 flex-1">
+                <span className="text-red-600 font-black text-base">{viewers}</span> people are watching this product right now!
+            </p>
         </div>
     );
 }
