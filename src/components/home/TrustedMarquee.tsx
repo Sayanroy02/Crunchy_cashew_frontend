@@ -29,7 +29,7 @@ export default function TrustedMarquee() {
                 .marquee-track-css {
                     display: flex;
                     width: max-content;
-                    animation: marquee-scroll 30s linear infinite;
+                    animation: marquee-scroll 60s linear infinite;
                     will-change: transform;
                 }
                 .marquee-track-css:hover {

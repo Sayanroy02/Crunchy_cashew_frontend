@@ -97,8 +97,15 @@ export default function ProductComparison({ product }: { product: Product }) {
     ];
 
   const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice].filter(p => p > 0);
-  const avgMpPrice = marketplacePrices.length > 0 ? marketplacePrices.reduce((sum, val) => sum + val, 0) / marketplacePrices.length : basePrice;
-  const savingsPercent = avgMpPrice > basePrice ? Math.round(((avgMpPrice - basePrice) / avgMpPrice) * 100) : 0;
+  const minMpPrice = marketplacePrices.length > 0 ? Math.min(...marketplacePrices) : basePrice;
+  const maxMpPrice = marketplacePrices.length > 0 ? Math.max(...marketplacePrices) : basePrice;
+
+  const minSavingsPercent = minMpPrice > basePrice ? Math.round(((minMpPrice - basePrice) / minMpPrice) * 100) : 0;
+  const maxSavingsPercent = maxMpPrice > basePrice ? Math.round(((maxMpPrice - basePrice) / maxMpPrice) * 100) : 0;
+
+  const savingsString = minSavingsPercent === maxSavingsPercent 
+    ? (maxSavingsPercent > 0 ? `${maxSavingsPercent}%` : '')
+    : `${minSavingsPercent}% - ${maxSavingsPercent}%`;
 
   return (
     <div className="mt-16 space-y-12">
@@ -203,13 +210,19 @@ export default function ProductComparison({ product }: { product: Product }) {
 
                 {platform.isBest ? (
                   <div className="mt-6 flex flex-col items-center">
-                    <div className="bg-[#00863D] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-1">
-                      Save
-                    </div>
-                    <span className="text-[24px] font-black text-[#00863D] leading-none">20% - 30%</span>
-                    <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">
-                      Per Order
-                    </span>
+                    {savingsString ? (
+                      <>
+                        <div className="bg-[#00863D] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-1">
+                          Save
+                        </div>
+                        <span className="text-[24px] font-black text-[#00863D] leading-none">{savingsString}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">
+                          Per Order
+                        </span>
+                      </>
+                    ) : (
+                      <span className="text-[16px] font-black text-[#00863D] uppercase">Best Price</span>
+                    )}
                   </div>
                 ) : platform.link ? (
                   <a
@@ -281,12 +294,26 @@ export default function ProductComparison({ product }: { product: Product }) {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="text-right">
+                    <div className="text-right flex flex-col items-end">
                       {p.isBest ? (
-                        <>
-                          <div className="text-[18px] font-black" style={{ color: COLORS.heading }}>₹{p.price}</div>
-                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">Factory Direct</div>
-                        </>
+                        savingsString ? (
+                          <>
+                            <div className="bg-[#00863D] text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-1">
+                              Save
+                            </div>
+                            <div className="text-[16px] font-black leading-none text-[#00863D]">
+                              {savingsString}
+                            </div>
+                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black mt-1">
+                              Per Order
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-[18px] font-black" style={{ color: COLORS.heading }}>₹{p.price}</div>
+                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">Factory Direct</div>
+                          </>
+                        )
                       ) : (
                         <>
                           <div className="text-[18px] font-black" style={{ color: '#ef4444' }}>₹{p.price}</div>
