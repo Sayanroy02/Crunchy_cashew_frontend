@@ -4,6 +4,7 @@ import { API } from '@/constants/api';
 import ProductDetailsClient from './ProductDetailsClient';
 import ProductCard from '@/components/products/ProductCard';
 import SectionHeading from '@/components/ui/SectionHeading';
+import FAQAccordion from '@/components/home/FAQAccordion';
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -68,6 +69,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         </div>
                     </div>
                 )}
+                
+                {/* FAQ Section */}
+                <div className="mt-14">
+                    <FAQAccordion />
+                </div>
             </div>
         </div>
     );

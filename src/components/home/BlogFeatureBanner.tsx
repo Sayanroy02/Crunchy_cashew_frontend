@@ -76,7 +76,7 @@ export default function BlogFeatureBanner() {
                 Made Something Delicious?{' '}
                 <span style={{ color: '#FDC700' }}>Share Your Recipe & Win!</span>
               </p>
-              <p className="text-white/50 text-xs leading-relaxed max-w-xs sm:max-w-sm">
+              <p className="text-white text-xs leading-relaxed max-w-xs sm:max-w-sm">
                 Did you create a mouth-watering dish using Crunchy Cashews? Share your recipe with us to get featured on our site and win an exclusive gift hamper!
               </p>
             </div>

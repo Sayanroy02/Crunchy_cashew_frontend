@@ -207,7 +207,7 @@ export default function LoginPage() {
                                 textColor="#ffffff"
                                 highlightColor="#F6B000"
                             />
-                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
+                            <p className="hidden sm:block text-white text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
                                 Sign in for faster checkout, easy reordering, and real-time shipment tracking.
                             </p>
                         </div>
@@ -284,7 +284,7 @@ export default function LoginPage() {
                                             <button
                                                 type="button"
                                                 onClick={() => { setError(''); setView('forgot_email'); }}
-                                                className="text-[11px] text-blue-600 font-bold hover:underline"
+                                                className="text-[11px] text-green-700 font-bold hover:underline"
                                             >
                                                 Forgot password?
                                             </button>
@@ -324,8 +324,8 @@ export default function LoginPage() {
                                 <p className="text-center mt-5 text-sm text-gray-500">
                                     Don't have an account?{' '}
                                     <Link href="/register"
-                                        className="text-primary font-bold hover:underline underline-offset-2">
-                                        Sign up free
+                                        className="text-green-700 font-bold hover:underline underline-offset-2">
+                                        Sign up
                                     </Link>
                                 </p>
                             </>

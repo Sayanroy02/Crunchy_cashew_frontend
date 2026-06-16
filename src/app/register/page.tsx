@@ -133,7 +133,7 @@ export default function RegisterPage() {
                                 textColor="#ffffff"
                                 highlightColor="#F6B000"
                             />
-                            <p className="hidden sm:block text-gray-400 text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
+                            <p className="hidden sm:block text-white text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
                                 Sign in for faster checkout, easy reordering, and real-time shipment tracking.
                             </p>
                         </div>

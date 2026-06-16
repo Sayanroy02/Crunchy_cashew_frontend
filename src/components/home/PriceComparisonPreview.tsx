@@ -126,13 +126,13 @@ export default function PriceComparisonPreview() {
                     </div>
                   )}
 
-                  <div className={`${platform.isBest ? 'w-40 h-40' : 'w-32 h-32'} relative mb-6 ${platform.name === 'FLIPKART' ? 'bg-[#0074FA] rounded-full' : ''}`}>
+                  <div className={`${platform.isBest ? 'w-40 h-40' : 'w-32 h-32'} relative mb-6`}>
                     <Image
                       src={platform.logo}
                       alt={platform.name}
                       fill
                       sizes="128px"
-                      className={`object-contain ${platform.name === 'AMAZON' ? 'scale-125' : platform.name === 'FLIPKART' ? 'p-4' : platform.name === 'JIO MART' ? 'scale-90' : ''}`}
+                      className={`object-contain ${platform.name === 'AMAZON' ? 'scale-125' : platform.name === 'JIO MART' ? 'scale-110' : ''}`}
                     />
                   </div>
 
@@ -225,23 +225,23 @@ export default function PriceComparisonPreview() {
                     >
                       <div className="flex items-center gap-4">
                         {p.isBest ? (
-                          <div className="w-10 h-10 relative rounded-full bg-white border border-black/5 overflow-hidden shadow-sm shrink-0 flex items-center justify-center">
+                          <div className="w-12 h-12 relative shrink-0 flex items-center justify-center">
                             <Image
                               src="/images/cc-Logo-01-1.png"
                               alt="Our Website"
                               fill
-                              sizes="40px"
+                              sizes="48px"
                               className="object-contain"
                             />
                           </div>
                         ) : (
-                          <div className={`w-10 h-10 relative shrink-0 flex items-center justify-center ${p.name === 'FLIPKART' ? 'bg-[#0074FA] rounded-full' : ''}`}>
+                          <div className="w-10 h-10 relative shrink-0 flex items-center justify-center">
                             <Image
                               src={p.logo}
                               alt={p.name}
                               fill
                               sizes="40px"
-                              className={`object-contain ${p.name === 'FLIPKART' ? 'p-1.5' : p.name === 'JIO MART' ? 'scale-90' : ''}`}
+                              className={`object-contain ${p.name === 'JIO MART' ? 'scale-110' : p.name === 'FLIPKART' ? 'scale-[1.35]' : ''}`}
                             />
                           </div>
                         )}

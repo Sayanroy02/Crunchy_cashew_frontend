@@ -63,9 +63,9 @@ export default function ProductDetailsClient({ product }: { product: any }) {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col lg:flex-row items-start relative">
                 {/* Image Gallery */}
                 <div className="lg:w-[45%] w-full bg-gray-50 lg:border-r border-b lg:border-b-0 border-gray-100 p-6 md:p-8 lg:sticky lg:top-24 lg:rounded-l-2xl rounded-t-2xl overflow-hidden z-10">
-                    <ProductGallery 
-                        images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]} 
-                        name={product.name} 
+                    <ProductGallery
+                        images={product.image_urls && product.image_urls.length > 0 ? product.image_urls : [product.image_url]}
+                        name={product.name}
                         videoUrl={product.video_url}
                     />
                 </div>
@@ -115,13 +115,12 @@ export default function ProductDetailsClient({ product }: { product: any }) {
 
                         {/* Coupon Info Section (Zomato District Style) */}
                         {hasCoupon && (
-                            <div 
+                            <div
                                 onClick={handleToggleCoupon}
-                                className={`mb-8 p-4 rounded-3xl border-2 cursor-pointer flex items-center justify-between shadow-sm transition-all duration-300 ${
-                                    isCouponApplied
-                                        ? 'bg-gradient-to-r from-green-50 to-emerald-50/35 border-green-500 shadow-green-100/50'
-                                        : 'bg-white border-dashed border-gray-300 hover:border-green-400 hover:bg-green-50/20'
-                                }`}
+                                className={`mb-8 p-4 rounded-3xl border-2 cursor-pointer flex items-center justify-between shadow-sm transition-all duration-300 ${isCouponApplied
+                                    ? 'bg-gradient-to-r from-green-50 to-emerald-50/35 border-green-500 shadow-green-100/50'
+                                    : 'bg-white border-dashed border-gray-300 hover:border-green-400 hover:bg-green-50/20'
+                                    }`}
                             >
                                 <div className="flex items-center gap-4">
                                     <div className="w-11 h-11 relative rounded-full bg-white border border-gray-100 flex items-center justify-center p-1.5 shrink-0 shadow-sm">
@@ -134,9 +133,8 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                         />
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className={`text-sm font-black uppercase tracking-wide transition-colors duration-200 ${
-                                            isCouponApplied ? 'text-green-800' : 'text-gray-700'
-                                        }`}>{selectedVariant.coupon_code}</span>
+                                        <span className={`text-sm font-black uppercase tracking-wide transition-colors duration-200 ${isCouponApplied ? 'text-green-800' : 'text-gray-700'
+                                            }`}>{selectedVariant.coupon_code}</span>
                                         <span className="text-xs text-gray-500 font-bold">
                                             {isCouponApplied ? 'Coupon applied successfully!' : `Save ₹${selectedVariant.coupon_amount || product.coupon_discount || 0} with this coupon`}
                                         </span>
@@ -162,22 +160,25 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-3">Select Pack Size</p>
                                 <div className="flex flex-wrap gap-3">
                                     {product.variants.map((v: any, idx: number) => {
-                                        const vPrice = isDiscountType ? v.price : v.original_price;
+                                        const vIsCouponType = product.discount_type === 'coupon' || (!product.discount_type && (product.coupon_enabled || v.coupon_code));
+                                        const vIsDiscountType = product.discount_type === 'discount' || (!product.discount_type && !product.coupon_enabled && v.discount > 0);
+                                        const vHasCoupon = vIsCouponType && v.coupon_code && v.coupon_amount > 0;
+                                        const vPrice = (vHasCoupon && isCouponApplied) 
+                                            ? (v.original_price - (v.coupon_amount || 0))
+                                            : (vIsDiscountType ? v.price : v.original_price);
                                         return (
                                             <button
                                                 key={idx}
                                                 onClick={() => {
                                                     setSelectedVariant(v);
-                                                    setIsCouponApplied(false); // reset coupon on variant switch
                                                 }}
-                                                className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${
-                                                    selectedVariant.size === v.size
-                                                        ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
-                                                        : 'border-white bg-white text-gray-500 hover:border-gray-200'
-                                                }`}
+                                                className={`px-5 py-2.5 rounded-xl text-sm font-bold border-2 transition-all duration-200 flex flex-col items-center gap-1 min-w-[80px] ${selectedVariant.size === v.size
+                                                    ? 'border-[#00863D] bg-[#00863D] text-white shadow-lg scale-105'
+                                                    : 'border-white bg-white text-gray-500 hover:border-gray-200'
+                                                    }`}
                                             >
                                                 <span>{v.size}</span>
-                                                <span className={`text-[10px] ${selectedVariant.size === v.size ? 'text-primary' : 'text-gray-400'}`}>₹{vPrice}</span>
+                                                <span className={`text-[10px] ${selectedVariant.size === v.size ? 'text-white' : 'text-gray-400'}`}>₹{vPrice}</span>
                                             </button>
                                         );
                                     })}
@@ -188,10 +189,10 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                         {/* Key Features */}
                         <div className="grid grid-cols-2 gap-3 mb-8">
                             {[
-                                { icon: '🏭', label: 'Direct from factory' },
-                                { icon: '🌱', label: '100% Natural' },
-                                { icon: '📦', label: 'Hygienic packaging' },
-                                { icon: '🚚', label: 'Free ship on ₹1499+' },
+                                { icon: '🏭', label: 'Factory-Direct Freshness' },
+                                { icon: '🌱', label: 'Premium African Crop' },
+                                { icon: '📦', label: 'Resealable Fresh-lock Pouch' },
+                                { icon: '🚚', label: 'Free Shipping above ₹1499' },
                             ].map(f => (
                                 <div key={f.label} className="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-xl px-3 py-2">
                                     <span>{f.icon}</span>
@@ -200,8 +201,8 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                             ))}
                         </div>
 
-                        <AddToCartButton 
-                            product={product} 
+                        <AddToCartButton
+                            product={product}
                             selectedVariant={{
                                 ...selectedVariant,
                                 price: finalPrice,
@@ -211,7 +212,7 @@ export default function ProductDetailsClient({ product }: { product: any }) {
                                 coupon_amount: (hasCoupon && isCouponApplied) ? (selectedVariant.coupon_amount || product.coupon_discount || 0) : 0,
                                 available_coupon_code: hasCoupon ? (selectedVariant.coupon_code || product.coupon_code || '') : '',
                                 available_coupon_amount: hasCoupon ? (selectedVariant.coupon_amount || product.coupon_discount || 0) : 0
-                            }} 
+                            }}
                         />
 
                         {/* Pincode delivery check */}

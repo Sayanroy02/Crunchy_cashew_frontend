@@ -92,7 +92,8 @@ export default function ProductComparison({ product }: { product: Product }) {
         name: 'JIO MART',
         logo: '/images/partners/JioMart_logo.png',
         price: jioPrice,
-        link: mp.swiggy?.link
+        link: mp.swiggy?.link,
+        logoClassName: 'scale-110'
       },
     ];
 
@@ -103,7 +104,7 @@ export default function ProductComparison({ product }: { product: Product }) {
   const minSavingsPercent = minMpPrice > basePrice ? Math.round(((minMpPrice - basePrice) / minMpPrice) * 100) : 0;
   const maxSavingsPercent = maxMpPrice > basePrice ? Math.round(((maxMpPrice - basePrice) / maxMpPrice) * 100) : 0;
 
-  const savingsString = minSavingsPercent === maxSavingsPercent 
+  const savingsString = minSavingsPercent === maxSavingsPercent
     ? (maxSavingsPercent > 0 ? `${maxSavingsPercent}%` : '')
     : `${minSavingsPercent}% - ${maxSavingsPercent}%`;
 
@@ -187,9 +188,16 @@ export default function ProductComparison({ product }: { product: Product }) {
                   </p>
                   <div className="flex flex-col items-center gap-1">
                     {platform.isBest ? (
-                      <div className="flex flex-col items-center gap-1">
-                        <span className="text-[28px] font-black" style={{ color: COLORS.heading }}>₹{basePrice}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40">Factory Price</span>
+                      <div className="mt-2 flex flex-col items-center justify-center text-center">
+                        <div className="bg-[#00863D] text-white text-[12px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full mb-2">
+                          SAVE
+                        </div>
+                        <div className="text-[24px] font-black leading-none text-[#00863D]">
+                          {savingsString}
+                        </div>
+                        <div className="text-[10px] font-black uppercase tracking-tighter opacity-70 text-gray-500 mt-1">
+                          PER ORDER
+                        </div>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center gap-1">
@@ -208,23 +216,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                   </div>
                 </div>
 
-                {platform.isBest ? (
-                  <div className="mt-6 flex flex-col items-center">
-                    {savingsString ? (
-                      <>
-                        <div className="bg-[#00863D] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-1">
-                          Save
-                        </div>
-                        <span className="text-[24px] font-black text-[#00863D] leading-none">{savingsString}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">
-                          Per Order
-                        </span>
-                      </>
-                    ) : (
-                      <span className="text-[16px] font-black text-[#00863D] uppercase">Best Price</span>
-                    )}
-                  </div>
-                ) : platform.link ? (
+                {platform.isBest ? null : platform.link ? (
                   <a
                     href={platform.link}
                     target="_blank"
@@ -242,11 +234,12 @@ export default function ProductComparison({ product }: { product: Product }) {
             );
           })}
         </div>
+
       </div>
 
       {/* Mobile view (HOMEPAGE style bubbles, fully responsive) */}
       <div className="md:hidden space-y-6">
-        <div className="rounded-[3rem] p-6 shadow-sm border border-black/5 relative" style={{ backgroundColor: `${COLORS.black}05` }}>
+        <div className="rounded-[3rem] p-3 shadow-sm border border-black/5 relative" style={{ backgroundColor: `${COLORS.black}05` }}>
           <div className="absolute top-6 right-8 opacity-10">
             <Zap size={64} style={{ color: COLORS.primary }} />
           </div>
@@ -261,30 +254,30 @@ export default function ProductComparison({ product }: { product: Product }) {
               {platforms.map((p) => (
                 <div
                   key={p.name}
-                  className={`flex items-center justify-between p-4 rounded-[2.5rem] transition-all duration-300 ${p.isBest
-                    ? 'bg-white shadow-xl border border-black/5'
+                  className={`flex items-center justify-between px-5 py-4 rounded-xl transition-all duration-300 ${p.isBest
+                    ? 'bg-white shadow-md border border-black/5'
                     : 'bg-black/5'
                     }`}
                 >
                   <div className="flex items-center gap-3">
                     {p.isBest ? (
-                      <div className="w-10 h-10 relative rounded-full bg-white border border-black/5 overflow-hidden shadow-sm shrink-0 flex items-center justify-center">
+                      <div className="w-12 h-12 relative shrink-0 flex items-center justify-center">
                         <Image
                           src="/images/cc-Logo-01-1.png"
                           alt="Our Website"
                           fill
-                          sizes="40px"
+                          sizes="48px"
                           className="object-contain"
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 relative rounded-xl bg-white border border-black/5 p-2 overflow-hidden shadow-sm shrink-0">
+                      <div className="w-10 h-10 relative shrink-0 flex items-center justify-center">
                         <Image
                           src={p.logo}
                           alt={p.name}
                           fill
                           sizes="40px"
-                          className={`object-contain p-0.5 ${p.logoClassName || ''}`}
+                          className={`object-contain ${p.logoClassName || ''}`}
                         />
                       </div>
                     )}
@@ -296,27 +289,13 @@ export default function ProductComparison({ product }: { product: Product }) {
                   <div className="flex items-center gap-3">
                     <div className="text-right flex flex-col items-end">
                       {p.isBest ? (
-                        savingsString ? (
-                          <>
-                            <div className="bg-[#00863D] text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full mb-1">
-                              Save
-                            </div>
-                            <div className="text-[16px] font-black leading-none text-[#00863D]">
-                              {savingsString}
-                            </div>
-                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black mt-1">
-                              Per Order
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="text-[18px] font-black" style={{ color: COLORS.heading }}>₹{p.price}</div>
-                            <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">Factory Direct</div>
-                          </>
-                        )
+                        <>
+                          <div className="text-[20px] font-black" style={{ color: '#00863D' }}>₹{p.price}</div>
+                          <div className="text-[9px] font-black uppercase tracking-tighter opacity-30 text-black">Factory Direct</div>
+                        </>
                       ) : (
                         <>
-                          <div className="text-[18px] font-black" style={{ color: '#ef4444' }}>₹{p.price}</div>
+                          <div className="text-[20px] font-black" style={{ color: '#ef4444' }}>₹{p.price}</div>
                           <div className="text-[9px] font-black uppercase tracking-tighter text-black flex items-center gap-1 justify-end mt-1">
                             save <span className="bg-green-600 text-white px-1.5 py-[2px] rounded-[3px] text-[11px]">{Math.round(((p.price - basePrice) / p.price) * 100)}%</span> with us
                           </div>
@@ -339,6 +318,19 @@ export default function ProductComparison({ product }: { product: Product }) {
               ))}
             </div>
 
+            {savingsString && (
+              <div className="mt-4 flex flex-col items-center justify-center text-center">
+                <div className="bg-[#00863D] text-white text-[14px] font-black uppercase tracking-widest px-5 py-2 rounded-full mb-3">
+                  You Save
+                </div>
+                <div className="text-[36px] font-black leading-none text-[#00863D]">
+                  {savingsString}
+                </div>
+                <div className="text-[14px] font-black uppercase tracking-tighter opacity-70 text-[#00863D] mt-2">
+                  Per Order by buying direct
+                </div>
+              </div>
+            )}
 
           </div>
         </div>
