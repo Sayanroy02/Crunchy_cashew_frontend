@@ -25,6 +25,42 @@ export default function AdminUsers() {
 
     useEffect(() => { fetchUsers(); }, []);
 
+    const downloadCSV = () => {
+        const headers = ['User ID', 'Name', 'Email', 'Phone', 'Address', 'Total Orders', 'Role'];
+        
+        const filtered = users.filter(u => {
+            if (!searchQuery) return true;
+            const q = searchQuery.toLowerCase();
+            const username = (u.username || '').toLowerCase();
+            const email = (u.email || '').toLowerCase();
+            const phone = (u.phone || '').toLowerCase();
+            const address = (u.address || '').toLowerCase();
+            const uid = (u._id || '').toLowerCase();
+            return username.includes(q) || email.includes(q) || phone.includes(q) || address.includes(q) || uid.includes(q);
+        });
+
+        const rows = filtered.map(u => {
+            return [
+                u._id,
+                u.username || '',
+                u.email || '',
+                u.phone || '',
+                u.address || '',
+                u.orders ? u.orders.length : 0,
+                u.role || 'user'
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `users_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     // Helper to highlight matching text
     const highlightText = (text: string, query: string) => {
         if (!query.trim()) return text;
@@ -42,16 +78,20 @@ export default function AdminUsers() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <h1 className="text-2xl font-bold text-gray-800">Registered Users</h1>
                 
-                {/* Search Bar */}
-                <div className="relative group min-w-[300px]">
-                    <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm transition-colors group-focus-within:text-primary"></i>
-                    <input 
-                        type="text" 
-                        placeholder="Search by User, Email, Phone, UID..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all shadow-sm"
-                    />
+                <div className="flex items-center gap-2">
+                    <button onClick={downloadCSV} className="py-2.5 px-4 bg-white border border-gray-200 rounded-xl text-sm font-bold flex items-center gap-2 hover:border-gray-900 transition-all shadow-sm active:scale-95 text-green-700 hover:text-green-800">
+                        <i className="fa-solid fa-file-excel" /> Download Excel
+                    </button>
+                    <div className="relative group min-w-[300px]">
+                        <i className="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm transition-colors group-focus-within:text-primary"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search by User, Email, Phone, UID..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-white border border-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-sm font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all shadow-sm"
+                        />
+                    </div>
                 </div>
             </div>
 

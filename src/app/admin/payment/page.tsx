@@ -44,6 +44,49 @@ export default function AdminPayment() {
 
     useEffect(() => { fetchOrders(); }, []);
 
+    const downloadCSV = () => {
+        const headers = ['Order ID', 'Date', 'Customer Name', 'Email', 'Payment ID', 'Total Amount', 'Type', 'Status'];
+        
+        const filtered = orders.filter(o => {
+            if (!searchQuery) return true;
+            const q = searchQuery.toLowerCase();
+            const name = (o.customer?.name || o.customer?.full_name || '').toLowerCase();
+            const pId = (o.razorpay_payment_id || o.razorpay_order_id || '').toLowerCase();
+            const amount = (o.total_amount || 0).toString();
+            const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-GB') : '';
+            return name.includes(q) || pId.includes(q) || amount.includes(q) || date.includes(q);
+        });
+
+        const rows = filtered.map(o => {
+            const dateObj = new Date(o.created_at || Date.now());
+            const date = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+            const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const isCod = o.payment_mode === 'COD';
+            const paymentId = o.razorpay_payment_id || o.razorpay_order_id || (isCod ? `ORD_${o._id.slice(-6).toUpperCase()}` : 'N/A');
+
+            return [
+                o._id,
+                `${date} ${time}`,
+                o.customer?.name || o.customer?.full_name || '',
+                o.customer?.email || '',
+                paymentId,
+                o.total_amount || 0,
+                isCod ? 'COD' : 'Online',
+                o.payment_status || 'Pending'
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `payments_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (loading) return (
         <div className="flex flex-col gap-6 animate-pulse p-8">
             <div className="h-10 bg-gray-200 rounded-xl w-64 mb-4"></div>
@@ -75,6 +118,9 @@ export default function AdminPayment() {
                         />
                     </div>
 
+                    <button onClick={downloadCSV} className="flex items-center gap-2 py-3 px-6 bg-white border-2 border-gray-100 rounded-2xl font-bold text-green-700 hover:border-black hover:text-green-800 transition-all shadow-sm active:scale-95">
+                        <i className="fa-solid fa-file-excel"></i> Download Excel
+                    </button>
                     <button 
                       onClick={fetchOrders} 
                       className="flex items-center gap-2 py-3 px-6 bg-white border-2 border-gray-100 rounded-2xl font-bold text-gray-600 hover:border-black hover:text-black transition-all shadow-sm active:scale-95"

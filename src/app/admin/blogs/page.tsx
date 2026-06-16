@@ -23,6 +23,7 @@ export default function AdminBlogs() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, type: 'delete' | 'status', blogId: string, currentStatus?: string, message: string }>({ isOpen: false, type: 'delete', blogId: '', message: '' });
 
     // Auto-generate slug from title only in add mode
     useEffect(() => {
@@ -49,6 +50,33 @@ export default function AdminBlogs() {
     };
 
     useEffect(() => { fetchBlogs(); }, []);
+
+    const downloadCSV = () => {
+        const headers = ['Blog ID', 'Title', 'Author', 'Category', 'Views', 'Date', 'Tags', 'Slug'];
+        
+        const rows = blogs.map(b => {
+            const date = b.created_at ? new Date(b.created_at).toLocaleDateString('en-GB') : '';
+            return [
+                b._id,
+                b.title || '',
+                b.author || '',
+                b.category || '',
+                b.views || 0,
+                date,
+                (b.tags || []).join(', '),
+                b.slug || ''
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `blogs_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const openAdd = () => {
         setEditingBlog(null);
@@ -81,12 +109,56 @@ export default function AdminBlogs() {
         setError('');
     };
 
+    const confirmDelete = (id: string) => {
+        setConfirmDialog({ isOpen: true, type: 'delete', blogId: id, message: 'Are you sure you want to delete this blog post?' });
+    };
+
+    const confirmToggleStatus = (id: string, status: string) => {
+        const isDisabling = status !== 'hidden';
+        setConfirmDialog({ 
+            isOpen: true, 
+            type: 'status', 
+            blogId: id, 
+            currentStatus: status, 
+            message: `Are you sure you want to ${isDisabling ? 'disable' : 'enable'} this blog post?` 
+        });
+    };
+
+    const executeConfirm = () => {
+        if (confirmDialog.type === 'delete') {
+            handleDelete(confirmDialog.blogId);
+        } else if (confirmDialog.type === 'status') {
+            handleToggleStatus(confirmDialog.blogId, confirmDialog.currentStatus || '');
+        }
+        setConfirmDialog({ ...confirmDialog, isOpen: false });
+    };
+
     const handleDelete = async (id: string) => {
-        if (!confirm('Delete this blog post?')) return;
         const res = await fetch(API.ADMIN_BLOG(id), {
             method: 'DELETE', headers: { 'Authorization': `Bearer ${getToken()}` }
         });
         if (res.ok) fetchBlogs();
+    };
+
+    const handleToggleStatus = async (id: string, currentStatus: string) => {
+        const newStatus = currentStatus === 'hidden' ? 'published' : 'hidden';
+        try {
+            const res = await fetch(`${API.ADMIN_BLOGS}/${id}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                fetchBlogs();
+                setSuccess(newStatus === 'hidden' ? '🚫 Blog disabled from customer panel' : '✅ Blog enabled in customer panel');
+                setTimeout(() => setSuccess(''), 4000);
+            }
+        } catch (e) {
+            setError('Failed to update status.');
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -151,9 +223,14 @@ export default function AdminBlogs() {
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Manage Journal</h1>
-                <button onClick={openAdd} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm flex items-center gap-2">
-                    <i className="fa-solid fa-pen-nib" /> Write Article
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={downloadCSV} className="bg-white border border-gray-200 text-green-700 hover:text-green-800 px-4 py-2 rounded-lg transition font-medium shadow-sm flex items-center gap-2 active:scale-95 text-sm">
+                        <i className="fa-solid fa-file-excel" /> Download Excel
+                    </button>
+                    <button onClick={openAdd} className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-800 transition font-medium shadow-sm flex items-center gap-2 text-sm">
+                        <i className="fa-solid fa-pen-nib" /> Write Article
+                    </button>
+                </div>
             </div>
 
             {success && (
@@ -201,11 +278,15 @@ export default function AdminBlogs() {
                                 </div>
                                 <div className="mt-auto flex justify-between items-center pt-4 border-t border-gray-100">
                                     <span className="text-sm font-bold text-primary"><i className="fa-regular fa-eye mr-1" />{b.views || 0} views</span>
-                                    <div className="flex gap-2">
-                                        <button onClick={() => openEdit(b)} className="text-blue-500 hover:bg-blue-50 px-3 py-1.5 rounded transition font-medium text-sm">
+                                    <div className="flex gap-2 flex-wrap justify-end">
+                                        <button onClick={() => confirmToggleStatus(b._id, b.status)} className={`px-3 py-1.5 rounded transition font-medium text-sm flex items-center gap-1 ${b.status === 'hidden' ? 'text-green-600 hover:bg-green-50' : 'text-gray-500 hover:bg-gray-100'}`}>
+                                            <i className={`fa-solid ${b.status === 'hidden' ? 'fa-eye' : 'fa-eye-slash'}`} />
+                                            {b.status === 'hidden' ? 'Enable' : 'Disable'}
+                                        </button>
+                                        <button onClick={() => openEdit(b)} className="text-blue-500 hover:bg-blue-50 px-3 py-1.5 rounded transition font-medium text-sm flex items-center gap-1">
                                             <i className="fa-solid fa-pen mr-1" />Edit
                                         </button>
-                                        <button onClick={() => handleDelete(b._id)} className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded transition font-medium text-sm">
+                                        <button onClick={() => confirmDelete(b._id)} className="text-red-500 hover:bg-red-50 px-3 py-1.5 rounded transition font-medium text-sm flex items-center gap-1">
                                             <i className="fa-solid fa-trash mr-1" />Delete
                                         </button>
                                     </div>
@@ -308,6 +389,30 @@ export default function AdminBlogs() {
                     </div>
                 </div>
             )}
+
+            {/* Custom Confirm Modal */}
+            {confirmDialog.isOpen && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl animate-in fade-in zoom-in duration-200">
+                        <div className="text-center">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${confirmDialog.type === 'delete' ? 'bg-red-100 text-red-500' : 'bg-amber-100 text-amber-500'}`}>
+                                <i className={`fa-solid text-2xl ${confirmDialog.type === 'delete' ? 'fa-trash' : 'fa-circle-exclamation'}`}></i>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">Are you sure?</h3>
+                            <p className="text-gray-500 mb-6">{confirmDialog.message}</p>
+                            <div className="flex gap-3">
+                                <button onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })} className="flex-1 py-2.5 rounded-xl border-2 border-gray-100 text-gray-600 font-bold hover:bg-gray-50 transition active:scale-95">
+                                    No, cancel
+                                </button>
+                                <button onClick={executeConfirm} className={`flex-1 py-2.5 rounded-xl text-white font-bold transition active:scale-95 ${confirmDialog.type === 'delete' ? 'bg-red-500 hover:bg-red-600' : 'bg-primary hover:bg-green-700'}`}>
+                                    Yes, I'm sure
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

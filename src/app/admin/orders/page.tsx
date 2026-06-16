@@ -18,6 +18,17 @@ const VIBRANT_STATUS_MAP: Record<string, { bg: string, text: string, border: str
     'Pending': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', dot: 'bg-orange-500' },
 };
 
+const formatDateWithSuffix = (dateString: string) => {
+    if (!dateString) return '--';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const day = date.getDate();
+    const suffix = ["th", "st", "nd", "rd"][day % 10 > 3 ? 0 : (day % 100 - day % 10 !== 10) ? day % 10 : 0] || "th";
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${day}${suffix} ${month}, ${year}`;
+};
+
 // --- Modal Component ---
 function StatusConfirmModal({ isOpen, onConfirm, onCancel, status, loading }: any) {
     if (!isOpen) return null;
@@ -92,7 +103,7 @@ function ShippingDetailsModal({ isOpen, onConfirm, onCancel, loading }: any) {
                     </div>
                     <div>
                         <label className="block text-xs font-bold text-gray-500 mb-1">Estimated Delivery Date</label>
-                        <input required type="text" value={estimatedDelivery} onChange={e => setEstimatedDelivery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="e.g. 15 June 2026" />
+                        <input required type="date" min={new Date().toISOString().split('T')[0]} value={estimatedDelivery} onChange={e => setEstimatedDelivery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
                     </div>
                     
                     <div className="flex gap-3 mt-8">
@@ -200,6 +211,42 @@ export default function AdminOrders() {
         (v, i, arr) => arr.indexOf(v) === i
     );
 
+    const downloadCSV = () => {
+        const headers = ['Order ID', 'Invoice ID', 'Date', 'Customer Name', 'Phone', 'Items', 'Quantity', 'Amount', 'Payment Mode', 'Payment Status', 'Order Status', 'Delivery Service', 'Tracking ID', 'Tracking Link', 'Estimated Delivery Date'];
+        
+        const rows = filtered.map(o => {
+            const itemsName = o.items?.map((i: any) => i.name || i.product_name).join(' | ') || '';
+            const quantities = o.items?.map((i: any) => i.quantity).join(' | ') || '';
+            const invoiceId = o.invoice_id || '';
+            return [
+                o._id,
+                invoiceId,
+                formatDateWithSuffix(o.created_at),
+                o.customer?.name || o.customer?.full_name || '',
+                o.customer?.phone || '',
+                itemsName,
+                quantities,
+                o.total_amount || 0,
+                o.payment_mode || 'COD',
+                o.payment_status || 'Unpaid',
+                o.status || 'Pending',
+                o.delivery_service_name || '',
+                o.tracking_id || '',
+                o.tracking_link || '',
+                o.estimated_delivery_date ? formatDateWithSuffix(o.estimated_delivery_date) : ''
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `orders_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const filtered = orders.filter(o => {
         // Status Filter
         if (filter !== 'All' && o.status !== filter) return false;
@@ -214,7 +261,7 @@ export default function AdminOrders() {
         const phone = (o.customer?.phone || '').toLowerCase();
         const paymentMode = (o.payment_mode || '').toLowerCase();
         const amount = (o.total_amount || 0).toString();
-        const date = o.created_at ? new Date(o.created_at).toLocaleDateString('en-GB') : '';
+        const date = o.created_at ? formatDateWithSuffix(o.created_at).toLowerCase() : '';
 
         return orderId.includes(q) || 
                shortId.includes(q) || 
@@ -257,9 +304,14 @@ export default function AdminOrders() {
                         />
                     </div>
                 </div>
-                <button onClick={fetchOrders} className="py-1.5 px-3 bg-white border border-gray-200 rounded-lg text-xs font-bold flex items-center gap-2 hover:border-gray-900 transition-all shadow-sm active:scale-95">
-                    <i className="fa-solid fa-rotate-right" /> Refresh
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={downloadCSV} className="py-1.5 px-3 bg-white border border-gray-200 rounded-lg text-xs font-bold flex items-center gap-2 hover:border-gray-900 transition-all shadow-sm active:scale-95 text-green-700 hover:text-green-800">
+                        <i className="fa-solid fa-file-excel" /> Download Excel
+                    </button>
+                    <button onClick={fetchOrders} className="py-1.5 px-3 bg-white border border-gray-200 rounded-lg text-xs font-bold flex items-center gap-2 hover:border-gray-900 transition-all shadow-sm active:scale-95">
+                        <i className="fa-solid fa-rotate-right" /> Refresh
+                    </button>
+                </div>
             </div>
 
             {/* Tight Main Area */}
@@ -295,7 +347,7 @@ export default function AdminOrders() {
                                 filtered.map(order => {
                                     const isSelected = selectedOrderId === order._id;
                                     const statusObj = VIBRANT_STATUS_MAP[order.status] || VIBRANT_STATUS_MAP.Pending;
-                                    const date = order.created_at ? new Date(order.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '--';
+                                    const date = order.created_at ? formatDateWithSuffix(order.created_at) : '--';
                                     
                                     return (
                                         <div 
@@ -437,6 +489,40 @@ export default function AdminOrders() {
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* Shipping Details */}
+                                {(selectedOrder.delivery_service_name || selectedOrder.tracking_id) && (
+                                    <div>
+                                        <h3 className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2">Shipping Details</h3>
+                                        <div className="space-y-2.5 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                            {selectedOrder.delivery_service_name && (
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[10px] font-bold text-gray-500">Service:</span>
+                                                    <span className="text-[11px] font-bold text-gray-900">{selectedOrder.delivery_service_name}</span>
+                                                </div>
+                                            )}
+                                            {selectedOrder.tracking_id && (
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[10px] font-bold text-gray-500">Tracking ID:</span>
+                                                    <span className="text-[11px] font-bold text-gray-900">{selectedOrder.tracking_id}</span>
+                                                </div>
+                                            )}
+                                            {selectedOrder.estimated_delivery_date && (
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-[10px] font-bold text-gray-500">Est. Delivery:</span>
+                                                    <span className="text-[11px] font-bold text-gray-900">{formatDateWithSuffix(selectedOrder.estimated_delivery_date)}</span>
+                                                </div>
+                                            )}
+                                            {selectedOrder.tracking_link && (
+                                                <div className="pt-1">
+                                                    <a href={selectedOrder.tracking_link} target="_blank" rel="noreferrer" className="text-[10px] font-bold text-blue-600 hover:underline flex items-center gap-1">
+                                                        <i className="fa-solid fa-arrow-up-right-from-square"></i> Track Order
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Refund Status for Online Payments */}
                                 {selectedOrder.refund_status && selectedOrder.refund_status !== 'none' && (

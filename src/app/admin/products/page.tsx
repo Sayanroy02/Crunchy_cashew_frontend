@@ -327,6 +327,43 @@ export default function AdminProducts() {
         });
     };
 
+    const downloadCSV = () => {
+        const headers = ['ID', 'Name', 'Category', 'Status', 'Variants', 'Tags', 'Marketplace Prices', 'Video URL', 'Coupon Code'];
+        
+        const rows = products.map(p => {
+            const status = p.is_available ? 'Active' : 'Inactive';
+            const variantsStr = (p.variants || []).map((v: any) => `${v.size}: ₹${v.price} (Stock: ${v.stock}, Disc: ${v.discount}%)`).join(' | ');
+            const tagsStr = (p.tags || []).join(', ');
+            const mpStr = [
+                p.marketplace_prices?.amazon?.price ? `Amazon: ₹${p.marketplace_prices.amazon.price}` : '',
+                p.marketplace_prices?.flipkart?.price ? `Flipkart: ₹${p.marketplace_prices.flipkart.price}` : '',
+                p.marketplace_prices?.blinkit?.price ? `Blinkit: ₹${p.marketplace_prices.blinkit.price}` : '',
+                p.marketplace_prices?.swiggy?.price ? `Swiggy: ₹${p.marketplace_prices.swiggy.price}` : ''
+            ].filter(Boolean).join(' | ');
+
+            return [
+                p._id || p.id || '',
+                p.name || '',
+                p.category || '',
+                status,
+                variantsStr,
+                tagsStr,
+                mpStr,
+                p.video_url || '',
+                p.coupon_code || ''
+            ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+        });
+
+        const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows].join('\n');
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `products_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex justify-between items-start">
@@ -341,9 +378,14 @@ export default function AdminProducts() {
                         </span>
                     </div>
                 </div>
-                <button onClick={openAdd} className="bg-primary text-white px-4 py-2.5 rounded-xl hover:bg-green-800 transition font-bold shadow-sm flex items-center gap-2">
-                    <i className="fa-solid fa-plus"></i> Add Product
-                </button>
+                <div className="flex items-center gap-2">
+                    <button onClick={downloadCSV} className="bg-white border border-gray-200 text-green-700 hover:text-green-800 px-4 py-2.5 rounded-xl transition font-bold shadow-sm flex items-center gap-2 active:scale-95 text-sm">
+                        <i className="fa-solid fa-file-excel"></i> Download Excel
+                    </button>
+                    <button onClick={openAdd} className="bg-primary text-white px-4 py-2.5 rounded-xl hover:bg-green-800 transition font-bold shadow-sm flex items-center gap-2 text-sm">
+                        <i className="fa-solid fa-plus"></i> Add Product
+                    </button>
+                </div>
             </div>
 
             {loading ? (
