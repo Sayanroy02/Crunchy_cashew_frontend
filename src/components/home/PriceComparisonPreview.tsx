@@ -288,18 +288,6 @@ export default function PriceComparisonPreview() {
                   className="pt-6 flex flex-col items-center gap-8"
                   style={{ borderTop: `1px solid ${COLORS.black}1A` }}
                 >
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-black text-black opacity-30 uppercase tracking-[0.2em] mb-1">
-                      Estimated Savings
-                    </span>
-                    <span className="text-4xl font-black" style={{ color: COLORS.heading }}>
-                      15%–25%
-                    </span>
-                    <span className="text-[10px] font-black text-black opacity-30 uppercase tracking-widest mt-1">
-                      Per Order
-                    </span>
-                  </div>
-
                   <Link
                     href="/our-product"
                     className="w-full bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2"

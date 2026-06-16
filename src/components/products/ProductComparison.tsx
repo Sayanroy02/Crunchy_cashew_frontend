@@ -202,19 +202,13 @@ export default function ProductComparison({ product }: { product: Product }) {
                 </div>
 
                 {platform.isBest ? (
-                  <div
-                    className="mt-6 flex items-center justify-center w-full px-2 py-1.5 rounded-[10px] border"
-                    style={{
-                      color: COLORS.heading,
-                      backgroundColor: `${COLORS.heading}18`,
-                      borderColor: `${COLORS.heading}40`,
-                    }}
-                  >
-                    <span
-                      className="text-[9px] font-black tracking-tight uppercase text-center"
-                      style={{ color: COLORS.heading }}
-                    >
-                      SAVE 20% TO 30% PER ORDER
+                  <div className="mt-6 flex flex-col items-center">
+                    <div className="bg-[#00863D] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-1">
+                      Save
+                    </div>
+                    <span className="text-[24px] font-black text-[#00863D] leading-none">20% - 30%</span>
+                    <span className="text-[10px] font-bold uppercase tracking-tighter opacity-40 mt-1">
+                      Per Order
                     </span>
                   </div>
                 ) : platform.link ? (
