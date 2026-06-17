@@ -118,14 +118,7 @@ export default function RegisterPage() {
                         style={{ background: 'linear-gradient(to top, rgba(200,169,110,0.1), transparent)' }} />
 
                     <div className="relative z-10 flex flex-col items-center mt-4 lg:mt-0 w-full">
-                        <img
-                            src="/images/login-page-img-new.png"
-                            alt="Crunchy Cashews illustration"
-                            className="object-contain w-[85%] max-w-[380px]"
-                            style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.6))' }}
-                        />
-
-                        <div className="mt-4 lg:mt-6 text-center px-2">
+                        <div className="mb-4 lg:mb-6 text-center px-2">
                             <SectionHeading
                                 text="Experience the"
                                 highlight="Perfect Crunch"
@@ -133,9 +126,35 @@ export default function RegisterPage() {
                                 textColor="#ffffff"
                                 highlightColor="#F6B000"
                             />
-                            <p className="hidden sm:block text-white text-xs lg:text-sm mt-2 max-w-[240px] mx-auto leading-relaxed">
-                                Sign in for faster checkout, easy reordering, and real-time shipment tracking.
+                        </div>
+
+                        <div className="relative w-full flex justify-center">
+                            {/* Whitish-yellow glow */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[65%] h-[65%] bg-[#fffacd] rounded-full blur-[70px] opacity-30 pointer-events-none z-0"></div>
+                            
+                            <img
+                                src="/images/login-page-img.png"
+                                alt="Crunchy Cashews illustration"
+                                className="relative z-10 object-contain w-[85%] max-w-[380px] h-full"
+                                style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.6))' }}
+                            />
+                        </div>
+
+                        <div className="mt-4 lg:mt-6 text-center px-2 w-full">
+                            <p className="hidden sm:block text-white text-xs lg:text-sm mb-3 font-semibold tracking-wide">
+                                Sign up for
                             </p>
+                            <div className="hidden sm:flex flex-wrap justify-center gap-2.5 max-w-[95%] mx-auto">
+                                <div className="bg-transparent border border-white/60 rounded-full px-3 py-1.5 text-[11px] font-medium text-white flex items-center gap-1.5 whitespace-nowrap">
+                                    <i className="fa-solid fa-bolt text-yellow-400 text-xs"></i> Faster Checkout
+                                </div>
+                                <div className="bg-transparent border border-white/60 rounded-full px-3 py-1.5 text-[11px] font-medium text-white flex items-center gap-1.5 whitespace-nowrap">
+                                    <i className="fa-solid fa-rotate-right text-yellow-400 text-xs"></i> Easy Reordering
+                                </div>
+                                <div className="bg-transparent border border-white/60 rounded-full px-3 py-1.5 text-[11px] font-medium text-white flex items-center gap-1.5 whitespace-nowrap">
+                                    <i className="fa-solid fa-truck-fast text-yellow-400 text-xs"></i> Real-time Shipment Tracking
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
