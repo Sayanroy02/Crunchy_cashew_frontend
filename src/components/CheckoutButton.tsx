@@ -69,6 +69,40 @@ export default function CheckoutButton({
 
   const createdOrderIdRef = React.useRef<string | null>(null);
   const paymentSuccessRef = React.useRef<boolean>(false);
+  const hasAutoTriggered = React.useRef<boolean>(false);
+
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+
+  React.useEffect(() => {
+    if (loading) {
+      const timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleManualCancel(); // Auto cancel on timeout
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      setTimeLeft(300);
+    }
+  }, [loading]);
+
+  const handleManualCancel = async () => {
+    setLoading(false);
+    if (createdOrderIdRef.current && !paymentSuccessRef.current) {
+      try {
+        await fetch(API.ORDER_CANCEL(createdOrderIdRef.current), {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } catch (e) { console.error(e); }
+    }
+    onError('Payment cancelled');
+  };
 
   React.useEffect(() => {
     const handlePopState = () => {
@@ -92,6 +126,13 @@ export default function CheckoutButton({
       }
     };
   }, [token]);
+
+  React.useEffect(() => {
+    if (!hasAutoTriggered.current && !disabled) {
+      hasAutoTriggered.current = true;
+      handleCheckout();
+    }
+  }, [disabled]);
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -232,25 +273,43 @@ export default function CheckoutButton({
     }
   };
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   return (
-    <button
-      type="button"
-      onClick={handleCheckout}
-      disabled={disabled || loading}
-      className="w-full text-black p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-      style={{ backgroundColor: COLORS.primary, color: '#000000' }}
-    >
-      {loading ? (
-        <>
-          <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" />
-          <span>Processing...</span>
-        </>
-      ) : (
-        <>
-          <i className="fa-solid fa-lock text-sm md:text-xs" />
-          <span>Place Order</span>
-        </>
+    <div className="flex flex-col gap-3">
+      <button
+        type="button"
+        onClick={handleCheckout}
+        disabled={disabled || loading}
+        className="w-full text-black p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        style={{ backgroundColor: COLORS.primary, color: '#000000' }}
+      >
+        {loading ? (
+          <>
+            <i className="fa-solid fa-spinner fa-spin text-sm md:text-xs" />
+            <span>Processing... ({formatTime(timeLeft)})</span>
+          </>
+        ) : (
+          <>
+            <i className="fa-solid fa-lock text-sm md:text-xs" />
+            <span>Place Order</span>
+          </>
+        )}
+      </button>
+
+      {loading && (
+        <button
+          type="button"
+          onClick={handleManualCancel}
+          className="w-full bg-red-50 border border-red-200 text-red-600 p-3 rounded-xl text-xs font-bold transition-all hover:bg-red-100 flex items-center justify-center gap-2"
+        >
+          <i className="fa-solid fa-xmark"></i> Cancel Payment
+        </button>
       )}
-    </button>
+    </div>
   );
 }

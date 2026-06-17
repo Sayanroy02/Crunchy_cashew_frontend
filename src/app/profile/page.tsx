@@ -281,7 +281,24 @@ function ProfileContent() {
                 try {
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`);
                     const data = await res.json();
-                    if (data.display_name) {
+                    if (data?.address) {
+                        const addr = data.address;
+                        const city = addr.city || addr.town || addr.village || addr.county || '';
+                        const state = addr.state || '';
+                        const pincode = addr.postcode || '';
+                        const exclude = [city, state, pincode, addr.country].filter(Boolean);
+                        let street = data.display_name;
+                        exclude.forEach(ex => {
+                            street = street.replace(new RegExp(`,?\\s*${ex}`, 'g'), '');
+                        });
+                        setEditForm(prev => ({
+                            ...prev,
+                            address: street.replace(/,\s*$/, '').trim() || data.display_name,
+                            city: city,
+                            state: state,
+                            pincode: pincode
+                        }));
+                    } else if (data?.display_name) {
                         setEditForm(prev => ({ ...prev, address: data.display_name }));
                     }
                 } catch { alert('Could not get address'); }

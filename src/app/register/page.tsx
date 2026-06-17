@@ -99,7 +99,7 @@ export default function RegisterPage() {
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
             {/* Floating card */}
-            <div className="w-full max-w-[860px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+            <div className="w-full max-w-[860px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col-reverse lg:flex-row">
 
                 {/* ════════════════════════════════
                     BRAND PANEL

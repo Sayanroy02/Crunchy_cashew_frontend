@@ -410,13 +410,13 @@ export default function OrderDetailPage() {
                     <div className="p-4 bg-gray-50 border-t border-gray-100 flex gap-3">
                         <button 
                             onClick={() => setShowInvoice(false)}
-                            className="flex-1 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-gray-100 transition-all"
+                            className="flex-1 px-6 py-3 bg-white border-2 border-green-700 text-green-700 font-bold rounded-xl text-xs uppercase tracking-widest hover:bg-green-50 transition-all"
                         >
                             Close
                         </button>
                         <button 
                             onClick={handleDownload}
-                            className="flex-[2] px-6 py-3 bg-black text-white font-black rounded-xl text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2"
+                            className="flex-[2] px-6 py-3 bg-green-700 text-white font-black rounded-xl text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-green-700/20 flex items-center justify-center gap-2"
                         >
                             <i className="fa-solid fa-download"></i> Download Bill (PDF)
                         </button>

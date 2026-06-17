@@ -125,8 +125,29 @@ export default function CheckoutPage() {
                     const { latitude, longitude } = pos.coords;
                     const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
                     const data = await res.json();
-                    if (data?.display_name) setFormData(prev => ({ ...prev, address: data.display_name }));
-                } catch { alert('Could not fetch address.'); }
+                    if (data?.address) {
+                        const addr = data.address;
+                        const city = addr.city || addr.town || addr.village || addr.county || '';
+                        const state = addr.state || '';
+                        const pincode = addr.postcode || '';
+                        // Filter out city, state, postcode, country from display_name to get street
+                        const exclude = [city, state, pincode, addr.country].filter(Boolean);
+                        let street = data.display_name;
+                        exclude.forEach(ex => {
+                            street = street.replace(new RegExp(`,?\\s*${ex}`, 'g'), '');
+                        });
+                        setFormData(prev => ({
+                            ...prev,
+                            address: street.replace(/,\s*$/, '').trim() || data.display_name,
+                            city: city,
+                            state: state,
+                            pincode: pincode
+                        }));
+                        if (pincode) setPincodeValid(null);
+                    } else if (data?.display_name) {
+                        setFormData(prev => ({ ...prev, address: data.display_name }));
+                    }
+                } catch { alert('Could not get address'); }
             },
             () => { alert('Unable to retrieve location'); }
         );

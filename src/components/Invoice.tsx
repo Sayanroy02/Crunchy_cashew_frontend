@@ -25,7 +25,7 @@ export default function Invoice({ order, onClose }: InvoiceProps) {
     const taxIncluded = Math.round(subtotal * 0.12);
 
     return (
-        <div className="bg-white text-black font-serif w-full p-8 print:p-0" id="invoice-bill">
+        <div className="bg-white text-black w-full p-8 print:p-0" id="invoice-bill" style={{ fontFamily: '"Times New Roman", Times, serif' }}>
             
             {/* Header / Brand */}
             <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-black">
@@ -131,20 +131,20 @@ export default function Invoice({ order, onClose }: InvoiceProps) {
                     <QRCodeSVG value={trackingUrl} size={100} level="H" includeMargin={false} />
                     <p className="text-[8px] font-bold text-gray-400 mt-2 uppercase text-center tracking-widest">Tracking QR</p>
                 </div>
-                <div className="w-[300px] border border-black p-0 uppercase">
-                    <div className="flex justify-between p-3 border-b border-gray-100 text-[11px] font-bold">
+                <div className="w-[300px] uppercase">
+                    <div className="flex justify-between py-2 border-b border-gray-200 text-[11px] font-bold">
                         <span className="text-gray-500">Subtotal</span>
                         <span>₹{subtotal.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="flex justify-between p-3 border-b border-gray-100 text-[11px] font-bold">
+                    <div className="flex justify-between py-2 border-b border-gray-200 text-[11px] font-bold">
                         <span className="text-gray-500">Delivery Charges</span>
                         <span className={shippingFee === 0 ? "text-green-700" : ""}>{shippingFee === 0 ? 'FREE' : `₹${shippingFee}`}</span>
                     </div>
-                    <div className="flex justify-between p-4 bg-gray-100 text-[16px] font-black">
+                    <div className="flex justify-between py-3 text-[16px] font-black">
                         <span>Total Amount</span>
                         <span>₹{totalAmount.toLocaleString('en-IN')}</span>
                     </div>
-                    <div className="p-3 text-[9px] text-gray-400 border-t border-gray-200 italic font-bold">
+                    <div className="text-[9px] text-gray-400 border-t border-gray-200 italic font-bold pt-2">
                         *Inclusive of all taxes
                     </div>
                 </div>

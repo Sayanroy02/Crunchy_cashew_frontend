@@ -176,7 +176,7 @@ export default function LoginPage() {
             className={`w-full flex items-center justify-center pt-16 pb-12 px-4 sm:pt-20 sm:pb-16 sm:px-5 lg:pt-24 lg:pb-20 lg:px-8 ${COLORS.bg}`}
             style={{ minHeight: 'calc(100vh - 112px)' }}
         >
-            <div className="w-full max-w-[860px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+            <div className="w-full max-w-[860px] bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col-reverse lg:flex-row">
 
                 {/* ════════════════════════════════
                     BRAND PANEL
