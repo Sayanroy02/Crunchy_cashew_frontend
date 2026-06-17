@@ -99,6 +99,14 @@ export default function MaintenanceView() {
                     Our website is currently undergoing scheduled maintenance, we will be back soon! Thank you for being so patient. Contact us for more information!
                 </p>
 
+                <button
+                    onClick={() => window.location.href = '/'}
+                    className="bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center gap-2 mb-10"
+                >
+                    <i className="fa-solid fa-rotate-right text-sm md:text-xs" />
+                    <span>Refresh</span>
+                </button>
+
                 {/* Follow Us / Social Section */}
                 <div className="flex flex-col items-center">
                     <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-[#00863D] mb-4">

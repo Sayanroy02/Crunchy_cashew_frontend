@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (status === 'checking') {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 gap-4">
-                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
                 <p className="text-primary font-semibold text-lg">Verifying Admin Access...</p>
             </div>
         );

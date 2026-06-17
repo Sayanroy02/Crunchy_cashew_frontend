@@ -92,7 +92,7 @@ export default function AdminProfile() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
             </div>
         );
     }

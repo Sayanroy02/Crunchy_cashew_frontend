@@ -40,6 +40,13 @@ export default function OrderDetailPage() {
   const [showInvoice, setShowInvoice] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  
+  // Return States
+  const [showReturnModal, setShowReturnModal] = useState(false);
+  const [returnReason, setReturnReason] = useState('Product is damaged');
+  const [otherReason, setOtherReason] = useState('');
+  const [submittingReturn, setSubmittingReturn] = useState(false);
+
   const [snackbar, setSnackbar] = useState<{ show: boolean; msg: string }>({ show: false, msg: '' });
 
   const [mounted, setMounted] = useState(false);
@@ -114,10 +121,46 @@ export default function OrderDetailPage() {
     }
   };
 
+  const handleReturnSubmit = async () => {
+    if (returnReason === 'Other (Please specify)' && !otherReason.trim()) {
+      setSnackbar({ show: true, msg: 'Please specify the reason.' });
+      setTimeout(() => setSnackbar({ show: false, msg: '' }), 4000);
+      return;
+    }
+    setSubmittingReturn(true);
+    try {
+      const payload = {
+        reason: returnReason,
+        specific_reason: otherReason
+      };
+      const res = await fetch(API.ORDER_RETURN(orderId), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        setSnackbar({ show: true, msg: 'Return request submitted successfully.' });
+        setShowReturnModal(false);
+        fetchOrder();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setSnackbar({ show: true, msg: err.detail || 'Could not submit return request.' });
+      }
+    } catch {
+      setSnackbar({ show: true, msg: 'Network error.' });
+    } finally {
+      setSubmittingReturn(false);
+      setTimeout(() => setSnackbar({ show: false, msg: '' }), 4000);
+    }
+  };
+
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) return (
     <div className="min-h-screen bg-[#f4f6f9] flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
     </div>
   );
 
@@ -187,7 +230,7 @@ export default function OrderDetailPage() {
               </div>
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Total</p>
-                <p className="text-sm font-black" style={{ color: COLORS.primary }}>
+                <p className="text-sm font-black" style={{ color: COLORS.heading }}>
                   ₹{order.total_amount?.toLocaleString('en-IN')}
                 </p>
               </div>
@@ -209,8 +252,18 @@ export default function OrderDetailPage() {
             )}
           </div>
 
+          {/* Shipping To */}
+          {order.customer && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shipping To</p>
+              <p className="font-bold text-gray-800">{order.customer.name}</p>
+              <p className="text-sm text-gray-500 mt-1">{order.customer.phone}</p>
+              <p className="text-sm text-gray-500 mt-1">{order.customer.address}</p>
+            </div>
+          )}
+
           {/* Tracking Details */}
-          {order.tracking_id && (
+          {(order.tracking_id || order.delivery_service_name) && (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shipping Details</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -220,7 +273,7 @@ export default function OrderDetailPage() {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Tracking ID</p>
-                  <p className="text-sm font-semibold text-gray-800">{order.tracking_id}</p>
+                  <p className="text-sm font-semibold text-gray-800">{order.tracking_id || 'N/A'}</p>
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Estimated Delivery</p>
@@ -228,21 +281,21 @@ export default function OrderDetailPage() {
                 </div>
                 <div>
                   <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Track Online</p>
-                  <a href={order.tracking_link} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 hover:underline">
-                    Track Order &rarr;
-                  </a>
+                  {order.tracking_link ? (
+                    <a href={order.tracking_link} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-blue-600 hover:underline">
+                      Track Order &rarr;
+                    </a>
+                  ) : (
+                    <p className="text-sm font-semibold text-gray-800">N/A</p>
+                  )}
                 </div>
+                {order.remarks && (
+                  <div className="col-span-1 sm:col-span-2 mt-2">
+                    <p className="text-[10px] text-gray-400 uppercase tracking-wider font-bold mb-1">Remarks</p>
+                    <p className="text-sm font-semibold text-gray-800">{order.remarks}</p>
+                  </div>
+                )}
               </div>
-            </div>
-          )}
-
-          {/* Shipping To */}
-          {order.customer && (
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Shipping To</p>
-              <p className="font-bold text-gray-800">{order.customer.name}</p>
-              <p className="text-sm text-gray-500 mt-1">{order.customer.phone}</p>
-              <p className="text-sm text-gray-500 mt-1">{order.customer.address}</p>
             </div>
           )}
 
@@ -283,25 +336,45 @@ export default function OrderDetailPage() {
               {/* Total Row */}
               <div className="flex justify-between items-center pt-3 mt-1 border-t-2 border-gray-100">
                 <span className="font-bold text-gray-800">Total</span>
-                <span className="font-black text-lg" style={{ color: COLORS.primary }}>
+                <span className="font-black text-lg" style={{ color: COLORS.heading }}>
                   ₹{order.total_amount?.toLocaleString('en-IN')}
                 </span>
               </div>
             </div>
           </div>
 
+          {/* Return Box (if Delivered) */}
+          {order.status === 'Delivered' && !order.return_request && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center">
+              <p className="text-gray-700 font-semibold mb-3">Didn't like the product or want to return the product?</p>
+              <button 
+                onClick={() => setShowReturnModal(true)}
+                className="bg-green-700 text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-green-800 transition-colors shadow-lg active:scale-95"
+              >
+                Send a mail
+              </button>
+            </div>
+          )}
+          {order.return_request && (
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center">
+              <p className="text-amber-600 font-bold"><i className="fa-solid fa-clock-rotate-left mr-2"></i>Return Request Submitted</p>
+              <p className="text-gray-500 text-sm mt-1">We are reviewing your request.</p>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-3 pb-20">
             <Link
               href="/profile?tab=orders"
-              className="flex-1 text-center border-2 border-gray-200 text-gray-700 font-bold py-3 rounded-xl hover:border-primary transition-colors text-sm"
+              className="flex-1 text-center bg-green-700 text-white font-bold py-3 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl text-sm"
             >
               ← My Orders
             </Link>
             
             <button 
               onClick={() => setShowInvoice(true)}
-              className="flex-1 bg-white border-2 border-primary text-primary font-bold py-3 rounded-xl hover:bg-primary/5 transition-colors text-sm flex items-center justify-center gap-2"
+              className="flex-1 bg-white border-2 font-bold py-3 rounded-xl transition-all hover:scale-105 active:scale-95 shadow-xl text-sm flex items-center justify-center gap-2"
+              style={{ borderColor: COLORS.heading, color: COLORS.heading }}
             >
               <i className="fa-solid fa-file-invoice"></i> View & Download Bill
             </button>
@@ -405,6 +478,87 @@ export default function OrderDetailPage() {
                             className="flex-1 bg-red-600 text-white font-bold py-3.5 rounded-2xl hover:bg-red-700 transition-all shadow-lg shadow-red-200"
                         >
                             Yes, cancel
+                        </button>
+                    </div>
+                </motion.div>
+            </div>
+        )}
+      </AnimatePresence>
+
+      {/* Return Modal */}
+      <AnimatePresence>
+        {showReturnModal && (
+            <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto pt-10 pb-10">
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    className="bg-white rounded-[24px] p-6 sm:p-8 max-w-lg w-full shadow-2xl relative"
+                >
+                    <h3 className="text-xl font-black text-gray-900 mb-6 text-center">Return Request</h3>
+                    
+                    <div className="space-y-4 mb-6 text-left">
+                        <div className="bg-gray-50 p-4 rounded-xl text-sm text-gray-700">
+                            <p><strong>Order ID:</strong> {order._id?.toString().slice(-6).toUpperCase()}</p>
+                            <p><strong>Customer Name:</strong> {order.customer?.name}</p>
+                            <p><strong>Order Date:</strong> {date}</p>
+                            <p><strong>Total Amount Paid:</strong> ₹{order.total_amount?.toLocaleString('en-IN')}</p>
+                            <div className="mt-2">
+                                <strong>Items Ordered:</strong>
+                                <ul className="list-disc list-inside text-xs mt-1 text-gray-600">
+                                    {(order.items || []).map((item: any, idx: number) => {
+                                        const variantStr = item.weight || item.variant || item.size || "";
+                                        return <li key={idx}>{item.name} {variantStr ? `(${variantStr})` : ""} x {item.quantity}</li>;
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Reason for returning the product</label>
+                            <select 
+                                value={returnReason}
+                                onChange={(e) => setReturnReason(e.target.value)}
+                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            >
+                                <option value="Product is damaged">Product is damaged</option>
+                                <option value="Wrong product received">Wrong product received</option>
+                                <option value="Product freshness issue">Product freshness issue</option>
+                                <option value="Packaging quality issue">Packaging quality issue</option>
+                                <option value="Taste is not satisfactory">Taste is not satisfactory</option>
+                                <option value="Product quality is not as expected">Product quality is not as expected</option>
+                                <option value="Product does not match description">Product does not match description</option>
+                                <option value="Other (Please specify)">Other (Please specify)</option>
+                            </select>
+                        </div>
+
+                        {returnReason === 'Other (Please specify)' && (
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Please specify reason</label>
+                                <textarea
+                                    value={otherReason}
+                                    onChange={(e) => setOtherReason(e.target.value)}
+                                    className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[80px]"
+                                    placeholder="Briefly explain..."
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button 
+                            onClick={() => setShowReturnModal(false)}
+                            disabled={submittingReturn}
+                            className="flex-1 bg-gray-100 text-gray-700 font-bold py-3.5 rounded-xl hover:bg-gray-200 transition-all text-sm disabled:opacity-60"
+                        >
+                            Cancel / Close
+                        </button>
+                        <button 
+                            onClick={handleReturnSubmit}
+                            disabled={submittingReturn}
+                            className="flex-1 bg-green-700 text-white font-bold py-3.5 rounded-xl hover:bg-green-800 transition-all shadow-lg text-sm flex items-center justify-center gap-2 disabled:opacity-60"
+                        >
+                            {submittingReturn ? <i className="fa-solid fa-spinner fa-spin" /> : 'Send'}
                         </button>
                     </div>
                 </motion.div>

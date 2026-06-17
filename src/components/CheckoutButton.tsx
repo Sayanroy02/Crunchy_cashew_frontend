@@ -67,8 +67,36 @@ export default function CheckoutButton({
   const [loading, setLoading] = useState(false);
   const { showSnackbar } = useSnackbar();
 
+  const createdOrderIdRef = React.useRef<string | null>(null);
+  const paymentSuccessRef = React.useRef<boolean>(false);
+
+  React.useEffect(() => {
+    const handlePopState = () => {
+      if (createdOrderIdRef.current && !paymentSuccessRef.current) {
+        fetch(API.ORDER_CANCEL(createdOrderIdRef.current), {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+          keepalive: true
+        }).catch(() => {});
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      if (createdOrderIdRef.current && !paymentSuccessRef.current) {
+        fetch(API.ORDER_CANCEL(createdOrderIdRef.current), {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+          keepalive: true
+        }).catch(() => {});
+      }
+    };
+  }, [token]);
+
   const handleCheckout = async () => {
     setLoading(true);
+    paymentSuccessRef.current = false;
+    createdOrderIdRef.current = null;
 
     try {
       // ── Step 1: Create the order in our backend ──────────────────────────
@@ -88,9 +116,11 @@ export default function CheckoutButton({
 
       const orderData = await createRes.json();
       const orderId: string = orderData.order_id;
+      createdOrderIdRef.current = orderId;
 
       // ── COD: done — no payment gateway needed ────────────────────────────
       if (orderPayload.payment_mode === 'COD') {
+        paymentSuccessRef.current = true;
         showSnackbar('Order placed successfully!', 'success');
         onSuccess(orderId);
         return;
@@ -153,6 +183,7 @@ export default function CheckoutButton({
               throw new Error(errData.detail || 'Payment verification failed');
             }
 
+            paymentSuccessRef.current = true;
             showSnackbar('Payment verified!', 'success');
             onSuccess(orderId);
           } catch (verifyErr: any) {

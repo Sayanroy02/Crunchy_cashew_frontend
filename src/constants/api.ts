@@ -29,6 +29,7 @@ export const API = {
   ORDER_VERIFY: `${API_BASE}/api/orders/verify`,
   ORDER_TRACK: (id: string) => `${API_BASE}/api/orders/track/${id}`,
   ORDER_PAYMENT_CONFIRM: (id: string) => `${API_BASE}/api/orders/${id}/payment-status`,
+  ORDER_RETURN: (id: string) => `${API_BASE}/api/orders/${id}/return`,
 
   // ── Admin ─────────────────────────────────────────────────────────────────
   ADMIN_DASHBOARD: `${API_BASE}/api/admin/dashboard`,

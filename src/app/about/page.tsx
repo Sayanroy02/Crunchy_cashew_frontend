@@ -164,7 +164,7 @@ function Gallery({ onSelectImage }: { onSelectImage: (idx: number) => void }) {
             {/* Shimmer loading spinner */}
             {!loaded[i] && (
               <div className="absolute inset-0 bg-gray-100 animate-pulse flex items-center justify-center z-10">
-                <div className="w-8 h-8 border-4 border-amber-400/80 border-t-transparent rounded-full animate-spin" />
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-12 h-12 animate-bounce object-contain" />
               </div>
             )}
 
@@ -581,7 +581,7 @@ export default function AboutPage() {
               <button type="submit" disabled={submitStatus === 'loading'}
                 className="w-full bg-green-700 text-white p-4 md:px-8 md:py-3.5 rounded-2xl text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center justify-center gap-2 disabled:opacity-60 disabled:hover:scale-100 disabled:active:scale-100">
                 {submitStatus === 'loading'
-                  ? <><svg className="animate-spin w-5 h-5" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Processing...</>
+                  ? <><img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-6 h-6 animate-bounce object-contain" /> Processing...</>
                   : <><i className="fa-solid fa-paper-plane text-xs" /> Submit Visit Request</>}
               </button>
             </form>

@@ -71,6 +71,7 @@ function ShippingDetailsModal({ isOpen, onConfirm, onCancel, loading }: any) {
     const [trackingLink, setTrackingLink] = useState('');
     const [estimatedDelivery, setEstimatedDelivery] = useState('');
     const [deliveryService, setDeliveryService] = useState('');
+    const [remarks, setRemarks] = useState('');
 
     if (!isOpen) return null;
 
@@ -80,7 +81,8 @@ function ShippingDetailsModal({ isOpen, onConfirm, onCancel, loading }: any) {
             tracking_id: trackingId,
             tracking_link: trackingLink,
             estimated_delivery_date: estimatedDelivery,
-            delivery_service_name: deliveryService
+            delivery_service_name: deliveryService,
+            remarks: remarks
         });
     };
 
@@ -104,6 +106,10 @@ function ShippingDetailsModal({ isOpen, onConfirm, onCancel, loading }: any) {
                     <div>
                         <label className="block text-xs font-bold text-gray-500 mb-1">Estimated Delivery Date</label>
                         <input required type="date" min={new Date().toISOString().split('T')[0]} value={estimatedDelivery} onChange={e => setEstimatedDelivery(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-bold text-gray-500 mb-1">Remarks (Optional)</label>
+                        <textarea value={remarks} onChange={e => setRemarks(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" placeholder="Any additional details..." rows={2}></textarea>
                     </div>
                     
                     <div className="flex gap-3 mt-8">

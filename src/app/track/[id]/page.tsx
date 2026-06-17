@@ -53,7 +53,7 @@ export default function PublicOrderTracking() {
     if (loading) return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
             <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
                 <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Locating Order...</p>
             </div>
         </div>

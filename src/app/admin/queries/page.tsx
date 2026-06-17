@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { API } from '@/constants/api';
+import * as XLSX from 'xlsx';
 
 function getToken() {
     return typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '';
@@ -64,6 +65,38 @@ export default function AdminQueries() {
         } catch (e) { console.error(e); } finally { setSaving(false); }
     };
 
+    const handleDownloadExcel = () => {
+        const wb = XLSX.utils.book_new();
+
+        const enquiriesData = enquiries.map(q => ({
+            Name: q.name,
+            Email: q.email,
+            Phone: q.phone,
+            Message: q.message,
+            Status: q.status,
+            'Created At': q.created_at ? new Date(q.created_at).toLocaleDateString() : '',
+            'Admin Notes': q.admin_notes || ''
+        }));
+        const wsEnquiries = XLSX.utils.json_to_sheet(enquiriesData);
+        XLSX.utils.book_append_sheet(wb, wsEnquiries, 'General Enquiries');
+
+        const visitsData = visits.map(v => ({
+            Name: v.name,
+            'Company Name': v.company_name || '',
+            Email: v.email,
+            Phone: v.phone,
+            Purpose: v.purpose,
+            Status: v.status,
+            'Desired Date': v.desired_date ? new Date(v.desired_date).toLocaleDateString() : '',
+            'Created At': v.created_at ? new Date(v.created_at).toLocaleDateString() : '',
+            'Admin Notes': v.admin_notes || ''
+        }));
+        const wsVisits = XLSX.utils.json_to_sheet(visitsData);
+        XLSX.utils.book_append_sheet(wb, wsVisits, 'Factory Visits');
+
+        XLSX.writeFile(wb, 'Queries.xlsx');
+    };
+
     if (loading) return (
         <div className="flex flex-col gap-4">
             {[1, 2, 3].map(i => <div key={i} className="bg-white rounded-xl h-16 animate-pulse border border-gray-100"></div>)}
@@ -72,6 +105,14 @@ export default function AdminQueries() {
 
     return (
         <div className="flex flex-col gap-10">
+            <div className="flex items-center justify-end gap-3 -mb-6">
+                <button onClick={fetchData} className="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm font-bold flex items-center gap-2 shadow-sm">
+                    <i className="fa-solid fa-rotate-right"></i> Refresh
+                </button>
+                <button onClick={handleDownloadExcel} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-bold flex items-center gap-2 shadow-sm">
+                    <i className="fa-solid fa-file-excel"></i> Download Excel
+                </button>
+            </div>
             {/* Enquiries */}
             <div>
                 <h1 className="text-2xl font-bold text-gray-800 mb-4">General Enquiries <span className="text-sm font-normal text-gray-400 ml-2">({enquiries.length})</span></h1>

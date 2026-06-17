@@ -77,8 +77,8 @@ const MOBILE_ORDER_STATUSES = [
 export default function ProfilePage() {
     return (
         <Suspense fallback={
-            <div className={`min-h-screen py-8 px-4 flex justify-center ${COLORS.bg}`}>
-                <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            <div className={`min-h-screen py-8 px-4 flex justify-center items-center ${COLORS.bg}`}>
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
             </div>
         }>
             <ProfileContent />
@@ -308,11 +308,11 @@ function ProfileContent() {
         } catch { setReviewStatus('error'); }
     };
 
-    if (loading) return (
-        <div className="min-h-screen py-8 px-4 flex justify-center bg-[#f8f9fa]">
-            <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-    );
+        if (loading) return (
+            <div className={`min-h-[80vh] flex justify-center items-center ${COLORS.bg}`}>
+                <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
+            </div>
+        );
 
     const displayedOrders = mobileOrderFilter === 'All' ? orders : orders.filter(o => o.status === mobileOrderFilter);
 
@@ -884,7 +884,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                         <button onClick={() => router.push('/our-product')} className="px-5 py-3 bg-green-700 hover:bg-green-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 sm:flex-1">
                             <i className="fa-solid fa-basket-shopping" /> Continue Shopping
                         </button>
-                        <button onClick={() => router.push(`/profile/orders/${order._id}`)} className="px-5 py-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-800 font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 sm:flex-none">
+                        <button onClick={() => router.push(`/profile/orders/${order._id}`)} className="px-5 py-3 bg-white border hover:bg-gray-50 font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 sm:flex-none" style={{ borderColor: COLORS.heading, color: COLORS.heading }}>
                             <i className="fa-solid fa-circle-info" /> Details
                         </button>
                         <div className="flex gap-2 justify-stretch sm:justify-end sm:flex-1">
@@ -893,7 +893,7 @@ function ExpandableOrderCard({ order, cancelOrder, isMobile }: any) {
                             </Link>
                             {canCancel && order.status !== 'Cancelled' && (
                                 <button onClick={() => cancelOrder(order._id)} className="flex-1 sm:flex-none px-4 py-3 bg-white border border-red-100 text-red-500 hover:bg-red-50 font-bold text-xs rounded-xl transition-colors">
-                                    Cancel
+                                    Cancel Order
                                 </button>
                             )}
                         </div>

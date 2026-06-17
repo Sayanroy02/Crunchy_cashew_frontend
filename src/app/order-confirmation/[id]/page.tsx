@@ -54,7 +54,7 @@ export default function OrderConfirmationPage() {
 
   if (loading) return (
     <div className="min-h-screen bg-[#f4f6f9] flex flex-col items-center justify-center pt-20 pb-10">
-      <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      <img src="/images/cc-Logo-01-1.png" alt="Loading..." className="w-20 h-20 animate-bounce object-contain" />
       <p className="mt-4 text-gray-500 font-bold animate-pulse">Confirming your order...</p>
     </div>
   );
