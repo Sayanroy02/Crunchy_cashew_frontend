@@ -54,9 +54,14 @@ export default function BestSellers() {
 
     const filtered = useMemo(() => {
         const list = Array.isArray(products) ? products : [];
-        // First filter by active category tab
+        
+        // If "All" is selected, show all products without best seller filter or limit
+        if (activeTag === 'all') {
+            return list;
+        }
+
+        // Otherwise, filter by active category tab
         let result = list.filter(p => {
-            if (activeTag === 'all') return true;
             return (p.category || '').toLowerCase() === activeTag.toLowerCase();
         });
         
