@@ -77,6 +77,7 @@ export default function Navbar() {
     if (pathname.startsWith('/admin') || pathname === '/cc/qr-offer' || pathname === '/maintenance') return null;
 
     const isActive = (href: string) => {
+        if (!mounted) return false;
         const p = pathname || '/';
         return href === '/' || href === '/our-product' ? p === href : p.startsWith(href);
     };
