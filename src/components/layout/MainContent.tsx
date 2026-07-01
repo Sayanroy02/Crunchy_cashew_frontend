@@ -8,7 +8,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
     const pathname = usePathname();
     const { showSnackbar } = useSnackbar();
     const isAdmin = pathname?.startsWith('/admin') ?? false;
-    const isMaintenanceOrOffline = pathname === '/maintenance' || pathname === '/offline';
+    const isMaintenanceOrOffline = pathname === '/maintenance' || pathname === '/offline' || pathname === '/server-error';
 
     React.useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -34,8 +34,8 @@ export default function MainContent({ children }: { children: React.ReactNode })
                             }
                             showSnackbar(errorMessage, 'error');
                         } else {
-                            if (window.location.pathname !== '/maintenance') {
-                                window.location.href = '/maintenance';
+                            if (window.location.pathname !== '/server-error') {
+                                window.location.href = '/server-error';
                             }
                         }
                     }
@@ -44,8 +44,8 @@ export default function MainContent({ children }: { children: React.ReactNode })
                     if (isFormSubmit) {
                         showSnackbar('Network connection failed. Please check your internet.', 'error');
                     } else {
-                        if (window.location.pathname !== '/maintenance') {
-                            window.location.href = '/maintenance';
+                        if (window.location.pathname !== '/server-error') {
+                            window.location.href = '/server-error';
                         }
                     }
                     throw err;
