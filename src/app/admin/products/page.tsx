@@ -57,9 +57,24 @@ export default function AdminProducts() {
 
     useEffect(() => { fetchProducts(); }, []);
 
+    useEffect(() => {
+        if (isModalOpen && !editingId) {
+            localStorage.setItem('addProductCache', JSON.stringify(formData));
+        }
+    }, [formData, isModalOpen, editingId]);
+
     const openAdd = () => {
         setEditingId(null);
-        setFormData({ ...defaultForm });
+        const cached = localStorage.getItem('addProductCache');
+        if (cached) {
+            try {
+                setFormData(JSON.parse(cached));
+            } catch (e) {
+                setFormData({ ...defaultForm });
+            }
+        } else {
+            setFormData({ ...defaultForm });
+        }
         setFiles([]);
         setError('');
         setIsModalOpen(true);
@@ -196,6 +211,7 @@ export default function AdminProducts() {
             
             const data = await res.json();
             if (res.ok) {
+                if (!id) localStorage.removeItem('addProductCache');
                 setIsModalOpen(false);
                 setFormData({ ...defaultForm });
                 setFiles([]);
@@ -479,7 +495,23 @@ export default function AdminProducts() {
                     <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
                         <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50">
                             <h2 className="text-xl font-bold text-gray-800">{editingId ? '✏️ Edit Product' : '+ Add New Product'}</h2>
-                            <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600"><i className="fa-solid fa-xmark text-xl"></i></button>
+                            <div className="flex items-center gap-3">
+                                {!editingId && (
+                                    <button 
+                                        onClick={() => {
+                                            if (confirm('Are you sure you want to reset the form?')) {
+                                                localStorage.removeItem('addProductCache');
+                                                setFormData({ ...defaultForm });
+                                            }
+                                        }} 
+                                        type="button" 
+                                        className="text-xs bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5"
+                                    >
+                                        <i className="fa-solid fa-rotate-right"></i> Reset Form
+                                    </button>
+                                )}
+                                <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600"><i className="fa-solid fa-xmark text-xl"></i></button>
+                            </div>
                         </div>
                         <div className="p-5 overflow-y-auto">
                             {error && (
