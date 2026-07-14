@@ -65,16 +65,12 @@ export default function BestSellers() {
             return (p.category || '').toLowerCase() === activeTag.toLowerCase();
         });
         
-        // Filter to best sellers (p.isBestSeller === true or has popular/bestseller tags)
-        const bestSellers = result.filter(p => 
-            p.isBestSeller || 
-            p.tags?.some(t => ['best seller', 'bestseller', 'popular', 'trending'].includes(t.toLowerCase()))
-        );
-        
-        // Fallback to general list if no products are explicitly marked as bestseller/popular
-        if (bestSellers.length > 0) {
-            result = bestSellers;
-        }
+        // Prioritize best sellers first, then others
+        result.sort((a, b) => {
+            const aIsBest = a.isBestSeller || a.tags?.some(t => ['best seller', 'bestseller', 'popular', 'trending'].includes(t.toLowerCase())) ? 1 : 0;
+            const bIsBest = b.isBestSeller || b.tags?.some(t => ['best seller', 'bestseller', 'popular', 'trending'].includes(t.toLowerCase())) ? 1 : 0;
+            return bIsBest - aIsBest;
+        });
         
         // Limit to 8 products for optimal rendering performance
         return result.slice(0, 8);

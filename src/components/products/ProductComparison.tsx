@@ -48,9 +48,7 @@ export default function ProductComparison({ product }: { product: Product }) {
   const blinkitPrice = mp.blinkit?.price || 0;
   const jioPrice = mp.swiggy?.price || 0;
 
-  if (amazonPrice === 0 && flipkartPrice === 0 && blinkitPrice === 0 && jioPrice === 0) {
-    return null;
-  }
+  const isExclusive = amazonPrice === 0 && flipkartPrice === 0 && blinkitPrice === 0 && jioPrice === 0;
 
   const platforms: Array<{
     name: string;
@@ -61,69 +59,93 @@ export default function ProductComparison({ product }: { product: Product }) {
     label?: string;
     logoClassName?: string;
   }> = [
-      {
-        name: 'OFFICIAL WEBSITE',
-        logo: product.image_url || '/images/crunchy-cashews-product.png',
-        price: basePrice,
-        link: '#',
-        isBest: true,
-        label: 'FACTORY PRICE'
-      },
-      {
-        name: 'AMAZON',
-        logo: '/images/partners/amazon.png',
-        price: amazonPrice,
-        link: mp.amazon?.link
-      },
-      {
-        name: 'BLINKIT',
-        logo: '/images/partners/blinkit.png',
-        price: blinkitPrice,
-        link: mp.blinkit?.link
-      },
-      {
-        name: 'FLIPKART',
-        logo: '/images/partners/flipkart-logo.png',
-        price: flipkartPrice,
-        link: mp.flipkart?.link,
-        logoClassName: 'scale-140'
-      },
-      {
-        name: 'JIO MART',
-        logo: '/images/partners/JioMart_logo.png',
-        price: jioPrice,
-        link: mp.swiggy?.link,
-        logoClassName: 'scale-110'
-      },
-    ];
+    {
+      name: 'OFFICIAL WEBSITE',
+      logo: product.image_url || '/images/crunchy-cashews-product.png',
+      price: basePrice,
+      link: '#',
+      isBest: true,
+      label: 'FACTORY PRICE'
+    },
+    {
+      name: 'AMAZON',
+      logo: '/images/partners/amazon.png',
+      price: amazonPrice,
+      link: mp.amazon?.link
+    },
+    {
+      name: 'BLINKIT',
+      logo: '/images/partners/blinkit.png',
+      price: blinkitPrice,
+      link: mp.blinkit?.link
+    },
+    {
+      name: 'FLIPKART',
+      logo: '/images/partners/flipkart-logo.png',
+      price: flipkartPrice,
+      link: mp.flipkart?.link,
+      logoClassName: 'scale-140'
+    },
+    {
+      name: 'JIO MART',
+      logo: '/images/partners/JioMart_logo.png',
+      price: jioPrice,
+      link: mp.swiggy?.link,
+      logoClassName: 'scale-110'
+    },
+  ].filter(p => p.isBest || p.price > 0);
 
-  const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice].filter(p => p > 0);
-  const minMpPrice = marketplacePrices.length > 0 ? Math.min(...marketplacePrices) : basePrice;
-  const maxMpPrice = marketplacePrices.length > 0 ? Math.max(...marketplacePrices) : basePrice;
+  let savingsString = '';
+  if (isExclusive) {
+    const minSavingsPercent = variants.length > 0 ? Math.min(...variants.map(v => Math.round(((v.original_price - v.price) / v.original_price) * 100))) : 0;
+    const maxSavingsPercent = variants.length > 0 ? Math.max(...variants.map(v => Math.round(((v.original_price - v.price) / v.original_price) * 100))) : 0;
+    savingsString = minSavingsPercent === maxSavingsPercent
+      ? (maxSavingsPercent > 0 ? `${maxSavingsPercent}%` : '')
+      : `${minSavingsPercent}% - ${maxSavingsPercent}%`;
+  } else {
+    const marketplacePrices = [amazonPrice, flipkartPrice, blinkitPrice, jioPrice].filter(p => p > 0);
+    const minMpPrice = marketplacePrices.length > 0 ? Math.min(...marketplacePrices) : basePrice;
+    const maxMpPrice = marketplacePrices.length > 0 ? Math.max(...marketplacePrices) : basePrice;
 
-  const minSavingsPercent = minMpPrice > basePrice ? Math.round(((minMpPrice - basePrice) / minMpPrice) * 100) : 0;
-  const maxSavingsPercent = maxMpPrice > basePrice ? Math.round(((maxMpPrice - basePrice) / maxMpPrice) * 100) : 0;
+    const minSavingsPercent = minMpPrice > basePrice ? Math.round(((minMpPrice - basePrice) / minMpPrice) * 100) : 0;
+    const maxSavingsPercent = maxMpPrice > basePrice ? Math.round(((maxMpPrice - basePrice) / maxMpPrice) * 100) : 0;
 
-  const savingsString = minSavingsPercent === maxSavingsPercent
-    ? (maxSavingsPercent > 0 ? `${maxSavingsPercent}%` : '')
-    : `${minSavingsPercent}% - ${maxSavingsPercent}%`;
+    savingsString = minSavingsPercent === maxSavingsPercent
+      ? (maxSavingsPercent > 0 ? `${maxSavingsPercent}%` : '')
+      : `${minSavingsPercent}% - ${maxSavingsPercent}%`;
+  }
 
   return (
     <div className="mt-16 space-y-12">
       <div className="text-center space-y-4">
-        <SectionHeading
-          text="Price Comparison"
-          highlight={`for ${product.name} (${compareSize})`}
-          className="text-2xl md:text-4xl"
-        />
-        <p className="text-slate-500 font-medium italic text-center">
-          See how much you save by buying direct
-        </p>
+        {isExclusive ? (
+          <SectionHeading
+            text={product.name}
+            highlight="exclusively available here"
+            className="text-2xl md:text-4xl"
+          />
+        ) : (
+          <>
+            <SectionHeading
+              text="Price Comparison"
+              highlight={`for ${product.name} (${compareSize})`}
+              className="text-2xl md:text-4xl"
+            />
+            <p className="text-slate-500 font-medium italic text-center">
+              See how much you save by buying direct
+            </p>
+          </>
+        )}
       </div>
 
       {/* Desktop view (HOMEPAGE style cards) */}
       <div className="hidden md:block relative">
-        <div className="grid md:grid-cols-5 gap-6 px-2">
+        <div className={`grid gap-6 px-2 ${platforms.length === 1 ? 'flex justify-center' :
+            platforms.length === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' :
+              platforms.length === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' :
+                platforms.length === 4 ? 'md:grid-cols-4 max-w-5xl mx-auto' :
+                  'md:grid-cols-5'
+          }`}>
           {platforms.map((platform, idx) => {
             const isHovered = hoveredIdx === idx && !platform.isBest;
             const rupeesSaved = !platform.isBest ? platform.price - basePrice : 0;
@@ -137,7 +159,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                 whileHover={{ y: -8, transition: { duration: 0.1 } }}
                 onHoverStart={() => !platform.isBest && setHoveredIdx(idx)}
                 onHoverEnd={() => setHoveredIdx(null)}
-                className={`relative p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-75 ${platform.isBest
+                className={`relative w-full ${platforms.length === 1 ? 'max-w-[280px]' : ''} p-8 rounded-[2.5rem] flex flex-col items-center justify-between transition-all duration-75 ${platform.isBest
                   ? 'bg-white z-10 scale-105 border border-slate-200'
                   : 'bg-white/60 shadow-xl shadow-slate-200/50 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 border border-slate-100'
                   }`}
@@ -159,7 +181,7 @@ export default function ProductComparison({ product }: { product: Product }) {
                     className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest px-6 py-2 rounded-full shadow-lg whitespace-nowrap"
                     style={{ backgroundColor: COLORS.heading, color: '#ffffff' }}
                   >
-                    Best Price
+                    {isExclusive ? 'FACTORY DIRECT' : 'Best Price'}
                   </div>
                 )}
 
@@ -245,10 +267,12 @@ export default function ProductComparison({ product }: { product: Product }) {
           </div>
 
           <div className="space-y-6">
-            <div className="flex justify-between items-end pb-3" style={{ borderBottom: `1px solid ${COLORS.black}1A` }}>
-              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Platform</span>
-              <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Their Price</span>
-            </div>
+            {!isExclusive && (
+              <div className="flex justify-between items-end pb-3" style={{ borderBottom: `1px solid ${COLORS.black}1A` }}>
+                <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Platform</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-black/50">Their Price</span>
+              </div>
+            )}
 
             <div className="space-y-3">
               {platforms.map((p) => (
